@@ -1,8 +1,8 @@
 {
-    'name' : "EBBC CFE",
-    'version' : '17.0.1.0',
-    'depends' : [],
-    'author' : "Quadro Soluciones",
+    'name': "EBBC CFE",
+    'version': '17.0.1.01',
+    'depends': ["stock"],
+    'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
     'description': """
