@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="partner_customer_res_partner_form_view">
+        <field name="name">partner.customer.res.partner.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+
+            <xpath expr="//group[@name='sale']" position="before">
+                <group>
+                    <field name="is_customer" invisible="not is_company" />
+                    <field name="is_government" invisible="not is_customer" />
+                </group>
+            </xpath>
+
+            <xpath expr="//field[@name='lang']" position="after">
+                <field name="commercial_name" readonly="parent_id" />
+                <field name="customer_number_reference" readonly="1" invisible="not is_customer" />
+            </xpath>
+
+            <xpath expr="//group[@name='sale']" position="attributes">
+                <attribute name="invisible">not is_customer</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="partner_customer_res_partner_search_view">
+        <field name="name">partner.customer.sales.res.partner.search.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="commercial_name" filter_domain="[('commercial_name', 'ilike', self)]" />
+                <field name="customer_number_reference"
+                    filter_domain="[('customer_number_reference', 'ilike', self)]" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

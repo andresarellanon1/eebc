@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="partner_branches_res_partner_form_view">
+        <field name="name">partner.branches.res.partner.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale']" position="before">
+                <group>
+                    <field name="is_branch" />
+                </group>
+            </xpath>
+
+            <xpath expr="//field[@name='lang']" position="after">
+                <field name="branch_id" invisible="is_branch or is_company" />
+            </xpath>
+
+            <xpath expr="//field[@name='customer_delivery_zone']" position="attributes">
+                <attribute name="invisible">
+                    (not is_customer) and (not is_branch)
+                </attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='customer_number_reference']" position="attributes">
+                <attribute name="invisible">
+                    (not is_customer) and (not is_branch)
+                </attribute>
+            </xpath>
+
+            <xpath expr="//group[@name='sale']" position="after">
+                <group name="branch_group" string="Ajustes de sucursal" invisible="not is_branch"
+                    class="o_bold">
+                    <field name="is_customer" invisible="1" />
+                    <field name="branch_name"
+                        placeholder="Nombre de la sucursal" />
+                    <field name="branch_number"
+                        placeholder="Número de sucursal" />
+                    <field name="branch_tax"
+                        placeholder="Impuesto de sucursal" />
+                </group>
+            </xpath>
+
+            <xpath expr="(//field[@name='title'])[3]" position="before">
+                <field name="is_company" invisible="1" />
+                <field name="is_branch" invisible="type == 'contact'" />
+                <field name="branch_id" invisible="is_branch" />
+                <field name="branch_name" invisible="not is_branch" />
+                <field name="branch_number" invisible="not is_branch" />
+                <field name="branch_tax" invisible="not is_branch" />
+                <field name="customer_delivery_zone"
+                    invisible="not is_branch and (type == 'contact')" />
+            </xpath>
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="partner_branches_res_partner_delivery_settings_form_view">
+        <field name="name">partner.branches.res.partner.delivery.settings.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id"
+            ref="delivery_rules.delivery_rules_view_partner_address_form_inherit" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='delivery_settings']" position="attributes">
+                <attribute name="invisible">
+                    (not is_customer) and (not is_branch)
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="partner_branches_res_partner_kanban_view">
+        <field name="name">partner.branches.res.partner.kanban.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="before">
+                <field name="is_branch" invisible="1" />
+                <field name="is_customer" invisible="1" />
+            </xpath>
+            <xpath expr="//div[@class='ribbon ribbon-top-right']" position="before">
+                <div class="ribbon ribbon-top-right" invisible="not is_branch">
+                    <span class="text-bg-info">Sucursal</span>
+                </div>
+            </xpath>
+            <xpath expr="//li[@t-if='record.email.raw_value']" position="after">
+                <li invisible="(not is_customer) or (not customer_number_reference)">
+                    <span> Referencia de cliente: <field name="customer_number_reference" />
+                    </span>
+                </li>
+                <li invisible="(not is_branch) or (not branch_number)">
+                    <span>
+                        <field name="branch_name" />
+                    </span>
+                    <span>Número de sucursal: <field name="branch_number" />
+                    </span>
+                </li>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="partner_branches_res_partner_tree_view">
+        <field name="name">partner.branches.res.partner.tree.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="is_branch" optional="show" readonly="1" />
+                <field name="branch_number" optional="show" readonly="1" />
+                <field name="branch_name" optional="show" readonly="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="partner_branches_res_partner_search_view">
+        <field name="name">partner.branches.res.partner.search.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="branch_number" />
+                <field name="branch_name" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
