@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="product_supplierinfo_tree_view_inherit">
+        <field name="name">product.supplierinfo.tree.view.inherit</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="is_main_supplier" />
+                <field name="allow_price_recompute" />
+                <field name="multiplier" />
+            </xpath>
+            <xpath expr="//field[@name='price']" position="after">
+                <field name="last_price" widget="monetary"
+                    options="{'currency_field': 'currency_id'}" />
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="supplier_retention"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
