@@ -6,4 +6,4 @@ logger = logging.getLogger(__name__)
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
-    purchase_order_type_id = fields.Many2one('purchase_order_type.purchase_order_type', string='Tipo de Orden de Compra', required=True)
+    purchase_order_type_id = fields.Many2one('purchase.order.type', string='Tipo de Orden de Compra')
