@@ -4,7 +4,7 @@
         <field name="name">purchase.order.type.tree</field>
         <field name="model">purchase.order.type</field>
         <field name="arch" type="xml">
-            <tree string="Tipo de Orden de Compra" create="false">
+            <tree string="Tipo de Orden de Compra" create="true">
                 <field name="name" readonly="1"/>
                 <field name="location_id" readonly="1"/>
             </tree>
