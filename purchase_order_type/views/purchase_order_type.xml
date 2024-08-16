@@ -24,7 +24,7 @@
 
     <record id="purchase_order_type_form_action" model="ir.actions.act_window">
         <field name="name">Tipos de Ordenes de Compra</field>
-        <field name="res_model">purchase_order_type.purchase_order_type</field>
+        <field name="res_model">purchase.order.type</field>
         <field name="view_mode">tree,search,form</field>
     </record>
 
