@@ -14,8 +14,8 @@
     "data": [
         "security/res.groups.xml",
         "security/ir.model.access.csv",
-        "views/purchase_order_type.xml"
-        "views/inherit_views.xml"
+        "views/purchase_order_type.xml",
+        "views/inherit_views.xml",
     ],
     "application": False,
     "installable": True,
