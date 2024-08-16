@@ -35,7 +35,7 @@
     
     <menuitem
     action="purchase_order_type.purchase_order_type_form_action"
-    id="menu_purchase_uom_categ_form_action"
+    id="menu_purchase_order_type_tree_action"
     parent="purchase_order_type.menu_purchase_order_type_in_config_purchase"
     sequence="10"/>
 
