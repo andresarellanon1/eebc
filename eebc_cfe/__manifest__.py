@@ -10,6 +10,7 @@
 
     """,
     "data": [
+        "views/inherit_product_template_form.xml"
     ],
     "application": False,
     "installable": True,
