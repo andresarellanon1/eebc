@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_type_tree" model="ir.ui.view">
+        <field name="name">purchase.order.type.tree</field>
+        <field name="model">purchase.order.type</field>
+        <field name="arch" type="xml">
+            <tree string="Tipo de Orden de Compra" create="false">
+                <field name="name" readonly="1"/>
+                <field name="location_id" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="purchase_order_type_search" model="ir.ui.view">
+        <field name="name">purchase.order.type.search</field>
+        <field name="model">purchase.order.type</field>
+        <field name="arch" type="xml">
+            <search string="Buscar tipo de Orden de Compra">
+                <field name="name"/>
+                <field name="location_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="purchase_order_type_form_action" model="ir.actions.act_window">
+        <field name="name">Tipos de Ordenes de Compra</field>
+        <field name="res_model">purchase_order_type.purchase_order_type</field>
+        <field name="view_mode">tree,search,form</field>
+    </record>
+
+    <menuitem
+    id="menu_purchase_order_type_in_config_purchase"
+    name="Tipos de Ordenes de Compra"
+    parent="purchase.menu_purchase_config" sequence="50"/>
+    
+    <menuitem
+    action="purchase_order_type.purchase_order_type_form_action"
+    id="menu_purchase_uom_categ_form_action"
+    parent="purchase_order_type.menu_purchase_order_type_in_config_purchase"
+    sequence="10"/>
+
+    <record id="purchase_order_type_form" model="ir.ui.view">
+        <field name="name">purchase.order.type.form</field>
+        <field name="model">purchase.order.type</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de Orden de Compra">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="location_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
