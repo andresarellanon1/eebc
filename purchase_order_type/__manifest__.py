@@ -12,6 +12,8 @@
         Este modulo conforma las configuraciones de las ordenes de compra.
     """,
     "data": [
+        "security/res.groups.xml",
+        "security/ir.model.access.csv",
         "views/purchase_order_type.xml"
     ],
     "application": False,
