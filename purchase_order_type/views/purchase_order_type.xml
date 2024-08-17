@@ -4,9 +4,10 @@
         <field name="name">purchase.order.type.tree</field>
         <field name="model">purchase.order.type</field>
         <field name="arch" type="xml">
-            <tree string="Tipo de Orden de Compra" create="true">
+            <tree string="Tipo de orden de compra">
                 <field name="name" readonly="1"/>
                 <field name="location_id" readonly="1"/>
+                <field name="sequence_id" readonly="1"/>
             </tree>
         </field>
     </record>
@@ -15,9 +16,10 @@
         <field name="name">purchase.order.type.search</field>
         <field name="model">purchase.order.type</field>
         <field name="arch" type="xml">
-            <search string="Buscar tipo de Orden de Compra">
+            <search string="Buscar tipo de orden de compra">
                 <field name="name"/>
                 <field name="location_id"/>
+                <field name="sequence_id"/>
             </search>
         </field>
     </record>
@@ -30,7 +32,7 @@
 
     <menuitem
     id="menu_purchase_order_type_in_config_purchase"
-    name="Tipos de Ordenes de Compra"
+    name="Tipos de ordenes de compra"
     parent="purchase.menu_purchase_config" sequence="50"/>
     
     <menuitem
@@ -43,13 +45,14 @@
         <field name="name">purchase.order.type.form</field>
         <field name="model">purchase.order.type</field>
         <field name="arch" type="xml">
-            <form string="Tipo de Orden de Compra">
+            <form string="Tipo de orden de compra">
                 <sheet>
                     <group>
                         <field name="name"/>
                     </group>
                     <group>
                         <field name="location_id"/>
+                        <field name="sequence_id"/>
                     </group>
                 </sheet>
             </form>
