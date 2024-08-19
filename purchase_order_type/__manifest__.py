@@ -3,8 +3,7 @@
     'version': '17.0.0.02',
     'depends': [
         "base",
-        "purchase",
-        "stock",
+        "purchase_stock",
     ],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
