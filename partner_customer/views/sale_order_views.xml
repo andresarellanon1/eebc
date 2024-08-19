@@ -32,9 +32,9 @@
                 <field name="urgency_type" readonly="state in ('sale', 'cancel')" />
             </xpath>
 
-            <xpath expr="//field[@name='partner_id']" position="before">
+            <!--<xpath expr="//field[@name='partner_id']" position="before">
                 <field name="customer_reference" />
-            </xpath>
+            </xpath>-->
 
         </field>
     </record>
