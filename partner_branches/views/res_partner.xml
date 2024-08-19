@@ -36,8 +36,6 @@
                         placeholder="Nombre de la sucursal" />
                     <field name="branch_number"
                         placeholder="Número de sucursal" />
-                    <field name="branch_tax"
-                        placeholder="Impuesto de sucursal" />
                 </group>
             </xpath>
 
@@ -47,26 +45,25 @@
                 <field name="branch_id" invisible="is_branch" />
                 <field name="branch_name" invisible="not is_branch" />
                 <field name="branch_number" invisible="not is_branch" />
-                <field name="branch_tax" invisible="not is_branch" />
             </xpath>
 
         </field>
     </record>
 
-    <record model="ir.ui.view" id="partner_branches_res_partner_delivery_settings_form_view">
-        <field name="name">partner.branches.res.partner.delivery.settings.form.view</field>
-        <field name="model">res.partner</field>
-        <field name="priority">36</field>
-        <field name="inherit_id"
-            ref="delivery_rules.delivery_rules_view_partner_address_form_inherit" />
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='delivery_settings']" position="attributes">
-                <attribute name="invisible">
-                    (not is_customer) and (not is_branch)
-                </attribute>
-            </xpath>
-        </field>
-    </record>
+    <!-- <record model="ir.ui.view" id="partner_branches_res_partner_delivery_settings_form_view"> -->
+    <!--     <field name="name">partner.branches.res.partner.delivery.settings.form.view</field> -->
+    <!--     <field name="model">res.partner</field> -->
+    <!--     <field name="priority">36</field> -->
+    <!--     <field name="inherit_id" -->
+    <!--         ref="delivery_rules.delivery_rules_view_partner_address_form_inherit" /> -->
+    <!--     <field name="arch" type="xml"> -->
+    <!--         <xpath expr="//group[@name='delivery_settings']" position="attributes"> -->
+    <!--             <attribute name="invisible"> -->
+    <!--                 (not is_customer) and (not is_branch) -->
+    <!--             </attribute> -->
+    <!--         </xpath> -->
+    <!--     </field> -->
+    <!-- </record> -->
 
     <record model="ir.ui.view" id="partner_branches_res_partner_kanban_view">
         <field name="name">partner.branches.res.partner.kanban.view</field>
