@@ -1,6 +1,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
+
 class ProductSupplierInfo(models.Model):
     _inherit = "product.supplierinfo"
 
@@ -32,7 +33,7 @@ class ProductSupplierInfo(models.Model):
                 if main_supplier_count > 0:
                     raise ValidationError(
                         "Solo un proveedor principal por producto")
-                
+
     @api.onchange('supplier_retention')
     def _check_retention(self):
         for record in self:
