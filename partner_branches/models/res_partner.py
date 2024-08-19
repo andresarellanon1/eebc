@@ -29,7 +29,6 @@ class ResPartner(models.Model):
                 partner.is_branch = False
                 partner.branch_name = False
                 partner.branch_number = False
-                partner.branch_tax = False
 
             if not partner.parent_id and partner.branch_id:
                 partner.branch_id = False
@@ -67,4 +66,3 @@ class ResPartner(models.Model):
             elif not partner.is_branch:
                 partner.branch_name = False
                 partner.branch_number = False
-                partner.branch_tax = False
