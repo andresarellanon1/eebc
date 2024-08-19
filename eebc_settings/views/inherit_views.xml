@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="eebc_res_config_settings_purchase_form_view">
+        <field name="name">eebc.res.config.settings.purchase.form.view</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase" />
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='po_order_approval']" position="before">
+                <setting id="setting_enable_purchase_location_reference"
+                    help="Agrega el prefijo a los folios de compra de acuerdo a ubicación en el tipo de compra.">
+                    <field name="enable_purchase_location_reference" />
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
