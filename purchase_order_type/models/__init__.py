@@ -1,1 +1,1 @@
-from . import purchase_order_type, purchase_order, stock_picking
+from . import purchase_order_type, purchase_order
