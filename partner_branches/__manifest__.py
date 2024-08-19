@@ -1,6 +1,6 @@
 {
     "name": "Partner Branches",
-    "version": "17.0.1.21",
+    "version": "17.0.1.22",
     "depends": [
         "stock",
         "partner_customer",
@@ -12,7 +12,7 @@
         Contactos como sucursales.
     """,
     "data": [
-        "views/res_partner_views.xml"
+        "views/res_partner.xml"
     ],
     "license": "LGPL-3",
 }
