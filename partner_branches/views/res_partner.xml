@@ -16,11 +16,11 @@
                 <field name="branch_id" invisible="is_branch or is_company" />
             </xpath>
 
-            <xpath expr="//field[@name='customer_delivery_zone']" position="attributes">
-                <attribute name="invisible">
-                    (not is_customer) and (not is_branch)
-                </attribute>
-            </xpath>
+            <!-- <xpath expr="//field[@name='customer_delivery_zone']" position="attributes"> -->
+            <!--     <attribute name="invisible"> -->
+            <!--         (not is_customer) and (not is_branch) -->
+            <!--     </attribute> -->
+            <!-- </xpath> -->
 
             <xpath expr="//field[@name='customer_number_reference']" position="attributes">
                 <attribute name="invisible">
@@ -48,8 +48,6 @@
                 <field name="branch_name" invisible="not is_branch" />
                 <field name="branch_number" invisible="not is_branch" />
                 <field name="branch_tax" invisible="not is_branch" />
-                <field name="customer_delivery_zone"
-                    invisible="not is_branch and (type == 'contact')" />
             </xpath>
 
         </field>
