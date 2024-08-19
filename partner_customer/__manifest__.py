@@ -20,7 +20,8 @@
         Este modulo conforma las configuraciones de los clientes.
     """,
     "data": [
-        "views/res_partner.xml"
+        "views/res_partner.xml",
+        "views/sale_order_views.xml"
     ],
     "application": False,
     "installable": True,
