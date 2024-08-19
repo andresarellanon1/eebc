@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//setting[@id='po_order_approval']" position="before">
                 <setting id="setting_enable_purchase_location_reference"
-                    help="Agrega el prefijo a los folios de compra de acuerdo a ubicación en el tipo de compra.">
+                    help="(En desarrollo) Agrega el prefijo a los folios de compra de acuerdo a ubicación en el tipo de compra.">
                     <field name="enable_purchase_location_reference" />
                 </setting>
             </xpath>
