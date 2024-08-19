@@ -12,6 +12,6 @@ class PurchaseOrder(models.Model):
         res = super(PurchaseOrder, self)._prepare_picking()
 
         if self.purchase_order_type_id:
-            res['location_id'] = self.purchase_order_type_id.location_id
-            
+            res['location_id'] = self.purchase_order_type_id.location_id.id
+
         return res
