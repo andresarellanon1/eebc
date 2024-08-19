@@ -28,9 +28,9 @@
                 </attribute>
             </xpath>
 
-            <xpath expr="//field[@name='payment_term_id']" position="before">
+            <!--<xpath expr="//field[@name='payment_term_id']" position="before">
                 <field name="urgency_type" readonly="state in ('sale', 'cancel')" />
-            </xpath>
+            </xpath>-->
 
             <!--<xpath expr="//field[@name='partner_id']" position="before">
                 <field name="customer_reference" />
