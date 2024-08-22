@@ -8,7 +8,7 @@ const {Component} = owl;
 class PaymentAmountPopOver extends Component {}
 PaymentAmountPopOver.template = "PaymentAmountPopOver";
 
-patch(AccountPaymentField.prototype, "account_partial_outstanding_payment", {
+patch(AccountPaymentField.prototype, {
     async popoverPartialOutstanding(ev, id) {
         var self = this;
         _.each(this.props.value.content, function (k) {
