@@ -30,3 +30,13 @@ class ResPartner(models.Model):
                 # aquí se debería establecer la referencia de cliente actualizada para los hijos
                 # TODO: Averiguar si queremos o no queremos hacer eso... creo que si
                 continue
+
+    # Remove VAT validation.
+    # I couldn't find a way to add the flag to avoid VAT validation,
+    # and there is no reason to expect invalid vats.
+    # Anyways if theres an invalid vat it will just be or there was an user error of some sort
+    # The current odoo base vat validation checks as "invalid" several actual RFC (Vat MX) that are OK and up to date with the MX SAT
+
+    @api.constrains('vat', 'country_id')
+    def check_vat(self):
+        return
