@@ -9,4 +9,4 @@ class PurchaseOrderType(models.Model):
 
     name = fields.Char('Nombre', required=True)
     location_id = fields.Many2one('stock.location', string='Ubicación', required=True)
-    sequence_id = fields.Many2one('ir.sequence', string='Secuencia', required=True)
+    sequence_id = fields.Many2one('ir.sequence', string='Secuencia')
