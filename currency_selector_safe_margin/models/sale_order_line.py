@@ -197,14 +197,15 @@ class SaleOrderLine(models.Model):
                              or if no price list is found for the customer-selected price list.
 
         """
-        def _get_pricelist(product_template, name, currency):
-            return self.env["product.pricelist.line"].search(
-                [
-                    ("product_templ_id", "=", product_template),
-                    ("name", "ilike", name),
-                    ("currency_id", "=", currency),
-                ],
-                limit=1)
+        def _get_pricelist(product_template, pricelist_id, currency):
+                return self.env["product.pricelist.line"].search(
+                    [
+                        ("product_tmpl_id", "=", product_template),
+                        ("pricelist_id", "=", pricelist_id),
+                        ("currency_id", "=", currency),
+                    ],
+                    limit=1
+                )
 
         for line in self:
             if not line.product_template_id:
@@ -221,13 +222,13 @@ class SaleOrderLine(models.Model):
             #customer_selected_pricelist = line.order_id.partner_id.property_product_pricelist
             #product_pricelist_id = False
 
-            default_pricelist_id = self.env.user.company_id.default_product_pricelist_id.name
-            logger.warning(f'Lista de precio global {self.env.user.company_id.default_product_pricelist_id.name}')
-            #default_pricelist_id = int(default_pricelist_id) 
-            if default_pricelist_id else False
-            default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id) if default_pricelist_id else False
-
+            default_pricelist_id = self.env.user.company_id.default_product_pricelist_id.id
+            logger.warning(f'ID de lista de precio global: {default_pricelist_id}')
+            default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
             logger.warning(f'Lista de precio: {default_product_pricelist_id}')
+            default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id) if default_pricelist_id else False
+             
+            logger.warning(f'Lista de precio predeterminada {default_product_pricelist_id.name}')
 
             priority_customer_selected_pricelist = line.order_id.partner_id.priority_pricelist_id
             customer_selected_pricelist = line.order_id.partner_id.property_product_pricelist
