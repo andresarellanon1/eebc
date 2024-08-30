@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="price_list_customer_res_partner_form_view">
+        <field name="name">price.list.customer.res.partner.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="product.view_partner_property_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_product_pricelist']" position="after">
+                <field name="priority_pricelist_id"
+                    domain="[('currency_id', '=', sales_currency_id), ('is_special', '=', True)]"
+                />
+                <field name="sales_currency_id" />
+            </xpath>
+            <xpath expr="//field[@name='property_product_pricelist']" position="attributes">
+                <attribute name="domain">
+                    [('currency_id', '=', sales_currency_id), ('is_special', '=', False)]
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
