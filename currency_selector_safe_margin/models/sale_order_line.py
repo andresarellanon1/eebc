@@ -223,7 +223,7 @@ class SaleOrderLine(models.Model):
 
             default_pricelist_id = self.env.user.company_id.default_product_pricelist_id.id
             logger.warning(f'Lista de precio global {self.env.user.company_id.default_product_pricelist_id.name}')
-            default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
+            #default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
             default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id) if default_pricelist_id else False
 
             logger.warning(f'Lista de precio: {default_product_pricelist_id}')
