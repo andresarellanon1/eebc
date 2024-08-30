@@ -197,11 +197,11 @@ class SaleOrderLine(models.Model):
                              or if no price list is found for the customer-selected price list.
 
         """
-        def _get_pricelist(product_template, name, currency):
+        def _get_pricelist(product_template, pricelist_id, currency):
             return self.env["product.pricelist.line"].search(
                 [
                     ("product_templ_id", "=", product_template),
-                    ("name", "ilike", name),
+                    ("pricelist_id", "=", pricelist_id),
                     ("currency_id", "=", currency),
                 ],
                 limit=1)
