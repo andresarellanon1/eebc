@@ -216,16 +216,16 @@ class SaleOrderLine(models.Model):
             # TODO: Instead of hardcoding 'Nivel 1%' and doing a search, set up the default pricelist system-wide with a setting in settings > Sales OR settings > Stock
             # I don't do it cuz it's not a requirement to change the default system-wide pricelist by an user but that is the correct approach
 
-            default_product_pricelist_id = _get_pricelist(line.product_template_id.id, "Nivel 1%", line.order_id.locked_currency_id.id)
-            priority_customer_selected_pricelist = line.order_id.partner_id.priority_pricelist_id
-            customer_selected_pricelist = line.order_id.partner_id.property_product_pricelist
-            product_pricelist_id = False
-
-            #default_pricelist = self.env['ir.config_parameter'].sudo().get_param('default_product_pricelist_id')
-            #default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist, line.order_id.locked_currency_id.id) if default_pricelist else False
-            
+            #default_product_pricelist_id = _get_pricelist(line.product_template_id.id, "Nivel 1%", line.order_id.locked_currency_id.id)
             #priority_customer_selected_pricelist = line.order_id.partner_id.priority_pricelist_id
             #customer_selected_pricelist = line.order_id.partner_id.property_product_pricelist
+            #product_pricelist_id = False
+
+            default_pricelist = self.env['ir.config_parameter'].sudo().get_param('default_product_pricelist_id')
+            default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist, line.order_id.locked_currency_id.id) if default_pricelist else False
+            
+            priority_customer_selected_pricelist = line.order_id.partner_id.priority_pricelist_id
+            customer_selected_pricelist = line.order_id.partner_id.property_product_pricelist
 
             if (not default_product_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
