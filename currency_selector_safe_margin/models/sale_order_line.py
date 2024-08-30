@@ -222,9 +222,9 @@ class SaleOrderLine(models.Model):
             #product_pricelist_id = False
 
             default_pricelist_id = self.env['ir.config_parameter'].sudo().get_param('default_product_pricelist_id')
-            logger.warning(f'Lista de precio global {default_pricelist}')
+            logger.warning(f'Lista de precio global {default_pricelist_id}')
             default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
-            logger.warning(f'Lista de precio global {default_pricelist}')
+            logger.warning(f'Lista de precio global {default_pricelist_id}')
             default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id) if default_pricelist else False
             
             
