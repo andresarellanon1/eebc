@@ -225,7 +225,7 @@ class SaleOrderLine(models.Model):
             logger.warning(f'Lista de precio global {default_pricelist_id}')
             default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
             logger.warning(f'Lista de precio global {default_pricelist_id}')
-            default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id) if default_pricelist else False
+            default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id) if default_pricelist_id else False
             
             
             logger.warning(f'Lista de precio predeterminada {default_product_pricelist_id}')
