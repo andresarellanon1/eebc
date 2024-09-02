@@ -1,5 +1,5 @@
 {
-    "name": "Morvil mail composer",
+    "name": "Mail composer",
     "version": "17.0.0.10",
     "depends": ['account','mail','sale'],
     "author": "Quadro Soluciones",
