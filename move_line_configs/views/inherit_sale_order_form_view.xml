@@ -5,8 +5,8 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_uom_qty']" position="before">
-                <field name="complete_description" editable="True"/>
+            <xpath expr="//tree//field[@name='name']" position="after">
+                <field name="complete_description" widget="section_and_note_text"/>
             </xpath>
         </field>
     </record>
