@@ -228,7 +228,7 @@ class SaleOrderLine(models.Model):
             logger.warning(f'Id compañia {actual_company}')
             logger.warning(f'Nombre de la compañia {self.env.user.company_id.name}')
             default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
-            default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id, self.env.user.company_id.id) if default_pricelist_id else False
+            default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id, actual_company) if default_pricelist_id else False
 
             priority_customer_selected_pricelist = line.order_id.partner_id.priority_pricelist_id
             customer_selected_pricelist = line.order_id.partner_id.property_product_pricelist
