@@ -134,6 +134,7 @@ class SaleOrderLine(models.Model):
                     ("product_templ_id", "=", line.product_template_id.id),
                     ("name", "=", line.product_pricelist_id.name),
                     ("currency_id", "=", line.order_id.locked_currency_id.id),
+                    ("pricelist_id.company_id.id", self.env.user.company_id.id)
                 ],
                 limit=1
             )
@@ -197,12 +198,13 @@ class SaleOrderLine(models.Model):
                              or if no price list is found for the customer-selected price list.
 
         """
-        def _get_pricelist(product_template, pricelist_id, currency):
+        def _get_pricelist(product_template, pricelist_id, currency, company):
             return self.env["product.pricelist.line"].search(
                 [
                     ("product_templ_id", "=", product_template),
                     ("pricelist_id", "=", pricelist_id),
                     ("currency_id", "=", currency),
+                    ("pricelist_id.company_id.id", company)
                 ],
                 limit=1)
 
@@ -224,9 +226,9 @@ class SaleOrderLine(models.Model):
             default_pricelist_id = self.env.user.company_id.default_product_pricelist_id.id
             actual_company = self.env.user.company_id.id
             logger.warning(f'Id compañia {actual_company}')
-            logger.warning(f'Nombre de la compañia {self.env.user.company_id.child_ids}')
+            logger.warning(f'Nombre de la compañia {self.env.user.company_id.name}')
             default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
-            default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id) if default_pricelist_id else False
+            default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id, self.env.user.company_id.id) if default_pricelist_id else False
 
             priority_customer_selected_pricelist = line.order_id.partner_id.priority_pricelist_id
             customer_selected_pricelist = line.order_id.partner_id.property_product_pricelist
