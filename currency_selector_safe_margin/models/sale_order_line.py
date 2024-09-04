@@ -134,7 +134,7 @@ class SaleOrderLine(models.Model):
                     ("product_templ_id", "=", line.product_template_id.id),
                     ("name", "=", line.product_pricelist_id.name),
                     ("currency_id", "=", line.order_id.locked_currency_id.id),
-                    ("pricelist_id.company_id.id", self.env.user.company_id.id)
+                    ("pricelist_id.company_id.id", "=", self.env.user.company_id.id)
                 ],
                 limit=1
             )
@@ -204,7 +204,7 @@ class SaleOrderLine(models.Model):
                     ("product_templ_id", "=", product_template),
                     ("pricelist_id", "=", pricelist_id),
                     ("currency_id", "=", currency),
-                    ("pricelist_id.company_id.id", company)
+                    ("pricelist_id.company_id.id", "=", company)
                 ],
                 limit=1)
 
