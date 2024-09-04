@@ -204,7 +204,7 @@ class SaleOrderLine(models.Model):
                     ("product_templ_id", "=", product_template),
                     ("pricelist_id", "=", pricelist_id),
                     ("currency_id", "=", currency),
-                    ("pricelist_id.company_id.id", "=", company)
+                    ("pricelist_id.location.id", "=", company)
                 ],
                 limit=1)
 
