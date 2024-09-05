@@ -119,7 +119,7 @@ class SaleOrderLine(models.Model):
             if line.product_pricelist_id.uom_id.id != line.product_uom.id:
                 line._compute_line_uom_now()
 
-        def find_equivalent_pricelist(self, line):
+        def _find_equivalent_pricelist(line):
             """
             Finds equivalent pricelist for the order line's product template with the correct currency.
 
@@ -129,44 +129,15 @@ class SaleOrderLine(models.Model):
             Returns:
                 The equivalent product pricelist line in the order currency.
             """
-            company_pricelist = self.env["product.pricelist.line"].search(
+            return self.env["product.pricelist.line"].search(
                 [
                     ("product_templ_id", "=", line.product_template_id.id),
-                    ("pricelist_id.name", "=", line.product_pricelist_id.name),
+                    ("name", "=", line.product_pricelist_id.name),
                     ("currency_id", "=", line.order_id.locked_currency_id.id),
-                    ("pricelist_id.company_id", "=", self.env.user.company_id.id),
+                    ("pricelist_id.location", "=", self.env.user.company_id.id)
                 ],
                 limit=1
             )
-    
-            if company_pricelist:
-                return company_pricelist
-
-            customer_pricelist = self.env["product.pricelist.line"].search(
-                [
-                    ("product_templ_id", "=", line.product_template_id.id),
-                    ("pricelist_id", "=", line.order_id.partner_id.property_product_pricelist.id),
-                    ("currency_id", "=", line.order_id.locked_currency_id.id),
-                ],
-                limit=1
-            )
-            
-            if customer_pricelist:
-                return customer_pricelist
-
-            default_pricelist = self.env["product.pricelist.line"].search(
-                [
-                    ("product_templ_id", "=", line.product_template_id.id),
-                    ("pricelist_id", "=", self.env.user.company_id.default_product_pricelist_id.id),
-                    ("currency_id", "=", line.order_id.locked_currency_id.id),
-                ],
-                limit=1
-            )
-
-            if default_pricelist:
-                return default_pricelist
-
-            raise ValidationError(f"No se encontró una lista de precios para el producto '{line.product_template_id.name}' en la moneda '{line.order_id.currency_id.name}'.")
 
         def _compute_price_unit(unit_price, safe_margin, source_currency, target_currency):
             """
@@ -242,7 +213,7 @@ class SaleOrderLine(models.Model):
                 line.product_pricelist_id = False
                 continue
 
-            product_pricelist_id = self.find_equivalent_pricelist(line)
+            product_pricelist_id = False
 
             # TODO: Instead of hardcoding 'Nivel 1%' and doing a search, set up the default pricelist system-wide with a setting in settings > Sales OR settings > Stock
             # I don't do it cuz it's not a requirement to change the default system-wide pricelist by an user but that is the correct approach
