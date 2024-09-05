@@ -119,7 +119,7 @@ class SaleOrderLine(models.Model):
             if line.product_pricelist_id.uom_id.id != line.product_uom.id:
                 line._compute_line_uom_now()
 
-        def _find_equivalent_pricelist(line):
+        def _find_equivalent_pricelist(self, line):
             """
             Finds equivalent pricelist for the order line's product template with the correct currency.
 
