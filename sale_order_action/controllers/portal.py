@@ -7,9 +7,10 @@ from odoo.fields import Command
 from odoo.http import request
 from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.payment.controllers import portal as payment_portal
-# from odoo.addons.sale.controllers.portal import CustomerPortal
+from odoo.addons.sale.controllers.portal import CustomerPortal
 
-from odoo.addons.portal.controllers.portal import CustomerPortal
+# from odoo.addons.portal.controllers.portal import CustomerPortal
+# from odoo.addons.portal.controllers.portal import CustomerPortal
 
 
 
