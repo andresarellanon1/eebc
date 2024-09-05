@@ -119,7 +119,7 @@ class SaleOrderLine(models.Model):
             if line.product_pricelist_id.uom_id.id != line.product_uom.id:
                 line._compute_line_uom_now()
 
-        def _find_equivalent_pricelist(self, line):
+        def find_equivalent_pricelist(self, line):
             """
             Finds equivalent pricelist for the order line's product template with the correct currency.
 
@@ -242,7 +242,7 @@ class SaleOrderLine(models.Model):
                 line.product_pricelist_id = False
                 continue
 
-            product_pricelist_id = self._find_equivalent_pricelist(line)
+            product_pricelist_id = self.find_equivalent_pricelist(line)
 
             # TODO: Instead of hardcoding 'Nivel 1%' and doing a search, set up the default pricelist system-wide with a setting in settings > Sales OR settings > Stock
             # I don't do it cuz it's not a requirement to change the default system-wide pricelist by an user but that is the correct approach
