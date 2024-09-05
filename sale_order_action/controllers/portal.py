@@ -8,7 +8,7 @@ from odoo.http import request
 from odoo.addons.portal.controllers.mail import _message_post_helper
 import logging
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 from odoo.addons.sale.controllers.portal import CustomerPortal as CustomerPortalInherit
 
@@ -17,7 +17,7 @@ class CustomerPortalInherited(CustomerPortalInherit):
     @http.route(['/my/orders/<int:order_id>/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, order_id, access_token=None, name=None, signature=None):
         
-        logger.warning('ENTRAMOS A NUESTRO portal_quote_accept HEREDADOO')
+        _logger.warning('ENTRAMOS A NUESTRO portal_quote_accept HEREDADOO')
         # get from query string if not on json param
         access_token = access_token or request.httprequest.args.get('access_token')
         try:
