@@ -134,7 +134,7 @@ class SaleOrderLine(models.Model):
                     ("product_templ_id", "=", line.product_template_id.id),
                     ("name", "=", line.product_pricelist_id.name),
                     ("currency_id", "=", line.order_id.locked_currency_id.id),
-                    ("pricelist_id.location", "=", self.env.user.company_id.id)
+                    ("pricelist_id.location", "=", self.env.company_id.id)
                 ],
                 limit=1
             )
@@ -224,9 +224,9 @@ class SaleOrderLine(models.Model):
             #product_pricelist_id = False
 
             default_pricelist_id = self.env.user.company_id.default_product_pricelist_id.id
-            actual_company = self.env.user.company_id.id
+            actual_company = self.env.company_id.id
             logger.warning(f'Id compañia {actual_company}')
-            logger.warning(f'Nombre de la compañia {self.env.user.company_id.name}')
+            logger.warning(f'Nombre de la compañia {self.env.company_id.name}')
             default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
             default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id, actual_company) if default_pricelist_id else False
 
