@@ -11,6 +11,7 @@ class ResPartner(models.Model):
     is_customer = fields.Boolean(default=False, string="Es cliente")
     is_government = fields.Boolean(default=False, string="Es del gobierno")
 
+
     commercial_name = fields.Char(string="Nombre comercial")
 
     customer_number_reference = fields.Char(string="Referencia del cliente.")
