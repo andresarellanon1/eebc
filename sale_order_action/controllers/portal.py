@@ -20,7 +20,7 @@ class CustomerPortalInherited(CustomerPortal):
     def portal_quote_accept(self, order_id, access_token=None, name=None, signature=None):
         # Aquí puedes agregar tu lógica personalizada antes o después
         # del código original.
-
+        _logger.warning('AQUI ANDAMOS Y NO NOS VAMOS')
         # Llamar al método original si es necesario
         result = super(CustomerPortalInherited, self).portal_quote_accept(
             order_id, access_token, name, signature
