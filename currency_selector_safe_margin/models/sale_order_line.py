@@ -242,7 +242,7 @@ class SaleOrderLine(models.Model):
                 line.product_pricelist_id = False
                 continue
 
-            product_pricelist_id = _find_equivalent_pricelist(line)
+            product_pricelist_id = self._find_equivalent_pricelist(line)
 
             # TODO: Instead of hardcoding 'Nivel 1%' and doing a search, set up the default pricelist system-wide with a setting in settings > Sales OR settings > Stock
             # I don't do it cuz it's not a requirement to change the default system-wide pricelist by an user but that is the correct approach
