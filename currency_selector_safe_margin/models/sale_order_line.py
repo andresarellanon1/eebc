@@ -241,7 +241,7 @@ class SaleOrderLine(models.Model):
                 raise ValidationError(msg)
 
             if priority_customer_selected_pricelist and (not product_pricelist_id):
-                product_pricelist_id = _get_pricelist(line.product_template_id.id, priority_customer_selected_pricelist.name, priority_customer_selected_pricelist.currency_id.id)
+                product_pricelist_id = _get_pricelist(line.product_template_id.id, priority_customer_selected_pricelist.name, priority_customer_selected_pricelist.currency_id.id, actual_company)
 
             if customer_selected_pricelist and (not product_pricelist_id):
                 # Search for the price list line that matches the customer-selected price list
