@@ -61,8 +61,8 @@ class CustomerPortalInherited(CustomerPortal):
         except (TypeError, binascii.Error) as e:
             return {'error': _('Invalid signature data.')}
 
-        if not order_sudo._has_to_be_paid():
-            order_sudo.with_context(send_email=True).action_confirm()
+        # if not order_sudo._has_to_be_paid():
+        #     order_sudo.with_context(send_email=True).action_confirm()
 
         pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
 
