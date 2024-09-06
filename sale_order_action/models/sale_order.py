@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
         for order in quotations:
             order.action_cancel()
 
-
+    @api.one
     @api.depends('partner_id')
     def _compute_user_id(self):
         _logger.warning('Es nuestro compute')
