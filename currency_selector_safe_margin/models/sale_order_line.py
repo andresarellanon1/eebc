@@ -121,13 +121,15 @@ class SaleOrderLine(models.Model):
 
         def _find_equivalent_pricelist(line):
             """
-            Finds equivalent pricelist for the order line's product template with the correct currency.
+            Finds the equivalent pricelist for the order line's product template with the correct currency,
+            and also checks if the pricelist location matches the current company where the user is logged in.
 
             Args:
-                line: The order line.
+                line: The sale order line for which the pricelist needs to be found.
 
             Returns:
-                The equivalent product pricelist line in the order currency.
+                The equivalent product pricelist line based on the product template, 
+                pricelist name, order currency, and the company location.
             """
             return self.env["product.pricelist.line"].search(
                 [
@@ -184,18 +186,20 @@ class SaleOrderLine(models.Model):
         """
         Computes the price list for each order line based on default or customer-selected price lists.
 
-        This method searches for the appropriate price list for each product and currency combination.
-        If a customer-selected price list exists, it will prioritize it; otherwise, it will default to
-        the 'Nivel 1' price list. It then assigns the found price list to the order line.
+        This method no longer hardcodes the default price list; instead, it dynamically retrieves the default 
+        pricelist from the user's company settings. Additionally, it ensures that the search includes the 
+        company (location) where the user is currently logged in.
 
-        When no product is selected, it empties the price list field and exits.
-
-        This method does not enforce the currency of the parent order.
-        At the end, it calls the method that will switch the selected price list to the equivalent in the correct currency.
+        For each order line:
+        - Searches for the appropriate price list based on product, currency, and company.
+        - Prioritizes the customer's selected price list if it exists, followed by the priority price list, 
+        and finally, the default price list.
+        - If no product is selected, the method clears the price list field and exits.
+        - If no price list is found for the product and currency, it raises a ValidationError.
 
         Raises:
-            ValidationError: If no default price list is found for the product and currency combination,
-                             or if no price list is found for the customer-selected price list.
+            ValidationError: If no appropriate price list is found for the product and currency combination
+                            or if the customer-selected or default price list is not available.
 
         """
         def _get_pricelist(product_template, pricelist_id, currency, company):
@@ -215,18 +219,8 @@ class SaleOrderLine(models.Model):
 
             product_pricelist_id = False
 
-            # TODO: Instead of hardcoding 'Nivel 1%' and doing a search, set up the default pricelist system-wide with a setting in settings > Sales OR settings > Stock
-            # I don't do it cuz it's not a requirement to change the default system-wide pricelist by an user but that is the correct approach
-
-            #default_product_pricelist_id = _get_pricelist(line.product_template_id.id, "Nivel 1%", line.order_id.locked_currency_id.id)
-            #priority_customer_selected_pricelist = line.order_id.partner_id.priority_pricelist_id
-            #customer_selected_pricelist = line.order_id.partner_id.property_product_pricelist
-            #product_pricelist_id = False
-
             default_pricelist_id = self.env.user.company_id.default_product_pricelist_id.id
             actual_company = self.env.company.id
-            logger.warning(f'Id compañia {actual_company}')
-            logger.warning(f'Nombre de la compañia {self.env.company.name}')
             default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
             default_product_pricelist_id = _get_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id, actual_company) if default_pricelist_id else False
 
