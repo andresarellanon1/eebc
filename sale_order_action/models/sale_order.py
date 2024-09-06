@@ -29,6 +29,5 @@ class SaleOrder(models.Model):
     def _compute_user_id(self):
         _logger.warning('Es nuestro compute')
         for order in self:
-            # Aquí puedes cambiar la lógica a tu gusto
-            if order.partner_id and not (order._origin.id and order.user_id):
-                order.user_id = order.partner_id.user_id or self.env.user  # Ejemplo de nueva lógica
+            # Asigna siempre al usuario logueado como el user_id
+            order.user_id = self.env.user
