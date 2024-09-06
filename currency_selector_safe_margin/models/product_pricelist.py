@@ -9,8 +9,8 @@ class ProductPricelist(models.Model):
     @api.onchange('company_id')
     def _location_onchange(self):
         if self.company_id:
-        return {
-            'domain': {
-                'location': [('parent_id', '=', self.company_id.id)]
-            }
+            return {
+                'domain': {
+                    'location': [('parent_id', '=', self.company_id.id)]
+                }
         }
