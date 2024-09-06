@@ -9,32 +9,13 @@ from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers.portal import CustomerPortal
 
-# from odoo.addons.portal.controllers.portal import CustomerPortal
-# from odoo.addons.portal.controllers.portal import CustomerPortal
-
-
-
 import logging
 
 _logger = logging.getLogger(__name__)
 
 
 class CustomerPortalInherited(CustomerPortal):
-    # @http.route(['/my/orders/<int:order_id>/accept'], type='json', auth="public", website=True)
-    # def portal_quote_accept(self, order_id, access_token=None, name=None, signature=None):
-    #     # Aquí puedes agregar tu lógica personalizada antes o después
-    #     # del código original.
-    #     _logger.warning('AQUI ANDAMOS Y NO NOS VAMOS')
-    #     # Llamar al método original si es necesario
-    #     result = super(CustomerPortalInherited, self).portal_quote_accept(
-    #         order_id, access_token, name, signature
-    #     )
 
-    #     # Modificar el comportamiento después de la llamada original si lo necesitas
-    #     # Por ejemplo, agregar una nueva acción o registro adicional
-
-    #     return result
-    
     @http.route(['/my/orders/<int:order_id>/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, order_id, access_token=None, name=None, signature=None):
         
