@@ -236,7 +236,7 @@ class SaleOrderLine(models.Model):
 
             priority_customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.priority_pricelist_id, line.order_id.locked_currency_id.id, actual_company) if line.order_id.partner_id.priority_pricelist_id else False
 
-            customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.property_product_pricelist, line.order_id.locked_currency_id.id, actual_company) if customer_list else False
+            customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.property_product_pricelist, line.order_id.locked_currency_id.id, actual_company) if line.order_id.partner_id.property_product_pricelist else False
 
             if (not default_product_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
