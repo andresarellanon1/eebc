@@ -12,7 +12,7 @@
     "version": "17.0.1.22",
     "website": "https://quadrosoluciones.com",
     "author": "Quadro Soluciones",
-    "depends": ["stock", "purchase_stock", "purchase", "stock_landed_costs"],
+    "depends": ["stock", "purchase_stock", "purchase", "stock_landed_costs", "l10n_mx_edi_landing"],
     "data": [
         "views/purchase_order_views.xml",
         "views/stock_landed_cost_views.xml",
