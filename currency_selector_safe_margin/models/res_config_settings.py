@@ -18,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
         string='Default Product Pricelist',
         default_model = 'res.config.settings',
         default=lambda self: self.env['product.pricelist'].browse(1),
-        related='company.default_product_pricelist_id',
+        related='company_id.default_product_pricelist_id',
         readonly=False,
         help="This pricelist will be used as the default system-wide."
     )
@@ -32,6 +32,6 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         res.update(
-            default_product_pricelist_id=self.env.company.default_product_pricelist_id.id
+            default_product_pricelist_id=self.env.user.company_id.default_product_pricelist_id.id
         )
         return res
