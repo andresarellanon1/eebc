@@ -230,17 +230,13 @@ class SaleOrderLine(models.Model):
 
             default_pricelist_id = self.env.user.company_id.default_product_pricelist_id.id
             actual_company = self.env.company.id
-            product = line.product_template_id.id
-            currency = line.order_id.locked_currency_id.id
 
             default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
-            default_product_pricelist_id = _get_default_pricelist(product, default_pricelist_id, currency) if default_pricelist_id else False
+            default_product_pricelist_id = _get_default_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id) if default_pricelist_id else False
 
-            priority_list = line.order_id.partner_id.priority_pricelist_id
-            priority_customer_selected_pricelist = _get_pricelist(product, priority_list, currency, actual_company) if priority_list else False
+            priority_customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.priority_pricelist_id, line.order_id.locked_currency_id.id, actual_company) if line.order_id.partner_id.priority_pricelist_id else False
 
-            customer_list = line.order_id.partner_id.property_product_pricelist
-            customer_selected_pricelist = _get_pricelist(product, customer_list, currency, actual_company) if customer_list else False
+            customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.property_product_pricelist, line.order_id.locked_currency_id.id, actual_company) if customer_list else False
 
             if (not default_product_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
