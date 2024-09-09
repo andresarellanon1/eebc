@@ -234,9 +234,9 @@ class SaleOrderLine(models.Model):
             default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
             default_product_pricelist_id = _get_default_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id) if default_pricelist_id else False
 
-            priority_customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.priority_pricelist_id, line.order_id.locked_currency_id.id, actual_company) if line.order_id.partner_id.priority_pricelist_id else False
+            priority_customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.priority_pricelist_id.id, line.order_id.locked_currency_id.id, actual_company) if line.order_id.partner_id.priority_pricelist_id else False
 
-            customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.property_product_pricelist, line.order_id.locked_currency_id.id, actual_company) if line.order_id.partner_id.property_product_pricelist else False
+            customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.property_product_pricelist.id, line.order_id.locked_currency_id.id, actual_company) if line.order_id.partner_id.property_product_pricelist else False
 
             if (not default_product_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
