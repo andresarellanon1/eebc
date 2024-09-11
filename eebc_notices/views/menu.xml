@@ -3,9 +3,24 @@
 
     <menuitem id="notice_menu_root"
         name="Avisos"
-        web_icon="eebc_notices,static/description/avisos_icon.png"
+        web_icon="eebc_notices,static/description/avisos_icon.png
+        
+        sos_icon.png"
         active="False"
         sequence="30">
+
+         <menuitem id="notice_menu"
+            name="Avisos"
+            sequence="10">
+
+       
+            <menuitem id="menu_notices"
+                name="Avisos"
+                action="action_notices"
+                sequence="10"/>
+
+         
+        </menuitem>
 
         
     </menuitem>

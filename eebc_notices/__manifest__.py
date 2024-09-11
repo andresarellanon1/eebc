@@ -10,6 +10,8 @@
 
     """,
     "data": [
+        "views/menu.xml",
+        "views/notices_views.xml"
     ],
     "application": False,
     "installable": True,
