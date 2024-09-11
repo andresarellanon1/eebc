@@ -11,6 +11,8 @@
             <xpath expr="//tree//field[@name='name']" position="replace">
                 <field name="use_large_description" invisible="1"/>
                 <field name="name" widget="section_and_note_text" attrs="{'invisible': [('use_large_description', '=', True)]}"/>
+            </xpath>
+            <xpath expr="//tree//field[@name='product_uom_qty']" position="before">
                 <field name="complete_description" widget="section_and_note_text" attrs="{'invisible': [('use_large_description', '=', False)]}"/>
             </xpath>
         </field>
