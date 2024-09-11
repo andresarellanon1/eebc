@@ -8,7 +8,7 @@ class Notices(models.Model):
     order = fields.One2many(
         string='Orden de compra origen',
         comodel_name='purchase.order',
-        inverse_name='purchase_order_record_id',
+        inverse_name='purchase_order_notice_id',
     )
     
     supplier = fields.Char( string='Proveedor')
