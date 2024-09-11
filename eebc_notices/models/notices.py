@@ -5,11 +5,12 @@ class Notices(models.Model):
     _name= 'notices.notices'
 
     resource = fields.Float()
-    order = fields.Many2one(
+    order = fields.One2many(
         string='Orden de compra origen',
         comodel_name='purchase.order',
-        ondelete='restrict',
+        inverse_name='purchase_order_record_id',
     )
+    
     supplier = fields.Char( string='Proveedor')
     folio = fields.Char(string='Folio')
     create_date = fields.Date(
@@ -17,9 +18,10 @@ class Notices(models.Model):
         default=fields.Date.context_today,
     )
     
-    invoices = fields.Many2one(
+    invoices = fields.One2many(
         string='Facturas',
         comodel_name='account.move',
+        inverse_name='account_move_notice_id',
     )
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
