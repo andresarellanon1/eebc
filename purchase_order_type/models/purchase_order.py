@@ -8,6 +8,7 @@ class PurchaseOrder(models.Model):
 
     purchase_order_type_id = fields.Many2one('purchase.order.type', string='Tipo de orden de compra')
 
+
     def _prepare_picking(self):
         res = super(PurchaseOrder, self)._prepare_picking()
 
