@@ -5,3 +5,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     use_large_description = fields.Boolean(string="Usar descripción larga", default=False)
+
+    @api.onchange('use_large_description')
+    def _onchange_description(self):
+        order_line.use_large_description = use_large_description
