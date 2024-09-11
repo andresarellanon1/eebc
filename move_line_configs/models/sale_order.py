@@ -8,4 +8,4 @@ class SaleOrder(models.Model):
 
     @api.onchange('use_large_description')
     def _onchange_description(self):
-        order_line.use_large_description = self.use_large_description
+        self.order_line.use_large_description = self.use_large_description
