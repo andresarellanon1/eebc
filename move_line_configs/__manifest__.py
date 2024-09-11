@@ -1,6 +1,6 @@
 {
     "name": "Product Line Configs",
-    "version": "17.0.0.4",
+    "version": "17.0.0.5",
     "depends": ['account','sale'],
     "author": "Quadro Soluciones",
     "website": "https://quadrosoluciones.com/",
