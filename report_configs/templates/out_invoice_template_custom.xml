@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="out_invoice_template_custom">
+        <t t-foreach="docs" t-as="factura">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
+                        <div class="container">
+                            <div class="row">
+                                <div class="column">
+                                    <strong>NO. CLIENTE </strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>NOMBRE:</strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>R.F.C:</strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>DOMICILIO FISCAL:</strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>USO DEL CFDI:</strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>FORMA PAGO</strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>RÉGIMEN FISCAL:</strong>
+                                    <span t-field="property.expected_price"/>
+                                </div>
+                                <div class="column">
+                                    <strong>FECHA/HORA:</strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>NUM.PEDIDO:</strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>ORDEN COMPRA:</strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>METODO PAGO:</strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>VENDEDOR:</strong>
+                                    <span t-field="property.expected_price"/>
+                                    <strong>EXPORTACIÓN</strong>
+                                    <span t-field="property.expected_price"/>
+                                </div>
+                            </div>
+                        </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="offers" t-value="property.mapped('offer_ids')"/>
+                                    <tr t-foreach="offers" t-as="offer">
+                                        <td>
+                                            <span t-field="offer.price"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
