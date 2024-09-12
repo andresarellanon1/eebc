@@ -3,10 +3,12 @@
     'description': """
             Este modulo comprende las personalizaciones de los reportes de la compañia.
     """,
-    'version': '17.0.1.01',
+    'version': '17.0.0.01',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
-    'depends': [],
+    'depends': [
+                'account',
+               ],
     'data': [
         'templates/external_layout_invoice_custom.xml',
         'templates/out_invoice_template_custom.xml',
@@ -14,5 +16,6 @@
         'views/account_invoice_views.xml',
     ],
     "license": "LGPL-3",
-    'installable': True
+    'installable': True,
+    'application': False
 }
