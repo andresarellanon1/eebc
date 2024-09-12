@@ -1,64 +1,68 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <template id="out_invoice_template_custom">
-        <t t-foreach="docs" t-as="factura">
-            <t t-call="web.html_container">
-                <t t-call="web.external_layout">
-                    <div class="page">
-                        <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
-                        <div class="container">
-                            <div class="row">
-                                <div class="column">
-                                    <strong>NO. CLIENTE </strong>
-                                    <!--<span t-field="property.expected_price"/> !-->
-                                    <strong>NOMBRE:</strong>
-                                    
-                                    <strong>R.F.C:</strong>
-                                    
-                                    <strong>DOMICILIO FISCAL:</strong>
-                                    
-                                    <strong>USO DEL CFDI:</strong>
-                                    
-                                    <strong>FORMA PAGO</strong>
-                                    
-                                    <strong>RÉGIMEN FISCAL:</strong>
-                                    
-                                </div>
-                                <div class="column">
-                                    <strong>FECHA/HORA:</strong>
-                                    <!--<span t-field="property.expected_price"/> !-->
-                                    <strong>NUM.PEDIDO:</strong>
-                                    
-                                    <strong>ORDEN COMPRA:</strong>
-                                    
-                                    <strong>METODO PAGO:</strong>
-                                    
-                                    <strong>VENDEDOR:</strong>
-                                    
-                                    <strong>EXPORTACIÓN</strong>
-                                    
+    <data>
+        <template id="out_invoice_template_custom">
+            <t t-foreach="docs" t-as="factura">
+                <t t-call="web.html_container">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="column">
+                                        <strong>NO. CLIENTE </strong>
+                                        <!--<span t-field="property.expected_price"/> !-->
+                                        <strong>NOMBRE:</strong>
+                                        
+                                        <strong>R.F.C:</strong>
+                                        
+                                        <strong>DOMICILIO FISCAL:</strong>
+                                        
+                                        <strong>USO DEL CFDI:</strong>
+                                        
+                                        <strong>FORMA PAGO</strong>
+                                        
+                                        <strong>RÉGIMEN FISCAL:</strong>
+                                        
+                                    </div>
+                                    <div class="column">
+                                        <strong>FECHA/HORA:</strong>
+                                        <!--<span t-field="property.expected_price"/> !-->
+                                        <strong>NUM.PEDIDO:</strong>
+                                        
+                                        <strong>ORDEN COMPRA:</strong>
+                                        
+                                        <strong>METODO PAGO:</strong>
+                                        
+                                        <strong>VENDEDOR:</strong>
+                                        
+                                        <strong>EXPORTACIÓN</strong>
+                                        
+                                    </div>
                                 </div>
                             </div>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--<span t-field="property.expected_price"/>
+                                        <t t-set="offers" t-value="property.mapped('offer_ids')"/>
+                                        <tr t-foreach="offers" t-as="offer">
+                                            <td>
+                                                <span t-field="offer.price"/>
+                                            </td>
+                                        </tr>
+                                    !-->
+                                    </tbody>
+                                </table>
+                                
                         </div>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-set="offers" t-value="property.mapped('offer_ids')"/>
-                                    <tr t-foreach="offers" t-as="offer">
-                                        <td>
-                                            <span t-field="offer.price"/>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                    </div>
+                    </t>
                 </t>
             </t>
-        </t>
-    </template>
+        </template>
+    </data>
 </odoo>
