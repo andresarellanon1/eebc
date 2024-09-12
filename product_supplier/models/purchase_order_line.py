@@ -1,6 +1,6 @@
 from odoo import fields, models, api
 
-class SaleOrderLine(models.Model):
+class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     @api.onchange('order_id.partner_id')
