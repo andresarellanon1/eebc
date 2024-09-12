@@ -11,7 +11,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <strong>NO. CLIENTE </strong>
-                                        <!--<span t-field="property.expected_price"/> !-->
+                                        <!--<span t-field="property.expected_price"/> -->
                                         <strong>NOMBRE:</strong>
 
                                         <strong>R.F.C:</strong>
@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="col">
                                         <strong>FECHA/HORA:</strong>
-                                        <!--<span t-field="property.expected_price"/> !-->
+                                        <!--<span t-field="property.expected_price"/> -->
                                         <strong>NUM.PEDIDO:</strong>
 
                                         <strong>ORDEN COMPRA:</strong>
