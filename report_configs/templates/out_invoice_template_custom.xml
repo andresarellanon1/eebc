@@ -13,52 +13,51 @@
                                         <strong>NO. CLIENTE </strong>
                                         <!--<span t-field="property.expected_price"/> !-->
                                         <strong>NOMBRE:</strong>
-                                        
+
                                         <strong>R.F.C:</strong>
-                                        
+
                                         <strong>DOMICILIO FISCAL:</strong>
-                                        
+
                                         <strong>USO DEL CFDI:</strong>
-                                        
+
                                         <strong>FORMA PAGO</strong>
-                                        
+
                                         <strong>RÉGIMEN FISCAL:</strong>
-                                        
+
                                     </div>
                                     <div class="column">
                                         <strong>FECHA/HORA:</strong>
                                         <!--<span t-field="property.expected_price"/> !-->
                                         <strong>NUM.PEDIDO:</strong>
-                                        
+
                                         <strong>ORDEN COMPRA:</strong>
-                                        
+
                                         <strong>METODO PAGO:</strong>
-                                        
+
                                         <strong>VENDEDOR:</strong>
-                                        
+
                                         <strong>EXPORTACIÓN</strong>
-                                        
+
                                     </div>
                                 </div>
                             </div>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Price</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    <!--<span t-field="property.expected_price"/>
-                                        <t t-set="offers" t-value="property.mapped('offer_ids')"/>
-                                        <tr t-foreach="offers" t-as="offer">
-                                            <td>
-                                                <span t-field="offer.price"/>
-                                            </td>
-                                        </tr>
-                                    !-->
-                                    </tbody>
-                                </table>
-                                
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <!--<span t-field="property.expected_price"/>
+                                    <t t-set="offers" t-value="property.mapped('offer_ids')"/>
+                                    <tr t-foreach="offers" t-as="offer">
+                                        <td>
+                                            <span t-field="offer.price"/>
+                                        </td>
+                                    </tr>
+                                !-->
+                                </tbody>
+                            </table>
                         </div>
                     </t>
                 </t>
