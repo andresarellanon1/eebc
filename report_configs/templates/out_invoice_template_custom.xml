@@ -10,33 +10,33 @@
                             <div class="row">
                                 <div class="column">
                                     <strong>NO. CLIENTE </strong>
-                                    <span t-field="property.expected_price"/>
+                                    <!--<span t-field="property.expected_price"/> !-->
                                     <strong>NOMBRE:</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                     <strong>R.F.C:</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                     <strong>DOMICILIO FISCAL:</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                     <strong>USO DEL CFDI:</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                     <strong>FORMA PAGO</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                     <strong>RÉGIMEN FISCAL:</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                 </div>
                                 <div class="column">
                                     <strong>FECHA/HORA:</strong>
-                                    <span t-field="property.expected_price"/>
+                                    <!--<span t-field="property.expected_price"/> !-->
                                     <strong>NUM.PEDIDO:</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                     <strong>ORDEN COMPRA:</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                     <strong>METODO PAGO:</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                     <strong>VENDEDOR:</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                     <strong>EXPORTACIÓN</strong>
-                                    <span t-field="property.expected_price"/>
+                                    
                                 </div>
                             </div>
                         </div>
