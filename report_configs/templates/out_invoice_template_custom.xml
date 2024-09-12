@@ -37,9 +37,43 @@
                                         <strong>VENDEDOR:</strong>
 
                                         <strong>EXPORTACIÓN</strong>
+
                                     </div>
                                 </div>
                             </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No. CLAVE</th>
+                                        <th>CANTIDAD</th>
+                                        <th>UNIDAD</th>
+                                        <th>DESCRIPCION</th>
+                                        <th>OBJ.IMP</th>
+                                        <th>PRECIO</th>
+                                        <th>IMPORTE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="offers" t-value="property.mapped('offers_id')"/>
+                                    <tr t-foreach="offers" t-as="offer">
+                                        <td>
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </t>
                 </t>
