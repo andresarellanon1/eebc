@@ -1,6 +1,6 @@
 {
     'name': "Proveedor de productos",
-    'version': '17.0.1.01',
+    'version': '17.0.1.02',
     'depends': ['stock', 'contacts', 'product', 'purchase'],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',

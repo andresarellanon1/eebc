@@ -14,3 +14,4 @@ class ProductPricelist(models.Model):
                     'location': [('parent_id', '=', self.company_id.id)]
                 }
         }
+
