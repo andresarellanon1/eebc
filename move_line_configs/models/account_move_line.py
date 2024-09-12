@@ -7,6 +7,7 @@ class AccountMoveLine(models.Model):
     complete_description = fields.Char(string="Descripción", compute='_compute_complete_description', store=True)
     use_large_description = fields.Boolean(string="Usar descripción larga", default=False)
 
+
     @api.depends('sale_line_ids')
     def _compute_complete_description(self):
         for line in self:
