@@ -637,7 +637,6 @@
         <field name="res_model">notices.notices</field>
         <field name="view_mode">tree,form</field>
         <!-- <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/> -->
-        <field name="context">{}</field>
         <!-- <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field> -->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -647,6 +646,13 @@
             </p>
         </field>
     </record>
+
+    <menuitem name="Aviso" parent="notice_menu_root" id="notices_notices" sequence="2" groups="base.group_system"/>
+
+    <menuitem action="action_notices" parent="notices_notices" name="Avisos"
+        id="notice_menu" groups="base.group_system" sequence="0"/>
+
+   
 
     <!-- <record id="sale_order_action_view_order_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
