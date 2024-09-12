@@ -9,8 +9,5 @@
         sequence="30">  
     </menuitem>
 
-    <menuitem
-           action="eebc_notices.action_notices" id="menu_noticess"
-           parent="notice_menu_root" sequence="1"/>
 
 </odoo>
