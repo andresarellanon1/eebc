@@ -9,7 +9,7 @@
                             <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
                             <div class="container">
                                 <div class="row">
-                                    <div class="column">
+                                    <div class="col">
                                         <strong>NO. CLIENTE </strong>
                                         <!--<span t-field="property.expected_price"/> !-->
                                         <strong>NOMBRE:</strong>
@@ -25,7 +25,7 @@
                                         <strong>RÉGIMEN FISCAL:</strong>
 
                                     </div>
-                                    <div class="column">
+                                    <div class="col">
                                         <strong>FECHA/HORA:</strong>
                                         <!--<span t-field="property.expected_price"/> !-->
                                         <strong>NUM.PEDIDO:</strong>
@@ -41,23 +41,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <!--<span t-field="property.expected_price"/>
-                                    <t t-set="offers" t-value="property.mapped('offer_ids')"/>
-                                    <tr t-foreach="offers" t-as="offer">
-                                        <td>
-                                            <span t-field="offer.price"/>
-                                        </td>
-                                    </tr>
-                                !-->
-                                </tbody>
-                            </table>
                         </div>
                     </t>
                 </t>
