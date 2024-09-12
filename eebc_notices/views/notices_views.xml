@@ -647,7 +647,7 @@
         </field>
     </record>
 
-    <menuitem name="Fleet" parent="notice_menu_root" id="notices_notices" sequence="2" groups="base.group_system"/>
+    <menuitem name="Aviso" parent="notice_menu_root" id="notices_notices" sequence="2" groups="base.group_system"/>
 
     <menuitem action="action_notices" parent="notices_notices" name="Avisos"
         id="notice_menu" groups="base.group_system" sequence="0"/>
