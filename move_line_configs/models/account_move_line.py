@@ -4,7 +4,9 @@ class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'
 
-    complete_description = fields.Char(string="Large description", compute='_compute_complete_description', store=True)
+    complete_description = fields.Char(string="Descripción", compute='_compute_complete_description', store=True)
+    use_large_description = fields.Boolean(string="Usar descripción larga", default=False)
+
 
     @api.depends('sale_line_ids')
     def _compute_complete_description(self):

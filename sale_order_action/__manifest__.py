@@ -1,6 +1,6 @@
 {
     'name': "Sale Order Action Cancel",
-    'version': '17.0.0.01',
+    'version': '17.0.0.02',
     'depends': [
         "sale",
     ],
