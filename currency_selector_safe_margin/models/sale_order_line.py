@@ -185,7 +185,6 @@ class SaleOrderLine(models.Model):
     def _select_default_pricelist(self):
         """
         Computes the price list for each order line based on default or customer-selected price lists.
-
         This method no longer hardcodes the default price list; instead, it dynamically retrieves the default 
         pricelist from the user's company settings. Additionally, it ensures that the search includes the 
         company (location) where the user is currently logged in.
