@@ -4,7 +4,6 @@
     <menuitem id="notice_menu_root"
         name="Avisos"
         web_icon="eebc_notices,static/description/avisos_icon.png"
-        active="False"
         sequence="30">  
     </menuitem>
 
