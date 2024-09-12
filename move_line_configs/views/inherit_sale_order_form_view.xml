@@ -14,6 +14,7 @@
             </xpath>
             <xpath expr="//tree//field[@name='product_uom_qty']" position="before">
                 <field name="complete_description" widget="section_and_note_text" invisible="use_large_description == False"/>
+
             </xpath>
         </field>
     </record>

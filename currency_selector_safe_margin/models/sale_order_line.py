@@ -137,6 +137,7 @@ class SaleOrderLine(models.Model):
                     ("name", "=", line.product_pricelist_id.name),
                     ("currency_id", "=", line.order_id.locked_currency_id.id),
                     ("pricelist_id.location", "=", self.env.company.id)
+
                 ],
                 limit=1
             )
@@ -185,7 +186,6 @@ class SaleOrderLine(models.Model):
     def _select_default_pricelist(self):
         """
         Computes the price list for each order line based on default or customer-selected price lists.
-
         This method no longer hardcodes the default price list; instead, it dynamically retrieves the default 
         pricelist from the user's company settings. Additionally, it ensures that the search includes the 
         company (location) where the user is currently logged in.
@@ -218,6 +218,7 @@ class SaleOrderLine(models.Model):
                     ("product_templ_id", "=", product_template),
                     ("pricelist_id", "=", pricelist_id),
                     ("currency_id", "=", currency)
+
                 ],
                 limit=1)
 
@@ -251,6 +252,7 @@ class SaleOrderLine(models.Model):
             if customer_selected_pricelist and (not product_pricelist_id):
                 # Search for the price list line that matches the customer-selected price list
                 product_pricelist_id = _get_pricelist(line.product_template_id.id, customer_selected_pricelist.name, customer_selected_pricelist.currency_id.id, actual_company)
+
 
             if default_product_pricelist_id and (not product_pricelist_id):
                 product_pricelist_id = default_product_pricelist_id

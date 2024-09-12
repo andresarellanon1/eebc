@@ -7,3 +7,4 @@ class SaleOrderLine(models.Model):
     complete_description = fields.Char(string='Large description', default=lambda self: self.name)
 
     use_large_description = fields.Boolean(string="Usar descripcion")
+
