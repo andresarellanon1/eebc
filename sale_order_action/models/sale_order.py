@@ -19,6 +19,7 @@ class SaleOrder(models.Model):
             self.env.ref("sales_team.group_sale_salesman").id
         ))
 
+
     @api.model
     def cancelar_cotizaciones_vencidas(self):
         quotations = self.search([('state', 'in', ['draft', 'sent'])])
@@ -31,3 +32,4 @@ class SaleOrder(models.Model):
         for order in self:
             # Asigna siempre al usuario logueado como el user_id
             order.user_id = self.env.user
+
