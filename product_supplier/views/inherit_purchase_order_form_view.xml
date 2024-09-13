@@ -6,7 +6,7 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form" />
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
+            <xpath expr="//tree/field[@name='product_id']" position="attributes">
                 <attribute name="on_change">_onchange_partner_id()</attribute>
                 <attribute name="column_invisible">0</attribute>
             </xpath>
