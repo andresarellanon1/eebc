@@ -1,49 +1,204 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<odoo>
-    <data>
-        <template id="out_invoice_template_custom">
+<t t-name="report_configs.out_invoice_template_custom">
             <t t-foreach="docs" t-as="factura">
                 <t t-call="web.html_container">
                     <t t-call="web.external_layout">
+
+                        <style>
+                            /* Estilos CSS aquí */
+                            .col_tags{
+                                text-align:right;
+                                padding:0;
+                                font-size:12px;
+                                color: #323299;
+                                margin:0;
+                            }
+                            .col_fields{
+                                font-size:12px;
+                                margin-right:1px;
+                                color:black;
+                                background-color:#ededed;
+                            }
+                            .container{
+                                margin:0;
+                                paddign:0;
+                                width: 100%;
+                            }
+                            
+                            p{
+                                margin:0;
+                                font-weight: bold;
+                            }
+                            
+                            .table{
+                                margin-top: 30px;
+                                th{
+                                    
+                                }
+                            }
+                            
+                            #encabezados-tabla{
+                                background-color: #00006b; 
+                            }
+                            
+                        </style>
                         <div class="page">
                             <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
+                            <br/>
+                            <br/>
                             <div class="container">
                                 <div class="row">
-                                    <div class="col">
-                                        <strong>NO. CLIENTE </strong>
+                                    <div class="col-auto col_tags">
+                                        <p>NO. CLIENTE:</p>
+                                        
                                         <!--<span t-field="property.expected_price"/> -->
-                                        <strong>NOMBRE:</strong>
-
-                                        <strong>R.F.C:</strong>
-
-                                        <strong>DOMICILIO FISCAL:</strong>
-
-                                        <strong>USO DEL CFDI:</strong>
-
-                                        <strong>FORMA PAGO</strong>
-
-                                        <strong>RÉGIMEN FISCAL:</strong>
+                                        <p>NOMBRE:</p>
+                                        
+                                        <p>R.F.C:</p>
+                                        
+                                        <p>DOMICILIO FISCAL:</p>
+                                        
+                                        <p>USO DEL CFDI:</p>
+                                        
+                                        <p>FORMA PAGO:</p>
+                                        
+                                        <p>RÉGIMEN FISCAL:</p>
 
                                     </div>
-                                    <div class="col">
-                                        <strong>FECHA/HORA:</strong>
+                                    <div class="col-auto col_fields" style="padding-right:15px">
+                                        <p>50582</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        <strong>NUM.PEDIDO:</strong>
-
-                                        <strong>ORDEN COMPRA:</strong>
-
-                                        <strong>METODO PAGO:</strong>
-
-                                        <strong>VENDEDOR:</strong>
-
-                                        <strong>EXPORTACIÓN</strong>
+                                        
+                                        <p>ABVA CONSTRUCCION Y MANTENIMIENTO</p>
+                                        
+                                        <p>ACM180118MF1</p>
+                                        
+                                        <p>21600</p>
+                                        
+                                        <p>G03</p>
+                                        
+                                        <p>03 - TRANSFERENCIA ELECTRONICA DE FONDOS</p>
+                                        
+                                        <p>626</p>
+                                        
+                                    </div>
+                                    <div class="col-auto col_tags">
+                                        <p>FECHA/HORA:</p>
+                                        <!--<span t-field="property.expected_price"/> -->
+                                        
+                                        <p>NUM.PEDIDO:</p>
+                                        
+                                        <p>ORDEN COMPRA:</p>
+                                        
+                                        <p>METODO PAGO:</p>
+                                        
+                                        <p>VENDEDOR:</p>
+                                        
+                                        <p>EXPORTACIÓN:</p>
+                                    </div>
+                                    <div class="col-auto col_fields" style="background-color:#ededed;">
+                                        <p>2024-09-10T14:47:41</p>
+                                        <!--<span t-field="property.expected_price"/> -->
+                                        
+                                        <p>2874</p>
+                                        
+                                        <p>n/a</p>
+                                        
+                                        <p>PUE</p>
+                                        
+                                        <p>LUIS MANUEL RAMOS CASTRO</p>
+                                        
+                                        <p>01</p>
                                     </div>
                                 </div>
                             </div>
+                            <table class="table">
+                                <thead>
+                                    <tr id="encabezados-tabla">
+                                        <th style="color: #ffffff;">No.</th>
+                                        <th style="color: #ffffff;">CLAVE</th>
+                                        <th style="color: #ffffff;">CANTIDAD</th>
+                                        <th style="color: #ffffff;">UNIDAD</th>
+                                        <th style="color: #ffffff;">DESCRIPCION</th>
+                                        <th style="color: #ffffff;">OBJ.IMP</th>
+                                        <th style="color: #ffffff;">PRECIO</th>
+                                        <th style="color: #ffffff;">IMPORTE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t/>
+                                    <tr>
+                                        <td>
+                                            1
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            8163
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            2.00
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            PZA
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                             BASE CONCRETO RECTANGULAR .40 X .40 X 1.20
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            02
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            2,223.00
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            4,446.00
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p> CFDI Relacionado(s): </p>
+                            <p> Tipo de relacion: UUID</p>
+                            <table> 
+                                <tbody>
+                                    <tr>
+                                        <td scope="row">
+                                            <p>Convenio : Si su pago es por BANCOMER usar Convenio : 0001551647 </p>
+                                            <p>Referencia : M0000000050582</p>
+                                        </td>
+                                        <td rowspan="2" style="padding: 10px 20px">
+                                            <p> SUBTOTAL $ </p>
+                                            <p> DESCUENTO $</p>
+                                            <p> SUBTOTAL $</p>
+                                            <p> IVA TRASLADADO $</p>
+                                            <p> IVA RETENIDO $</p>'
+                                            <p> TOTAL $ </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                      <td scope="row">
+                                            <p style="font-size:8px;">
+                                                GARANTIAS:EQUIPOS ELECTRICOS DE BAJA CALIFORNIA; garantiza que los productos entregados deben estar libres de defecto en material, mano de obra y
+                                                fabricación. Esta garantía tiene vigencia de 12 meses a partir de su fecha de facturación. El Cliente se compromete a reportar cualquier defecto en un período de 10
+                                                (diez) dias, el no hacerlo, invalida la garantía. Una vez terminado el período de garantía, el cliente libera a EQUIPOS ELECTRICOS DE BAJA CALIFORNIA de cualquier
+                                                responsabilidad. En caso de que la garantía sea efectiva, las partes acuerdan que EQUIPOS ELECTRICOS DE BAJA CALIFORNIA re-emplazará o reparará o devolverá
+                                                el precio pagado por el articulo defectuoso según acuerden. La compañía no se hace responsable de daños incidentales, especiales, indirectos o consecuenciales
+                                                que pudieran ocurrir.
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                      
+                                    </tr>
+                              </tbody>
+                            </table>
                         </div>
                     </t>
                 </t>
             </t>
-        </template>
-    </data>
-</odoo>
+        </t>
