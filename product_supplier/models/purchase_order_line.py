@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+import logging
 logger = logging.getLogger(__name__)
 
 class PurchaseOrderLine(models.Model):
