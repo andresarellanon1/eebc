@@ -1,6 +1,6 @@
 {
     'name': "Proveedor de productos",
-    'version': '17.0.1.02',
+    'version': '17.0.1.03',
     'depends': ['stock', 'contacts', 'product', 'purchase'],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
@@ -10,7 +10,8 @@
 
     """,
     "data": [
-        "views/product_supplierinfo.xml"
+        "views/product_supplierinfo.xml",
+        "views/inherit_purchase_order_form_view.xml"
     ],
     "application": False,
     "installable": True,
