@@ -11,7 +11,7 @@ class PurchaseOrder(models.Model):
             products = self.env['product.supplierinfo'].search([('id', '=', self.partner_id.id)]).mapped('product_tmpl_id')
             
             logger.warning(f'1 {products}')
-            product_ids = self.env['product.product'].search([('product_tmpl_id', 'in', products.ids)]).ids
+            product_ids = self.env['product.product'].search([('product_tmpl_id', 'in', products.ids)])
             
             logger.warning(f'2 {product_ids}')
             
