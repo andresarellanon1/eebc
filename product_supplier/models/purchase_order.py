@@ -10,10 +10,4 @@ class PurchaseOrder(models.Model):
         if self.partner_id:
             products = self.env['product.supplierinfo'].search([('partner_id', '=', self.partner_id.id)]).mapped('product_tmpl_id')
             
-            logger.warning(f'1 {products.ids}')
-            product_ids = self.env['product.product'].search([('product_tmpl_id', 'in', products.ids)])
-            
-            logger.warning(f'2 {product_ids.ids}')
-            
-            self.order_line.product_id = [(6, 0, product_ids)]
-            logger.warning(f'Productos {self.order_line.product_id}')
+            self.order_line.product_template_id = [(6, 0, products)]
