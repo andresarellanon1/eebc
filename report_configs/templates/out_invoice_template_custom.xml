@@ -35,9 +35,13 @@
                             .table{
                                 margin-top: 30px;
                                 th{
-                                    color: #ffffff;
-                                    background-color: #00006b; 
+                                    
                                 }
+                            }
+                            
+                            #encabezados-tabla{
+                                background-color: #00006b;
+                                border-color: #000000;
                             }
                             
                         </style>
@@ -113,15 +117,15 @@
                             </div>
                             <table class="table">
                                 <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>CLAVE</th>
-                                        <th>CANTIDAD</th>
-                                        <th>UNIDAD</th>
-                                        <th>DESCRIPCION</th>
-                                        <th>OBJ.IMP</th>
-                                        <th>PRECIO</th>
-                                        <th>IMPORTE</th>
+                                    <tr id="encabezados-tabla">
+                                        <th style="color: #ffffff;">No.</th>
+                                        <th style="color: #ffffff;">CLAVE</th>
+                                        <th style="color: #ffffff;">CANTIDAD</th>
+                                        <th style="color: #ffffff;">UNIDAD</th>
+                                        <th style="color: #ffffff;">DESCRIPCION</th>
+                                        <th style="color: #ffffff;">OBJ.IMP</th>
+                                        <th style="color: #ffffff;">PRECIO</th>
+                                        <th style="color: #ffffff;">IMPORTE</th>
                                     </tr>
                                 </thead>
                                 <tbody>
