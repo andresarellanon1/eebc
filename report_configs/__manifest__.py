@@ -14,7 +14,7 @@
         'templates/external_layout_invoice_custom.xml',
         'templates/report_invoice_inherit_custom.xml',
         'views/account_invoice_views.xml',
-        'templates/report_styles.css'
+        'templates/report_styles.xml'
     ],
     "license": "LGPL-3",
     'installable': True,
