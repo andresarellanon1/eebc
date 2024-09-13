@@ -12,4 +12,5 @@ class PurchaseOrder(models.Model):
             logger.warning(f'1 {supplier_products.ids}')
             for line in self.order_line:
                 line.supplier_products_ids = supplier_products
-            logger.warning(f'2 {self.order_line[0].supplier_products_ids.ids}')
+            if self.order_line:
+                logger.warning(f'2 {self.order_line[0].supplier_products_ids.ids}')
