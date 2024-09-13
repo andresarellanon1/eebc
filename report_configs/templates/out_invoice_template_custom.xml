@@ -7,6 +7,19 @@
                     <t t-call="web.external_layout">
                     <t t-raw="0" t-call="report_styles"/>
                         <div class="page">
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse;">
+                                <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 23px; font-weight: 900 important!; padding: 2px important!">
+                                    <tr>
+                                        <th style="width: 58%;"></th> 
+                                        <th style="width: 25%; background-color: white;">
+                                            F A C T U R A
+                                        </th>
+                                        <th style="width: 17%; ">
+                                            FORMATO
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                             <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
                             <br/>
                             <br/>
