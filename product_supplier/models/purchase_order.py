@@ -7,7 +7,7 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        if self.order_id.partner_id:
+        if self.partner_id:
             products = self.env['product.supplierinfo'].search([('id', '=', self.partner_id.id)]).mapped('product_tmpl_id')
             
             logger.warning(f'1 {products}')
