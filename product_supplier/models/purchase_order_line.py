@@ -6,9 +6,9 @@ class PurchaseOrderLine(models.Model):
     @api.onchange('order_id.partner_id')
     def _onchange_partner_id(self):
         if self.order_id.partner_id:
-            supplier_info = self.env['product.supplierinfo'].search([('name', '=', self.order_id.partner_id.id)])
-            product_templates = supplier_info.mapped('product_tmpl_id')
-            product_ids = self.env['product.product'].search([('product_tmpl_id', 'in', product_templates)]).ids
+            product_templates = self.env['product.template'].search([('partner_id', '=', self.order_id.partner_id.id)])
+            
+            product_ids = self.env['product.product'].search([('product_tmpl_id', 'in', product_templates.ids)]).ids
             
             return {
                 'domain': {
