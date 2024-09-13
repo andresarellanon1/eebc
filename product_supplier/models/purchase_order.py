@@ -16,4 +16,4 @@ class PurchaseOrder(models.Model):
             logger.warning(f'2 {product_ids}')
             
             self.order_line.product_ids = [(6, 0, product_ids)]
-            logger.warning(f'Productos {self.product_ids}')
+            logger.warning(f'Productos {self.order_line.product_ids}')
