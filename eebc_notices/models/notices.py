@@ -19,25 +19,7 @@ class Notices(models.Model):
     quantity = fields.Float(string='Cantidad')
     series = fields.Char(string='Series (s)')
 
-     # Relación One2many con órdenes de compra
-    order_ids = fields.One2many(
-        comodel_name='purchase.order',
-        inverse_name='notice_id',
-        string='Órdenes de compra'
+    picking_ids = fields.Many2many(
+        'stock.picking', 
+        string='Operaciones de Almacén'
     )
-    
-    # Relación Many2many con facturas (a través de las órdenes de compra)
-    invoice_ids = fields.Many2many(
-        comodel_name='account.move',
-        string='Facturas',
-        compute='_compute_invoices'
-    )
-
-    @api.depends('order_ids')
-    def _compute_invoices(self):
-        for record in self:
-            invoices = self.env['account.move'].search([('invoice_origin', 'in', record.order_ids.mapped('name'))])
-            record.invoice_ids = invoices
-
-
- 
