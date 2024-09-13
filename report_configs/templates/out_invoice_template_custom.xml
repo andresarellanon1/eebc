@@ -1,7 +1,11 @@
-<t t-name="report_configs.out_invoice_template_custom">
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="out_invoice_template_custom">
             <t t-foreach="docs" t-as="factura">
                 <t t-call="web.html_container">
                     <t t-call="web.external_layout">
+
                         <style>
                             /* Estilos CSS aquí */
                             .col_tags{
@@ -9,6 +13,7 @@
                                 padding:0;
                                 font-size:10px;
                                 color: #323299;
+                                margin:0;
                             }
                             .col_fields{
                                 font-size:10px;
@@ -20,7 +25,19 @@
                                 paddign:0;
                                 width: 100%;
                             }
-
+                            
+                            p{
+                                margin:0;
+                                font-weight: bold;
+                            }
+                            
+                            .table{
+                                margin-top: 30px;
+                                th{
+                                    color: #fff;
+                                    background-color: #00006b; 
+                                }
+                            }
                             
                         </style>
                         <div class="page">
@@ -44,7 +61,7 @@
                                         <p>RÉGIMEN FISCAL:</p>
 
                                     </div>
-                                    <div class="col-auto col_fields"  style="background-color:#ededed;">
+                                    <div class="col-auto col_fields" style="background-color:#ededed;">
                                         <p>50582</p>
                                         <!--<span t-field="property.expected_price"/> -->
                                         
@@ -146,4 +163,6 @@
                     </t>
                 </t>
             </t>
-        </t>
+        </template>
+    </data>
+</odoo>
