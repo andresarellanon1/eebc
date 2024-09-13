@@ -13,7 +13,7 @@ class PurchaseOrder(models.Model):
             logger.warning(f'1 {products.ids}')
             product_ids = self.env['product.product'].search([('product_tmpl_id', 'in', products.ids)])
             
-            logger.warning(f'2 {product_ids}')
+            logger.warning(f'2 {product_ids.ids}')
             
-            self.order_line.product_ids = [(6, 0, product_ids)]
-            logger.warning(f'Productos {self.order_line.product_ids}')
+            self.order_line.product_id = [(6, 0, product_ids)]
+            logger.warning(f'Productos {self.order_line.product_id}')
