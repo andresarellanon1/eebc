@@ -1,83 +1,101 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<odoo>
-    <data>
-        <template id="out_invoice_template_custom">
+<t t-name="report_configs.out_invoice_template_custom">
             <t t-foreach="docs" t-as="factura">
                 <t t-call="web.html_container">
                     <t t-call="web.external_layout">
+                        <style>
+                            /* Estilos CSS aquí */
+                            .col_tags{
+                                text-align:right;
+                                padding:0;
+                                font-size:10px;
+                                color: #323299;
+                            }
+                            .col_fields{
+                                font-size:10px;
+                                margin-right:1px;
+                                color:black;
+                            }
+                            .container{
+                                margin:0;
+                                paddign:0;
+                                width: 100%;
+                            }
+
+                            
+                        </style>
                         <div class="page">
                             <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
                             <div class="container">
                                 <div class="row">
-                                    <div class="col">
-                                        <strong>NO. CLIENTE: </strong>
-                                        <br/>
+                                    <div class="col-auto col_tags">
+                                        <p>NO. CLIENTE:</p>
+                                        
                                         <!--<span t-field="property.expected_price"/> -->
-                                        <strong>NOMBRE: ABVA CONSTRUCCION Y MANTENIMIENTO</strong>
-                                        <br/>
-                                        <strong>R.F.C:</strong>
-                                        <br/>
-                                        <strong>DOMICILIO FISCAL:</strong>
-                                        <br/>
-                                        <strong>USO DEL CFDI:</strong>
-                                        <br/>
-                                        <strong>FORMA PAGO</strong>
-                                        <br/>
-                                        <strong>RÉGIMEN FISCAL:</strong>
+                                        <p>NOMBRE:</p>
+                                        
+                                        <p>R.F.C:</p>
+                                        
+                                        <p>DOMICILIO FISCAL:</p>
+                                        
+                                        <p>USO DEL CFDI:</p>
+                                        
+                                        <p>FORMA PAGO:</p>
+                                        
+                                        <p>RÉGIMEN FISCAL:</p>
 
                                     </div>
-                                    <div class="col">
-                                        <strong>50582</strong>
+                                    <div class="col-auto col_fields"  style="background-color:#ededed;">
+                                        <p>50582</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        <br/>
-                                        <strong>ABVA CONSTRUCCION Y MANTENIMIENTO
-</strong>
-                                        <br/>
-                                        <strong>ACM180118MF1</strong>
-                                        <br/>
-                                        <strong>21600</strong>
-                                        <br/>
-                                        <strong>G03</strong>
-                                        <br/>
-                                        <strong>03 - TRANSFERENCIA ELECTRONICA DE FONDOS</strong>
-                                        <br/>
-                                        <strong>626</strong>
+                                        
+                                        <p>ABVA CONSTRUCCION Y MANTENIMIENTO</p>
+                                        
+                                        <p>ACM180118MF1</p>
+                                        
+                                        <p>21600</p>
+                                        
+                                        <p>G03</p>
+                                        
+                                        <p>03 - TRANSFERENCIA ELECTRONICA DE FONDOS</p>
+                                        
+                                        <p>626</p>
                                         
                                     </div>
-                                    <div class="col">
-                                        <strong>FECHA/HORA:</strong>
+                                    <div class="col-auto col_tags">
+                                        <p>FECHA/HORA:</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        <br/>
-                                        <strong>NUM.PEDIDO:</strong>
-                                        <br/>
-                                        <strong>ORDEN COMPRA:</strong>
-                                        <br/>
-                                        <strong>METODO PAGO:</strong>
-                                        <br/>
-                                        <strong>VENDEDOR:</strong>
-                                        <br/>
-                                        <strong>EXPORTACIÓN</strong>
+                                        
+                                        <p>NUM.PEDIDO:</p>
+                                        
+                                        <p>ORDEN COMPRA:</p>
+                                        
+                                        <p>METODO PAGO:</p>
+                                        
+                                        <p>VENDEDOR:</p>
+                                        
+                                        <p>EXPORTACIÓN:</p>
                                     </div>
-                                    <div class="col">
-                                        <strong>2024-09-10T14:47:41</strong>
+                                    <div class="col-auto col_fields" style="background-color:#ededed;">
+                                        <p>2024-09-10T14:47:41</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        <br/>
-                                        <strong>2874</strong>
-                                        <br/>
-                                        <strong>n/a</strong>
-                                        <br/>
-                                        <strong>PUE</strong>
-                                        <br/>
-                                        <strong>LUIS MANUEL RAMOS CASTRO</strong>
-                                        <br/>
-                                        <strong>01</strong>
+                                        
+                                        <p>2874</p>
+                                        
+                                        <p>n/a</p>
+                                        
+                                        <p>PUE</p>
+                                        
+                                        <p>LUIS MANUEL RAMOS CASTRO</p>
+                                        
+                                        <p>01</p>
                                     </div>
                                 </div>
                             </div>
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>No. CLAVE</th>
+                                        <th>No.</th>
+                                        <th>CLAVE</th>
                                         <th>CANTIDAD</th>
                                         <th>UNIDAD</th>
                                         <th>DESCRIPCION</th>
@@ -128,6 +146,4 @@
                     </t>
                 </t>
             </t>
-        </template>
-    </data>
-</odoo>
+        </t>
