@@ -8,9 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='product_id']" position="after">
                 <field name="supplier_products_ids" invisible="1"/>
-            </xpath>
-            <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
-                <attribute name="domain">[('id', 'in', supplier_products_ids.ids)]</attribute>
+                <field name="product_template_id" domain="[('id', 'in', supplier_products_ids)]"/>
             </xpath>
         </field>
     </record>
