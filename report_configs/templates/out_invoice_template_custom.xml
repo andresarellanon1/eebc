@@ -54,8 +54,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-set="offers" t-value="property.mapped('offers_id')"/>
-                                    <tr t-foreach="offers" t-as="offer">
+                                    <t/>
+                                    <tr>
                                         <td>
                                             <!-- <span t-field="offer.price"/> -->
                                         </td>
