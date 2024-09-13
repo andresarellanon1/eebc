@@ -11,14 +11,15 @@
                             .col_tags{
                                 text-align:right;
                                 padding:0;
-                                font-size:10px;
+                                font-size:12px;
                                 color: #323299;
                                 margin:0;
                             }
                             .col_fields{
-                                font-size:10px;
+                                font-size:12px;
                                 margin-right:1px;
                                 color:black;
+                                background-color:#ededed;
                             }
                             .container{
                                 margin:0;
@@ -34,7 +35,7 @@
                             .table{
                                 margin-top: 30px;
                                 th{
-                                    color: #fff;
+                                    color: #ffffff;
                                     background-color: #00006b; 
                                 }
                             }
@@ -42,6 +43,8 @@
                         </style>
                         <div class="page">
                             <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
+                            <br/>
+                            <br/>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-auto col_tags">
@@ -61,7 +64,7 @@
                                         <p>RÉGIMEN FISCAL:</p>
 
                                     </div>
-                                    <div class="col-auto col_fields" style="background-color:#ededed;">
+                                    <div class="col-auto col_fields" style="padding-right:15px">
                                         <p>50582</p>
                                         <!--<span t-field="property.expected_price"/> -->
                                         
