@@ -10,7 +10,7 @@ class PurchaseOrder(models.Model):
         if self.partner_id:
             supplier_products = self.env['product.supplierinfo'].search([('partner_id', '=', self.partner_id.id)]).mapped('product_tmpl_id')
             logger.warning(f'1 {supplier_products.ids}')
-            self.supplier_products_ids = [(6, 0, supplier_products.ids)]
+            self.order_line.supplier_products_ids = [(6, 0, supplier_products.ids)]
             logger.warning(f'Supplier products for partner {self.partner_id.id}: {supplier_products.ids}')
         else:
-            self.supplier_products_ids = [(5, 0, 0)]
+            self.order_line.supplier_products_ids = [(5, 0, 0)]
