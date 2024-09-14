@@ -9,11 +9,10 @@
                 <field name="use_large_description"/>
             </xpath>
             <xpath expr="//tree//field[@name='name']" position="before">
-                <field name="use_large_description" invisible="1"/>
+                <field name="use_large_description" column_invisible="1"/>
             </xpath>
             <xpath expr="//tree//field[@name='product_uom_qty']" position="before">
-                <field name="complete_description" widget="section_and_note_text" invisible="use_large_description == False"/>
-
+                <field name="complete_description" widget="section_and_note_text" column_invisible="use_large_description == False"/>
             </xpath>
         </field>
     </record>
