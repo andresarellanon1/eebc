@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_styles">
-        <t t-raw="0">
             <style>
                 .col_tags {
                     text-align: right;
@@ -33,6 +32,5 @@
                     border-color: #000000;
                 }
             </style>
-        </t>
     </template>
 </odoo>
