@@ -5,12 +5,13 @@
             <t t-foreach="docs" t-as="factura">
                 <t t-call="web.html_container">
                     <t t-call="web.external_layout">
-                    <t t-raw="0" t-call="report_styles"/>
+                        <t t-raw="0" t-call="report_styles"/>
                         <div class="page">
                             <table class="table-borderless" style="width: 100%; border-collapse: collapse;">
-                                <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 23px; font-weight: 900 important!; padding: 2px important!">
+                                <thead class="p- table-borderless text-center"
+                                       style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 23px; font-weight: 900 important!; padding: 2px important!">
                                     <tr>
-                                        <th style="width: 58%;"></th> 
+                                        <th style="width: 58%;"></th>
                                         <th style="width: 25%; background-color: white;">
                                             F A C T U R A
                                         </th>
@@ -20,71 +21,71 @@
                                     </tr>
                                 </thead>
                             </table>
-                            <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
+                            <strong>R.F.C.: EEB8111231Q4 RÉGIMEN FISCAL: 601</strong>
                             <br/>
                             <br/>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-auto col_tags">
                                         <p>NO. CLIENTE:</p>
-                                        
+
                                         <!--<span t-field="property.expected_price"/> -->
                                         <p>NOMBRE:</p>
-                                        
+
                                         <p>R.F.C:</p>
-                                        
+
                                         <p>DOMICILIO FISCAL:</p>
-                                        
+
                                         <p>USO DEL CFDI:</p>
-                                        
+
                                         <p>FORMA PAGO:</p>
-                                        
+
                                         <p>RÉGIMEN FISCAL:</p>
 
                                     </div>
                                     <div class="col-auto col_fields" style="padding-right:15px">
                                         <p>50582</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        
+
                                         <p>ABVA CONSTRUCCION Y MANTENIMIENTO</p>
-                                        
+
                                         <p>ACM180118MF1</p>
-                                        
+
                                         <p>21600</p>
-                                        
+
                                         <p>G03</p>
-                                        
+
                                         <p>03 - TRANSFERENCIA ELECTRONICA DE FONDOS</p>
-                                        
+
                                         <p>626</p>
-                                        
+
                                     </div>
                                     <div class="col-auto col_tags">
                                         <p>FECHA/HORA:</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        
+
                                         <p>NUM.PEDIDO:</p>
-                                        
+
                                         <p>ORDEN COMPRA:</p>
-                                        
+
                                         <p>METODO PAGO:</p>
-                                        
+
                                         <p>VENDEDOR:</p>
-                                        
+
                                         <p>EXPORTACIÓN:</p>
                                     </div>
                                     <div class="col-auto col_fields" style="background-color:#ededed;">
                                         <p>2024-09-10T14:47:41</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        
+
                                         <p>2874</p>
-                                        
+
                                         <p>n/a</p>
-                                        
+
                                         <p>PUE</p>
-                                        
+
                                         <p>LUIS MANUEL RAMOS CASTRO</p>
-                                        
+
                                         <p>01</p>
                                     </div>
                                 </div>
@@ -122,7 +123,7 @@
                                             <!-- <span t-field="offer.price"/> -->
                                         </td>
                                         <td>
-                                             BASE CONCRETO RECTANGULAR .40 X .40 X 1.20
+                                            BASE CONCRETO RECTANGULAR .40 X .40 X 1.20
                                             <!-- <span t-field="offer.price"/> -->
                                         </td>
                                         <td>
@@ -140,6 +141,47 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <table class="table" style="font-size:8px">
+                                <tbody>
+                                    <tr>
+                                        <td scope="row">
+                                            <p>Convenio: Si su pago es por BANCOMER usar Convenio : 0001551647</p>
+                                            <p>Referencia : M0000000050582</p>
+                                        </td>
+                                        <td rowspan="2" style="padding: 10px 20px">
+                                            <p>SUBTOTAL $</p>
+                                            <p>DESCUENTO $</p>
+                                            <p>SUBTOTAL $</p>
+                                            <p>IVA TRASLADADO $</p>
+                                            <p>IVA RETENIDO $</p>
+                                            <p>TOTAL $</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            <p>
+                                                GARANTIAS:EQUIPOS ELECTRICOS DE BAJA CALIFORNIA; garantiza que los
+                                                productos entregados deben estar libres de defecto en material, mano de
+                                                obra y
+                                                fabricación. Esta garantía tiene vigencia de 12 meses a partir de su
+                                                fecha de facturación. El Cliente se compromete a reportar cualquier
+                                                defecto en un período de 10
+                                                (diez) dias, el no hacerlo, invalida la garantía. Una vez terminado el
+                                                período de garantía, el cliente libera a EQUIPOS ELECTRICOS DE BAJA
+                                                CALIFORNIA de cualquier
+                                                responsabilidad. En caso de que la garantía sea efectiva, las partes
+                                                acuerdan que EQUIPOS ELECTRICOS DE BAJA CALIFORNIA re-emplazará o
+                                                reparará o devolverá
+                                                el precio pagado por el articulo defectuoso según acuerden. La compañía
+                                                no se hace responsable de daños incidentales, especiales, indirectos o
+                                                consecuenciales
+                                                que pudieran ocurrir.
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
                         </div>
                     </t>
                 </t>
