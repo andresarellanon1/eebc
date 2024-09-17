@@ -8,7 +8,7 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
     
     
-    def _create_notice(self):
+    def create_notice(self):
         
         _logger.warning('Entramos a metodo de crear aviso')
         
