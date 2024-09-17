@@ -4,11 +4,10 @@
     <menuitem id="notice_menu_root"
         name="Avisos"
         web_icon="eebc_notices,static/description/avisos_icon.png"
-        sequence="30">  
+        groups="base.group_system"
+
+        sequence="240">  
     </menuitem>
 
-    <menuitem
-           action="eebc_notices.action_notices" id="menu_noticess"
-           parent="notice_menu_root" sequence="1"/>
 
 </odoo>

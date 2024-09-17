@@ -6,5 +6,7 @@ logger = logging.getLogger(__name__)
 class AccountMove(models.Model):
     _inherit = "purchase.order"
 
-    purchase_order_notice_id = fields.Many2one('purchase.order', string='Registro de orden de compra avisos')
-
+    notice_id = fields.Many2one(
+        comodel_name='notices.notices',
+        string='Aviso relacionado'
+    )
