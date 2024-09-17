@@ -5,47 +5,21 @@
             <t t-foreach="docs" t-as="factura">
                 <t t-call="web.html_container">
                     <t t-call="web.external_layout">
-
-                        <style>
-                            /* Estilos CSS aquí */
-                            .col_tags{
-                                text-align:right;
-                                padding:0;
-                                font-size:12px;
-                                color: #323299;
-                                margin:0;
-                            }
-                            .col_fields{
-                                font-size:12px;
-                                margin-right:1px;
-                                color:black;
-                                background-color:#ededed;
-                            }
-                            .container{
-                                margin:0;
-                                paddign:0;
-                                width: 100%;
-                            }
-                            
-                            p{
-                                margin:0;
-                                font-weight: bold;
-                            }
-                            
-                            .table{
-                                margin-top: 30px;
-                                th{
-                                    
-                                }
-                            }
-                            
-                            #encabezados-tabla{
-                                background-color: #00006b;
-                                border-color: #000000;
-                            }
-                            
-                        </style>
+                    <t t-raw="0" t-call="report_styles"/>
                         <div class="page">
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse;">
+                                <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 23px; font-weight: 900 important!; padding: 2px important!">
+                                    <tr>
+                                        <th style="width: 58%;"></th> 
+                                        <th style="width: 25%; background-color: white;">
+                                            F A C T U R A
+                                        </th>
+                                        <th style="width: 17%; ">
+                                            FORMATO
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
                             <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
                             <br/>
                             <br/>

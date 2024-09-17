@@ -19,12 +19,11 @@
                 
                 
                 <field name="resource" />
-                <field name="order_ids" />
+                <field name="picking_ids" widget="many2many_tags"/>
 
                 <field name="supplier" />
                 <field name="folio"  />
                 <field name="create_date" widget="date" />
-                <field name="invoice_ids" optional="hide"/>
                 <field name="notice" />
                 <field name="description" />
                 <field name="quantity" />
