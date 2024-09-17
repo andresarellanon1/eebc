@@ -173,7 +173,7 @@
                                             <p>Referencia : M0000000050582</p>
                                         </td>
                                         <td rowspan="2" style="padding: 10px 20px; font-size:11px;" class="col-3">
-                                            <p>SUBTOTAL $</p>
+                                            <p>SUBTOTAL $ <t t-esc="total_importe"/></p>                                            
                                             <p>DESCUENTO $</p>
                                             <p>SUBTOTAL $</p>
                                             <p>IVA TRASLADADO $</p>
