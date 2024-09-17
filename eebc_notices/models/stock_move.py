@@ -10,6 +10,8 @@ class StockMove(models.Model):
     
     def create_notice(self):
         
+        # notice = self.env['notices.notices'].
+        
         _logger.warning('Entramos a metodo de crear aviso')
         
         
