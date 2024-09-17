@@ -5,7 +5,8 @@
             <t t-foreach="docs" t-as="factura">
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
-                        <style>
+                        <t t-call="report_configs.report_styles"/>
+                        <!-- <style>
                             .col_tags {
                                 text-align: right;
                                 padding: 0;
@@ -35,12 +36,12 @@
                                 background-color: #00006b;
                                 border-color: #000000;
                             }
-                        </style>
+                        </style> -->
                         <div class="page">
                             <table class="table-borderless" style="width: 100%; border-collapse: collapse;">
                                 <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 23px; font-weight: 900 important!; padding: 2px important!">
                                     <tr>
-                                        <th style="width: 58%;"></th> 
+                                        <th style="width: 58%;"></th>
                                         <th style="width: 25%; background-color: white;">
                                             F A C T U R A
                                         </th>
@@ -57,71 +58,71 @@
                                 <div class="row">
                                     <div class="col-auto col_tags">
                                         <p>NO. CLIENTE:</p>
-                                        
+
                                         <!--<span t-field="property.expected_price"/> -->
                                         <p>NOMBRE:</p>
-                                        
+
                                         <p>R.F.C:</p>
-                                        
+
                                         <p>DOMICILIO FISCAL:</p>
-                                        
+
                                         <p>USO DEL CFDI:</p>
-                                        
+
                                         <p>FORMA PAGO:</p>
-                                        
+
                                         <p>RÉGIMEN FISCAL:</p>
 
                                     </div>
                                     <div class="col-auto col_fields" style="padding-right:15px">
                                         <p>50582</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        
+
                                         <p>ABVA CONSTRUCCION Y MANTENIMIENTO</p>
-                                        
+
                                         <p>ACM180118MF1</p>
-                                        
+
                                         <p>21600</p>
-                                        
+
                                         <p>G03</p>
-                                        
+
                                         <p>03 - TRANSFERENCIA ELECTRONICA DE FONDOS</p>
-                                        
+
                                         <p>626</p>
-                                        
+
                                     </div>
                                     <div class="col-auto col_tags">
                                         <p>FECHA/HORA:</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        
+
                                         <p>NUM.PEDIDO:</p>
-                                        
+
                                         <p>ORDEN COMPRA:</p>
-                                        
+
                                         <p>METODO PAGO:</p>
-                                        
+
                                         <p>VENDEDOR:</p>
-                                        
+
                                         <p>EXPORTACIÓN:</p>
                                     </div>
                                     <div class="col-auto col_fields" style="background-color:#ededed;">
                                         <p>2024-09-10T14:47:41</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        
+
                                         <p>2874</p>
-                                        
+
                                         <p>n/a</p>
-                                        
+
                                         <p>PUE</p>
-                                        
+
                                         <p>LUIS MANUEL RAMOS CASTRO</p>
-                                        
+
                                         <p>01</p>
                                     </div>
                                 </div>
                             </div>
                             <table class="table">
                                 <thead>
-                                    <tr id="encabezados-tabla">
+                                    <tr id="encabezados-tabla" style="background-color: #333333;">
                                         <th style="color: #ffffff;">No.</th>
                                         <th style="color: #ffffff;">CLAVE</th>
                                         <th style="color: #ffffff;">CANTIDAD</th>
@@ -133,41 +134,35 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t/>
-                                    <tr>
-                                        <td>
-                                            1
-                                            <!-- <span t-field="offer.price"/> -->
-                                        </td>
-                                        <td>
-                                            8163
-                                            <!-- <span t-field="offer.price"/> -->
-                                        </td>
-                                        <td>
-                                            2.00
-                                            <!-- <span t-field="offer.price"/> -->
-                                        </td>
-                                        <td>
-                                            PZA
-                                            <!-- <span t-field="offer.price"/> -->
-                                        </td>
-                                        <td>
-                                             BASE CONCRETO RECTANGULAR .40 X .40 X 1.20
-                                            <!-- <span t-field="offer.price"/> -->
-                                        </td>
-                                        <td>
-                                            02
-                                            <!-- <span t-field="offer.price"/> -->
-                                        </td>
-                                        <td>
-                                            2,223.00
-                                            <!-- <span t-field="offer.price"/> -->
-                                        </td>
-                                        <td>
-                                            4,446.00
-                                            <!-- <span t-field="offer.price"/> -->
-                                        </td>
-                                    </tr>
+                                    <t t-foreach="factura.invoice_line_ids" t-as="linea" t-index="i">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="i + 1"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_id.default_code or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.quantity or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_uom_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.tax_ids and ', '.join([tax.name for tax in linea.tax_ids]) or ''"/>
+02</td>
+                                            <td style="text-align: right;">
+                                                <t t-esc="linea.price_unit or ''"/>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <t t-esc="linea.price_unit * linea.quantity or ''"/>
+                                                <t t-set="total_importe" t-value="total_importe + (linea.price_unit * linea.quantity)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
                                 </tbody>
                             </table>
                         </div>
