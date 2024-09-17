@@ -1,0 +1,2 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+notices_model_access_right_user,notices_model_access_right,model_notices_notices,base.group_system,1,1,1,1
