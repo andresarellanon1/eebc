@@ -148,7 +148,7 @@
                                             <p>Convenio: Si su pago es por BANCOMER usar Convenio : 0001551647</p>
                                             <p>Referencia : M0000000050582</p>
                                         </td>
-                                        <td rowspan="2" style="padding: 10px 20px">
+                                        <td rowspan="2" style="padding: 10px 20px; font-size:11px;" class="col-3">
                                             <p>SUBTOTAL $</p>
                                             <p>DESCUENTO $</p>
                                             <p>SUBTOTAL $</p>
@@ -179,9 +179,22 @@
                                             </p>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            <p>
+                                                POR ESTE PAGARE DEBO(EMOS) Y PAGARE(MOS) INCONDICIONALMENTE A LA ORDEN
+                                                DE EQUIPOS ELECTRICOS DE BAJA CALIFORNIA LA CANTIDAD DE $ 4,801.68 SON:
+                                                CUATRO MIL OCHOCIENTOS UN PESOS 68/100 M.N.
+                                                VALOR RECIBIDO EN MERCANCIAS A MI(NUESTRA) ENTERA SATISFACCION, EN CASO
+                                                DE NO PAGAR AL VENCIMIENTO CAUSARA INTERESES MORATORIOS AL 6% MENSUAL.
+                                            </p>
+                                        </td>
+                                        <td rowspan="4">
+                                            <img src="https://placehold.co/120"/>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
-
                         </div>
                     </t>
                 </t>
