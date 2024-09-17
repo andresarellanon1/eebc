@@ -5,41 +5,141 @@
             <t t-foreach="docs" t-as="factura">
                 <t t-call="web.html_container">
                     <t t-call="web.external_layout">
+                    <t t-raw="0" t-call="report_styles"/>
                         <div class="page">
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse;">
+                                <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 23px; font-weight: 900 important!; padding: 2px important!">
+                                    <tr>
+                                        <th style="width: 58%;"></th> 
+                                        <th style="width: 25%; background-color: white;">
+                                            F A C T U R A
+                                        </th>
+                                        <th style="width: 17%; ">
+                                            FORMATO
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
                             <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
+                            <br/>
+                            <br/>
                             <div class="container">
                                 <div class="row">
-                                    <div class="col">
-                                        <strong>NO. CLIENTE </strong>
+                                    <div class="col-auto col_tags">
+                                        <p>NO. CLIENTE:</p>
+                                        
                                         <!--<span t-field="property.expected_price"/> -->
-                                        <strong>NOMBRE:</strong>
-
-                                        <strong>R.F.C:</strong>
-
-                                        <strong>DOMICILIO FISCAL:</strong>
-
-                                        <strong>USO DEL CFDI:</strong>
-
-                                        <strong>FORMA PAGO</strong>
-
-                                        <strong>RÉGIMEN FISCAL:</strong>
+                                        <p>NOMBRE:</p>
+                                        
+                                        <p>R.F.C:</p>
+                                        
+                                        <p>DOMICILIO FISCAL:</p>
+                                        
+                                        <p>USO DEL CFDI:</p>
+                                        
+                                        <p>FORMA PAGO:</p>
+                                        
+                                        <p>RÉGIMEN FISCAL:</p>
 
                                     </div>
-                                    <div class="col">
-                                        <strong>FECHA/HORA:</strong>
+                                    <div class="col-auto col_fields" style="padding-right:15px">
+                                        <p>50582</p>
                                         <!--<span t-field="property.expected_price"/> -->
-                                        <strong>NUM.PEDIDO:</strong>
-
-                                        <strong>ORDEN COMPRA:</strong>
-
-                                        <strong>METODO PAGO:</strong>
-
-                                        <strong>VENDEDOR:</strong>
-
-                                        <strong>EXPORTACIÓN</strong>
+                                        
+                                        <p>ABVA CONSTRUCCION Y MANTENIMIENTO</p>
+                                        
+                                        <p>ACM180118MF1</p>
+                                        
+                                        <p>21600</p>
+                                        
+                                        <p>G03</p>
+                                        
+                                        <p>03 - TRANSFERENCIA ELECTRONICA DE FONDOS</p>
+                                        
+                                        <p>626</p>
+                                        
+                                    </div>
+                                    <div class="col-auto col_tags">
+                                        <p>FECHA/HORA:</p>
+                                        <!--<span t-field="property.expected_price"/> -->
+                                        
+                                        <p>NUM.PEDIDO:</p>
+                                        
+                                        <p>ORDEN COMPRA:</p>
+                                        
+                                        <p>METODO PAGO:</p>
+                                        
+                                        <p>VENDEDOR:</p>
+                                        
+                                        <p>EXPORTACIÓN:</p>
+                                    </div>
+                                    <div class="col-auto col_fields" style="background-color:#ededed;">
+                                        <p>2024-09-10T14:47:41</p>
+                                        <!--<span t-field="property.expected_price"/> -->
+                                        
+                                        <p>2874</p>
+                                        
+                                        <p>n/a</p>
+                                        
+                                        <p>PUE</p>
+                                        
+                                        <p>LUIS MANUEL RAMOS CASTRO</p>
+                                        
+                                        <p>01</p>
                                     </div>
                                 </div>
                             </div>
+                            <table class="table">
+                                <thead>
+                                    <tr id="encabezados-tabla">
+                                        <th style="color: #ffffff;">No.</th>
+                                        <th style="color: #ffffff;">CLAVE</th>
+                                        <th style="color: #ffffff;">CANTIDAD</th>
+                                        <th style="color: #ffffff;">UNIDAD</th>
+                                        <th style="color: #ffffff;">DESCRIPCION</th>
+                                        <th style="color: #ffffff;">OBJ.IMP</th>
+                                        <th style="color: #ffffff;">PRECIO</th>
+                                        <th style="color: #ffffff;">IMPORTE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t/>
+                                    <tr>
+                                        <td>
+                                            1
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            8163
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            2.00
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            PZA
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                             BASE CONCRETO RECTANGULAR .40 X .40 X 1.20
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            02
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            2,223.00
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                        <td>
+                                            4,446.00
+                                            <!-- <span t-field="offer.price"/> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </t>
                 </t>

@@ -6,7 +6,7 @@
         web_icon="eebc_notices,static/description/avisos_icon.png"
         groups="base.group_system"
 
-        sequence="30">  
+        sequence="240">  
     </menuitem>
 
 
