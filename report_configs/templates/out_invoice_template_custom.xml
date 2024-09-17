@@ -167,8 +167,7 @@
                                                     <t t-esc="linea.product_id.name or ''"/>
                                                 </td>
                                                 <td>
-                                                    <t t-esc="linea.tax_ids and ', '.join([tax.name for tax in linea.tax_ids]) or ''"/>
-02</td>
+                                                    <t t-esc="linea.tax_ids and ', '.join([tax.name for tax in linea.tax_ids]) or ''"/>02</td>
                                                 <td style="text-align: right;">
                                                     <t t-esc="linea.price_unit or ''"/>
                                                 </td>
@@ -177,7 +176,7 @@
                                                     <t t-set="total_importe" t-value="total_importe + (linea.price_unit * linea.quantity)"/>
                                                 </td>
                                             </tr>
-                                            <!-- </t> -->
+                                            </t>
                                         </tbody>
                                     </table>
                                     <table class="table" style="font-size:8px">
