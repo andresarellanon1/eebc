@@ -7,7 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//form/sheet/notebook/page[@name='operations']/field[@name='move_ids_without_package']/tree" position="inside">
                 <!-- Campo invisible para controlar la visibilidad del botón en cada producto -->
-                <field name="has_aviso_in_attributes" invisible="1"/>
+                <field name="has_aviso_in_attributes" 
+                edit="true"
+                 invisible="1"/>
 
                 <!-- Añadimos un botón para cada producto en la línea de picking -->
               
