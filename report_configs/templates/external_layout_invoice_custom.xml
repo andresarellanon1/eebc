@@ -16,17 +16,19 @@
             </t>
             <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
                 <div class="row">
-                    <div class="col-2 mb4" style="margin-right:0; padding-right:0;margin-left:0; padding-left:0;text-align:left">
-                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 100px; margin-right:0; padding-right:0;" alt="Logo"/>
+                    <div class="col-2 mb4" style="margin-right:0; padding-right:0; padding-left:0; text-align:center;max-width: 11%;">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-width: 100%; margin-right:0; padding-right:0;" alt="Logo"/>
                     </div>
-                    <div class="col-4" name="company_address" style="color:#323299; margin-left:0; padding-left:0; font-size:12px; text-align:left">
+                    <div class="col-4" name="company_address" style="color:#323299; margin-left:0;padding-left:0; max-width: 39%; font-size:12px">
                         <ul class="list-unstyled" name="company_address_list">
-                            <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}">
-                                <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
-                                    <strong>Company address block</strong>
-                                    <div>Contains the company address.</div>
-                                </div>
-                            </span></li>
+                            <li t-if="company.is_company_details_empty">
+                                <span t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}">
+                                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                                        <strong>Company address block</strong>
+                                        <div>Contains the company address.</div>
+                                    </div>
+                                </span>
+                            </li>
                             <li t-else="">
                                 <span t-field="company.company_details">
                                     <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
@@ -35,53 +37,68 @@
                                     </div>
                                 </span>
                             </li>
-                            <li t-if="not forced_vat"/>
+                            <li t-if="not forced_vat">
+                            </li>
+                            <li t-else="">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                    <span t-esc="forced_vat">US12345671</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-3" name="company_address" style="text-align:center; font-size:12px">
+                        <ul class="list-unstyled" name="company_address_list">
+                            <li t-if="company.is_company_details_empty">
+                                <span t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}">
+                                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                                        <strong>Company address block</strong>
+                                        <div>Contains the company address.</div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li t-else="">
+                                <span t-field="company.company_details">
+                                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                                        <strong>Company details block</strong>
+                                        <div>Contains the company details.</div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li t-if="not forced_vat">
+                                      </li>
                             <li t-else="">
                                 <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
                                 <span t-esc="forced_vat">US12345671</span>
                             </li>
                         </ul>
                     </div>
-                    <div class="col-3" name="company_address" style="text-align:center; font-size:12px">
+                    <div class="col-3" name="company_address" style="text-align:center; font-size:12px; font-weight: bold;">
                         <ul class="list-unstyled" name="company_address_list">
-                            <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}">
-                                <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
-                                    <strong>Company address block</strong>
-                                    <div>Contains the company address.</div>
-                                </div>
-                            </span></li>
+                            <li t-if="company.is_company_details_empty">
+                                <strong>Company address block</strong>
+                                <div>Contains the company address.</div>
+                            </li>
                             <li t-else="">
-                                <span t-field="company.company_details">
+                                <span t-field="company.create_date">
                                     <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                                         <strong>Company details block</strong>
                                         <div>Contains the company details.</div>
                                     </div>
                                 </span>
                             </li>
-                            <li t-if="not forced_vat"/>
-                            <li t-else="">
-                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                                <span t-esc="forced_vat">US12345671</span>
+                            <li t-if="company.sale_footer">
+                                <strong>Company address block</strong>
+                                <div>Contains the company address.</div>
                             </li>
-                        </ul>
-                    </div>
-                    <div class="col-3" name="company_address" style="text-align:center; font-size:12px">
-                        <ul class="list-unstyled" name="company_address_list">
-                            <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}">
-                                <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
-                                    <strong>Company address block</strong>
-                                    <div>Contains the company address.</div>
-                                </div>
-                            </span></li>
                             <li t-else="">
-                                <span t-field="company.company_details">
+                                <span t-field="company.sale_footer">
                                     <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                                         <strong>Company details block</strong>
                                         <div>Contains the company details.</div>
                                     </div>
                                 </span>
                             </li>
-                            <li t-if="not forced_vat"/>
+                            <li t-if="not forced_vat">
+                                      </li>
                             <li t-else="">
                                 <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
                                 <span t-esc="forced_vat">US12345671</span>
