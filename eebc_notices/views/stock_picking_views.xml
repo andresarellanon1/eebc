@@ -16,7 +16,7 @@
             <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='operations']/field[@name='move_ids_without_package']/tree[1]/field[@name='product_uom']" position="after">
         
                 <button name="create_notice" type="object" string="Crear Aviso" icon="fa-area-chart"
-                        invisible="has_aviso_in_attributes"/>
+                        invisible="has_aviso_in_attributes == 'False'"/>
             </xpath>
         </field>
     </record>
