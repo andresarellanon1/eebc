@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="report_configs.out_saleorder_template_custom" inherit_id="sale.report_saleorder_document">
-            <xpath expr="//t[@t-call=&quot;account.report_invoice_document&quot;]" position="after">
+            <xpath expr="//t[@t-call=&quot;sale.report_saleorder_document&quot;]" position="after">
                 <t t-elif="o._get_name_invoice_report() == 'report_configs.out_saleorder_template_custom'" t-call="report_configs.out_saleorder_template_custom" t-lang="lang" />
             </xpath>
         </template>

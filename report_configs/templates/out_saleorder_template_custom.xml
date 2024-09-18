@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
-        <template id="out_invoice_template_custom">
+        <template id="out_saleorder_template_custom">
             <t t-foreach="docs" t-as="factura">
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
