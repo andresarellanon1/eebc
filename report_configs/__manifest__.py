@@ -11,8 +11,10 @@
                ],
     'data': [
         'templates/out_invoice_template_custom.xml',
+        'templates/out_saleorder_template_custom.xml',
         'templates/external_layout_invoice_custom.xml',
         'templates/report_invoice_inherit_custom.xml',
+        'templates/report_sale.order_inherit_custom.xml',        
         'templates/report_styles.xml',
         'views/account_invoice_views.xml',
     ],
