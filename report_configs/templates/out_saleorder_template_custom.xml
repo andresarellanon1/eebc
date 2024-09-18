@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="out_saleorder_template_custom">
-            <t t-foreach="docs" t-as="factura">
+            <t t-foreach="docs" t-as="doc">
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
                         <t t-call="report_configs.report_styles"/>
@@ -96,7 +96,7 @@
                                 <tbody style="font-size: 9px;">
                                     <t t-set="contador_productos" t-value="0"/>
                                     <t t-set="total_importe" t-value="0"/>
-                                    <t t-foreach="factura.invoice_line_ids" t-as="linea" t-index="i">
+                                    <t t-foreach="doc.order_line" t-as="linea">
                                         <t t-if="linea.display_type == 'product'">
                                             <t t-set="contador_productos" t-value="contador_productos + 1"/>
                                         </t>
@@ -129,16 +129,16 @@
                                                     INMEDIATO
                                                 </td>
                                                 <td>
-                                                    <t t-esc="line.quantity"/>
+                                                    <t t-esc="linea.quantity"/>
                                                 </td>
                                                 <td>
-                                                    <t t-esc="line.product_uom_id.name"/>
+                                                    <t t-esc="linea.product_uom.name"/>
                                                 </td>
                                                 <td>
-                                                    <span t-field="line.price_unit"/>
+                                                    <span t-field="linea.price_unit"/>
                                                 </td>
                                                 <td style="text-align: right;">
-                                                    <t t-set="importe" t-value="(linea.price_unit or 0) * (linea.quantity or 0)"/>
+                                                    <t t-set="importe" t-value="(linea.price_unit or 0) * (linea.product_uom_qty or 0)"/>
                                                     <t t-esc="importe"/>
                                                     <t t-set="total_importe" t-value="total_importe + importe"/>
                                                 </td>
