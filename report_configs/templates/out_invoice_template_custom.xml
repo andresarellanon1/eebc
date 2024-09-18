@@ -132,7 +132,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <t t-set="contador_productos" t-value="0"/>
+                                    <t t-set="total_importe" t-value="0"/>
                                     <t t-foreach="factura.invoice_line_ids" t-as="linea" t-index="i">
+
                                         <t t-if="linea.display_type == 'line_section'">
                                             <tr>
                                                 <td colspan="8" style="font-weight: bold; background-color: #f5f5f5; text-align: center;">
@@ -150,7 +153,7 @@
                                         <t t-if="linea.display_type == 'product'">
                                             <tr>
                                                 <td>
-                                                    <t t-esc="i + 1"/>
+                                                    <t t-esc="contador_productos"/>
                                                 </td>
                                                 <td>
                                                     <t t-esc="linea.product_id.default_code or ''"/>
