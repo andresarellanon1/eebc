@@ -13,7 +13,6 @@
         'templates/out_invoice_template_custom.xml',
         'templates/external_layout_invoice_custom.xml',
         'templates/report_invoice_inherit_custom.xml',
-        'templates/report_styles.xml',
         'views/account_invoice_views.xml',
     ],
     "license": "LGPL-3",

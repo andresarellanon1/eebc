@@ -5,8 +5,8 @@
             <t t-foreach="docs" t-as="factura">
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
-                        <t t-call="report_configs.report_styles"/>
-                        <!-- <style>
+                        <!--<t t-call="report_configs.report_styles"/>-->
+                        <style>
                             .col_tags {
                                 text-align: right;
                                 padding: 0;
@@ -36,7 +36,7 @@
                                 background-color: #00006b;
                                 border-color: #000000;
                             }
-                        </style> -->
+                        </style>
                         <div class="page">
                             <table class="table-borderless" style="width: 100%; border-collapse: collapse;">
                                 <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 23px; font-weight: 900 important!; padding: 2px important!">
