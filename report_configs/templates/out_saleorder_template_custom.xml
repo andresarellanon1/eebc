@@ -6,37 +6,6 @@
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
                         <t t-call="report_configs.report_styles"/>
-                        <!-- <style>
-                            .col_tags {
-                                text-align: right;
-                                padding: 0;
-                                font-size: 12px;
-                                color: #323299;
-                                margin: 0;
-                            }
-                            .col_fields {
-                                font-size: 12px;
-                                margin-right: 1px;
-                                color: black;
-                                background-color: #ededed;
-                            }
-                            .container {
-                                margin: 0;
-                                padding: 0;
-                                width: 100%;
-                            }
-                            p {
-                                margin: 0;
-                                font-weight: bold;
-                            }
-                            .table {
-                                margin-top: 30px;
-                            }
-                            #encabezados-tabla {
-                                background-color: #00006b;
-                                border-color: #000000;
-                            }
-                        </style> -->
                         <div class="page">
                             <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0; ">
                                 <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 21px; padding: 2px important!">
@@ -167,7 +136,7 @@
                                                 </td>
                                                 <td>
                                                     <span t-field="line.price_unit"/>
-                                                </td>                                                
+                                                </td>
                                                 <td style="text-align: right;">
                                                     <t t-set="importe" t-value="(linea.price_unit or 0) * (linea.quantity or 0)"/>
                                                     <t t-esc="importe"/>
@@ -194,6 +163,66 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <div style="position: fixed; bottom: 0; left: 0; width: 100%; font-size: 8px; background-color: white;">
+                                <p style="text-align: left;">www.eebc.com.mx</p>
+                                <table class="table" style="width: 100%; font-size: 8px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50%; font-weight: bold;">Precios válidos hasta el dí: <strong>06/Jul/2022</strong>
+                                            </th>
+                                            <th style="width: 50%;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="text-align: left;">
+                                                <strong>Vendedor:</strong> MIGUEL ARCANGEL BRAMASCO TAMAYO
+                                            </td>
+                                            <td style="text-align: left;">
+                                                <strong>EQUIPOS ELECTRICOS DE BAJA CALIFORNIA</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left;">
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Teléfono:</strong>
+                                                        </td>
+                                                        <td>(686) 561-5255</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Celular:</strong>
+                                                        </td>
+                                                        <td>(686) 273-6077</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Correo:</strong>
+                                                        </td>
+                                                        <td>arcangel.bramasco@eebc.com.mx</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="text-align: left;">
+                                                <table>
+                                                    <tr>
+                                                        <td>CALLE URBANO VASQUEZ NUM. 1988</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>COL. PLUTARCO ELIAS CALLES, CP 21376, MEXICALI, B.C.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>R.F.C EEB8111231Q4, Teléfono: (686) 561-5200 FAX 561-5206</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
                     </t>
                 </t>
