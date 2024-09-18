@@ -31,13 +31,6 @@
                     background-color: #00006b;
                     border-color: #000000;
                 }
-
-                .td-text-fix{
-                    max-width: 100px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    word-wrap: break-word;
-                }
             </style>
     </template>
 </odoo>
