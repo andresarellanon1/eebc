@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_styles">
-        <t t-raw="0">
             <style>
                 .col_tags {
                     text-align: right;
@@ -32,7 +31,13 @@
                     background-color: #00006b;
                     border-color: #000000;
                 }
+
+                #td-text-fix{
+                    max-width: 70%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                }
             </style>
-        </t>
     </template>
 </odoo>
