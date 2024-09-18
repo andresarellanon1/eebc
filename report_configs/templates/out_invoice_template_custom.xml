@@ -5,48 +5,17 @@
             <t t-foreach="docs" t-as="factura">
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
-                        <t t-call="report_configs.report_styles"/>
-                        <!-- <style>
-                            .col_tags {
-                                text-align: right;
-                                padding: 0;
-                                font-size: 12px;
-                                color: #323299;
-                                margin: 0;
-                            }
-                            .col_fields {
-                                font-size: 12px;
-                                margin-right: 1px;
-                                color: black;
-                                background-color: #ededed;
-                            }
-                            .container {
-                                margin: 0;
-                                padding: 0;
-                                width: 100%;
-                            }
-                            p {
-                                margin: 0;
-                                font-weight: bold;
-                            }
-                            .table {
-                                margin-top: 30px;
-                            }
-                            #encabezados-tabla {
-                                background-color: #00006b;
-                                border-color: #000000;
-                            }
-                        </style> -->
+                        <t t-call="report_configs.report_styles"/>                       
                         <div class="page">
-                            <table class="table-borderless" style="width: 100%; border-collapse: collapse;">
-                                <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 23px; font-weight: 900 important!; padding: 2px important!">
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0; ">
+                                <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 21px; padding: 2px important!">
                                     <tr>
-                                        <th style="width: 58%;"></th>
-                                        <th style="width: 25%; background-color: white;">
+                                        <th style="width: 58%; "/>
+                                        <th style="width: 25%; background-color: white; font-weight: 900 ">
                                             F A C T U R A
                                         </th>
-                                        <th style="width: 17%; ">
-                                            FORMATO
+                                        <th style="width: 17%; font-weight: 900">
+                                            M - 177074
                                         </th>
                                     </tr>
                                 </thead>
@@ -122,22 +91,24 @@
                             </div>
                             <table class="table">
                                 <thead>
-                                    <tr id="encabezados-tabla" style="background-color: rgb(0, 0, 107); font-size: 24px; color: white;">
+                                    <tr id="encabezados-tabla" style="background-color: rgb(0, 0, 107); font-size: 10px; color: white;">
                                         <th style="width: 5%;">No.</th>
-                                        <th style="width: 10%;">CLAVE</th>
-                                        <th style="width: 10%;">CANTIDAD</th>
-                                        <th style="width: 10%;">UNIDAD</th>
-                                        <th style="width: 35%;">DESCRIPCION</th>
-                                        <th style="width: 10%;">OBJ.IMP</th>
+                                        <th style="width: 9%;">CLAVE</th>
+                                        <th style="width: 9%;">CANTIDAD</th>
+                                        <th style="width: 9%;">UNIDAD</th>
+                                        <th style="width: 39%;">DESCRIPCION</th>
+                                        <th style="width: 9%;">OBJ.IMP</th>
                                         <th style="width: 10%;">PRECIO</th>
                                         <th style="width: 10%;">IMPORTE</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody style="font-size: 9px;">
                                     <t t-set="contador_productos" t-value="0"/>
                                     <t t-set="total_importe" t-value="0"/>
                                     <t t-foreach="factura.invoice_line_ids" t-as="linea" t-index="i">
-
+                                        <t t-if="linea.display_type == 'product'">
+                                            <t t-set="contador_productos" t-value="contador_productos + 1"/>
+                                        </t>
                                         <t t-if="linea.display_type == 'line_section'">
                                             <tr>
                                                 <td colspan="8" style="font-weight: bold; background-color: #f5f5f5; text-align: center;">
@@ -153,7 +124,9 @@
                                             </tr>
                                         </t>
                                         <t t-if="linea.display_type == 'product'">
+                                        
                                             <tr>
+                                            
                                                 <td>
                                                     <t t-esc="contador_productos"/>
                                                 </td>
