@@ -32,8 +32,8 @@
                     border-color: #000000;
                 }
 
-                #td-text-fix{
-                    max-width: 70%;
+                .td-text-fix{
+                    max-width: 100px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     word-wrap: break-word;
