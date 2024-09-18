@@ -171,7 +171,6 @@
                                                 </td>
                                                 <td>
                                                     <t t-esc="linea.tax_ids and ', '.join([tax.name for tax in linea.tax_ids]) or ''"/>
-02
                                                 </td>
                                                 <td style="text-align: right;">
                                                     <t t-esc="linea.price_unit or ''"/>
