@@ -23,3 +23,5 @@ class Notices(models.Model):
         'stock.picking', 
         string='Operaciones de Almacén'
     )
+    
+    
