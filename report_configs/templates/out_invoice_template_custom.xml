@@ -264,9 +264,24 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td scope="row" colspan="2">
-                                            <p>SELLO DIGITAL SAT: 00001000000406200000</p>
-                                        </td>
+                                        <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+                                            <p style="display: flex; flex-direction: column; margin-right: 20px;">
+                                                No. de Certificado del CSD:
+                                                <span>00001000000701173867</span>
+                                            </p>
+                                            <p style="display: flex; flex-direction: column; margin-right: 20px;">
+                                                No. de Certificado del SAT:
+                                                <span>00001000000505371432</span>
+                                            </p>
+                                            <p style="display: flex; flex-direction: column; margin-right: 20px;">
+                                                Folio Fiscal:
+                                                <span>AB87796A-ECAC-4EF0-B42B-57A0321E976F</span>
+                                            </p>
+                                            <p style="display: flex; flex-direction: column; margin-right: 20px;">
+                                                Fecha y Hora de Certificación:
+                                                <span>2024-09-10T16:47:57</span>
+                                            </p>
+                                        </div>
                                     </tr>
                                     <tr>
                                         <td scope="row">
