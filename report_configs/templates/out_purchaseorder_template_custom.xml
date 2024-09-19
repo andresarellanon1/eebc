@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <template id="out_invoice_template_custom">
-            <t t-foreach="docs" t-as="factura">
+        <template id="out_purchaseorder_template_custom">
+            <t t-foreach="docs" t-as="compra">
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
-                        <t t-call="report_configs.report_styles"/>
                         <div class="page">
                             <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0; ">
                                 <thead class="p- table-borderless text-center"
@@ -124,20 +123,20 @@
                             </div>
                             <div style="font-size:12px; page-break-inside: avoid">
                                 <table class="table">
-                                    <thead id="encabezados-tabla" style="border-color: #f0f0f0;">
-                                        <th style="width: 5%;color:#ffffff;">No.</th>
-                                        <th style="width: 9%;color:#ffffff;">CLAVE</th>
-                                        <th style="width: 9%;color:#ffffff;">CANTIDAD</th>
-                                        <th style="width: 9%;color:#ffffff;">UNIDAD</th>
-                                        <th style="width: 39%;color:#ffffff;">DESCRIPCION</th>
-                                        <th style="width: 9%;color:#ffffff;">OBJ.IMP</th>
-                                        <th style="width: 10%;color:#ffffff;">PRECIO</th>
-                                        <th style="width: 10%;color:#ffffff;">IMPORTE</th>
+                                    <thead id="encabezados-tabla" style="color: #000000;">
+                                        <th style="width: 5%;">No.</th>
+                                        <th style="width: 9%;">CLAVE</th>
+                                        <th style="width: 9%;">CANTIDAD</th>
+                                        <th style="width: 9%;">UNIDAD</th>
+                                        <th style="width: 39%;">DESCRIPCION</th>
+                                        <th style="width: 9%;">OBJ.IMP</th>
+                                        <th style="width: 10%;">PRECIO</th>
+                                        <th style="width: 10%;">IMPORTE</th>
                                     </thead>
                                     <tbody>
                                         <t t-set="contador_productos" t-value="0"/>
                                         <t t-set="total_importe" t-value="0"/>
-                                        <t t-foreach="factura.invoice_line_ids" t-as="linea" t-index="i">
+                                        <t t-foreach="compra.purchaseorder_line_ids" t-as="linea" t-index="i">
                                             <t t-if="linea.display_type == 'product'">
                                                 <t t-set="contador_productos" t-value="contador_productos + 1"/>
                                             </t>
@@ -194,7 +193,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <table class="table" style="font-size: 10px;">
+                            <table class="table" style="font-size: 8px;">
                                 <tbody>
                                     <tr>
                                         <td scope="row">
