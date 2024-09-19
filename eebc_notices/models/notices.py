@@ -4,11 +4,7 @@ class Notices(models.Model):
 
     _name= 'notices.notices'
 
-    resource = fields.One2many(
-        string='field_name',
-        comodel_name='model.name',
-        inverse_name='inverse_field',
-    )
+    resource = fields.Float()
  
     supplier = fields.Char( string='Proveedor')
     folio = fields.Char(string='Folio')
