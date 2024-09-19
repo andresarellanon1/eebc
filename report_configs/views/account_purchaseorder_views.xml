@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_out_purchaseorder_quadro" model="ir.actions.report">
+        <field name="name">Reporte orden de compra de clientes Quadro</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">report_configs.out_purchaseorder_template_custom</field>
+    </record>
+</odoo>
