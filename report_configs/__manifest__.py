@@ -8,7 +8,8 @@
     'author': 'Quadro Soluciones',
     'depends': [
                 'account',
-                'sale'
+                'sale',
+                'purchase'
                ],
     'data': [
         'templates/out_invoice_template_custom.xml',
