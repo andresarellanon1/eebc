@@ -85,18 +85,6 @@
                                     </div>
                                 </span>
                             </li>
-                            <li t-if="company.sale_footer">
-                                <strong>Company address block</strong>
-                                <div>Contains the company address.</div>
-                            </li>
-                            <li t-else="">
-                                <span t-field="company.sale_footer">
-                                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
-                                        <strong>Company details block</strong>
-                                        <div>Contains the company details.</div>
-                                    </div>
-                                </span>
-                            </li>
                             <li t-if="not forced_vat">
                                       </li>
                             <li t-else="">
