@@ -36,8 +36,8 @@ class StockMove(models.Model):
         notice_vals = {
             'description': 'Aviso generado para el producto %s en la operación %s' % (self.product_id.name, self.picking_id.name),
             'quantity': self.product_uom_qty,
-            'resource': self.product_id,
-            'supplier': self.picking_id.partner_id,
+            'resource': self.product_id.id,
+            'supplier': self.picking_id.partner_id.id,
             'description': self.product_id.description,
             
             # Otros valores que quieras pasar a notices.notices
