@@ -20,12 +20,13 @@
                                     </tr>
                                 </thead>
                             </table>
+                            <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
                             <br/>
                             <br/>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-auto col_tags">
-                                        <span>Cliente:</span>
+                                        <span>Cliente:</span>                                        
                                         <br/>
                                         <span>Nombre:</span>
                                         <br/>
@@ -73,6 +74,7 @@
                                         <br/>
                                         <span>CREDITO</span>
                                         <br/>
+                                        <span><div style="height: 5px;"></div></span>
                                         <br/>
                                         <span>686-904-54-00 EXT2297</span>
                                         <br/>
@@ -121,7 +123,7 @@
                                                     <span>4270</span>
                                                 </td>
                                                 <td style="text-align: left;">
-                                                    <span t-field="linea.product_id.name" />
+                                                    <span t-field="linea.product_id.name"/>
                                                 </td>
                                                 <td>
                                                     INMEDIATO
@@ -146,7 +148,7 @@
                                 </tbody>
                             </table>
                             <table class="table-borderless" style="width: 100%; font-size: 13px;">
-                                <tbody>
+                                <tbody>                                    
                                     <tr>
                                         <td style="width: 75%;"/>
                                         <td style="width: 5%; text-align: right; border-top: 1px solid black; color: rgb(0, 56, 108);">
@@ -181,37 +183,37 @@
                             <br/>
                             <div style="width: 100%; font-size: 13px; background-color: white; background-color: rgba(255, 255, 255, 0); margin-top: 20px;">
                                 <span style="text-align: left;">www.eebc.com.mx</span>
-                                <table class="table-borderless" style="width: 100%; table-layout: fixed;">
+                                <table class="table-borderless" style="width: 100%; table-layout: fixed; border-bottom: 3px solid rgb(0,58,112); border-top: 3px solid rgb(0,58,112);">
                                     <thead>
                                         <tr>
-                                            <th style="width: 50%; font-weight: bold; text-align: left">
+                                            <th style="width: 50%; font-weight: bold; text-align: left;  border-right: 3px solid rgb(0,58,112);">
                                                 <strong>Precios válidos hasta el día: 06/Jul/2022</strong>
                                             </th>
-                                            <th style="width: 50%;"/>
+                                            <th style="width: 50%; border-top: 3px solid rgb(0,58,112);"/>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td style="text-align: left; width: 50%; ">
+                                            <td style="text-align: left; width: 50%; border-right: 3px solid rgb(0,58,112);">
                                                 <table style="width: 100%;">
                                                     <tbody>
                                                         <br/>
                                                         <br/>
                                                         <br/>
                                                         <tr>
-                                                            <td style="text-align: right; width: 20%; padding-right: 4px; ">
+                                                            <td style="text-align: right; width: 20%; padding-right: 4px;">
                                                                 <strong>Vendedor : </strong>
                                                             </td>
-                                                            <td style="text-align: left; width: 80%; ">MIGUEL ARCANGEL BRAMASCO TAMAYO</td>
+                                                            <td style="text-align: left; width: 80%;">MIGUEL ARCANGEL BRAMASCO TAMAYO</td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="text-align: right; padding-right: 4px; ">
+                                                            <td style="text-align: right; padding-right: 4px;">
                                                                 <strong>Teléfono : </strong>
                                                             </td>
                                                             <td style="text-align: left;">(686) 561-5255</td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="text-align: right; padding-right: 4px; ">
+                                                            <td style="text-align: right; padding-right: 4px;">
                                                                 <strong>Celular : </strong>
                                                             </td>
                                                             <td style="text-align: left;">(686) 273-6077</td>
@@ -220,12 +222,12 @@
                                                             <td style="text-align: right; padding-right: 4px; ">
                                                                 <strong>Correo : </strong>
                                                             </td>
-                                                            <td style="text-align: left;">arcangel.bramasco@eebc.com.mx</td>
+                                                            <td style="text-align: left; ">arcangel.bramasco@eebc.com.mx</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </td>
-                                            <td style="text-align: right; width: 50%;">
+                                            <td style="text-align: right; width: 50%; ">
                                                 <table style="width: 100%;">
                                                     <br/>
                                                     <br/>
@@ -250,6 +252,9 @@
                                     </tbody>
                                 </table>
                             </div>
+
+
+
                         </div>
                     </t>
                 </t>
