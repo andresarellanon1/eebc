@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <template id="out_invoice_template_custom">
-            <t t-foreach="docs" t-as="factura">
+        <template id="out_purchaseorder_template_custom">
+            <t t-foreach="docs" t-as="compra">
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
-                        <t t-call="report_configs.report_styles"/>
                         <div class="page">
                             <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0; ">
                                 <thead class="p- table-borderless text-center"
@@ -124,20 +123,20 @@
                             </div>
                             <div style="font-size:12px; page-break-inside: avoid">
                                 <table class="table">
-                                    <thead id="encabezados-tabla" style="border-color: #f0f0f0;">
-                                        <th style="width: 5%;color:#ffffff;">No.</th>
-                                        <th style="width: 9%;color:#ffffff;">CLAVE</th>
-                                        <th style="width: 9%;color:#ffffff;">CANTIDAD</th>
-                                        <th style="width: 9%;color:#ffffff;">UNIDAD</th>
-                                        <th style="width: 39%;color:#ffffff;">DESCRIPCION</th>
-                                        <th style="width: 9%;color:#ffffff;">OBJ.IMP</th>
-                                        <th style="width: 10%;color:#ffffff;">PRECIO</th>
-                                        <th style="width: 10%;color:#ffffff;">IMPORTE</th>
+                                    <thead id="encabezados-tabla" style="color: #000000;">
+                                        <th style="width: 5%;">No.</th>
+                                        <th style="width: 9%;">CLAVE</th>
+                                        <th style="width: 9%;">CANTIDAD</th>
+                                        <th style="width: 9%;">UNIDAD</th>
+                                        <th style="width: 39%;">DESCRIPCION</th>
+                                        <th style="width: 9%;">OBJ.IMP</th>
+                                        <th style="width: 10%;">PRECIO</th>
+                                        <th style="width: 10%;">IMPORTE</th>
                                     </thead>
                                     <tbody>
                                         <t t-set="contador_productos" t-value="0"/>
                                         <t t-set="total_importe" t-value="0"/>
-                                        <t t-foreach="factura.invoice_line_ids" t-as="linea" t-index="i">
+                                        <t t-foreach="compra.purchaseorder_line_ids" t-as="linea" t-index="i">
                                             <t t-if="linea.display_type == 'product'">
                                                 <t t-set="contador_productos" t-value="contador_productos + 1"/>
                                             </t>
@@ -194,44 +193,40 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <table class="table" style="font-size: 10px;">
+                            <table class="table" style="font-size: 8px;">
                                 <tbody>
                                     <tr>
                                         <td scope="row">
-                                            <span class="span-n">Convenio: Si su pago es por BANCOMER usar Convenio :
-                                                0001551647
-                                            </span>
+                                            <span class="span-n">Convenio: Si su pago es por BANCOMER usar Convenio : 0001551647</span>
                                             <p>Referencia : M0000000050582</p>
                                         </td>
                                         <td rowspan="2" style="font-size: 10px;" class="col-3">
-                                            <p style="display: table; width: 100%;">
-                                                <span style="display: table-cell; text-align: left;">SUBTOTAL</span>
-                                                <span style="display: table-cell; text-align: right;">$
+                                            <p style="display: flex; justify-content: space-between;">
+                                                SUBTOTAL
+                                                <span>$
                                                     <t t-esc="total_importe"/>
                                                 </span>
                                             </p>
-                                            <p style="display: table; width: 100%;">
-                                                <span style="display: table-cell; text-align: left;">DESCUENTO</span>
-                                                <span style="display: table-cell; text-align: right;">$</span>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                DESCUENTO
+                                                <span>$</span>
                                             </p>
-                                            <p style="display: table; width: 100%;">
-                                                <span style="display: table-cell; text-align: left;">SUBTOTAL</span>
-                                                <span style="display: table-cell; text-align: right;">$</span>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                SUBTOTAL
+                                                <span>$</span>
                                             </p>
-                                            <p style="display: table; width: 100%;">
-                                                <span style="display: table-cell; text-align: left;">IVA TRASLADADO
-                                                </span>
-                                                <span style="display: table-cell; text-align: right;">$</span>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                IVA TRASLADADO
+                                                <span>$</span>
                                             </p>
-                                            <p style="display: table; width: 100%;">
-                                                <span style="display: table-cell; text-align: left;">IVA RETENIDO</span>
-                                                <span style="display: table-cell; text-align: right;">$</span>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                IVA RETENIDO
+                                                <span>$</span>
                                             </p>
-                                            <p style="display: table; width: 100%;">
-                                                <span style="display: table-cell; text-align: left;">TOTAL</span>
-                                                <span style="display: table-cell; text-align: right;">$</span>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                TOTAL
+                                                <span>$</span>
                                             </p>
-
                                         </td>
                                     </tr>
                                     <tr>
@@ -274,33 +269,15 @@
                                     </tr>
                                     <tr>
                                         <td scope="row">
-                                            <span style="word-break: break-all;">
+                                            <p style="word-break: break-all;">
                                                 SELLO DIGITAL DEL CFDI:
                                                 bALTzFMgTa6F/N+25GiXSP/1oW9mZ4XCXqWVC51DeN2AxD3XzWdNVSaRLViwpeJMZ0jeihQG5kkjnzXU9OwVL5+kXeJK7V7Y1yhYifL+2u+s1aR3bQ8Oylt9dM55oZit8QgDRFbSEX5pdLkqDnSUePssLHYP6XlSOaEgkHc85HnfwstIzApHy1gJGGBEf57Bc1YGdeEuTbi94TxGFeHqnWiP5N2mjNCRk8oB+zJVsDZMgKHuld5ZMiPexk3S95omZ1jwMLeyYxw4GyNOkucHwT7tHYSu7UJmQ2pFf3gpE4Wk+WIJWHnJ8ThSPmbtzh48xh4pcdQvDUG0QkhkbR3e9A==
-                                            </span>
+                                            </p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td scope="row" colspan="2">
-                                            <div style="overflow: hidden;">
-                                                <p style="float: left; width: 24%; margin-right: 1%; margin-bottom: 10px;">
-                                                    No. de Certificado del CSD:
-                                                    <span>00001000000701173867</span>
-                                                </p>
-                                                <p style="float: left; width: 24%; margin-right: 1%; margin-bottom: 10px;">
-                                                    No. de Certificado del SAT:
-                                                    <span>00001000000505371432</span>
-                                                </p>
-                                                <p style="float: left; width: 24%; margin-right: 1%; margin-bottom: 10px;">
-                                                    Folio Fiscal:
-                                                    <span>AB87796A-ECAC-4EF0-B42B-57A0321E976F</span>
-                                                </p>
-                                                <p style="float: left; width: 24%; margin-right: 0; margin-bottom: 10px;">
-                                                    Fecha y Hora de Certificación:
-                                                    <span>2024-09-10T16:47:57</span>
-                                                </p>
-                                            </div>
-
+                                            <p>SELLO DIGITAL SAT: 00001000000406200000</p>
                                         </td>
                                     </tr>
                                     <tr>
