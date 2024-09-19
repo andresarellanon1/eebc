@@ -11,7 +11,7 @@
     """,
     "data": [
         "views/product_supplierinfo.xml",
-        "views/inherit_purchase_order_form_view.xml"
+        #"views/inherit_purchase_order_form_view.xml"
     ],
     "application": False,
     "installable": True,
