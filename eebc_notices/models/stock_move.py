@@ -45,8 +45,8 @@ class StockMove(models.Model):
         _logger.warning('VALS PARA AVISO: %s', notice_vals)
         
         
-        # notice = self.env['notices.notices'].create(notice_vals)
-        # _logger.warning('Se ha creado el aviso con ID: %s', notice.id)
+        notice = self.env['notices.notices'].create(notice_vals)
+        _logger.warning('Se ha creado el aviso con ID: %s', notice.id)
         
 
 
