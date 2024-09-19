@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <template id="report_configs.report_purchaseorder_inherit_custom" inherit_id="sale.report_purchaseorder">
+        <template id="report_configs.report_purchaseorder_inherit_custom" inherit_id="purchase.report_purchaseorder">
             <xpath expr="//t[@t-call='sale.report_purchaseorder_document']" position="replace">
                 <t t-set="lang" t-value="doc.partner_id.lang"/>
                 <t t-if="doc._get_name_purchase_report() == 'sale.report_purchaseorder_document'" t-call="sale.report_purchaseorder_document" t-lang="lang"/>
