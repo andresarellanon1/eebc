@@ -136,7 +136,7 @@
                                     <tbody>
                                         <t t-set="contador_productos" t-value="0"/>
                                         <t t-set="total_importe" t-value="0"/>
-                                        <t t-foreach="compra.purchaseorder_line_ids" t-as="linea" t-index="i">
+                                        <t t-foreach="compra.order_line" t-as="linea" t-index="i">
                                             <t t-if="linea.display_type == 'product'">
                                                 <t t-set="contador_productos" t-value="contador_productos + 1"/>
                                             </t>
