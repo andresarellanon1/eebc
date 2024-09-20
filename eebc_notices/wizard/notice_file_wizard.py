@@ -32,9 +32,9 @@ class NoticeFileWizard(models.TransientModel):
         # Convertir el archivo en un objeto de tipo BytesIO para ser leído por pandas
         file_stream = io.BytesIO(file_content)
         # Verificar la extensión del archivo para decidir cómo leerlo
-        if self.file_name.endswith('.csv'):
+        if self.file_xlsx.endswith('.csv'):
             df = pd.read_csv(file_stream)
-        elif self.file_name.endswith('.xlsx'):
+        elif self.file_xlsx.endswith('.xlsx'):
             df = pd.read_excel(file_stream)
         else:
             raise ValueError("Formato de archivo no soportado. Solo se permiten archivos CSV o Excel.")
