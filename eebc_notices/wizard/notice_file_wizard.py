@@ -26,15 +26,19 @@ class NoticeFileWizard(models.TransientModel):
     def action_data_analysis(self):
         if not self.file_xlsx:
             raise ValueError("Por favor, sube un archivo.")
+        
+        # Verificar la extensión del archivo usando el nombre del archivo
+        if not self.name:
+            raise ValueError("El archivo no tiene un nombre válido.")
+        
         # Decodificar el archivo binario
         file_content = base64.b64decode(self.file_xlsx)
-
-        # Convertir el archivo en un objeto de tipo BytesIO para ser leído por pandas
         file_stream = io.BytesIO(file_content)
+
         # Verificar la extensión del archivo para decidir cómo leerlo
-        if self.file_xlsx.endswith('.csv'):
+        if self.name.endswith('.csv'):
             df = pd.read_csv(file_stream)
-        elif self.file_xlsx.endswith('.xlsx'):
+        elif self.name.endswith('.xlsx'):
             df = pd.read_excel(file_stream)
         else:
             raise ValueError("Formato de archivo no soportado. Solo se permiten archivos CSV o Excel.")
