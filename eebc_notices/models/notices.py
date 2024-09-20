@@ -2,11 +2,19 @@ from odoo import fields, models, api
 
 class Notices(models.Model):
 
-    _name= 'notices.notices'
-
-    resource = fields.Float()
+    _name= 'notices.notices'    
+    
+    resource = fields.Many2one(
+        string='Recurso',
+        comodel_name='product.product',
+    )
+    
  
-    supplier = fields.Char( string='Proveedor')
+    supplier = fields.Many2one(
+        string='Proveedor',
+        comodel_name='res.partner',
+    )
+    
     folio = fields.Char(string='Folio')
     create_date = fields.Date(
         string='Fecha de creacion',
