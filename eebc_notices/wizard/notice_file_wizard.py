@@ -4,6 +4,10 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
+import base64
+import pandas as pd
+import io
+
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -20,11 +24,28 @@ class NoticeFileWizard(models.TransientModel):
     name = fields.Char(string="Nombre")
     quantity = fields.Float(string="Cantidad")
     def action_data_analysis(self):
-        
-        _logger.warning('Entramos a action_data_analysis')
-        _logger.warning(f"Nombre del archivo: {self.file_xlsx}")
-        _logger.warning(f"Nombre del wizard: {self.name}")
-        _logger.warning(f"Cantidad: {self.quantity}")
+        if not self.file:
+            raise ValueError("Por favor, sube un archivo.")
+        # Decodificar el archivo binario
+        file_content = base64.b64decode(self.file)
+
+        # Convertir el archivo en un objeto de tipo BytesIO para ser leído por pandas
+        file_stream = io.BytesIO(file_content)
+        # Verificar la extensión del archivo para decidir cómo leerlo
+        if self.file_name.endswith('.csv'):
+            df = pd.read_csv(file_stream)
+        elif self.file_name.endswith('.xlsx'):
+            df = pd.read_excel(file_stream)
+        else:
+            raise ValueError("Formato de archivo no soportado. Solo se permiten archivos CSV o Excel.")
+
+        _logger.warning(df.columns)
+
+        return {'type': 'ir.actions.act_window_close'}
+        # _logger.warning('Entramos a action_data_analysis')
+        # _logger.warning(f"Nombre del archivo: {self.file_xlsx}")
+        # _logger.warning(f"Nombre del wizard: {self.name}")
+        # _logger.warning(f"Cantidad: {self.quantity}")
 
 
 
