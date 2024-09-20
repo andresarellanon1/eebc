@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Analisar archivo">
                 <group>
-                    <field name="file_xlsx" />
+                    <field name="file_xlsx" filename="file_name" />
                     <field name="name" />
 
                     <field name="quantity" />
