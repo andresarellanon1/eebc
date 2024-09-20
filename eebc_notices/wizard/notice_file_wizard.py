@@ -23,9 +23,13 @@ class NoticeFileWizard(models.TransientModel):
     file_xlsx = fields.Binary(string="Archivo" )
     file_name = fields.Char(string="Nombre del archivo")  # Campo para almacenar el nombre del archivo
 
-    name = fields.Char(string="Nombre")
+    product_id = fields.Many2one(
+        string='Recurso',
+        comodel_name='product.product',
+    )
     quantity = fields.Float(string="Cantidad")
     def action_data_analysis(self):
+        _logger.warning('producto: %s', self.product_id)
         if not self.file_xlsx:
             raise ValueError("Por favor, sube un archivo.")
 
@@ -48,6 +52,21 @@ class NoticeFileWizard(models.TransientModel):
 
         # Aquí puedes procesar el DataFrame df
         _logger.warning(df.columns)
+
+         # Verificar si la columna 'Recurso' existe
+        if 'Recurso' not in df.columns:
+            raise ValueError("La columna 'Recurso' no existe en el archivo.")
+
+        # Buscar el valor del producto en la columna 'Recurso'
+        product_name = self.product_id.name  # Nombre del producto
+        matching_rows = df[df['Recurso'] == product_name]
+
+        if not matching_rows.empty:
+            _logger.info(f"Se encontraron las siguientes filas que coinciden con el producto {product_name}:")
+            _logger.info(matching_rows)
+            # Aquí puedes realizar alguna acción con las filas encontradas
+        else:
+            _logger.info(f"No se encontraron coincidencias para el producto {product_name} en la columna 'Recurso'.")
 
         return {'type': 'ir.actions.act_window_close'}
         # _logger.warning('Entramos a action_data_analysis')
