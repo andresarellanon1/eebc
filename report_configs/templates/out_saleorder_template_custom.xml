@@ -12,72 +12,70 @@
                                     <tr>
                                         <th style="width: 53%;"/>
                                         <th style="width: 30%; background-color: white; font-weight: 900">
-                                    C O T I Z A C I Ó N
+                                    T R A S L A D O
                                         </th>
                                         <th style="width: 17%; font-weight: 900">
-                                    76254
+                                    M - 618
                                         </th>
                                     </tr>
                                 </thead>
                             </table>
-                            <strong>R.F.C.: EEB8111231Q4  RÉGIMEN FISCAL: 601</strong>
-                            <br/>
-                            <br/>
-                            <div class="container">
+                            <div class="container m-1">
                                 <div class="row">
                                     <div class="col-auto col_tags">
-                                        <span>Cliente:</span>                                        
+                                        <span>No. Cliente:</span>                                        
                                         <br/>
                                         <span>Nombre:</span>
                                         <br/>
                                         <span>R.F.C:</span>
                                         <br/>
-                                        <span>C. Postal:</span>
+                                        <span>Domicilio Fiscal:</span>
                                         <br/>
-                                        <span>Contacto:</span>
+                                        <span>Uso del CFDI:</span>
                                         <br/>
-                                        <span>Email:</span>
+                                        <span>Régimen fiscal:</span>
                                         <br/>
                                     </div>
                                     <div class="col-auto col_fields" style="padding-right:15px">
-                                        <span>13663</span>
+                                        <span><div style="height: 5px;"></div></span>
                                         <br/>
-                                        <span>MAQUINARIA Y VALORES INDUSTRIALES</span>
+                                        <span>EQUIPOS ELECTRICOS DE BAJA CALIFORNIA</span>
                                         <br/>
-                                        <span>MVI140730V38</span>
+                                        <span>eeb8111231q4</span>
                                         <br/>
-                                        <span>21360</span>
+                                        <span>21374</span>
                                         <br/>
-                                        <span>YANIN ROMERO RIVERA</span>
+                                        <span>S01</span>
                                         <br/>
-                                        <span>yanin.romerorivera@fevisa.com</span>
+                                        <span>601</span>
                                         <br/>
                                     </div>
                                     <div class="col-auto col_tags">
-                                        <span>Fecha:</span>
+                                        <span>Fecha / Hora:</span>
                                         <br/>
-                                        <span>Almacen:</span>
+                                        <span>Num. Pedido:</span>
                                         <br/>
-                                        <span>Condiciones:</span>
+                                        <span>Orden Compra:</span>
                                         <br/>
-                                        <span>L.A.B.:</span>
+                                        <span>Vendedor:</span>
                                         <br/>
-                                        <span>Teléfono:</span>
+                                        <span>Forma de Pago:</span>
                                         <br/>
-                                        <span>Celular:</span>
+                                        <span>Exportación:</span>
                                         <br/>
                                     </div>
                                     <div class="col-auto col_fields" style="background-color:#ededed;">
-                                        <span>06/06/2022</span>
-                                        <br/>
-                                        <span>MEXICALI</span>
-                                        <br/>
-                                        <span>CREDITO</span>
+                                        <span>2024/09/04 10:17:23 AM</span>
                                         <br/>
                                         <span><div style="height: 5px;"></div></span>
                                         <br/>
-                                        <span>686-904-54-00 EXT2297</span>
+                                        <span><div style="height: 5px;"></div></span>
                                         <br/>
+                                        <span><div style="height: 5px;"></div></span>
+                                        <br/>
+                                        <span><div style="height: 5px;"></div></span>
+                                        <br/>
+                                        <span>01</span>                                        
                                         <br/>
                                     </div>
                                 </div>
@@ -85,14 +83,14 @@
                             <table class="table-borderless" style="width: 100%; font-size: 13px;">
                                 <thead>
                                     <tr id="encabezados-tabla" style="background-color: rgb(0, 56, 108); color: white; padding: 10px;">
-                                        <th style="width: 5%; padding: 7px 0;">Pda.</th>
-                                        <th style="width: 5%;"/>
-                                        <th style="width: 46%;">Descripción</th>
-                                        <th style="width: 15%;">Tiempo de Entrega</th>
-                                        <th style="width: 7%;">Cantidad</th>
-                                        <th style="width: 5%;">U.M.</th>
-                                        <th style="width: 10%;">P. Unitario</th>
-                                        <th style="width: 10%; text-align: right; padding-right: 5px;">Total</th>
+                                        <th style="width: 5%; padding: 7px 0;">No.</th>
+                                        <th style="width: 5%;">Clave</th>
+                                        <th style="width: 46%;">Cantidad</th>
+                                        <th style="width: 15%;">Unidad</th>
+                                        <th style="width: 7%;">Descripcion</th>
+                                        <th style="width: 5%;">Obj. Imp</th>
+                                        <th style="width: 10%;">Precio</th>
+                                        <th style="width: 10%; text-align: right; padding-right: 5px;">Importe</th>
                                     </tr>
                                 </thead>
                                 <tbody style="text-align: center;">
