@@ -32,7 +32,7 @@ class StockMove(models.Model):
             'view_mode': 'form',
             'target': 'new',
             'context': {
-                'product_id': self.product_id,  # Pasar valores por defecto
+                'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
             }
         }

@@ -9,7 +9,6 @@
                     <field name="file_xlsx" filename="file_name" />
                     <field name="file_name"  />
 
-                    <field name="product_id" />
 
                     <field name="quantity" />
 
