@@ -24,10 +24,10 @@ class NoticeFileWizard(models.TransientModel):
     name = fields.Char(string="Nombre")
     quantity = fields.Float(string="Cantidad")
     def action_data_analysis(self):
-        if not self.file:
+        if not self.file_xlsx:
             raise ValueError("Por favor, sube un archivo.")
         # Decodificar el archivo binario
-        file_content = base64.b64decode(self.file)
+        file_content = base64.b64decode(self.file_xlsx)
 
         # Convertir el archivo en un objeto de tipo BytesIO para ser leído por pandas
         file_stream = io.BytesIO(file_content)
