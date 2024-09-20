@@ -6,117 +6,72 @@
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
                         <div class="page">
-                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0; ">
-                                <thead class="p- table-borderless text-center"
-                                       style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 21px; padding: 2px important!">
-                                    <tr>
-                                        <th style="width: 58%; "/>
-                                        <th style="width: 25%; background-color: white; font-weight: 900 ">
-                                            F A
-                                        </th>
-                                        <th style="width: 17%; font-weight: 900">
-                                            M - 177074
-                                        </th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <span class="span-n">
-                                <strong>R.F.C.: EEB8111231Q4 RÉGIMEN FISCAL: 601</strong>
-                            </span>
-                            <br/>
-                            <br/>
                             <div class="container">
-                                <div class="row">
+                                <hr style="border: .5px solid black"/>
+                                <div class="row" style="font-size: 11px;">
                                     <div class="col-auto col_tags">
-                                        <span class="span-n">NO. CLIENTE:</span>
+                                        <span class="span-n" style="font-weight:bold;">Almacen:</span>
                                         <br/>
 
-                                        <!--<span
-                                        t-field="property.expected_price"/> -->
-                                        <span class="span-n">NOMBRE:</span>
+                                        <span class="span-n">Proveedor:</span>
                                         <br/>
 
-                                        <span class="span-n">R.F.C:</span>
+                                        <span class="span-n">Domicilio:</span>
                                         <br/>
 
-                                        <span class="span-n">DOMICILIO FISCAL:</span>
+                                        <span class="span-n">FOB:</span>
                                         <br/>
 
-                                        <span class="span-n">USO DEL CFDI:</span>
-                                        <br/>
-
-                                        <span class="span-n">FORMA PAGO:</span>
-                                        <br/>
-
-                                        <span class="span-n">RÉGIMEN FISCAL:</span>
+                                        <span class="span-n">Modo de envio:</span>
                                         <br/>
 
                                     </div>
                                     <div class="col-auto col_fields" style="padding-right:15px">
-                                        <span class="span-n">50582</span>
-                                        <br/>
-                                        <!--<span
-                                        t-field="property.expected_price"/> -->
-
-                                        <span class="span-n">ABVA CONSTRUCCION Y MANTENIMIENTO</span>
+                                        <span class="span-n" style="font-weight:bold;">001 MEXICALI</span>
                                         <br/>
 
-                                        <span class="span-n">ACM180118MF1</span>
+                                        <span class="span-n">0904 ALIANZA ELECTRICA DEL PACIFICO SA DE CV</span>
                                         <br/>
 
-                                        <span class="span-n">21600</span>
+                                        <span class="span-n">LOPEZ DEL CASTILLO ENTRE CAMELIA Y DE LAS TORRES 942</span>
                                         <br/>
 
-                                        <span class="span-n">G03</span>
+                                        <span class="span-n">ALAMCEN LA PAZ BCS</span>
                                         <br/>
-
-                                        <span class="span-n">03 - TRANSFERENCIA ELECTRONICA DE FONDOS</span>
+                                        
+                                        <span class="span-n">PROPIO</span>
                                         <br/>
-
-                                        <span class="span-n">626</span>
-                                        <br/>
-
                                     </div>
                                     <div class="col-auto col_tags">
-                                        <span class="span-n">FECHA/HORA:</span>
-                                        <br/>
-                                        <!--<span
-                                        t-field="property.expected_price"/> -->
-
-                                        <span class="span-n">NUM.PEDIDO:</span>
+                                        <span class="span-n" style="font-weight:bold;">Fecha Entrega:</span>
                                         <br/>
 
-                                        <span class="span-n">ORDEN COMPRA:</span>
+                                        <span class="span-n" style="font-weight:bold;">Tiempo Entrega:</span>
                                         <br/>
 
-                                        <span class="span-n">METODO PAGO:</span>
+                                        <span class="span-n" style="font-weight:bold;">Terminos:</span>
                                         <br/>
 
-                                        <span class="span-n">VENDEDOR:</span>
+                                        <span class="span-n" style="font-weight:bold;">Referencia:</span>
                                         <br/>
 
-                                        <span class="span-n">EXPORTACIÓN:</span>
+                                        <span class="span-n" style="font-weight:bold;">Moneda:</span>
                                         <br/>
                                     </div>
-                                    <div class="col-auto col_fields" style="background-color:#ededed;">
-                                        <span class="span-n">2024-09-10T14:47:41</span>
-                                        <br/>
-                                        <!--<span
-                                        t-field="property.expected_price"/> -->
-
-                                        <span class="span-n">2874</span>
+                                    <div class="col-auto col_fields">
+                                        <span class="span-n" style="font-weight:bold;">28/08/2024</span>
                                         <br/>
 
-                                        <span class="span-n">n/a</span>
+                                        <span class="span-n" style="font-weight:bold;">INMEDIATO</span>
                                         <br/>
 
-                                        <span class="span-n">PUE</span>
+                                        <span class="span-n" style="font-weight:bold;">CREDITO 30 DIAS</span>
                                         <br/>
 
-                                        <span class="span-n">LUIS MANUEL RAMOS CASTRO</span>
+                                        <span class="span-n" style="font-weight:bold;">REQUISICION LPZ-184</span>
                                         <br/>
 
-                                        <span class="span-n">01</span>
+                                        <span class="span-n" style="font-weight:bold;">PESOS MEXICANOS</span>
                                         <br/>
                                     </div>
                                 </div>
