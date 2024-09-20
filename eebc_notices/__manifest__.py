@@ -15,10 +15,12 @@
         "security/ir.model.access.csv",
         "views/menu.xml",
         "views/notices_views.xml",
-        "views/stock_picking_views.xml"
+        "views/stock_picking_views.xml",
+        "wizard/notice_file_wizard_view.xml"
         
     ],
     "application": True,
     "installable": True,
     "license": "LGPL-3",
 }
+
