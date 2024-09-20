@@ -124,7 +124,7 @@
                             </div>
                         </div>
                     </div>
-                    <div style="font-size:12px; page-break-inside: avoid">
+                    <div style="font-size:12px; page-break-inside: avoid; margin-top:20px;">
                         <table class="table">
                             <thead id="encabezados-tabla" style="border-color: #f0f0f0;;">
                                 <th style="width: 9%;color:#ffffff;">CANTIDAD</th>
@@ -254,7 +254,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th colspan="8"> Totales Pago Expresados En Moneda Nacional </th>
+                                    <th colspan="8" style="text-align:center;"> Totales Pago Expresados En Moneda Nacional </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -326,7 +326,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th colspan="6"> Impuesto al pago</th>
+                                    <th colspan="6" style="text-align:center;"> Impuesto al pago</th>
                                 </tr>
                             </thead>
                             <tbody>
