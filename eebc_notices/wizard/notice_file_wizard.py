@@ -59,11 +59,11 @@ class NoticeFileWizard(models.TransientModel):
         matching_rows = df[df['Recurso'] == id_producto]
 
         if not matching_rows.empty:
-            _logger.info(f"Se encontraron las siguientes filas que coinciden con el producto {product.name}:")
+            _logger.info(f"Se encontraron las siguientes filas que coinciden con el producto {id_producto}:")
             _logger.info(matching_rows)
             # Aquí puedes realizar alguna acción con las filas encontradas
         else:
-            _logger.info(f"No se encontraron coincidencias para el producto {product.name} en la columna 'Recurso'.")
+            _logger.info(f"No se encontraron coincidencias para el producto {id_producto} en la columna 'Recurso'.")
 
         return {'type': 'ir.actions.act_window_close'}
         # _logger.warning('Entramos a action_data_analysis')
