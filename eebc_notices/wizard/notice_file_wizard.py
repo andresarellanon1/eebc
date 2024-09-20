@@ -30,6 +30,7 @@ class NoticeFileWizard(models.TransientModel):
     quantity = fields.Float(string="Cantidad")
     def action_data_analysis(self):
         _logger.warning('producto: %s', self._context['product_id'])
+        product = self._context['product_id']
         if not self.file_xlsx:
             raise ValueError("Por favor, sube un archivo.")
 
@@ -58,8 +59,7 @@ class NoticeFileWizard(models.TransientModel):
             raise ValueError("La columna 'Recurso' no existe en el archivo.")
 
         # Buscar el valor del producto en la columna 'Recurso'
-        product_name = self.product_id.name  # Nombre del producto
-        matching_rows = df[df['Recurso'] == product_name]
+        matching_rows = df[df['Recurso'] == product.name]
 
         if not matching_rows.empty:
             _logger.info(f"Se encontraron las siguientes filas que coinciden con el producto {product_name}:")
