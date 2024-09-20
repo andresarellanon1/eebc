@@ -18,15 +18,14 @@
                   >
                 
                 
-                <field name="resource" />
+                <field name="resource" widget="many2one"/>
                 <field name="picking_ids" widget="many2many_tags"/>
-
-                <field name="supplier" />
-                <field name="folio"  />
-                <field name="create_date" widget="date" />
-                <field name="notice" />
-                <field name="description" />
-                <field name="quantity" />
+                <field name="supplier" widget="many2one"/>
+                <field name="folio"/>
+                <field name="create_date" widget="date"/>
+                <field name="notice"/>
+                <field name="description"/>
+                <field name="quantity"/>
                 <field name="series" optional="hide"/>
                
             </tree>
