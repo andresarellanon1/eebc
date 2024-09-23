@@ -6,8 +6,4 @@ class sale_order(models.Model):
 
     def _get_name_sale_report(self):
         self.ensure_one()
-        return 'report_configs.out_stock_picking_out_template'
-
-    # def _get_name_sale_report(self):
-    #     self.ensure_one()
-    #     return 'report_configs.out_saleorder_template_custom'
+        return 'report_configs.out_saleorder_template_custom'
