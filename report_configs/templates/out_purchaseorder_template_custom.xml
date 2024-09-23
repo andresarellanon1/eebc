@@ -5,16 +5,16 @@
             <t t-foreach="docs" t-as="compra">
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
-                        <div class="page">
+                        <div class="page" style="position:absolute; height: 80%; padding-bottom: 60px;">
                             <div class="container">
                                 <hr style="border: 1px solid black"/>
                                 <table class="table" style="font-size: 8px;border-collapse: collapse;">
                                 <tbody>
                                     <tr style="border: none;">
                                         <td scope="row" style="padding:0; font-size:14px; font-weight: bold; border: none;">
-                                            <span class="span-n">EQUIPOS ELECTRICOS DE BAJA CALIFORNIA</span>
+                                            
                                         </td>
-                                        <td rowspan="2" style="font-size: 14px;font-weight: bold;text-align:right;padding:0;border: none;" class="col-3">
+                                        <td rowspan="2" style="font-size: 15px;font-weight: bold;text-align:right;padding:0;border: none;" class="col-3">
                                             <span class="span-n">
                                                 Orden de Compra
                                             </span>
@@ -23,13 +23,13 @@
                                                 No.-MXL30378
                                             </span>
                                             <br/>
-                                            <span class="span-n" style="padding-bottom:0; font-size:11px; font-weight:bold; color:#ff0505;">
+                                            <span class="span-n" style="padding-bottom:0; font-size:12px; font-weight:bold; color:#ff0505;">
                                                 No. de Modificación: 1 ORIGINAL
                                             </span>
                                         </td>
                                     </tr>
                                     <tr style="border: none;">
-                                        <td scope="row" style="padding:0;font-size:10px; border: none;">
+                                        <td scope="row" style="padding:0;font-size:11px; border: none;">
                                             <span class="span-n" style="font-weight: bold;">
                                                 FACTURADO A:
                                             </span>
@@ -58,7 +58,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                                <div class="row" style="font-size: 11px;">
+                                <div class="row" style="font-size: 12px;">
                                     <div class="col-auto col_tags">
                                         <span class="span-n" style="font-weight:bold;">Almacen:</span>
                                         <br/>
@@ -76,7 +76,7 @@
                                         <br/>
 
                                     </div>
-                                    <div class="col-auto col_fields" style="padding-right:15px">
+                                    <div class="col-auto col_fields" style="padding-right:16px">
                                         <span class="span-n" style="font-weight:bold;">001 MEXICALI</span>
                                         <br/>
 
@@ -126,7 +126,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="font-size:12px; page-break-inside: avoid">
+                            <div style="font-size:13px; page-break-inside: avoid">
                                 <table class="table">
                                     <thead id="encabezados-tabla" style="color: #000000;">
                                         <th style="width: 5%;">Pda.</th>
@@ -197,15 +197,15 @@
                                 <span class="span-n" style="font-weight:bold;">Observaciones:</span>
                                 <hr/>
                             </div>
-                            <table class="table" style="font-size: 8px;">
+                            <table class="table" style="font-size: 9px;">
                                 <tbody>
                                     <tr style="border: none;">
-                                        <td scope="row" style="font-size:10px; font-weight:bold;border: none;">
+                                        <td scope="row" style="font-size:11px; font-weight:bold;border: none;">
                                             <span class="span-n" style="font-size:10px">
                                                 MATERIAL SOLICITADO POR FABIOLA GARCIA R., PARA VENTA.
                                             </span>
                                             <br/>
-                                            <span class="span-n" style="font-size:10px">
+                                            <span class="span-n" style="font-size:11px">
                                                 SE REQUIERE AVISO DE PRUEBA C.F.E. (SIGLA 03)
                                             </span>
                                             <br/>
@@ -214,9 +214,9 @@
                                             </span>
                                             <br/>
                                             <br/>
-                                            <span class="span-n" style="font-size:12px">
+                                            <span class="span-n" style="font-size:13px">
                                                 MATERIAL SOLICITADO CON AVISO DE PRUEBA, EN LO QUE APLIQUE, FAVOR DE REALIZAR LA
-                                                TRANSFERENCIA EN SIGLA03 A LA CUENTA 43639
+                                                TRANSFERENCIA EN SIGLA 03 A LA CUENTA 43639
                                             </span>
                                         </td>
                                         <td rowspan="2" style="font-size: 10px;border: none;" class="col-3">
@@ -246,14 +246,47 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div style="bottom:0;left:0; font-size:10px;">
+                        <div style="position:absolute; width:100%; page-break:avoid; ">
+                            <div style="font-size:12px; margin-bottom:20px">
                                 <ol>
                                     <li>Favor de anexar una copia de la orden de compra junto con su factura.</li>
                                     <li>Confirmar la recepción de esta orden de compra.</li>
                                     <li>Los importes están expresados en pesos mexicanos.</li>
-                                    <li>Enviar el número de folio a: cvillagrana@eebc.com.mx.</li>
+                                    <li>Enviar el número de folio a: cvillagrana@eebc.com.mx</li>
                                 </ol>
                             </div>
+                            <div style="font-size:12px; width:100%;">
+                                <div class="row justify-content-evenly">
+                                    <div class="col-4" style="text-align:center">
+                                        <span style="font-size:10px">
+                                            FABIOLA GARCÍA ROJAS
+                                        </span>
+                                        <hr style="border: 1px solid black;margin:1px"/>
+                                        <span style="font-size:10px">
+                                            SOLICITO
+                                        </span>
+                                    </div>
+                                    <div class="col-4" style="text-align:center">
+                                        <span style="font-size:10px;">
+                                            FABIOLA GARCÍA ROJAS
+                                        </span>
+                                        <hr style="border: 1px solid black;margin:1px;"/>
+                                        <span style="font-size:10px">
+                                            ELABORO
+                                        </span>
+                                    </div> 
+                                    <div class="col-4" style="text-align:center">
+                                        <span style="font-size:10px">
+                                            FABIOLA GARCÍA ROJAS
+                                        </span>
+                                        <hr style="border: 1px solid black;margin:1px"/>
+                                        <span style="font-size:10px">
+                                            GERENTE/JEFE DE AREA
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                     </t>
                 </t>
