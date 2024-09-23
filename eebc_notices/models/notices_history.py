@@ -42,7 +42,9 @@ class NoticesHistory(models.Model):
 def _compute_picking_ids(self):
 
     po = self.env['purchase.order'].search([('name','=',self.origin)])
-    self.picking_ids = po.
+    self.picking_ids = po.picking_ids 
+
+    # Hay que mapear por el producto que se encuentra por picking id
 
 
 

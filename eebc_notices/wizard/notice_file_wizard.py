@@ -25,7 +25,7 @@ class NoticeFileWizard(models.TransientModel):
 
    
     quantity = fields.Float(string="Cantidad")
-    
+
     def action_data_analysis(self):
         _logger.warning('producto: %s', self._context['product_id'])
         id_producto = self._context['product_id']
@@ -71,6 +71,11 @@ class NoticeFileWizard(models.TransientModel):
                 _logger.info(f"No se encontraron coincidencias para el producto {id_producto} en la hoja {sheet_name}.")
 
         return {'type': 'ir.actions.act_window_close'}
+
+
+
+        # Ya conseguimos la informacion del excel 
+        # Ahora debemos de crear un metodo para que cree una entra
         # _logger.warning('Entramos a action_data_analysis')
         # _logger.warning(f"Nombre del archivo: {self.file_xlsx}")
         # _logger.warning(f"Nombre del wizard: {self.name}")
