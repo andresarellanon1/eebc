@@ -15,7 +15,7 @@
         'templates/out_invoice_template_custom.xml',
         'templates/out_saleorder_template_custom.xml',
         'templates/out_purchaseorder_template_custom.xml',
-        'templates/out_stock_picking_out_template.xm;',
+        'templates/out_stock_picking_out_template.xml',
         'templates/external_layout_invoice_custom.xml',
         'templates/report_invoice_inherit_custom.xml',
         'templates/report_saleorder_inherit_custom.xml',
