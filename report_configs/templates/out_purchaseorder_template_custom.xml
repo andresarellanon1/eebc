@@ -5,7 +5,7 @@
             <t t-foreach="docs" t-as="compra">
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
-                        <div class="page" style="position:absolute; height: 80%; padding-bottom: 60px;">
+                        <div class="page" style="position:relative; max-height: 80%;">
                             <div class="container">
                                 <hr style="border: 1px solid black"/>
                                 <table class="table" style="font-size: 8px;border-collapse: collapse;">
@@ -246,7 +246,8 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        <div style="position:absolute; width:100%; page-break:avoid; ">
+                        </div>
+                        <div style="position:relative; width:100%;margin-top:35%;">
                             <div style="font-size:12px; margin-bottom:20px">
                                 <ol>
                                     <li>Favor de anexar una copia de la orden de compra junto con su factura.</li>
@@ -256,17 +257,17 @@
                                 </ol>
                             </div>
                             <div style="font-size:12px; width:100%;">
-                                <div class="row justify-content-evenly">
-                                    <div class="col-4" style="text-align:center">
+                                <div class="row justify-content-evenly; text-align:center">
+                                    <div class="col-4" style="text-align:center;padding-left:2%;padding-right:2%">
                                         <span style="font-size:10px">
                                             FABIOLA GARCÍA ROJAS
                                         </span>
-                                        <hr style="border: 1px solid black;margin:1px"/>
+                                        <hr style="border: 1px solid black;margin:1px;"/>
                                         <span style="font-size:10px">
                                             SOLICITO
                                         </span>
                                     </div>
-                                    <div class="col-4" style="text-align:center">
+                                    <div class="col-4" style="text-align:center;padding-left:2%;padding-right:2%">
                                         <span style="font-size:10px;">
                                             FABIOLA GARCÍA ROJAS
                                         </span>
@@ -275,7 +276,7 @@
                                             ELABORO
                                         </span>
                                     </div> 
-                                    <div class="col-4" style="text-align:center">
+                                    <div class="col-4" style="text-align:center;padding-left:2%;padding-right:2%">
                                         <span style="font-size:10px">
                                             FABIOLA GARCÍA ROJAS
                                         </span>
@@ -286,7 +287,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                     </t>
                 </t>
