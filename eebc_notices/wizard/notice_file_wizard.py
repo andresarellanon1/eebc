@@ -29,6 +29,14 @@ class NoticeFileWizard(models.TransientModel):
     def action_data_analysis(self):
         _logger.warning('producto: %s', self._context['product_id'])
         id_producto = self._context['product_id']
+        supplier = self._context['proveedor']
+        origin = self._context['origin']
+        supplier = self._context['proveedor']
+        type = self._context['type']
+        location_id = self._context['location_id']
+        location_dest_id = self._context['location_dest_id']
+        origin = self._context['origin']
+        
         
         if not self.file_xlsx:
             raise ValueError("Por favor, sube un archivo.")
@@ -52,6 +60,8 @@ class NoticeFileWizard(models.TransientModel):
             raise ValueError("Formato de archivo no soportado. Solo se permiten archivos Excel.")
 
         notice_data = []
+        notice__history_data = []
+        
 
         # Iterar sobre todas las hojas del archivo
         for sheet_name, df in sheets.items():
@@ -72,10 +82,26 @@ class NoticeFileWizard(models.TransientModel):
                 # Extraer la información que necesitamos de las filas coincidentes
                 for index, row in matching_rows.iterrows():
                     notice_data.append({
-                        'product_id': row.get('Recurso', 0),
+                        'resource': row.get('Recurso', 0),
                         'quantity': row.get('Cantidad', 0),  # Asume que tienes una columna 'Cantidad' en el archivo
-                        'description': row.get('Cantidad', 0)
+                        'description': row.get('Cantidad', 0),
+                        'supplier':supplier,
+                        'notice':row.get('Aviso', 0),
+                        
                     })
+                    
+                # for index, row in matching_rows.iterrows():
+                #     notice_history_data.append({
+                #         'resource': row.get('Recurso', 0),
+                #         'quantity': row.get('Cantidad', 0),  # Asume que tienes una columna 'Cantidad' en el archivo
+                #         'description': row.get('Cantidad', 0),
+                #         'supplier':,
+                #         'notice':,
+                #         'location_dest':,
+                #         'picking_code':,
+                #         'origin':,
+                        
+                #     })
             else:
                 _logger.info(f"No se encontraron coincidencias para el producto {self.product_id.name} en la hoja {sheet_name}.")
 
@@ -95,10 +121,29 @@ class NoticeFileWizard(models.TransientModel):
                 'resource': data['product_id'],  # ID del producto
                 'quantity': data['quantity'],  # Cantidad extraída del archivo
                 'description': data['description'],
-                'file_name': data['file_name'],
+                'supplier': data['supplier'],
+                'notice': data['notice'],
+                
+                
             })
 
         _logger.info(f"{len(notice_data)} avisos creados correctamente.")
+        
+        
+    def _create_history_notice(self, notice_history_data):
+        """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
+        for data in notice_history_data:
+            _logger.info(f"Creando aviso para el producto {data['product_id']} con cantidad {data['quantity']}")
+            
+            # Crear el nuevo registro en el modelo 'notices.notices'
+            self.env['notices.history'].create({
+                'resource': data['product_id'],  # ID del producto
+                'quantity': data['quantity'],  # Cantidad extraída del archivo
+                'description': data['description'],
+                'file_name': data['file_name'],
+            })
+
+        _logger.info(f"{len(notice_history_data)} avisos creados correctamente.")
         
         
 
