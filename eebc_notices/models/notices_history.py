@@ -19,7 +19,7 @@ class NoticesHistory(models.Model):
 
 
     picking_code = fields.Char(
-        string='field_name',
+        string='Tipo de operacion',
     )
     
 
@@ -38,13 +38,13 @@ class NoticesHistory(models.Model):
         string='Operaciones de Almacén'
     )
     
-@api.depends("origin")
-def _compute_picking_ids(self):
+    @api.depends("origin")
+    def _compute_picking_ids(self):
 
-    po = self.env['purchase.order'].search([('name','=',self.origin)])
-    self.picking_ids = po.picking_ids 
+        po = self.env['purchase.order'].search([('name','=',self.origin)])
+        self.picking_ids = po.picking_ids 
 
-    # Hay que mapear por el producto que se encuentra por picking id
+        # Hay que mapear por el producto que se encuentra por picking id
 
 
 
