@@ -104,128 +104,165 @@
                                     </tr>
                                 </thead>
                                 <tbody style="text-align: center;">
-                                    <tr>
-                                        <td>1</td>
-                                        <td>1055</td>
-                                        <td>80.00</td>
-                                        <td>JGO</td>
-                                        <td style="text-align: left ">HORQUILLA CON GUARDACABO</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>1056</td>
-                                        <td>40.00</td>
-                                        <td>JGO</td>
-                                        <td style="text-align: left;">MOLDURA FASE CENTRAL CAT. RE.</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>1058</td>
-                                        <td>80.00</td>
-                                        <td>PZA</td>
-                                        <td style="text-align: left;">OJO RE CAT. RE</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>1061</td>
-                                        <td>10.00</td>
-                                        <td>PZA</td>
-                                        <td style="text-align: left;">PERNO ANCLA 5/8" X 78 1/2" (16 X 2000 MM) 1PA</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>1064</td>
-                                        <td>10.00</td>
-                                        <td>PZA</td>
-                                        <td style="text-align: left;">PROTECTOR PARA RETENIDA R1 78 X 2134MM</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>6</td>
-                                        <td>1071</td>
-                                        <td>4.00</td>
-                                        <td>PZA</td>
-                                        <td style="text-align: left;">SOPORTE ANGULAR V63 (5 X 38 X 1600 MM)</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>7</td>
-                                        <td>1156</td>
-                                        <td>213.50</td>
-                                        <td>ML</td>
-                                        <td style="text-align: left;">FLEJE DE ACERO INOXIDABLE 3/4 X 0.30 X 30.5 MTS</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>8</td>
-                                        <td>1166</td>
-                                        <td>150.00</td>
-                                        <td>PZA</td>
-                                        <td style="text-align: left;">GRAPA PARA FLEJE 3/4 CAT.- C25699,TIPO.-201SS.</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>9</td>
-                                        <td>1187</td>
-                                        <td>50.00</td>
-                                        <td>PZA</td>
-                                        <td style="text-align: left;">PERNO DOBLE ROSCA GALV. 5/8" X 20" CAT. J8870</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>10</td>
-                                        <td>1216</td>
-                                        <td>80.00</td>
-                                        <td>PZA</td>
-                                        <td style="text-align: left;">TORNILLO MAQ. GALV. 1/2" X 7", CAT. J8707 13 X 178 MM</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>11</td>
-                                        <td>3010</td>
-                                        <td>10.00</td>
-                                        <td>PZA</td>
-                                        <td style="text-align: left;">AISLADOR DE FIBRA DE VIDRIO 8 21000LBS C-GCC21-96R MC</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>12</td>
-                                        <td>9085</td>
-                                        <td>12.00</td>
-                                        <td>PZA</td>
-                                        <td style="text-align: left;">CORTACIRCUITO T/V, 27KV, 100A, CPV-2712100-150, IUSA.</td>
-                                        <td>01</td>
-                                        <td>0.00</td>
-                                        <td style="text-align: right;">0.00</td>
-                                    </tr>
+                                    <t t-set="contador_productos" t-value="0"/>
+                                        <t t-set="total_importe" t-value="0"/>
+                                        <t t-foreach="factura.invoice_line_ids" t-as="linea" t-index="i">
+                                            <t t-if="linea.display_type == 'product'">
+                                                <t t-set="contador_productos" t-value="contador_productos + 1"/>
+                                            </t>
+                                            <t t-if="linea.display_type == 'product'">
+                                                <tr>
+                                                    <td>
+                                                        <t t-esc="contador_productos"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_id.default_code or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.quantity or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_uom_id.name or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_id.name or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.tax_ids and ', '.join([tax.name for tax in linea.tax_ids]) or ''"/>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <t t-esc="linea.price_unit or ''"/>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <t t-set="importe"
+                                                           t-value="(linea.price_unit or 0) * (linea.quantity or 0)"/>
+                                                        <t t-esc="importe"/>
+                                                        <t t-set="total_importe" t-value="total_importe + importe"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+<!--                                    <tr>-->
+<!--                                        <td>1</td>-->
+<!--                                        <td>1055</td>-->
+<!--                                        <td>80.00</td>-->
+<!--                                        <td>JGO</td>-->
+<!--                                        <td style="text-align: left ">HORQUILLA CON GUARDACABO</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>2</td>-->
+<!--                                        <td>1056</td>-->
+<!--                                        <td>40.00</td>-->
+<!--                                        <td>JGO</td>-->
+<!--                                        <td style="text-align: left;">MOLDURA FASE CENTRAL CAT. RE.</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>3</td>-->
+<!--                                        <td>1058</td>-->
+<!--                                        <td>80.00</td>-->
+<!--                                        <td>PZA</td>-->
+<!--                                        <td style="text-align: left;">OJO RE CAT. RE</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>4</td>-->
+<!--                                        <td>1061</td>-->
+<!--                                        <td>10.00</td>-->
+<!--                                        <td>PZA</td>-->
+<!--                                        <td style="text-align: left;">PERNO ANCLA 5/8" X 78 1/2" (16 X 2000 MM) 1PA</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>5</td>-->
+<!--                                        <td>1064</td>-->
+<!--                                        <td>10.00</td>-->
+<!--                                        <td>PZA</td>-->
+<!--                                        <td style="text-align: left;">PROTECTOR PARA RETENIDA R1 78 X 2134MM</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>6</td>-->
+<!--                                        <td>1071</td>-->
+<!--                                        <td>4.00</td>-->
+<!--                                        <td>PZA</td>-->
+<!--                                        <td style="text-align: left;">SOPORTE ANGULAR V63 (5 X 38 X 1600 MM)</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>7</td>-->
+<!--                                        <td>1156</td>-->
+<!--                                        <td>213.50</td>-->
+<!--                                        <td>ML</td>-->
+<!--                                        <td style="text-align: left;">FLEJE DE ACERO INOXIDABLE 3/4 X 0.30 X 30.5 MTS</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>8</td>-->
+<!--                                        <td>1166</td>-->
+<!--                                        <td>150.00</td>-->
+<!--                                        <td>PZA</td>-->
+<!--                                        <td style="text-align: left;">GRAPA PARA FLEJE 3/4 CAT.- C25699,TIPO.-201SS.</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>9</td>-->
+<!--                                        <td>1187</td>-->
+<!--                                        <td>50.00</td>-->
+<!--                                        <td>PZA</td>-->
+<!--                                        <td style="text-align: left;">PERNO DOBLE ROSCA GALV. 5/8" X 20" CAT. J8870</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>10</td>-->
+<!--                                        <td>1216</td>-->
+<!--                                        <td>80.00</td>-->
+<!--                                        <td>PZA</td>-->
+<!--                                        <td style="text-align: left;">TORNILLO MAQ. GALV. 1/2" X 7", CAT. J8707 13 X 178 MM</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>11</td>-->
+<!--                                        <td>3010</td>-->
+<!--                                        <td>10.00</td>-->
+<!--                                        <td>PZA</td>-->
+<!--                                        <td style="text-align: left;">AISLADOR DE FIBRA DE VIDRIO 8 21000LBS C-GCC21-96R MC</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>12</td>-->
+<!--                                        <td>9085</td>-->
+<!--                                        <td>12.00</td>-->
+<!--                                        <td>PZA</td>-->
+<!--                                        <td style="text-align: left;">CORTACIRCUITO T/V, 27KV, 100A, CPV-2712100-150, IUSA.</td>-->
+<!--                                        <td>01</td>-->
+<!--                                        <td>0.00</td>-->
+<!--                                        <td style="text-align: right;">0.00</td>-->
+<!--                                    </tr>-->
+                                        </t>
                                 </tbody>
-
                             </table>
                             <!-- Complemento Carta Porte Section -->
                             <div class="m-3" style=" font-size: 12px; width:100%;">
