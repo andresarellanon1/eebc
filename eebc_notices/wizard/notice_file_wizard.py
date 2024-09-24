@@ -25,7 +25,7 @@ class NoticeFileWizard(models.TransientModel):
 
    
     quantity = fields.Float(string="Cantidad")
-    
+
     def action_data_analysis(self):
         _logger.warning('producto: %s', self._context['product_id'])
         id_producto = self._context['product_id']
@@ -38,7 +38,7 @@ class NoticeFileWizard(models.TransientModel):
 
         # Decodificar el archivo binario (base64) a contenido binario
         file_content = base64.b64decode(self.file_xlsx)
-        
+
         # Crear un objeto BytesIO a partir del contenido decodificado
         file_stream = io.BytesIO(file_content)
 
@@ -50,6 +50,8 @@ class NoticeFileWizard(models.TransientModel):
             sheets = pd.read_excel(file_stream, sheet_name=None)  # Devuelve un diccionario con DataFrames
         else:
             raise ValueError("Formato de archivo no soportado. Solo se permiten archivos Excel.")
+
+        notice_data = []
 
         # Iterar sobre todas las hojas del archivo
         for sheet_name, df in sheets.items():
@@ -64,13 +66,46 @@ class NoticeFileWizard(models.TransientModel):
             matching_rows = df[df['Recurso'] == id_producto]
 
             if not matching_rows.empty:
-                _logger.info(f"Se encontraron filas que coinciden con el producto {id_producto} en la hoja {sheet_name}:")
+                _logger.info(f"Se encontraron filas que coinciden con el producto {self.product_id.name} en la hoja {sheet_name}:")
                 _logger.info(matching_rows)
-                # Aquí puedes realizar alguna acción con las filas encontradas
+                
+                # Extraer la información que necesitamos de las filas coincidentes
+                for index, row in matching_rows.iterrows():
+                    notice_data.append({
+                        'product_id': row.get('Recurso', 0),
+                        'quantity': row.get('Cantidad', 0),  # Asume que tienes una columna 'Cantidad' en el archivo
+                        'description': row.get('Cantidad', 0)
+                    })
             else:
-                _logger.info(f"No se encontraron coincidencias para el producto {id_producto} en la hoja {sheet_name}.")
+                _logger.info(f"No se encontraron coincidencias para el producto {self.product_id.name} en la hoja {sheet_name}.")
+
+        # Llamar a _create_notice si se encontraron datos
+        if notice_data:
+            self._create_notice(notice_data)
 
         return {'type': 'ir.actions.act_window_close'}
+
+    def _create_notice(self, notice_data):
+        """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
+        for data in notice_data:
+            _logger.info(f"Creando aviso para el producto {data['product_id']} con cantidad {data['quantity']}")
+            
+            # Crear el nuevo registro en el modelo 'notices.notices'
+            self.env['notices.notices'].create({
+                'resource': data['product_id'],  # ID del producto
+                'quantity': data['quantity'],  # Cantidad extraída del archivo
+                'description': data['description'],
+                'file_name': data['file_name'],
+            })
+
+        _logger.info(f"{len(notice_data)} avisos creados correctamente.")
+        
+        
+
+
+
+        # Ya conseguimos la informacion del excel 
+        # Ahora debemos de crear un metodo para que cree una entra
         # _logger.warning('Entramos a action_data_analysis')
         # _logger.warning(f"Nombre del archivo: {self.file_xlsx}")
         # _logger.warning(f"Nombre del wizard: {self.name}")
