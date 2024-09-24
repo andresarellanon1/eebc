@@ -25,7 +25,7 @@ class StockMove(models.Model):
 
         _logger.warning('Producto name: %s', self.product_id.name)
         _logger.warning('Cantidad: %s', self.product_uom_qty)
-        _logger.warning('type: %s', self.picking_type_code)
+        _logger.warning('type: %s', self.picking_id.picking_type_code)
         
         return {
             'type': 'ir.actions.act_window',
@@ -36,7 +36,7 @@ class StockMove(models.Model):
             'context': {
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
-                'type': self.picking_type_code
+                'type': self.picking_id.picking_type_code
             }
         }
         
