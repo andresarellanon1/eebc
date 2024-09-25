@@ -45,7 +45,6 @@
                 <field name="description"/>
                 <field name="quantity"/>
                 <field name="series" optional="hide"/>
-                 <field name="history_ids" />
 
                
             </tree>
