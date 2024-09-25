@@ -114,7 +114,7 @@ class NoticeFileWizard(models.TransientModel):
     def _create_notice(self, notice_data):
         """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
         for data in notice_data:
-            _logger.info(f"Creando aviso para el producto {data['product_id']} con cantidad {data['quantity']}")
+            _logger.info(f"Creando aviso para el producto {data['resource']} con cantidad {data['quantity']}")
             
             # Crear el nuevo registro en el modelo 'notices.notices'
             self.env['notices.notices'].create({
