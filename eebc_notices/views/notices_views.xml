@@ -22,7 +22,7 @@
                 <tree string="Historial de Movimientos">
                     <field name="location_dest"/>
                     <field name="location_id"/>
-                    <field name="quantity" decoration-danger="(picking_code in ('outgoing','internal'))" decoration-success="(location_usage in ('incoming'))"/>
+                    <field name="quantity" decoration-danger="(picking_code in ('outgoing','internal'))" decoration-success="(picking_code in ('incoming'))"/>
                     <field name="picking_code"/>
                     <field name="origin"/>
                 </tree>
