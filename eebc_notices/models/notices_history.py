@@ -31,11 +31,11 @@ class NoticesHistory(models.Model):
     origin = fields.Char(string='Documento origen')
 
     
-    picking_ids = fields.Many2many(
-        'stock.picking', 
-        compute = "_compute_picking_ids",
-        string='Operaciones de Almacén'
-    )
+    # picking_ids = fields.Many2many(
+    #     'stock.picking', 
+    #     compute = "_compute_picking_ids",
+    #     string='Operaciones de Almacén'
+    # )
     
     # @api.depends("origin")
     # def _compute_picking_ids(self):
