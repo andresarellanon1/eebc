@@ -14,6 +14,11 @@ class Notices(models.Model):
         string='Proveedor',
         comodel_name='res.partner',
     )
+
+    last_update = fields.Date(
+        string='Ultima actualizacion',
+        
+    )
     
     folio = fields.Char(string='Folio')
     create_date = fields.Date(
@@ -27,9 +32,3 @@ class Notices(models.Model):
     quantity = fields.Float(string='Cantidad')
     series = fields.Char(string='Series (s)')
 
-    picking_ids = fields.Many2many(
-        'stock.picking', 
-        string='Operaciones de Almacén'
-    )
-    
-    

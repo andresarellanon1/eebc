@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_out_picking_quadro" model="ir.actions.report">
+        <field name="name">Recibo de salida</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">report_configs.out_stock_picking_out_template</field>
+    </record>
+</odoo>

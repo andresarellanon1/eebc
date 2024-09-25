@@ -19,7 +19,6 @@
                 
                 
                 <field name="resource" widget="many2one"/>
-                <field name="picking_ids" widget="many2many_tags"/>
                 <field name="supplier" widget="many2one"/>
                 <field name="folio"/>
                 <field name="create_date" widget="date"/>
@@ -27,6 +26,26 @@
                 <field name="description"/>
                 <field name="quantity"/>
                 <field name="series" optional="hide"/>
+               
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="notices_history_tree" model="ir.ui.view">
+        <field name="name">notices.history.tree</field>
+        <field name="model">notices.history</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <tree 
+                  string="Avisos"
+                  >
+                
+                <field name="picking_ids" widget="many2many_tags"/>
+                <field name="location_dest" widget="many2one"/>
+                <field name="location_id" widget="many2one"/>
+                <field name="create_date" widget="date"/>
+                <field name="quantity"/>
                
             </tree>
         </field>
