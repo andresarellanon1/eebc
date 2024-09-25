@@ -60,7 +60,7 @@
                   string="Avisos"
                   >
                 
-                <field name="picking_ids" widget="many2many_tags"/>
+                <!-- <field name="picking_ids" widget="many2many_tags"/> -->
                 <field name="location_dest" widget="many2one"/>
                 <field name="location_id" widget="many2one"/>
                 <field name="create_date" widget="date"/>
