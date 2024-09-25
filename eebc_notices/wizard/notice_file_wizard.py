@@ -11,6 +11,10 @@ import io
 import logging
 
 _logger = logging.getLogger(__name__)
+
+# TODO: Pendiente de validaciones que creen solo un registro de entrada en caso de que ya se encuentre el mismo numero de aviso,
+# 
+
 class NoticeFileWizard(models.TransientModel):
     """
     A wizard to convert a res.partner record to a fsm.person or
@@ -109,26 +113,44 @@ class NoticeFileWizard(models.TransientModel):
         for data in notice_data:
             _logger.info(f"Creando aviso para el producto {data['resource']} con cantidad {data['quantity']}")
             
-            # Crear el nuevo registro en el modelo 'notices.notices'
-            notice = self.env['notices.notices'].create({
-                'resource': data['resource'],  # ID del producto
-                'quantity': data['quantity'],  # Cantidad extraída del archivo
-                'description': data['description'],
-                'supplier': data['supplier'],
-                'notice': data['notice'],
-                
-                
-            })
+            its_created = self.env['notices.notices'].search([('notice','=', data[notice])])
+            _logger.warning('VALOR DE ITS CREATED : %s', its_created)
 
-            self.env['notices.history'].create({
-                'location_id': data['location_id'], 
-                'location_dest': data['location_dest'], 
-                'quantity': data['quantity'],  # Cantidad extraída del archivo
-                'picking_code': data['picking_code'],
-                'notice_id':notice.id,
-                
-                
-            })
+
+            if its_created:
+
+                its_created.write({
+                'history_ids': [(0, 0, {
+                    'location_dest': data['location_dest'],  # Añade los campos necesarios para history
+                    'location_id': data['location_id'],
+                    'quantity': data['quantity'],
+                    'picking_code': data['picking_code'],
+                    'origin': data['origin'],
+                    })]
+                })
+
+                _logger.info('Historial actualizado correctamente para el aviso.')
+            else:
+                # Crear el nuevo registro en el modelo 'notices.notices'
+                notice = self.env['notices.notices'].create({
+                    'resource': data['resource'],  # ID del producto
+                    'quantity': data['quantity'],  # Cantidad extraída del archivo
+                    'description': data['description'],
+                    'supplier': data['supplier'],
+                    'notice': data['notice'],
+                    
+                    
+                })
+
+                self.env['notices.history'].create({
+                    'location_id': data['location_id'], 
+                    'location_dest': data['location_dest'], 
+                    'quantity': data['quantity'],  # Cantidad extraída del archivo
+                    'picking_code': data['picking_code'],
+                    'notice_id':notice.id,
+                    
+                    
+                })
 
 
 
