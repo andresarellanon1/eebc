@@ -100,7 +100,7 @@ class NoticeFileWizard(models.TransientModel):
         # Llamar a _create_notice si se encontraron datos
         if notice_data:
             self._create_notice(notice_data)
-            self._create_history_notice()
+            # self._create_history_notice()
 
         return {'type': 'ir.actions.act_window_close'}
 
