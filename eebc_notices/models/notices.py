@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+# TODO: Pendiente validaciones de readonly
 
 class Notices(models.Model):
 
@@ -31,4 +32,12 @@ class Notices(models.Model):
     description = fields.Char(string='Descripción')
     quantity = fields.Float(string='Cantidad')
     series = fields.Char(string='Series (s)')
+
+    
+    history_ids = fields.One2many(
+        string='Historial de movimientos',
+        comodel_name='notice.history',
+        inverse_name='notice_id',
+    )
+    
 

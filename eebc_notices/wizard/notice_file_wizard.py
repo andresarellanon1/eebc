@@ -32,7 +32,7 @@ class NoticeFileWizard(models.TransientModel):
         supplier = self._context['proveedor']
         origin = self._context['origin']
         supplier = self._context['proveedor']
-        type = self._context['type']
+        type_picking = self._context['type']
         location_id = self._context['location_id']
         location_dest_id = self._context['location_dest_id']
         origin = self._context['origin']
@@ -82,32 +82,25 @@ class NoticeFileWizard(models.TransientModel):
                 # Extraer la información que necesitamos de las filas coincidentes
                 for index, row in matching_rows.iterrows():
                     notice_data.append({
-                        'resource': row.get('Recurso', 0),
-                        'quantity': row.get('Cantidad', 0),  # Asume que tienes una columna 'Cantidad' en el archivo
-                        'description': row.get('Cantidad', 0),
-                        'supplier':supplier,
-                        'notice':row.get('Aviso', 0),
-                        
+                        'resource': row.get('Recurso', 0), # notices.notices
+                        'quantity': row.get('Cantidad', 0),  # notices.notices
+                        'description': row.get('Cantidad', 0), # notices.notices
+                        'supplier':supplier, # notices.notices
+                        'notice':row.get('Aviso', 0), # notices.notices
+                        'location_id': location_id, # notices.history
+                        'location_dest': location_dest_id, # notices.history
+                        'picking_code': type_picking, # notices.history
+                        'origin':origin, # notices.history
                     })
                     
-                # for index, row in matching_rows.iterrows():
-                #     notice_history_data.append({
-                #         'resource': row.get('Recurso', 0),
-                #         'quantity': row.get('Cantidad', 0),  # Asume que tienes una columna 'Cantidad' en el archivo
-                #         'description': row.get('Cantidad', 0),
-                #         'supplier':,
-                #         'notice':,
-                #         'location_dest':,
-                #         'picking_code':,
-                #         'origin':,
-                        
-                #     })
+               
             else:
                 _logger.info(f"No se encontraron coincidencias para el producto {id_producto} en la hoja {sheet_name}.")
 
         # Llamar a _create_notice si se encontraron datos
         if notice_data:
             self._create_notice(notice_data)
+            self._create_history_notice()
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -117,7 +110,7 @@ class NoticeFileWizard(models.TransientModel):
             _logger.info(f"Creando aviso para el producto {data['resource']} con cantidad {data['quantity']}")
             
             # Crear el nuevo registro en el modelo 'notices.notices'
-            self.env['notices.notices'].create({
+            notice = self.env['notices.notices'].create({
                 'resource': data['resource'],  # ID del producto
                 'quantity': data['quantity'],  # Cantidad extraída del archivo
                 'description': data['description'],
@@ -127,7 +120,20 @@ class NoticeFileWizard(models.TransientModel):
                 
             })
 
+            self.env['notices.history'].create({
+                'location_id': data['location_id'], 
+                'location_dest': data['location_dest'], 
+                'quantity': data['quantity'],  # Cantidad extraída del archivo
+                'picking_code': data['picking_code'],
+                'notice':notice,
+                
+                
+            })
+
+
+
         _logger.info(f"{len(notice_data)} avisos creados correctamente.")
+
         
         
     def _create_history_notice(self, notice_history_data):
