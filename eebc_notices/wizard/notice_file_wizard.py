@@ -112,8 +112,7 @@ class NoticeFileWizard(models.TransientModel):
         """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
         for data in notice_data:
             _logger.info(f"Creando aviso para el producto {data['resource']} con cantidad {data['quantity']}")
-            
-            its_created = self.env['notices.notices'].search([('notice','=', data[notice])])
+            its_created = self.env['notices.notices'].search([('notice','=', data['notice'])])
             _logger.warning('VALOR DE ITS CREATED : %s', its_created)
 
 
@@ -125,7 +124,6 @@ class NoticeFileWizard(models.TransientModel):
                     'location_id': data['location_id'],
                     'quantity': data['quantity'],
                     'picking_code': data['picking_code'],
-                    'origin': data['origin'],
                     })]
                 })
 
