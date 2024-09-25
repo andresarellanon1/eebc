@@ -216,10 +216,10 @@
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_id.company_id.vat"/>
-                                            <br/><t t-esc="doc.location_id.display_name"/>
+                                            <br/><t t-esc="doc.location_id.company_id.street"/>
                                         </td>
                                         <td>
-                                            <t t-esc="doc.location_id.display_name"/>
+                                            <t t-esc="doc.location_id.company_id.name"/>
                                         </td>
                                         <td>
                                             01
@@ -228,7 +228,7 @@
                                             <t t-esc="doc.location_id.company_id.city"/> 
                                         </td>
                                         <td>
-                                            2024-09-04T10:05:53<br/><t t-esc="doc.location_id.company_id.state_id.name"/>
+                                            <t t-esc="doc.date"/><br/><t t-esc="doc.location_id.company_id.state_id.name"/>
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_id.company_id.country_id.name"/>
@@ -244,17 +244,17 @@
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_dest_id.company_id.vat"/>
-                                            <br/><t t-esc="doc.location_dest_id.display_name"/>
+                                            <br/><t t-esc="doc.location_dest_id.company_id.street"/>
                                         </td>
                                         <td>
-                                            <t t-esc="doc.location_dest_id.name"/>
+                                            <t t-esc="doc.location_dest_id.company_id.name"/>
                                         </td>
                                         <td>01</td>
                                         <td>
                                             <t t-esc="doc.location_dest_id.company_id.city"/> 
                                         </td>
                                         <td>
-                                            2024-09-04T10:05:53<br/><t t-esc="doc.location_dest_id.company_id.state_id.name"/>
+                                            <t t-esc="doc.date"/><br/><t t-esc="doc.location_dest_id.company_id.state_id.name"/>
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_dest_id.company_id.country_id.name"/>
