@@ -1,4 +1,6 @@
 from odoo import fields, models, api
+# TODO: Pendiente validaciones de readonly
+
 
 class NoticesHistory(models.Model):
 
@@ -34,11 +36,11 @@ class NoticesHistory(models.Model):
         string='Operaciones de Almacén'
     )
     
-    @api.depends("origin")
-    def _compute_picking_ids(self):
+    # @api.depends("origin")
+    # def _compute_picking_ids(self):
 
-        po = self.env['purchase.order'].search([('name','=',self.origin)])
-        self.picking_ids = po.picking_ids 
+    #     po = self.env['purchase.order'].search([('name','=',self.origin)])
+    #     self.picking_ids = po.picking_ids 
 
         # Hay que mapear por el producto que se encuentra por picking id
 
