@@ -38,8 +38,8 @@ class StockMove(models.Model):
                 'cantidad':  self.product_uom_qty,
                 'proveedor': self.picking_id.partner_id.id,
                 'type': self.picking_id.picking_type_code,
-                'location_id':self.picking_id.location_id,
-                'location_dest_id':self.picking_id.location_dest_id,
+                'location_id':self.picking_id.location_id.id,
+                'location_dest_id':self.picking_id.location_dest_id.id,
                 'origin': self.picking_id.origin
                 
             }
