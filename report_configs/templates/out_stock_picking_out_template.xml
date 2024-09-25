@@ -221,12 +221,21 @@
                                         <td>
                                             <t t-esc="doc.location_id.display_name"/>
                                         </td>
-                                        <td/>
-                                        <td/>
-                                        <td>2024-09-04T10:05:53<br/>BCN
+                                        <td>
+                                            01
                                         </td>
-                                        <td/>
-                                        <td/>
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.city"/> 
+                                        </td>
+                                        <td>
+                                            2024-09-04T10:05:53<br/><t t-esc="doc.location_id.company_id.state_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.country_id.name"/>
+                                        </td>
+                                        <td> 
+                                            <t t-esc="doc.location_id.company_id.zip"/>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Destino</td>
@@ -241,11 +250,17 @@
                                             <t t-esc="doc.location_dest_id.name"/>
                                         </td>
                                         <td>01</td>
-                                        <td>055</td>
-                                        <td>2024-09-04T10:05:53<br/>SON
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.company_id.city"/> 
                                         </td>
-                                        <td>MEX</td>
-                                        <td>70.01<br/>83430
+                                        <td>
+                                            2024-09-04T10:05:53<br/><t t-esc="doc.location_dest_id.company_id.state_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.company_id.country_id.name"/>
+                                        </td>
+                                        <td>
+                                            70.01<br/><t t-esc="doc.location_dest_id.company_id.zip"/>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -266,7 +281,7 @@
                                     </div>
                                     <div class="col-3">
                                         <strong>Num Total Mercancias:</strong>
-                                        12
+                                        <t t-esc="contador_productos"/>
                                     </div>
                                 </div>
                             </div>
