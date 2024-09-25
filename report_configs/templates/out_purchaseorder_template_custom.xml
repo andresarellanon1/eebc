@@ -73,7 +73,7 @@
                 <div class="col-auto col_fields" style="padding-right:16px">
                   <span class="span-n" style="font-weight:bold;">001 MEXICALI</span>
                   <br/>
-                  <span class="span-n">0904 ALIANZA ELECTRICA DEL PACIFICO SA DE CV</span>
+                  <span t-field="compra.partner_id" class="span-n"/>
                   <br/>
                   <span class="span-n">LOPEZ DEL CASTILLO ENTRE CAMELIA Y DE LAS TORRES 942</span>
                   <br/>
@@ -95,15 +95,15 @@
                   <br/>
                 </div>
                 <div class="col-auto col_fields">
-                  <span class="span-n" style="font-weight:bold;">28/08/2024</span>
+                  <span t-field="compra.date_planned" class="span-n" style="font-weight:bold;"/>
                   <br/>
                   <span class="span-n" style="font-weight:bold;">INMEDIATO</span>
                   <br/>
                   <span class="span-n" style="font-weight:bold;">CREDITO 30 DIAS</span>
                   <br/>
-                  <span class="span-n" style="font-weight:bold;">REQUISICION LPZ-184</span>
+                  <span t-field="compra.partner_ref" class="span-n" style="font-weight:bold;"/>
                   <br/>
-                  <span class="span-n" style="font-weight:bold;">PESOS MEXICANOS</span>
+                  <span t-field="compra.currency_id" class="span-n" style="font-weight:bold;"/>
                   <br/>
                 </div>
               </div>
@@ -150,16 +150,19 @@
                           <t t-esc="linea.product_id.default_code or ''"/>
                         </td>
                         <td>
-                          <t t-esc="linea.quantity or ''"/>
+                          <t t-esc="linea.product_qty or ''"/>
                         </td>
                         <td>
-                          <t t-esc="linea.product_uom_id.name or ''"/>
+                          <t t-esc="linea.product_uom or ''"/>
                         </td>
                         <td>
-                          <t t-esc="linea.product_id.name or ''"/>
+                          <t t-esc="linea.name or ''"/>
                         </td>
                         <td>
-                          <t t-esc="linea.tax_ids and ', '.join([tax.name for tax in linea.tax_ids]) or ''"/>
+                          <t t-esc="linea.date_planned or ''"/>
+                        </td>
+                        <td>
+                          <t t-esc="linea.price_unit or ''"/>
                         </td>
                         <td style="text-align: right;">
                           <t t-esc="linea.price_unit or ''"/>
