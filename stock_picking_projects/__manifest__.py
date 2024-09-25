@@ -10,6 +10,8 @@
                 'stock','project'
                ],
     'data': [
+        "views/inherit_project_task_view_form.xml",
+        "views/inherit_project_view_form.xml"
     ],
     "license": "LGPL-3",
     'installable': True,
