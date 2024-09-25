@@ -6,5 +6,3 @@ class ProjectTask(models.Model):
 
     stock_ids = fields.One2many('stock.picking', 'project_id', string="stock")
     move_ids = fields.One2many('stock.move', 'task_id', string="Lineas de operaciones")
-
-    
