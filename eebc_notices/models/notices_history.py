@@ -27,6 +27,8 @@ class NoticesHistory(models.Model):
         'notices.notices', string="Aviso relacionado"
     )
 
+    
+
     origin = fields.Char(string='Documento origen')
 
     
