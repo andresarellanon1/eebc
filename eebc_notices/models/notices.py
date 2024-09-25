@@ -36,7 +36,7 @@ class Notices(models.Model):
     
     history_ids = fields.One2many(
         string='Historial de movimientos',
-        comodel_name='notice.history',
+        comodel_name='notices.history',
         inverse_name='notice_id',
     )
     
