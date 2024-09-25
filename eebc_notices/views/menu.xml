@@ -8,5 +8,11 @@
         sequence="240">  
     </menuitem>
 
+ <menuitem id="notice__notices_menu"
+        name="Avisos"
+        parent="notice_menu_root"
+        action="action_open_notices"
+        sequence="1">  
+    </menuitem>
 
 </odoo>
