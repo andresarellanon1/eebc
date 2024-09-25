@@ -76,7 +76,7 @@ class NoticeFileWizard(models.TransientModel):
             matching_rows = df[df['Recurso'] == id_producto]
 
             if not matching_rows.empty:
-                _logger.info(f"Se encontraron filas que coinciden con el producto {self.product_id.name} en la hoja {sheet_name}:")
+                _logger.info(f"Se encontraron filas que coinciden con el producto {id_producto} en la hoja {sheet_name}:")
                 _logger.info(matching_rows)
                 
                 # Extraer la información que necesitamos de las filas coincidentes
@@ -103,7 +103,7 @@ class NoticeFileWizard(models.TransientModel):
                         
                 #     })
             else:
-                _logger.info(f"No se encontraron coincidencias para el producto {self.product_id.name} en la hoja {sheet_name}.")
+                _logger.info(f"No se encontraron coincidencias para el producto {id_producto} en la hoja {sheet_name}.")
 
         # Llamar a _create_notice si se encontraron datos
         if notice_data:
@@ -118,7 +118,7 @@ class NoticeFileWizard(models.TransientModel):
             
             # Crear el nuevo registro en el modelo 'notices.notices'
             self.env['notices.notices'].create({
-                'resource': data['product_id'],  # ID del producto
+                'resource': data['resource'],  # ID del producto
                 'quantity': data['quantity'],  # Cantidad extraída del archivo
                 'description': data['description'],
                 'supplier': data['supplier'],
