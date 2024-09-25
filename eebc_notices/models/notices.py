@@ -2,11 +2,24 @@ from odoo import fields, models, api
 
 class Notices(models.Model):
 
-    _name= 'notices.notices'
-
-    resource = fields.Float()
+    _name= 'notices.notices'    
+    
+    resource = fields.Many2one(
+        string='Recurso',
+        comodel_name='product.product',
+    )
+    
  
-    supplier = fields.Char( string='Proveedor')
+    supplier = fields.Many2one(
+        string='Proveedor',
+        comodel_name='res.partner',
+    )
+
+    last_update = fields.Date(
+        string='Ultima actualizacion',
+        
+    )
+    
     folio = fields.Char(string='Folio')
     create_date = fields.Date(
         string='Fecha de creacion',
@@ -19,9 +32,3 @@ class Notices(models.Model):
     quantity = fields.Float(string='Cantidad')
     series = fields.Char(string='Series (s)')
 
-    picking_ids = fields.Many2many(
-        'stock.picking', 
-        string='Operaciones de Almacén'
-    )
-    
-    
