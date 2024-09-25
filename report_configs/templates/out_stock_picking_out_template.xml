@@ -130,11 +130,10 @@
                                                 01
                                             </td>
                                             <td style="text-align: right;">
-                                                precio
+                                                <t t-esc="linea.product_id.standard_price or ''"/>
                                             </td>
                                             <td style="text-align: right;">
-                                                <t t-set="importe"
-                                                   t-value="(0) * (linea.quantity or 0)"/>
+                                                <t t-set="importe" t-value="(linea.product_id.standard_price or 0) * (linea.quantity or 0)"/>
                                                 <t t-esc="importe"/>
                                                 <t t-set="total_importe" t-value="total_importe + importe"/>
                                             </td>
@@ -243,10 +242,11 @@
                             </table>
                             <div class="m-3" style=" font-size: 12px; width:100%;">
                                 <div class="text-center" style="font-size: 14px; font-weight: bold;">MERCANCIAS</div>
+                                <t t-set="peso_total" t-value="0.00"/>
                                 <div class="d-flex" style="background-color: #f0f0f0;">
                                     <div class="col-3">
                                         <strong>Peso Bruto Total:</strong>
-                                        145.840
+                                        <t t-esc="peso_total"/>
                                     </div>
                                     <div class="col-3">
                                         <strong>Unidad Peso:</strong>
@@ -277,9 +277,8 @@
                                     </tr>
                                 </thead>
                                 <tbody style="text-align: center;">
-                                <t t-set="contador_productos" t-value="0"/>
                                 <t t-foreach="doc.move_line_ids" t-as="linea" t-index="i">
-                                    <t t-set="contador_productos" t-value="contador_productos + 1"/>
+                                    <t t-set="peso_total" t-value="peso_total + linea.product_id.weight or 0"/>
                                     <td>
                                         <t t-esc="linea.origin or ''"/>
                                     </td>
