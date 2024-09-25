@@ -216,9 +216,10 @@
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_id.company_id.vat"/>
-                                            <br/>CALLE URBANO VASQUEZ
+                                            <br/><t t-esc="doc.location_id.display_name"/>
                                         </td>
-                                        <td>EQUIPOS ELECTRICOS DE BAJA CALIFORNIA<br/>0176
+                                        <td>
+                                            <t t-esc="doc.location_id.display_name"/>
                                         </td>
                                         <td/>
                                         <td/>
@@ -234,9 +235,10 @@
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_dest_id.company_id.vat"/>
-                                            <br/>CALLE URBANO VASQUEZ
+                                            <br/><t t-esc="doc.location_dest_id.display_name"/>
                                         </td>
-                                        <td>ELECTRICA DIAZ<br/>0238
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.name"/>
                                         </td>
                                         <td>01</td>
                                         <td>055</td>
