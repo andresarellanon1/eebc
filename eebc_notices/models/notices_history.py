@@ -18,6 +18,7 @@ class NoticesHistory(models.Model):
     quantity = fields.Float(string='Cantidad')
 
 
+
     picking_code = fields.Char(
         string='Tipo de operacion',
     )
