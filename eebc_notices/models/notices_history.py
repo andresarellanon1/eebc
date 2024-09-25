@@ -7,13 +7,11 @@ class NoticesHistory(models.Model):
 
     location_dest = fields.Many2one(
         'stock.location', "Destination Location",
-        compute="_compute_location_id", store=True, precompute=True, readonly=False,
-        check_company=True, required=True)
+        required=True)
 
     location_id = fields.Many2one(
         'stock.location', "Source Location",
-        compute="_compute_location_id", store=True, precompute=True, readonly=False,
-        check_company=True, required=True)
+        required=True)
 
     quantity = fields.Float(string='Cantidad')
 
