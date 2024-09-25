@@ -125,7 +125,7 @@ class NoticeFileWizard(models.TransientModel):
                 'location_dest': data['location_dest'], 
                 'quantity': data['quantity'],  # Cantidad extraída del archivo
                 'picking_code': data['picking_code'],
-                'notice':notice,
+                'notice_id':notice,
                 
                 
             })
