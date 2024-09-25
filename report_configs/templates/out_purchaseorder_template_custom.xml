@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="out_purchaseorder_template_custom">
+            <t t-foreach="docs" t-as="compra">
+                <t t-call="web.html_container">
+                    <t t-call="report_configs.external_layout_invoice_custom">
+                        <div class="page">
+                            <div class="container">
+                                <hr style="border: .5px solid black"/>
+                                <div class="row" style="font-size: 11px;">
+                                    <div class="col-auto col_tags">
+                                        <span class="span-n" style="font-weight:bold;">Almacen:</span>
+                                        <br/>
+
+                                        <span class="span-n">Proveedor:</span>
+                                        <br/>
+
+                                        <span class="span-n">Domicilio:</span>
+                                        <br/>
+
+                                        <span class="span-n">FOB:</span>
+                                        <br/>
+
+                                        <span class="span-n">Modo de envio:</span>
+                                        <br/>
+
+                                    </div>
+                                    <div class="col-auto col_fields" style="padding-right:15px">
+                                        <span class="span-n" style="font-weight:bold;">001 MEXICALI</span>
+                                        <br/>
+
+                                        <span class="span-n">0904 ALIANZA ELECTRICA DEL PACIFICO SA DE CV</span>
+                                        <br/>
+
+                                        <span class="span-n">LOPEZ DEL CASTILLO ENTRE CAMELIA Y DE LAS TORRES 942</span>
+                                        <br/>
+
+                                        <span class="span-n">ALAMCEN LA PAZ BCS</span>
+                                        <br/>
+                                        
+                                        <span class="span-n">PROPIO</span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_tags">
+                                        <span class="span-n" style="font-weight:bold;">Fecha Entrega:</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">Tiempo Entrega:</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">Terminos:</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">Referencia:</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">Moneda:</span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_fields">
+                                        <span class="span-n" style="font-weight:bold;">28/08/2024</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">INMEDIATO</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">CREDITO 30 DIAS</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">REQUISICION LPZ-184</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">PESOS MEXICANOS</span>
+                                        <br/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-size:12px; page-break-inside: avoid">
+                                <table class="table">
+                                    <thead id="encabezados-tabla" style="color: #000000;">
+                                        <th style="width: 5%;">Pda.</th>
+                                        <th style="width: 9%;">Cantidad</th>
+                                        <th style="width: 9%;">Unidad</th>
+                                        <th style="width: 9%;">Articulo/Descripción</th>
+                                        <th style="width: 39%;">Fec. Entrega</th>
+                                        <th style="width: 9%;">Sem.</th>
+                                        <th style="width: 10%;">P. Unitario</th>
+                                        <th style="width: 10%;">Importe</th>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="contador_productos" t-value="0"/>
+                                        <t t-set="total_importe" t-value="0"/>
+                                        <t t-foreach="compra.order_line" t-as="linea" t-index="i">
+                                            <t t-if="linea.display_type == 'product'">
+                                                <t t-set="contador_productos" t-value="contador_productos + 1"/>
+                                            </t>
+                                            <t t-if="linea.display_type == 'line_section'">
+                                                <tr>
+                                                    <td colspan="8"
+                                                        style="font-weight: bold; background-color: #f5f5f5; text-align: center;">
+                                                        <t t-esc="linea.name"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="linea.display_type == 'line_note'">
+                                                <tr>
+                                                    <td colspan="8"
+                                                        style="font-style: italic; background-color: #fafafa;">
+                                                        <t t-esc="linea.name"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="linea.display_type == 'product'">
+
+                                                <tr>
+
+                                                    <td>
+                                                        <t t-esc="contador_productos"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_id.default_code or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.quantity or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_uom_id.name or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_id.name or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.tax_ids and ', '.join([tax.name for tax in linea.tax_ids]) or ''"/>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <t t-esc="linea.price_unit or ''"/>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <t t-set="importe"
+                                                           t-value="(linea.price_unit or 0) * (linea.quantity or 0)"/>
+                                                        <t t-esc="importe"/>
+                                                        <t t-set="total_importe" t-value="total_importe + importe"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <table class="table" style="font-size: 8px;">
+                                <tbody>
+                                    <tr>
+                                        <td scope="row">
+                                            <span class="span-n">
+                                                MATERIAL SOLICITADO POR FABIOLA GARCIA R., PARA V ENTA.
+                                                SE REQUIERE AVISO DE PRUEBA C.F.E. (SIGLA 03)
+                                                COTIZACION # 115623, POR ILSE COTA.
+                                                MATERIAL SOLICITADO CON AVISO DE PRUEBA, EN LO QUE APLIQUE, FAVOR DE REALIZAR LA
+                                                TRANSFERENCIA EN SIGLA03 A LA CUENTA 43639
+                                            </span>
+                                        </td>
+                                        <td rowspan="2" style="font-size: 10px;" class="col-3">
+                                            <p style="display: flex; justify-content: space-between;">
+                                                SUBTOTAL
+                                                <span>$
+                                                    <t t-esc="total_importe"/>
+                                                </span>
+                                            </p>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                DESCUENTO
+                                                <span>$</span>
+                                            </p>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                SUBTOTAL
+                                                <span>$</span>
+                                            </p>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                IVA TRASLADADO
+                                                <span>$</span>
+                                            </p>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                IVA RETENIDO
+                                                <span>$</span>
+                                            </p>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                TOTAL
+                                                <span>$</span>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            <span class="span-n">
+                                                GARANTIAS:EQUIPOS ELECTRICOS DE BAJA CALIFORNIA; garantiza que los
+                                                productos entregados deben estar libres de defecto en material, mano de
+                                                obra y
+                                                fabricación. Esta garantía tiene vigencia de 12 meses a partir de su
+                                                fecha de facturación. El Cliente se compromete a reportar cualquier
+                                                defecto en un período de 10
+                                                (diez) dias, el no hacerlo, invalida la garantía. Una vez terminado el
+                                                período de garantía, el cliente libera a EQUIPOS ELECTRICOS DE BAJA
+                                                CALIFORNIA de cualquier
+                                                responsabilidad. En caso de que la garantía sea efectiva, las partes
+                                                acuerdan que EQUIPOS ELECTRICOS DE BAJA CALIFORNIA re-emplazará o
+                                                reparará o devolverá
+                                                el precio pagado por el articulo defectuoso según acuerden. La compañía
+                                                no se hace responsable de daños incidentales, especiales, indirectos o
+                                                consecuenciales
+                                                que pudieran ocurrir.
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="bottom:0;left:0; font-size:10px;margin-bottom:0px">
+                                <ol>
+                                    <li>Favor de anexar una copia de la orden de compra junto con su factura.</li>
+                                    <li>Confirmar la recepción de esta orden de compra.</li>
+                                    <li>Los importes están expresados en pesos mexicanos.</li>
+                                    <li>Enviar el número de folio a: cvillagrana@eebc.com.mx.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
