@@ -24,9 +24,7 @@ class NoticesHistory(models.Model):
     
 
     notice_id = fields.Many2one(
-        'notices.notices', "Aviso relacionado"
-
-
+        'notices.notices', string="Aviso relacionado"
     )
 
     origin = fields.Char(string='Documento origen')
