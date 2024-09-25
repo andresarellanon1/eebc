@@ -36,7 +36,7 @@ class StockMove(models.Model):
             'context': {
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
-                'proveedor': self.picking_id.partner_id,
+                'proveedor': self.picking_id.partner_id.id,
                 'type': self.picking_id.picking_type_code,
                 'location_id':self.picking_id.location_id,
                 'location_dest_id':self.picking_id.location_dest_id,
