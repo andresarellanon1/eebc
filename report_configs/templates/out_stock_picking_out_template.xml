@@ -8,7 +8,8 @@
                         <t t-call="report_configs.report_styles"/>
                         <div class="page">
                             <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0;">
-                                <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 26px; padding: 2px important!">
+                                <thead class="p- table-borderless text-center"
+                                       style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 26px; padding: 2px important!">
                                     <tr>
                                         <th style="width: 53%;"/>
                                         <th style="width: 30%; background-color: white; font-weight: 900">
@@ -43,7 +44,9 @@
                                         <br/>
                                         <span>EQUIPOS ELECTRICOS DE BAJA CALIFORNIA</span>
                                         <br/>
-                                        <span><t t-esc="doc.location_id.company_id.vat"/></span>
+                                        <span>
+                                            <t t-esc="doc.location_id.company_id.vat"/>
+                                        </span>
                                         <br/>
                                         <span>21374</span>
                                         <br/>
@@ -92,7 +95,8 @@
                             </div>
                             <table class="table-borderless" style="width: 100%; font-size: 13px;">
                                 <thead>
-                                    <tr id="encabezados-tabla" style="background-color: rgb(0, 56, 108); color: white; padding: 10px;">
+                                    <tr id="encabezados-tabla"
+                                        style="background-color: rgb(0, 56, 108); color: white; padding: 10px;">
                                         <th style="width: 5%; padding: 7px 0;">No.</th>
                                         <th style="width: 5%;">Clave</th>
                                         <th style="width: 5%;">Cantidad</th>
@@ -133,7 +137,8 @@
                                                 <t t-esc="linea.product_id.standard_price or ''"/>
                                             </td>
                                             <td style="text-align: right;">
-                                                <t t-set="importe" t-value="(linea.product_id.standard_price or 0) * (linea.quantity or 0)"/>
+                                                <t t-set="importe"
+                                                   t-value="(linea.product_id.standard_price or 0) * (linea.quantity or 0)"/>
                                                 <t t-esc="importe"/>
                                                 <t t-set="total_importe" t-value="total_importe + importe"/>
                                             </td>
@@ -156,7 +161,8 @@
                                     </div>
                                     <div class="col-3">
                                         <strong>PaisOrigenDestino:</strong>
-                                        <span t-raw="doc.location_id.company_id.country_id.name"/>/<span t-raw="doc.location_dest_id.company_id.country_id.name"/>
+                                        <span t-raw="doc.location_id.company_id.country_id.name"/>/
+                                        <span t-raw="doc.location_dest_id.company_id.country_id.name"/>
                                     </div>
                                     <div class="col-3">
                                         <strong>ViaEntradaSalida:</strong>
@@ -215,7 +221,8 @@
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_id.company_id.vat"/>
-                                            <br/><t t-esc="doc.location_id.company_id.street"/>
+                                            <br/>
+                                            <t t-esc="doc.location_id.company_id.street"/>
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_id.company_id.name"/>
@@ -224,15 +231,17 @@
 
                                         </td>
                                         <td>
-                                            <t t-esc="doc.location_id.company_id.city"/> 
+                                            <t t-esc="doc.location_id.company_id.city"/>
                                         </td>
                                         <td>
-                                            <t t-esc="doc.date"/><br/><t t-esc="doc.location_id.company_id.state_id.name"/>
+                                            <t t-esc="doc.date"/>
+                                            <br/>
+                                            <t t-esc="doc.location_id.company_id.state_id.name"/>
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_id.company_id.country_id.name"/>
                                         </td>
-                                        <td> 
+                                        <td>
                                             <t t-esc="doc.location_id.company_id.zip"/>
                                         </td>
                                     </tr>
@@ -243,7 +252,8 @@
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_dest_id.company_id.vat"/>
-                                            <br/><t t-esc="doc.location_dest_id.company_id.street"/>
+                                            <br/>
+                                            <t t-esc="doc.location_dest_id.company_id.street"/>
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_dest_id.company_id.name"/>
@@ -252,16 +262,19 @@
 
                                         </td>
                                         <td>
-                                            <t t-esc="doc.location_dest_id.company_id.city"/> 
+                                            <t t-esc="doc.location_dest_id.company_id.city"/>
                                         </td>
                                         <td>
-                                            <t t-esc="doc.date"/><br/><t t-esc="doc.location_dest_id.company_id.state_id.name"/>
+                                            <t t-esc="doc.date"/>
+                                            <br/>
+                                            <t t-esc="doc.location_dest_id.company_id.state_id.name"/>
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_dest_id.company_id.country_id.name"/>
                                         </td>
                                         <td>
-                                            <br/><t t-esc="doc.location_dest_id.company_id.zip"/>
+                                            <br/>
+                                            <t t-esc="doc.location_dest_id.company_id.zip"/>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -289,7 +302,8 @@
                             <!-- TABLA MERCANCIAS -->
                             <table class="table-borderless" style="width: 100%; font-size: 9px;">
                                 <thead>
-                                    <tr id="encabezados-tabla" style="background-color: rgb(0, 56, 108); color: white; padding: 10px; text-align: center;">
+                                    <tr id="encabezados-tabla"
+                                        style="background-color: rgb(0, 56, 108); color: white; padding: 10px; text-align: center;">
                                         <th style="width: 5%; padding: 7px 0;">BienesTransp / IDOrigen</th>
                                         <th style="width: 47%;">Descripción</th>
                                         <th style="width: 5%;">Cantidad / CantidadTransp</th>
@@ -302,26 +316,28 @@
                                 </thead>
                                 <tbody style="text-align: center;">
                                     <t t-foreach="doc.move_line_ids" t-as="linea" t-index="i">
-                                        <td>
-                                            <t t-esc="linea.origin or ''"/>
-                                        </td>
-                                        <td style="text-align: left;">
-                                            <t t-esc="linea.display_name or ''"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="linea.quantity"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="linea.product_uom_category_id or ''"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="linea.product_uom_id.name or ''"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="linea.product_id.weight or ''"/>
-                                        </td>
-                                        <td/>
-                                        <td/>
+                                        <tr>
+                                            <td>
+                                                <t t-esc="linea.origin or ''"/>
+                                            </td>
+                                            <td style="text-align: left;">
+                                                <t t-esc="linea.display_name or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.quantity"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_uom_category_id or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_uom_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_id.weight or ''"/>
+                                            </td>
+                                            <td/>
+                                            <td/>
+                                        </tr>
                                     </t>
                                 </tbody>
                             </table>
@@ -527,19 +543,22 @@
                                     <div style="border: 1px solid black; border-bottom: none;">
                                         <strong>SELLO DIGITAL DEL CFDI:</strong>
                                         Yvfemxm1++opgyCPIuh+g+wAHxkzwBEHtgvgH8vLFUGoWhX5pTH18USmH2qw2OX4hL3TYGFoYMfRBHh56XxO/JP29r4GjGxZclb2L8o4oMfmo7eYdFmB9Q
-                                        eORXKRWK/dlFA4yUfzsAIGi6mSVCzexweBJmfckzoyw6hqy6rrmf9w2YvOU/Fou+HbhfKR82YZVdr4BisR/MU9LeuKeE4xAAyB+MFy7RNro+Ucdk/PoCxEEg/V Or62hNnUfsDJ6y+DMp94OYN6pS6H+M9BJJWGdZ+YEVwiQBHHHu0xPcSD3nztsoemUSE1teFsXKlR4JApTHGlOFm2oda6EIi2pMwzTg==
+                                        eORXKRWK/dlFA4yUfzsAIGi6mSVCzexweBJmfckzoyw6hqy6rrmf9w2YvOU/Fou+HbhfKR82YZVdr4BisR/MU9LeuKeE4xAAyB+MFy7RNro+Ucdk/PoCxEEg/V
+                                        Or62hNnUfsDJ6y+DMp94OYN6pS6H+M9BJJWGdZ+YEVwiQBHHHu0xPcSD3nztsoemUSE1teFsXKlR4JApTHGlOFm2oda6EIi2pMwzTg==
                                     </div>
                                     <div style="border: 1px solid black; border-bottom: none;">
                                         <strong>SELLO DIGITAL DEL SAT:</strong>
                                         ENOmAhR9rNM1Lj6qN5YdWUMo0Hk+BfdVT7H00OmZA0gcFgubM43b+xbSMxam0yTvMjgaC1Ke1OF3ES7vMn0op970chQPKzs1c7nGfyE6tW0y7KnWYxAk7
-                                        hdW4hUlO4FIzZYthUmC79J4GyBTVGHxDunwjuajtcVXh0HWSx55Hc/9VqeebOFbNCqnCIVZX+TWLLx9H+WFL9kUBYgZ+QLzI1L4iiB6T3VLfCeIc1k+Z+w2+ie 6thoFGVHKomYj1gBg+9pvCthGntj3lxSzz1OP4B5O6wd+OkRO0WmLKu3Oa1dEVezTmwkpYNkw76RPXR4BlQcijvkgx3EAg7yAVyrpNg==
+                                        hdW4hUlO4FIzZYthUmC79J4GyBTVGHxDunwjuajtcVXh0HWSx55Hc/9VqeebOFbNCqnCIVZX+TWLLx9H+WFL9kUBYgZ+QLzI1L4iiB6T3VLfCeIc1k+Z+w2+ie
+                                        6thoFGVHKomYj1gBg+9pvCthGntj3lxSzz1OP4B5O6wd+OkRO0WmLKu3Oa1dEVezTmwkpYNkw76RPXR4BlQcijvkgx3EAg7yAVyrpNg==
                                     </div>
                                     <div style="border: 1px solid black; ">
                                         <strong>CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACIÓN DIGITAL DEL SAT:
                                         </strong>
                                         ||1.1|B4E1F56C-ADF8-484A-B08B-656DCD71B5D5|2024-09-04T11:17:12|ASE0209252Q1|Yvfemxm1++opgyCPIuh+g+wAHxkzwBEHtgvgH8vLFUGoWhX5pTH
                                         18USmH2qw2OX4hL3TYGFoYMfRBHh56XxO/JP29r4GjGxZclb2L8o4oMfmo7eYdFmB9QeORXKRWK/dlFA4yUfzsAIGi6mSVCzexweBJmfckzoyw6hqy6rrmf9
-                                        w2YvOU/Fou+HbhfKR82YZVdr4BisR/MU9LeuKeE4xAAyB+MFy7RNro+Ucdk/PoCxEEg/VOr62hNnUfsDJ6y+DMp94OYN6pS6H+M9BJJWGdZ+YEVwiQBHHHu 0xPcSD3nztsoemUSE1teFsXKlR4JApTHGlOFm2oda6EIi2pMwzTg==|00001000000505371432|
+                                        w2YvOU/Fou+HbhfKR82YZVdr4BisR/MU9LeuKeE4xAAyB+MFy7RNro+Ucdk/PoCxEEg/VOr62hNnUfsDJ6y+DMp94OYN6pS6H+M9BJJWGdZ+YEVwiQBHHHu
+                                        0xPcSD3nztsoemUSE1teFsXKlR4JApTHGlOFm2oda6EIi2pMwzTg==|00001000000505371432|
                                     </div>
                                 </div>
                                 <div class="col-2" style="border: 1px solid black;">
