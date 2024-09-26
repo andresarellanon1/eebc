@@ -10,14 +10,16 @@
         <field name="model">notices.notices</field>
         <field name="arch" type="xml">
          <form>
-            <field name="resource"/>
-            <field name="supplier"/>
-            <field name="folio"/>
-            <field name="create_date" widget="date"/>
-            <field name="notice"/>
-            <field name="description"/>
-            <field name="quantity" string="Cantidad"/>
-            <field name="series" />
+            <group>
+                <field name="resource"/>
+                <field name="supplier"/>
+                <field name="folio"/>
+                <field name="create_date" widget="date"/>
+                <field name="notice"/>
+                <field name="description"/>
+                <field name="quantity" string="Cantidad"/>
+                <field name="series"/>
+            </group>
             <field name="history_ids">
                 <tree string="Historial de Movimientos">
                     <field name="location_dest"/>
