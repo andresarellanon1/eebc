@@ -42,17 +42,25 @@
                                             <div style="height: 5px;"/>
                                         </span>
                                         <br/>
-                                        <span>EQUIPOS ELECTRICOS DE BAJA CALIFORNIA</span>
-                                        <br/>
                                         <span>
-                                            <t t-esc="doc.location_id.company_id.vat"/>
+                                            <t t-esc="doc.company_id.name"/>
                                         </span>
                                         <br/>
-                                        <span>21374</span>
+                                        <span>
+                                            <t t-esc="doc.company_id.vat"/>
+                                        </span>
                                         <br/>
-                                        <span>S01</span>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
                                         <br/>
-                                        <span>601</span>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
                                         <br/>
                                     </div>
                                     <div class="col-auto col_tags">
@@ -70,10 +78,16 @@
                                         <br/>
                                     </div>
                                     <div class="col-auto col_fields" style="background-color:#ededed;">
-                                        <span>2024/09/04 10:17:23 AM</span>
+                                        <span>
+                                            <t t-esc="current_date"/>
+                                        </span>
                                         <br/>
                                         <span>
-                                            <div style="height: 5px;"/>
+                                            <t t-esc="doc.origin"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <t t-esc="doc.purchase_id.name"/>
                                         </span>
                                         <br/>
                                         <span>
@@ -87,8 +101,6 @@
                                         <span>
                                             <div style="height: 5px;"/>
                                         </span>
-                                        <br/>
-                                        <span>01</span>
                                         <br/>
                                     </div>
                                 </div>
