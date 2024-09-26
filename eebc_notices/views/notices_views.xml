@@ -16,7 +16,7 @@
             <field name="create_date" widget="date"/>
             <field name="notice"/>
             <field name="description"/>
-            <field name="quantity"/>
+            <field name="quantity" string="Cantidad"/>
             <field name="series" />
             <field name="history_ids">
                 <tree string="Historial de Movimientos">
