@@ -149,8 +149,6 @@
                                 <div class="d-flex" style="background-color: #f0f0f0;">
                                     <div class="col-3">
                                         <strong>TranspInternac:</strong>
-                                        <t t-if="doc.location_id.company_id.country_id.name === doc.location_dest_id.company_id.country_id.name">No</t>
-                                        <t t-else="doc.location_id.company_id.country_id.name !== doc.location_dest_id.company_id.country_id.name">Si</t>
                                     </div>
                                     <div class="col-3">
                                         <strong>EntradaSalidaMerc:</strong>
