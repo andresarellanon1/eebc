@@ -79,7 +79,7 @@
                                     </div>
                                     <div class="col-auto col_fields" style="background-color:#ededed;">
                                         <span>
-                                            <t t-esc="current_date"/>
+                                            <div style="height: 5px;"/>
                                         </span>
                                         <br/>
                                         <span>
@@ -134,7 +134,7 @@
                                                 <t t-esc="linea.product_id.default_code or ''"/>
                                             </td>
                                             <td>
-                                                <t t-esc="linea.quantity or ''"/>
+                                                <t t-esc="linea.quantity or 0"/>
                                             </td>
                                             <td>
                                                 <t t-esc="linea.product_uom_id.name or ''"/>
@@ -146,7 +146,7 @@
 
                                             </td>
                                             <td style="text-align: right;">
-                                                <t t-esc="linea.product_id.standard_price or ''"/>
+                                                <t t-esc="linea.product_id.standard_price or 0"/>
                                             </td>
                                             <td style="text-align: right;">
                                                 <t t-set="importe"
@@ -336,7 +336,7 @@
                                                 <t t-esc="linea.display_name or ''"/>
                                             </td>
                                             <td>
-                                                <t t-esc="linea.quantity"/>
+                                                <t t-esc="linea.quantity or 0"/>
                                             </td>
                                             <td>
                                                 <t t-esc="linea.product_uom_category_id or ''"/>
@@ -345,7 +345,7 @@
                                                 <t t-esc="linea.product_uom_id.name or ''"/>
                                             </td>
                                             <td>
-                                                <t t-esc="linea.product_id.weight or ''"/>
+                                                <t t-esc="linea.product_id.weight or 0"/>
                                             </td>
                                             <td/>
                                             <td/>
