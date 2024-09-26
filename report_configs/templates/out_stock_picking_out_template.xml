@@ -43,7 +43,7 @@
                                         <br/>
                                         <span>EQUIPOS ELECTRICOS DE BAJA CALIFORNIA</span>
                                         <br/>
-                                        <span>eeb8111231q4</span>
+                                        <span><t t-esc="doc.location_id.company_id.vat"/></span>
                                         <br/>
                                         <span>21374</span>
                                         <br/>
@@ -127,7 +127,7 @@
                                                 <t t-esc="linea.display_name or ''"/>
                                             </td>
                                             <td>
-                                                01
+
                                             </td>
                                             <td style="text-align: right;">
                                                 <t t-esc="linea.product_id.standard_price or ''"/>
@@ -149,25 +149,26 @@
                                 <div class="d-flex" style="background-color: #f0f0f0;">
                                     <div class="col-3">
                                         <strong>TranspInternac:</strong>
-                                        No
+                                        <t t-if="doc.location_id.company_id.country_id.name === doc.location_dest_id.company_id.country_id.name">No</t>
+                                        <t t-else="doc.location_id.company_id.country_id.name !== doc.location_dest_id.company_id.country_id.name">Si</t>
                                     </div>
                                     <div class="col-3">
                                         <strong>EntradaSalidaMerc:</strong>
-                                        No
+
                                     </div>
                                     <div class="col-3">
                                         <strong>PaisOrigenDestino:</strong>
-                                        MX
+                                        <span t-raw="doc.location_id.company_id.country_id.name"/>/<span t-raw="doc.location_dest_id.company_id.country_id.name"/>
                                     </div>
                                     <div class="col-3">
                                         <strong>ViaEntradaSalida:</strong>
-                                        Tren
+
                                     </div>
                                 </div>
                                 <div class="d-flex" style="background-color: #f0f0f0;">
                                     <div class="col-3">
                                         <strong>TotalDistRec:</strong>
-                                        70.01
+
                                     </div>
                                     <div class="col-6">
                                         <strong>IdCCP:</strong>
@@ -222,7 +223,7 @@
                                             <t t-esc="doc.location_id.company_id.name"/>
                                         </td>
                                         <td>
-                                            01
+
                                         </td>
                                         <td>
                                             <t t-esc="doc.location_id.company_id.city"/> 
@@ -249,7 +250,9 @@
                                         <td>
                                             <t t-esc="doc.location_dest_id.company_id.name"/>
                                         </td>
-                                        <td>01</td>
+                                        <td>
+
+                                        </td>
                                         <td>
                                             <t t-esc="doc.location_dest_id.company_id.city"/> 
                                         </td>
@@ -260,7 +263,7 @@
                                             <t t-esc="doc.location_dest_id.company_id.country_id.name"/>
                                         </td>
                                         <td>
-                                            70.01<br/><t t-esc="doc.location_dest_id.company_id.zip"/>
+                                            <br/><t t-esc="doc.location_dest_id.company_id.zip"/>
                                         </td>
                                     </tr>
                                 </tbody>
