@@ -8,21 +8,11 @@
             <xpath expr="//page[@name='extra_info']" position="after">
                 <page name="material" string="Material">
                     <field name="stock_ids">
-                        
-                    </field>
-                    <field name="move_ids" widget="one2many_list" mode="tree,form">
                         <tree>
-                            <field name="product_id" string="Producto"/>
-                            <field name="product_uom_qty" string="Cantidad"/>
-                            <field name="company_id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="state"/>
+                            <field name="scheduled_date"/>
                         </tree>
-                        <form>
-                            <group>
-                                <field name="product_id"/>
-                                <field name="product_uom_qty"/>
-                                <field name="company_id" invisible="1"/>
-                            </group>
-                        </form>
                     </field>
                 </page>
             </xpath>

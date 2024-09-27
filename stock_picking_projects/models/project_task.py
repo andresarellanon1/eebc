@@ -21,3 +21,14 @@ class ProjectTask(models.Model):
                 task.stock_ids = stock_moves
             else:
                 task.stock_ids = False
+
+    def action_create_inventory(self):
+        self.ensure_one()
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        action['context'] = {
+            'default_origin': self.name,
+            'default_picking_type_id': self.project_id.default_picking_type_id.id,
+            'default_task_id': self.id,
+        }
+        action['domain'] = [('task_id', '=', self.id)]
+        return action
