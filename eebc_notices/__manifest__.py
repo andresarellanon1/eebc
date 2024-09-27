@@ -1,6 +1,6 @@
 {
     'name': "EBBC NOTICES",
-    'version': '17.0.1.35',
+    'version': '17.0.1.52',
     'depends': ["stock"],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
@@ -13,12 +13,14 @@
 
     "data": [
         "security/ir.model.access.csv",
-        "views/menu.xml",
         "views/notices_views.xml",
-        "views/stock_picking_views.xml"
+        "views/menu.xml",
+        "views/stock_picking_views.xml",
+        "wizard/notice_file_wizard_view.xml"
         
     ],
     "application": True,
     "installable": True,
     "license": "LGPL-3",
 }
+

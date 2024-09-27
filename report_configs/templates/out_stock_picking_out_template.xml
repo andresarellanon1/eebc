@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="out_stock_picking_out_template">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.html_container">
+                    <t t-call="report_configs.external_layout_invoice_custom">
+                        <t t-call="report_configs.report_styles"/>
+                        <div class="page">
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0;">
+                                <thead class="p- table-borderless text-center"
+                                       style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 26px; padding: 2px important!">
+                                    <tr>
+                                        <th style="width: 53%;"/>
+                                        <th style="width: 30%; background-color: white; font-weight: 900">
+                                            T R A S L A D O
+                                        </th>
+                                        <th style="width: 17%; font-weight: 900">
+                                            M - 618
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="container m-1">
+                                <div class="row">
+                                    <div class="col-auto col_tags">
+                                        <span>No. Cliente:</span>
+                                        <br/>
+                                        <span>Nombre:</span>
+                                        <br/>
+                                        <span>R.F.C:</span>
+                                        <br/>
+                                        <span>Domicilio Fiscal:</span>
+                                        <br/>
+                                        <span>Uso del CFDI:</span>
+                                        <br/>
+                                        <span>Régimen fiscal:</span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_fields" style="padding-right:15px">
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <t t-esc="doc.company_id.name"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <t t-esc="doc.company_id.vat"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_tags">
+                                        <span>Fecha / Hora:</span>
+                                        <br/>
+                                        <span>Num. Pedido:</span>
+                                        <br/>
+                                        <span>Orden Compra:</span>
+                                        <br/>
+                                        <span>Vendedor:</span>
+                                        <br/>
+                                        <span>Forma de Pago:</span>
+                                        <br/>
+                                        <span>Exportación:</span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_fields" style="background-color:#ededed;">
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <t t-esc="doc.origin"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <t t-esc="doc.purchase_id.name"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
+                                        <br/>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table-borderless" style="width: 100%; font-size: 13px;">
+                                <thead>
+                                    <tr id="encabezados-tabla"
+                                        style="background-color: rgb(0, 56, 108); color: white; padding: 10px;">
+                                        <th style="width: 5%; padding: 7px 0;">No.</th>
+                                        <th style="width: 5%;">Clave</th>
+                                        <th style="width: 5%;">Cantidad</th>
+                                        <th style="width: 5%;">Unidad</th>
+                                        <th style="width: 55%;">Descripcion</th>
+                                        <th style="width: 5%;">Obj. Imp</th>
+                                        <th style="width: 10%;">Precio</th>
+                                        <th style="width: 10%; text-align: right; padding-right: 5px;">Importe</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center;">
+                                    <t t-set="contador_productos" t-value="0"/>
+                                    <t t-set="total_importe" t-value="0"/>
+                                    <t t-set="peso_total" t-value="0"/>
+                                    <t t-foreach="doc.move_line_ids" t-as="linea" t-index="i">
+                                        <t t-set="contador_productos" t-value="contador_productos + 1"/>
+                                        <t t-set="peso_total" t-value="peso_total + linea.product_id.weight or 0"/>
+                                        <tr>
+                                            <td>
+                                                <t t-esc="contador_productos"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_id.default_code or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.quantity or 0"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_uom_id.name or ''"/>
+                                            </td>
+                                            <td style="text-align: left;">
+                                                <t t-esc="linea.display_name or ''"/>
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <t t-esc="linea.product_id.standard_price or 0"/>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <t t-set="importe"
+                                                   t-value="(linea.product_id.standard_price or 0) * (linea.quantity or 0)"/>
+                                                <t t-esc="importe"/>
+                                                <t t-set="total_importe" t-value="total_importe + importe"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <!-- Complemento Carta Porte Section -->
+                            <div class="m-3" style=" font-size: 12px; width:100%;">
+                                <div class="text-center" style="font-size: 14px; font-weight: bold;">COMPLEMENTO CARTA
+                                    PORTE
+                                </div>
+                                <div class="d-flex" style="background-color: #f0f0f0;">
+                                    <div class="col-3">
+                                        <strong>TranspInternac:</strong>
+                                    </div>
+                                    <div class="col-3">
+                                        <strong>EntradaSalidaMerc:</strong>
+
+                                    </div>
+                                    <div class="col-3">
+                                        <strong>PaisOrigenDestino:</strong>
+                                        <span t-raw="doc.location_id.company_id.country_id.name"/>/
+                                        <span t-raw="doc.location_dest_id.company_id.country_id.name"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <strong>ViaEntradaSalida:</strong>
+
+                                    </div>
+                                </div>
+                                <div class="d-flex" style="background-color: #f0f0f0;">
+                                    <div class="col-3">
+                                        <strong>TotalDistRec:</strong>
+
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>IdCCP:</strong>
+                                        CCC088D9-0A58-4F54-8764-FBA4D9A85DED
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center" style="font-size: 14px; font-weight: bold;">UBICACIONES</div>
+                            <table class="table-borderless" style="width: 100%; font-size: 12px;">
+                                <thead style="text-align: center;">
+                                    <tr style="background-color: #f0f0f0; color: black; padding: 10px;">
+                                        <th style="width: 10%; padding: 7px 0;">
+                                            <strong>Tipo Ubicación</strong>
+                                        </th>
+                                        <th style="width: 10%;">
+                                            <strong>ID Ubicación</strong>
+                                        </th>
+                                        <th style="width: 20%;">
+                                            <strong>RFC / Calle</strong>
+                                        </th>
+                                        <th style="width: 15%;">
+                                            <strong>Nombre / Colonia</strong>
+                                        </th>
+                                        <th style="width: 10%;">
+                                            <strong>NumRegIdTrib / Localidad</strong>
+                                        </th>
+                                        <th style="width: 10%;">
+                                            <strong>ResidenciaFiscal / Municipio</strong>
+                                        </th>
+                                        <th style="width: 15%;">
+                                            <strong>FechaHora / Estado</strong>
+                                        </th>
+                                        <th style="width: 5%;">
+                                            <strong>TipoEstacion / País</strong>
+                                        </th>
+                                        <th style="width: 10%;">
+                                            <strong>DistanciaRecorrida / Código Postal</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center;">
+                                    <tr>
+                                        <td>Origen</td>
+                                        <td>
+                                            <t t-esc="doc.location_id.id"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.vat"/>
+                                            <br/>
+                                            <t t-esc="doc.location_id.company_id.street"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.name"/>
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.city"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.date"/>
+                                            <br/>
+                                            <t t-esc="doc.location_id.company_id.state_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.country_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.zip"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Destino</td>
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.id"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.company_id.vat"/>
+                                            <br/>
+                                            <t t-esc="doc.location_dest_id.company_id.street"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.company_id.name"/>
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.company_id.city"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.date"/>
+                                            <br/>
+                                            <t t-esc="doc.location_dest_id.company_id.state_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.company_id.country_id.name"/>
+                                        </td>
+                                        <td>
+                                            <br/>
+                                            <t t-esc="doc.location_dest_id.company_id.zip"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="m-3" style=" font-size: 12px; width:100%;">
+                                <div class="text-center" style="font-size: 14px; font-weight: bold;">MERCANCIAS</div>
+                                <div class="d-flex" style="background-color: #f0f0f0;">
+                                    <div class="col-3">
+                                        <strong>Peso Bruto Total:</strong>
+                                        <t t-esc="peso_total"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <strong>Unidad Peso:</strong>
+                                        KGM
+                                    </div>
+                                    <div class="col-3">
+                                        <strong>Peso Neto Total:</strong>
+                                    </div>
+                                    <div class="col-3">
+                                        <strong>Num Total Mercancias:</strong>
+                                        <t t-esc="contador_productos"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- TABLA MERCANCIAS -->
+                            <table class="table-borderless" style="width: 100%; font-size: 9px;">
+                                <thead>
+                                    <tr id="encabezados-tabla"
+                                        style="background-color: rgb(0, 56, 108); color: white; padding: 10px; text-align: center;">
+                                        <th style="width: 5%; padding: 7px 0;">BienesTransp / IDOrigen</th>
+                                        <th style="width: 47%;">Descripción</th>
+                                        <th style="width: 5%;">Cantidad / CantidadTransp</th>
+                                        <th style="width: 5%;">ClaveUnidad</th>
+                                        <th style="width: 5%;">Unidad</th>
+                                        <th style="width: 5%;">Peso (Kg)</th>
+                                        <th style="width: 7%;">Fracción Arancelaria</th>
+                                        <th style="width: 7%;">UUID Comercio Ext</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center;">
+                                    <t t-foreach="doc.move_line_ids" t-as="linea" t-index="i">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="linea.origin or ''"/>
+                                            </td>
+                                            <td style="text-align: left;">
+                                                <t t-esc="linea.display_name or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.quantity or 0"/>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_uom_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_id.weight or 0"/>
+                                            </td>
+                                            <td/>
+                                            <td/>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <div class="m-3" style=" font-size: 12px; width:100%;">
+                                <div class="text-center" style="font-size: 14px; font-weight: bold;">INFORMACION
+                                    TRANSPORTE:
+                                </div>
+                                <div class="d-flex" style="background-color: #f0f0f0;">
+                                    <div class="col-3">
+                                        <span>
+                                            <strong>PermSCT:</strong>TPXX00
+                                        </span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span>
+                                            <strong>NumPermisoSCT:</strong>Sin permiso
+                                        </span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span>
+                                            <strong>ConfigVehicular:</strong>C2
+                                        </span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span>
+                                            <strong>PesoBrutoVehicular:</strong>15.00
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="d-flex" style="background-color: #f0f0f0;">
+                                    <div class="col-3">
+                                        <span>
+                                            <strong>PlacaVM:</strong>AN2455
+                                        </span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span>
+                                            <strong>AñoModeloVM:</strong>2003
+                                        </span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span>
+                                            <strong>AseguraRespCivil:</strong>CHUBB
+                                        </span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span>
+                                            <strong>PolizaRespCivil:</strong>MX43000051
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-3" style=" font-size: 12px; width:100%;">
+                            <div class="text-center" style="font-size: 14px; font-weight: bold;">FIGURA TRANSPORTE:
+                            </div>
+                            <div class="d-flex">
+                                <div class="col-1"/>
+                                <div class="col-5" style="background-color: #f0f0f0;">
+                                    <span>
+                                        <strong>TipoFigura:</strong>TPXX00
+                                    </span>
+                                </div>
+                                <div class="col-5" style="background-color: #f0f0f0;">
+                                    <span>
+                                        <strong>RFCFigura:</strong>JILM830107745
+                                    </span>
+                                </div>
+                                <div class="col-1"/>
+                            </div>
+                            <div class="d-flex">
+                                <div class="col-1"/>
+                                <div class="col-5" style="background-color: #f0f0f0;">
+                                    <span>
+                                        <strong>NumLicencia:</strong>BCN0108819
+                                    </span>
+                                </div>
+                                <div class="col-5" style="background-color: #f0f0f0;">
+                                    <span>
+                                        <strong>NombreFigura:</strong>MARCO ANTONIO JIMENEZ LARA
+                                    </span>
+                                </div>
+                                <div class="col-1"/>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="col-3">
+                                CFDI Relacionado(s):
+                            </div>
+                            <div class="col-9">
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="col-3">
+                                Tipo de Relación
+                            </div>
+                            <div class="col-9">
+                                UUID
+                            </div>
+                        </div>
+
+                        <div class="d-flex" style="font-size: 10px; border: 1px solid black; border-bottom: none;">
+                            <div class="col-9">
+                                <div>
+                                    <span>Convenio: Si su pago es por BANCOMER usar Convenio: 0001551647</span>
+                                </div>
+                                <div>
+                                    <span>Referencia: M0000000050582</span>
+                                </div>
+                            </div>
+                            <div class="col-3" style="font-size: 8px; border-left: 1px solid black; text-align: right;">
+                                <div class="d-flex">
+                                    <div class="col-4" style="padding-left: 3px;">
+                                        <span style="font-weight: 900;">SUBTOTAL $</span>
+                                    </div>
+                                    <div class="col-8" style="padding-right: 3px;">
+                                        <span>0</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex" style="background-color: rgb(255, 204, 0);">
+                                    <div class="col-4" style=" padding-left: 3px;">
+                                        <span style="font-weight: 900;">TOTAL $</span>
+                                    </div>
+                                    <div class="col-8" style=" padding-right: 3px;">
+                                        <span>0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex" style="font-size: 9px; text-align: justify; border: 1px solid black; ">
+                            <p>
+                                GARANTIAS:EQUIPOS ELECTRICOS DE BAJA CALIFORNIA; garantiza que los
+                                productos entregados deben estar libres de defecto en material, mano de
+                                obra y
+                                fabricación. Esta garantía tiene vigencia de 12 meses a partir de su
+                                fecha de facturación. El Cliente se compromete a reportar cualquier
+                                defecto en un período de 10
+                                (diez) dias, el no hacerlo, invalida la garantía. Una vez terminado el
+                                período de garantía, el cliente libera a EQUIPOS ELECTRICOS DE BAJA
+                                CALIFORNIA de cualquier
+                                responsabilidad. En caso de que la garantía sea efectiva, las partes
+                                acuerdan que EQUIPOS ELECTRICOS DE BAJA CALIFORNIA re-emplazará o
+                                reparará o devolverá
+                                el precio pagado por el articulo defectuoso según acuerden. La compañía
+                                no se hace responsable de daños incidentales, especiales, indirectos o
+                                consecuenciales
+                                que pudieran ocurrir.
+                            </p>
+                        </div>
+
+                        <div style="font-size: 9px; text-align: justify; page-break-inside: avoid; border: 1px solid black">
+                            <div style="padding: 5px;">
+                                POR ESTE PAGARÉ DEBO(EMOS) Y PAGARÉ(MOS) INCONDICIONALMENTE A LA ORDEN DE EQUIPOS
+                                ELÉCTRICOS DE BAJA CALIFORNIA LA CANTIDAD DE $0 SON: CERO PESOS 00/100 M.N. VALOR
+                                RECIBIDO EN MERCANCÍAS A MI(NUESTRA) ENTERA SATISFACCIÓN, EN CASO DE NO PAGAR AL
+                                VENCIMIENTO CAUSARÁ INTERESES MORATORIOS AL % MENSUAL.
+                                <br/>
+                                <br/>
+                                <br/>
+                                <div style="margin-left: 75%; width: 200px; border-bottom: 1px solid black;"/>
+                                <div style="margin-left: 75%; width: 200px; text-align: center; padding-right: 5px; padding-bottom: 5px;">
+                                    ACEPTO Y PAGARÉ
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div style="page-break-inside: avoid;">
+                            <div class="d-flex" style="font-size: 12px; padding: 5px; border: 1px solid black">
+                                <div class="col-3" style="flex: 1; ">
+                                    <div>No. de Certificado del CSD:</div>
+                                    <div>
+                                        <span>00001000000701173867</span>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="flex: 1; padding-bottom: 10px;">
+                                    <div>No. de Certificado del SAT:</div>
+                                    <div>
+                                        <span>00001000000505371432</span>
+                                    </div>
+                                </div>
+                                <div class="col-4" style="flex: 1; padding-bottom: 10px;">
+                                    <div>Folio Fiscal:</div>
+                                    <div>
+                                        <span>AB87796A-ECAC-4EF0-B42B-57A0321E976F</span>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="flex: 1; padding-bottom: 10px;">
+                                    <div>Fecha y Hora de Certificación:</div>
+                                    <div>
+                                        <span>2024-09-10T16:47:57</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex" style="font-size: 9px; page-break-inside: avoid;">
+
+
+                                <div class="col-2" style="border: 1px solid black;">
+                                    <img src="https://placehold.co/120"/>
+                                </div>
+                                <div class="col-8">
+                                    <div style="border: 1px solid black; border-bottom: none;">
+                                        <strong>SELLO DIGITAL DEL CFDI:</strong>
+                                        Yvfemxm1++opgyCPIuh+g+wAHxkzwBEHtgvgH8vLFUGoWhX5pTH18USmH2qw2OX4hL3TYGFoYMfRBHh56XxO/JP29r4GjGxZclb2L8o4oMfmo7eYdFmB9Q
+                                        eORXKRWK/dlFA4yUfzsAIGi6mSVCzexweBJmfckzoyw6hqy6rrmf9w2YvOU/Fou+HbhfKR82YZVdr4BisR/MU9LeuKeE4xAAyB+MFy7RNro+Ucdk/PoCxEEg/V
+                                        Or62hNnUfsDJ6y+DMp94OYN6pS6H+M9BJJWGdZ+YEVwiQBHHHu0xPcSD3nztsoemUSE1teFsXKlR4JApTHGlOFm2oda6EIi2pMwzTg==
+                                    </div>
+                                    <div style="border: 1px solid black; border-bottom: none;">
+                                        <strong>SELLO DIGITAL DEL SAT:</strong>
+                                        ENOmAhR9rNM1Lj6qN5YdWUMo0Hk+BfdVT7H00OmZA0gcFgubM43b+xbSMxam0yTvMjgaC1Ke1OF3ES7vMn0op970chQPKzs1c7nGfyE6tW0y7KnWYxAk7
+                                        hdW4hUlO4FIzZYthUmC79J4GyBTVGHxDunwjuajtcVXh0HWSx55Hc/9VqeebOFbNCqnCIVZX+TWLLx9H+WFL9kUBYgZ+QLzI1L4iiB6T3VLfCeIc1k+Z+w2+ie
+                                        6thoFGVHKomYj1gBg+9pvCthGntj3lxSzz1OP4B5O6wd+OkRO0WmLKu3Oa1dEVezTmwkpYNkw76RPXR4BlQcijvkgx3EAg7yAVyrpNg==
+                                    </div>
+                                    <div style="border: 1px solid black; ">
+                                        <strong>CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACIÓN DIGITAL DEL SAT:
+                                        </strong>
+                                        ||1.1|B4E1F56C-ADF8-484A-B08B-656DCD71B5D5|2024-09-04T11:17:12|ASE0209252Q1|Yvfemxm1++opgyCPIuh+g+wAHxkzwBEHtgvgH8vLFUGoWhX5pTH
+                                        18USmH2qw2OX4hL3TYGFoYMfRBHh56XxO/JP29r4GjGxZclb2L8o4oMfmo7eYdFmB9QeORXKRWK/dlFA4yUfzsAIGi6mSVCzexweBJmfckzoyw6hqy6rrmf9
+                                        w2YvOU/Fou+HbhfKR82YZVdr4BisR/MU9LeuKeE4xAAyB+MFy7RNro+Ucdk/PoCxEEg/VOr62hNnUfsDJ6y+DMp94OYN6pS6H+M9BJJWGdZ+YEVwiQBHHHu
+                                        0xPcSD3nztsoemUSE1teFsXKlR4JApTHGlOFm2oda6EIi2pMwzTg==|00001000000505371432|
+                                    </div>
+                                </div>
+                                <div class="col-2" style="border: 1px solid black;">
+                                    <img src="https://placehold.co/120"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
