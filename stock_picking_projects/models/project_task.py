@@ -23,12 +23,16 @@ class ProjectTask(models.Model):
                 task.stock_ids = False
 
     def action_create_inventory(self):
-        self.ensure_one()
-        action = self.env.ref('stock.action_picking_tree_all').read()[0]
-        action['context'] = {
-            'default_origin': self.name,
-            'default_picking_type_id': self.project_id.default_picking_type_id.id,
-            'default_task_id': self.id,
+        inventory_vals = {
+            'origin': self.name,
+            'picking_type_id': self.project_id.default_picking_type_id.id,
+            'project_id': self.id,
         }
-        action['domain'] = [('task_id', '=', self.id)]
-        return action
+        inventory = self.env['stock.picking'].create(inventory_vals)
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'res_id': inventory.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
