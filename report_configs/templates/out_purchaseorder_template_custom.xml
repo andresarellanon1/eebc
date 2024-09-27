@@ -5,7 +5,7 @@
             <t t-foreach="docs" t-as="compra">
                 <t t-call="web.html_container">
                     <t t-call="report_configs.external_layout_invoice_custom">
-                        <div class="page" style="position:absolute; height:100vh">
+                        <div class="page" style="position:absolute; height:925px">
             <div class="container">
               <hr style="border: 1px solid black"/>
               <table class="table" style="font-size: 8px;border-collapse: collapse;">
@@ -75,9 +75,9 @@
                   <br/>
                   <span t-field="compra.partner_id" class="span-n"/>
                   <br/>
-                  <span class="span-n">LOPEZ DEL CASTILLO ENTRE CAMELIA Y DE LAS TORRES 942</span>
+                  <span class="span-n">BOUQUET CANYON ROAD 1713</span>
                   <br/>
-                  <span class="span-n">ALAMCEN LA PAZ BCS</span>
+                  <span class="span-n">NTO. ALMACEN</span>
                   <br/>
                   <span class="span-n">PROPIO</span>
                   <br/>
@@ -97,9 +97,9 @@
                 <div class="col-auto col_fields">
                   <span t-field="compra.date_planned" class="span-n" style="font-weight:bold;"/>
                   <br/>
-                  <span class="span-n" style="font-weight:bold;">INMEDIATO</span>
+                  <span t-field="compra.payment_term_id" class="span-n" style="font-weight:bold;">INMEDIATO</span>
                   <br/>
-                  <span class="span-n" style="font-weight:bold;">CREDITO 30 DIAS</span>
+                  <span t-field="compra.incoterm_id" class="span-n" style="font-weight:bold;"/>
                   <br/>
                   <span t-field="compra.partner_ref" class="span-n" style="font-weight:bold;"/>
                   <br/>
@@ -177,6 +177,30 @@
                   </t>
                 </tbody>
               </table>
+              <t t-if="compra.state == 'cancel'">
+                    <span class="span-n" style="font-weight:bold;color:red;font-size:25px">ORDEN DE COMPRA CANCELADA</span>
+                    <div class="row" style="font-size: 12px;">
+                        <div class="col-auto col_tags">
+                            <span class="span-n" style="font-weight:bold;color:blue">Usuario que registro la cancelación: </span>
+                            <br/>
+                            <span class="span-n" style="font-weight:bold;color:blue">Fecha de la cancelación: </span>
+                            <br/>
+                            <span class="span-n" style="font-weight:bold;color:blue">Motivo de la cancelación: </span>
+                            <br/>
+                        </div>
+                        <div class="col-auto col_fields" style="padding-right:16px">
+                            <span t-field="compra.user_id" class="span-n" style="font-weight:bold;"/>
+                            <br/>
+                            <span t-field="compra.partner_id" class="span-n"/>
+                            <br/>
+                            <span class="span-n">CANCELACION PRO CAMBIO DE NUM. DE PROVEEDOR PARA ESTA SOLICITUD DE 
+                                                MATERIAL. POR ING. C. GARCIA Y/O M. BRAMASCO.</span>
+                            <br/>
+                            <br/>
+                            <br/>
+                        </div>
+                    </div>
+                </t>  
               <span class="span-n" style="font-weight:bold;">Observaciones:</span>
               <hr/>
             </div>
@@ -228,7 +252,7 @@
                 </tr>
               </tbody>
             </table>
-            <div style="position:absolute; bottom:-73%; width:100%;">
+            <div style="position:absolute; bottom:0; width:100%;">
                 <div style="width:100%;height:100%;">
                     <div style="font-size:12px;">
                         <ol>

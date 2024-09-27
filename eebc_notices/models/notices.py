@@ -30,7 +30,7 @@ class Notices(models.Model):
   
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
-    quantity = fields.Float(string='Cantidad')
+    quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
     series = fields.Char(string='Series (s)')
 
     
@@ -40,4 +40,10 @@ class Notices(models.Model):
         inverse_name='notice_id',
     )
     
+    
+    @api.depends('history_ids.quantity')
+    def _compute_quantity(self):
+        for record in self:
+            # Calcula la suma de las cantidades en history_ids
+            record.quantity = sum(record.history_ids.mapped('quantity'))
 
