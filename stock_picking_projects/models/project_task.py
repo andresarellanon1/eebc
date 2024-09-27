@@ -5,7 +5,6 @@ class ProjectTask(models.Model):
     _inherit = 'project.task'
 
     stock_ids = fields.One2many('stock.picking', 'project_id', string="stock")
-    move_ids = fields.One2many('stock.move', 'task_id', string="Lineas de operaciones")
 
     @api.depends('project_id.default_picking_type_id')
     def _compute_stock_ids(self):
@@ -34,5 +33,5 @@ class ProjectTask(models.Model):
             'res_model': 'stock.picking',
             'res_id': inventory.id,
             'view_mode': 'form',
-            'target': 'current',
+            'target': 'new',
         }

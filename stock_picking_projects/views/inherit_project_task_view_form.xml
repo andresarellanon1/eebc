@@ -8,8 +8,8 @@
             <xpath expr="//page[@name='extra_info']" position="after">
                 <page name="material" string="Material">
                     <button name="action_create_inventory" type="object" string="Crear Inventario" class="oe_highlight"/>
-                    <field name="stock_ids">
-                        <tree>
+                    <field name="stock_ids" widget="One2many_list" readonly="1">
+                        <tree editable="false">
                             <field name="name"/>
                             <field name="state"/>
                             <field name="scheduled_date"/>
@@ -17,6 +17,6 @@
                     </field>
                 </page>
             </xpath>
-        </field>
+        </field>wi
     </record>
 </odoo>
