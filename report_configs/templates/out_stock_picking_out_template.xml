@@ -339,7 +339,6 @@
                                                 <t t-esc="linea.quantity or 0"/>
                                             </td>
                                             <td>
-                                                <t t-esc="linea.product_uom_category_id or ''"/>
                                             </td>
                                             <td>
                                                 <t t-esc="linea.product_uom_id.name or ''"/>
