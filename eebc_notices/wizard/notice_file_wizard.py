@@ -31,19 +31,22 @@ class NoticeFileWizard(models.TransientModel):
     file_name = fields.Char(string="Nombre del archivo")  # Campo para almacenar el nombre del archivo
 
    
-    quantity = fields.Float(string="Cantidad", 
-    readonly=True,
-    
-        compute='_compute_quantity' )
+    quantity = fields.Float(string="Cantidad", readonly=True,)
     
     
     
     
-    @api.depends('quantity')
-    def _compute_quantity(self):
-            self.quantity = self._context['cantidad']
+    @api.model
+    def default_get(self, fields):
+        res = super(NoticeFileWizard, self).default_get(fields)
         
-    
+        # Establecer el valor del campo 'quantity' con el valor pasado en el contexto
+        if 'cantidad' in self._context:
+            res['quantity'] = self._context['cantidad']
+        
+        return res
+
+        	
     def action_data_analysis(self):
         _logger.warning('producto: %s', self._context['product_id'])
       
