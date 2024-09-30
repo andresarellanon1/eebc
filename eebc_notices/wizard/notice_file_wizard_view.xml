@@ -23,8 +23,8 @@
     </record>
 
 
-    <record id="wizard_notice_quantity_error" model="ir.ui.view">
-        <field name="name">Wizard Quantity Error</field>
+    <record id="wizard_notice_error" model="ir.ui.view">
+        <field name="name">Wizard Error</field>
         <field name="model">notice.file.wizard</field>
         <field name="arch" type="xml">
             <form string="Error">
