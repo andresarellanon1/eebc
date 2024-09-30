@@ -1,5 +1,5 @@
 from odoo import fields, models, api
-# TODO: Pendiente validaciones de readonly
+# TODO: Pendiente validaciones de readonly en campos
 
 class Notices(models.Model):
 
