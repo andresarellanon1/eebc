@@ -2,7 +2,7 @@
 <odoo>
     <record id="inherit_timesheet_line_tree" model="ir.ui.view">
         <field name="name">inherit.timesheet.line.tree</field>
-        <field name="model">hr.timesheet.line</field>
+        <field name="model">account.analytic.line</field>
         <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
