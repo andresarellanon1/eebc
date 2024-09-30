@@ -32,6 +32,7 @@ class StockMove(models.Model):
             'name': 'Wizard File Upload',
             'res_model': 'notice.file.wizard',
             'view_mode': 'form',
+            'view_id': self.env.ref('eebc_notices.wizard_notice_file_view').id,  # Aquí se especifica el ID correcto de la vista
             'target': 'new',
             'context': {
                 'product_id': self.product_id.id,  # Pasar valores por defecto
