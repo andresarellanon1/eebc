@@ -9,5 +9,3 @@ class ProjectProject(models.Model):
         'stock.picking', 
         string="Operaciones de Inventario",
         )
-    
-    
