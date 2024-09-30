@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
         <field name="arch" type="xml">
             <xpath expr="//tree//field[@name='name']" position="after">
-                <field name="pickin_ids" widget="many2many_tags" string="Operaciones de Inventario"/>
+                <field name="pickin_ids" widget="many2many_tags" string="Operaciones de Inventario" readonly="0"/>
             </xpath>
         </field>
     </record>
