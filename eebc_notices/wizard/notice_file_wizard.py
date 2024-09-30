@@ -39,7 +39,7 @@ class NoticeFileWizard(models.TransientModel):
     
     
     
-    @api.depends('depends')
+    @api.depends('quantity')
     def _compute_quantity(self):
             self.quantity = self._context['cantidad']
         
