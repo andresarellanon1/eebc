@@ -164,7 +164,7 @@ class NoticeFileWizard(models.TransientModel):
                         'target': 'new',
                         'name': 'Folio duplicado',
                         'context': {
-                            'default_message': f"El folio del archivo ({data['Folio']}) ya existe en el folio ({its_created.display_name}).",
+                            'default_message': f"El folio del archivo ({data['folio']}) ya existe en el folio ({its_created.display_name}).",
                         }
                     }
                 else:
