@@ -105,6 +105,11 @@ class NoticeFileWizard(models.TransientModel):
             # Extraer la información que necesitamos de las filas coincidentes
             for index, row in matching_rows.iterrows():
                 archivo_quantity = row.get('Cantidad', 0)
+                archivo_folio = row.get('Folio', 0)
+
+                _logger.info('valor de folio: %s',archivo_folio)
+
+
 
                 notice_data.append({
                     'resource': row.get('Recurso', 0),  # notices.notices
@@ -112,7 +117,7 @@ class NoticeFileWizard(models.TransientModel):
                     'description': row.get('Cantidad', 0),  # notices.notices
                     'supplier': supplier,  # notices.notices
                     'notice': row.get('Aviso', 0),  # notices.notices
-                    'folio': int(row.get('Folio', 0)), # notices.notices
+                    'folio': row.get('Folio', 0), # notices.notices
                     'location_id': location_id,  # notices.history
                     'location_dest': location_dest_id,  # notices.history
                     'picking_code': type_picking,  # notices.history
