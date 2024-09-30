@@ -124,7 +124,7 @@ class NoticeFileWizard(models.TransientModel):
                         'name': 'Wizard Quantity Error',
                         'res_model': 'notice.file.wizard',
                         'view_mode': 'form',
-                        'view_id': self.env.ref('wizard_notice_quantity_error').id,
+                        'view_id': self.env.ref('eebc_notices.wizard_notice_quantity_error').id,
                         'target': 'new',
                         'name': 'Cantidad incorrecta',
                         'context': {
