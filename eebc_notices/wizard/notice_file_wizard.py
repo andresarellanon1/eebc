@@ -38,6 +38,8 @@ class NoticeFileWizard(models.TransientModel):
     def action_data_analysis(self):
         _logger.warning('producto: %s', self._context['product_id'])
         self.quantity = self._context['cantidad']
+        _logger.warning('cantidad: %s',  self.quantity)
+
         id_producto = self._context['product_id']
         supplier = self._context['proveedor']
         origin = self._context['origin']
