@@ -32,6 +32,8 @@ class NoticeFileWizard(models.TransientModel):
 
    
     quantity = fields.Float(string="Cantidad", readonly=True,)
+    message = fields.Text(string="Mensaje de Error", readonly=True)  # Campo para el mensaje de error
+
     
     
     
@@ -43,6 +45,8 @@ class NoticeFileWizard(models.TransientModel):
         # Establecer el valor del campo 'quantity' con el valor pasado en el contexto
         if 'cantidad' in self._context:
             res['quantity'] = self._context['cantidad']
+        if 'default_message' in self._context:
+            res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
         
         return res
 
@@ -117,8 +121,10 @@ class NoticeFileWizard(models.TransientModel):
                 if archivo_quantity != self.quantity:
                     return {
                         'type': 'ir.actions.act_window',
-                        'res_model': 'ir.actions.act_window',
+                        'name': 'Wizard Quantity Error',
+                        'res_model': 'notice.file.wizard',
                         'view_mode': 'form',
+                        'view_id': self.env.ref('wizard_notice_quantity_error').id,
                         'target': 'new',
                         'name': 'Cantidad incorrecta',
                         'context': {
