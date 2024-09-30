@@ -168,7 +168,7 @@
                           <t t-esc="linea.price_unit or ''"/>
                         </td>
                         <td style="text-align: right;">
-                          <t t-set="importe" t-value="(linea.price_unit or 0) * (linea.quantity or 0)"/>
+                          <t t-set="importe" t-value="(linea.price_unit or 0) * (linea.product_qty or 0)"/>
                           <t t-esc="importe"/>
                           <t t-set="total_importe" t-value="total_importe + importe"/>
                         </td>
