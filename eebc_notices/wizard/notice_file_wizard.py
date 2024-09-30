@@ -153,8 +153,11 @@ class NoticeFileWizard(models.TransientModel):
 
 
             if its_created:
+                _logger.warning('1')
 
                 if int(its_created.folio) == data['folio']:
+                     _logger.warning('2')
+
                      return {
                         'type': 'ir.actions.act_window',
                         'name': 'Wizard Folio Error',
@@ -168,7 +171,8 @@ class NoticeFileWizard(models.TransientModel):
                         }
                     }
                 else:
-
+                    _logger.warning('3')
+                    
                     its_created.write({
                     'history_ids': [(0, 0, {
                         'location_dest': data['location_dest'],  # Añade los campos necesarios para history
@@ -180,6 +184,8 @@ class NoticeFileWizard(models.TransientModel):
 
                     _logger.info('Historial actualizado correctamente para el aviso.')
             else:
+                _logger.warning('4')
+
                 # Crear el nuevo registro en el modelo 'notices.notices'
                 notice = self.env['notices.notices'].create({
                     'resource': data['resource'],  # ID del producto
