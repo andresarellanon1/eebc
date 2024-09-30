@@ -154,6 +154,10 @@ class NoticeFileWizard(models.TransientModel):
 
             if its_created:
                 _logger.warning('1')
+                _logger.warning('VALOR DE ITS CREATED folio : %s', its_created.folio)
+
+                _logger.warning('VALOR DE data folio : %s', data['folio'])
+
 
                 if int(its_created.folio) == data['folio']:
                      _logger.warning('2')
