@@ -22,4 +22,20 @@
         </field>
     </record>
 
+
+    <record id="wizard_notice_quantity_error" model="ir.ui.view">
+        <field name="name">Wizard Quantity Error</field>
+        <field name="model">notice.file.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Error">
+              <group>
+                    <field name="message" readonly="1" />
+                </group>
+                <footer>
+                    <button string="Cerrar" class="btn-primary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
 </odoo>
