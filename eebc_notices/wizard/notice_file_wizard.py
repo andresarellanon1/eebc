@@ -92,6 +92,10 @@ class NoticeFileWizard(models.TransientModel):
             _logger.warning("La columna 'Recurso' no existe en la primera hoja.")
             return {'type': 'ir.actions.act_window_close'}
 
+
+        if 'Folio' not in df.columns:
+            _logger.warning("La columna 'Folio' no existe en la primera hoja.")
+
         # Buscar el valor del producto en la columna 'Recurso'
         matching_rows = df[df['Recurso'] == id_producto]
 
@@ -114,7 +118,7 @@ class NoticeFileWizard(models.TransientModel):
                 notice_data.append({
                     'resource': row.get('Recurso', 0),  # notices.notices
                     'quantity': row.get('Cantidad', 0),  # notices.notices
-                    'description': row.get('Cantidad', 0),  # notices.notices
+                    'description': row.get('Descripción', 0),  # notices.notices
                     'supplier': supplier,  # notices.notices
                     'notice': row.get('Aviso', 0),  # notices.notices
                     'folio': row.get('Folio', 0), # notices.notices
