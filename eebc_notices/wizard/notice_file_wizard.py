@@ -1,7 +1,7 @@
 # Copyright (C) 2018 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, fields, models
+from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 
 import base64
@@ -32,13 +32,21 @@ class NoticeFileWizard(models.TransientModel):
 
    
     quantity = fields.Float(string="Cantidad", 
-    readonly=True 
-    )
-
+    readonly=True,
+    
+        compute='_compute_quantity' )
+    
+    
+    
+    
+    @api.depends('depends')
+    def _compute_quantity(self):
+            self.quantity = self._context['cantidad']
+        
+    
     def action_data_analysis(self):
         _logger.warning('producto: %s', self._context['product_id'])
-        self.quantity = self._context['cantidad']
-        _logger.warning('cantidad: %s',  self.quantity)
+      
 
         id_producto = self._context['product_id']
         supplier = self._context['proveedor']
@@ -85,10 +93,11 @@ class NoticeFileWizard(models.TransientModel):
             _logger.info(matching_rows)
             
             
-            archivo_quantity = row.get('Cantidad', 0)
+           
 
             # Extraer la información que necesitamos de las filas coincidentes
             for index, row in matching_rows.iterrows():
+                archivo_quantity = row.get('Cantidad', 0)
                 notice_data.append({
                     'resource': row.get('Recurso', 0),  # notices.notices
                     'quantity': row.get('Cantidad', 0),  # notices.notices
