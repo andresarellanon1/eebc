@@ -6,8 +6,7 @@ class ProjectProject(models.Model):
 
     default_picking_type_id = fields.Many2one('stock.picking.type', string="Operation type", required=True)
     pickin_ids = fields.Many2many(
-        'stock.picking', 
-        compute="_compute_pickin_ids", 
+        'stock.picking',
         string="Operaciones de Inventario", 
         domain="[('id', 'in', pickin_ids)]"
     )
