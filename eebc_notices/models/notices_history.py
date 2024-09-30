@@ -1,5 +1,7 @@
 from odoo import fields, models, api
-# TODO: Pendiente validaciones de readonly
+# TODO: Pendiente validaciones de readonly en campos
+# En el historial de aviso no puede existir dos entradas con el mismo folio
+# Relacionar a los stock move line los registros de historial
 
 
 class NoticesHistory(models.Model):

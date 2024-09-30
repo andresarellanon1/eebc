@@ -12,8 +12,11 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-# TODO: Pendiente de validaciones que creen solo un registro de entrada en caso de que ya se encuentre el mismo numero de aviso,
-# 
+# TODO: 
+#  Dejar de buscar en todas las hojas del excel
+#  Crear ventanas emergentes para validacion en caso de que la cantidad del excel sea mayor a la de la orden de compra, es decir que la cantidad de orden de compra debe ser menor o igual al del excel
+# Agregar a la vista del wizard la cantidad de la linea de la orden de compra y la cantidad que esta en el excel del respectivo producto al cual se le desea crear aviso.
+# No permitir de momento que se registren nuevos productos con el mismo numero de folio en caso de haber sido registrado previamente. (colocar ventana emergente que mencione el error)
 
 class NoticeFileWizard(models.TransientModel):
     """
@@ -35,12 +38,9 @@ class NoticeFileWizard(models.TransientModel):
         id_producto = self._context['product_id']
         supplier = self._context['proveedor']
         origin = self._context['origin']
-        supplier = self._context['proveedor']
         type_picking = self._context['type']
         location_id = self._context['location_id']
         location_dest_id = self._context['location_dest_id']
-        origin = self._context['origin']
-        
         
         if not self.file_xlsx:
             raise ValueError("Por favor, sube un archivo.")
@@ -58,53 +58,46 @@ class NoticeFileWizard(models.TransientModel):
         if self.file_name.endswith('.csv'):
             raise ValueError("Este método solo procesa archivos XLSX. Por favor, sube un archivo Excel.")
         elif self.file_name.endswith('.xlsx'):
-            # Leer todas las hojas del archivo en un diccionario
-            sheets = pd.read_excel(file_stream, sheet_name=None)  # Devuelve un diccionario con DataFrames
+            # Leer solo la primera hoja del archivo Excel
+            df = pd.read_excel(file_stream, sheet_name=0)  # Carga solo la primera hoja como DataFrame
         else:
             raise ValueError("Formato de archivo no soportado. Solo se permiten archivos Excel.")
 
         notice_data = []
-        notice__history_data = []
-        
 
-        # Iterar sobre todas las hojas del archivo
-        for sheet_name, df in sheets.items():
-            _logger.info(f"Procesando la hoja: {sheet_name}")
+        _logger.info(f"Procesando la primera hoja del archivo Excel.")
 
-            # Verificar si la columna 'Recurso' existe en la hoja
-            if 'Recurso' not in df.columns:
-                _logger.warning(f"La columna 'Recurso' no existe en la hoja {sheet_name}.")
-                continue  # Pasar a la siguiente hoja si la columna no existe
+        # Verificar si la columna 'Recurso' existe en la primera hoja
+        if 'Recurso' not in df.columns:
+            _logger.warning("La columna 'Recurso' no existe en la primera hoja.")
+            return {'type': 'ir.actions.act_window_close'}
 
-            # Buscar el valor del producto en la columna 'Recurso'
-            matching_rows = df[df['Recurso'] == id_producto]
+        # Buscar el valor del producto en la columna 'Recurso'
+        matching_rows = df[df['Recurso'] == id_producto]
 
-            if not matching_rows.empty:
-                _logger.info(f"Se encontraron filas que coinciden con el producto {id_producto} en la hoja {sheet_name}:")
-                _logger.info(matching_rows)
-                
-                # Extraer la información que necesitamos de las filas coincidentes
-                for index, row in matching_rows.iterrows():
-                    notice_data.append({
-                        'resource': row.get('Recurso', 0), # notices.notices
-                        'quantity': row.get('Cantidad', 0),  # notices.notices
-                        'description': row.get('Cantidad', 0), # notices.notices
-                        'supplier':supplier, # notices.notices
-                        'notice':row.get('Aviso', 0), # notices.notices
-                        'location_id': location_id, # notices.history
-                        'location_dest': location_dest_id, # notices.history
-                        'picking_code': type_picking, # notices.history
-                        'origin':origin, # notices.history
-                    })
-                    
-               
-            else:
-                _logger.info(f"No se encontraron coincidencias para el producto {id_producto} en la hoja {sheet_name}.")
+        if not matching_rows.empty:
+            _logger.info(f"Se encontraron filas que coinciden con el producto {id_producto}:")
+            _logger.info(matching_rows)
+            
+            # Extraer la información que necesitamos de las filas coincidentes
+            for index, row in matching_rows.iterrows():
+                notice_data.append({
+                    'resource': row.get('Recurso', 0),  # notices.notices
+                    'quantity': row.get('Cantidad', 0),  # notices.notices
+                    'description': row.get('Cantidad', 0),  # notices.notices
+                    'supplier': supplier,  # notices.notices
+                    'notice': row.get('Aviso', 0),  # notices.notices
+                    'location_id': location_id,  # notices.history
+                    'location_dest': location_dest_id,  # notices.history
+                    'picking_code': type_picking,  # notices.history
+                    'origin': origin,  # notices.history
+                })
+        else:
+            _logger.info(f"No se encontraron coincidencias para el producto {id_producto} en la primera hoja.")
 
         # Llamar a _create_notice si se encontraron datos
         if notice_data:
             self._create_notice(notice_data)
-            # self._create_history_notice()
 
         return {'type': 'ir.actions.act_window_close'}
 
