@@ -6,8 +6,7 @@ class TimesheetLine(models.Model):
     pickin_ids = fields.Many2many(
         'stock.picking',
         compute="_compute_pickin_ids",
-        string="Operaciones de Inventario",
-        store=True
+        string="Operaciones de Inventario"
     )
 
     @api.depends('task_id.stock_ids')
