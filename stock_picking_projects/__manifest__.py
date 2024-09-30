@@ -14,7 +14,9 @@
         "views/view_project_project_kanban.xml",
         "views/inherit_project_view_form.xml",
         "views/inherit_edit_project_view.xml",
-        "views/inherit_pickin_form_view.xml"
+        "views/inherit_pickin_form_view.xml",
+        "views/inherit_timesheet_line_tree.xml",
+        "views/inherit_timesheet_view_form.xml"
     ],
     "license": "LGPL-3",
     'installable': True,
