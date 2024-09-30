@@ -178,7 +178,6 @@ class NoticeFileWizard(models.TransientModel):
                         'view_mode': 'form',
                         'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
                         'target': 'new',
-                        'name': 'Folio duplicado',
                         'context': {
                             'default_message': f"El folio del archivo ({data['folio']}) ya existe en el folio ({its_created.display_name}).",
                         }
