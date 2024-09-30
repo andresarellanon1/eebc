@@ -93,7 +93,7 @@ class NoticeFileWizard(models.TransientModel):
             return {'type': 'ir.actions.act_window_close'}
 
 
-        if 'Folio' not in df.columns:
+        if 'Folio ' not in df.columns:
             _logger.warning("La columna 'Folio' no existe en la primera hoja.")
 
         # Buscar el valor del producto en la columna 'Recurso'
