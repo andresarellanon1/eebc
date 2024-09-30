@@ -154,7 +154,7 @@ class NoticeFileWizard(models.TransientModel):
 
             if its_created:
 
-                if int(its_created.folio) == data['Folio']:
+                if int(its_created.folio) == data['folio']:
                      return {
                         'type': 'ir.actions.act_window',
                         'name': 'Wizard Folio Error',
