@@ -13,7 +13,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 # TODO: 
-#  Dejar de buscar en todas las hojas del excel
+#  Dejar de buscar en todas las hojas del excel - LISTO!!
 #  Crear ventanas emergentes para validacion en caso de que la cantidad del excel sea mayor a la de la orden de compra, es decir que la cantidad de orden de compra debe ser menor o igual al del excel
 # Agregar a la vista del wizard la cantidad de la linea de la orden de compra y la cantidad que esta en el excel del respectivo producto al cual se le desea crear aviso.
 # No permitir de momento que se registren nuevos productos con el mismo numero de folio en caso de haber sido registrado previamente. (colocar ventana emergente que mencione el error)
@@ -31,10 +31,13 @@ class NoticeFileWizard(models.TransientModel):
     file_name = fields.Char(string="Nombre del archivo")  # Campo para almacenar el nombre del archivo
 
    
-    quantity = fields.Float(string="Cantidad")
+    quantity = fields.Float(string="Cantidad", 
+    readonly=True 
+    )
 
     def action_data_analysis(self):
         _logger.warning('producto: %s', self._context['product_id'])
+        self.quantity = self._context['cantidad']
         id_producto = self._context['product_id']
         supplier = self._context['proveedor']
         origin = self._context['origin']
@@ -79,6 +82,9 @@ class NoticeFileWizard(models.TransientModel):
             _logger.info(f"Se encontraron filas que coinciden con el producto {id_producto}:")
             _logger.info(matching_rows)
             
+            
+            archivo_quantity = row.get('Cantidad', 0)
+
             # Extraer la información que necesitamos de las filas coincidentes
             for index, row in matching_rows.iterrows():
                 notice_data.append({
@@ -92,6 +98,19 @@ class NoticeFileWizard(models.TransientModel):
                     'picking_code': type_picking,  # notices.history
                     'origin': origin,  # notices.history
                 })
+
+
+                if archivo_quantity != self.quantity:
+                    return {
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'ir.actions.act_window',
+                        'view_mode': 'form',
+                        'target': 'new',
+                        'name': 'Cantidad incorrecta',
+                        'context': {
+                            'default_message': f"La cantidad en el archivo ({archivo_quantity}) no coincide con la cantidad esperada ({self.quantity}).",
+                        }
+                    }
         else:
             _logger.info(f"No se encontraron coincidencias para el producto {id_producto} en la primera hoja.")
 
