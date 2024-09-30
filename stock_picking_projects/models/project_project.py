@@ -8,8 +8,7 @@ class ProjectProject(models.Model):
     pickin_ids = fields.Many2many(
         'stock.picking', 
         string="Operaciones de Inventario", 
-        compute="_compute_pickin_ids",
-        domain="[('id', 'in', pickin_ids)]"
+        compute="_compute_pickin_ids"
         )
     
     @api.depends('id')
