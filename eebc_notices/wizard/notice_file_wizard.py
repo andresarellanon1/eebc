@@ -14,8 +14,8 @@ _logger = logging.getLogger(__name__)
 
 # TODO: 
 #  Dejar de buscar en todas las hojas del excel - LISTO!!
-#  Crear ventanas emergentes para validacion en caso de que la cantidad del excel sea mayor a la de la orden de compra, es decir que la cantidad de orden de compra debe ser menor o igual al del excel
-# Agregar a la vista del wizard la cantidad de la linea de la orden de compra y la cantidad que esta en el excel del respectivo producto al cual se le desea crear aviso.
+#  Crear ventanas emergentes para validacion en caso de que la cantidad del excel sea mayor a la de la orden de compra, es decir que la cantidad de orden de compra debe ser menor o igual al del excel  -  LISTO!!
+# Agregar a la vista del wizard la cantidad de la linea de la orden de compra y la cantidad que esta en el excel del respectivo producto al cual se le desea crear aviso. - LISTO (?)
 # No permitir de momento que se registren nuevos productos con el mismo numero de folio en caso de haber sido registrado previamente. (colocar ventana emergente que mencione el error)
 
 class NoticeFileWizard(models.TransientModel):
@@ -105,12 +105,14 @@ class NoticeFileWizard(models.TransientModel):
             # Extraer la información que necesitamos de las filas coincidentes
             for index, row in matching_rows.iterrows():
                 archivo_quantity = row.get('Cantidad', 0)
+
                 notice_data.append({
                     'resource': row.get('Recurso', 0),  # notices.notices
                     'quantity': row.get('Cantidad', 0),  # notices.notices
                     'description': row.get('Cantidad', 0),  # notices.notices
                     'supplier': supplier,  # notices.notices
                     'notice': row.get('Aviso', 0),  # notices.notices
+                    'folio': row.get('Folio', 0), # notices.notices
                     'location_id': location_id,  # notices.history
                     'location_dest': location_dest_id,  # notices.history
                     'picking_code': type_picking,  # notices.history
@@ -124,13 +126,15 @@ class NoticeFileWizard(models.TransientModel):
                         'name': 'Wizard Quantity Error',
                         'res_model': 'notice.file.wizard',
                         'view_mode': 'form',
-                        'view_id': self.env.ref('eebc_notices.wizard_notice_quantity_error').id,
+                        'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
                         'target': 'new',
                         'name': 'Cantidad incorrecta',
                         'context': {
                             'default_message': f"La cantidad en el archivo ({archivo_quantity}) no coincide con la cantidad esperada ({self.quantity}).",
                         }
                     }
+               
+                   
         else:
             _logger.info(f"No se encontraron coincidencias para el producto {id_producto} en la primera hoja.")
 
@@ -150,16 +154,31 @@ class NoticeFileWizard(models.TransientModel):
 
             if its_created:
 
-                its_created.write({
-                'history_ids': [(0, 0, {
-                    'location_dest': data['location_dest'],  # Añade los campos necesarios para history
-                    'location_id': data['location_id'],
-                    'quantity': data['quantity'],
-                    'picking_code': data['picking_code'],
-                    })]
-                })
+                if its_created.folio == notice_data['Folio']:
+                     return {
+                        'type': 'ir.actions.act_window',
+                        'name': 'Wizard Folio Error',
+                        'res_model': 'notice.file.wizard',
+                        'view_mode': 'form',
+                        'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
+                        'target': 'new',
+                        'name': 'Folio duplicado',
+                        'context': {
+                            'default_message': f"El folio del archivo ({notice_data['Folio']}) ya existe en el folio ({its_created.display_name}).",
+                        }
+                    }
+                else:
 
-                _logger.info('Historial actualizado correctamente para el aviso.')
+                    its_created.write({
+                    'history_ids': [(0, 0, {
+                        'location_dest': data['location_dest'],  # Añade los campos necesarios para history
+                        'location_id': data['location_id'],
+                        'quantity': data['quantity'],
+                        'picking_code': data['picking_code'],
+                        })]
+                    })
+
+                    _logger.info('Historial actualizado correctamente para el aviso.')
             else:
                 # Crear el nuevo registro en el modelo 'notices.notices'
                 notice = self.env['notices.notices'].create({
