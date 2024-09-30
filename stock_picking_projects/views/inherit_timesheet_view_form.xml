@@ -5,7 +5,7 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
-            <xpath expr="//group//group//field[@name='company_id'" position="after">
+            <xpath expr="//group//field[@name='company_id']" position="after">
                 <field name="pickin_ids" widget="many2many_tags" options="{'no_create': True}" string="Operaciones de Inventario"/>
             </xpath>
         </field>
