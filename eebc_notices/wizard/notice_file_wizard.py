@@ -173,7 +173,6 @@ class NoticeFileWizard(models.TransientModel):
 
                      return {
                         'type': 'ir.actions.act_window',
-                        'name': 'Wizard Folio Error',
                         'res_model': 'notice.file.wizard',
                         'view_mode': 'form',
                         'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
