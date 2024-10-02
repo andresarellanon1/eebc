@@ -18,7 +18,7 @@
                 <field name="picking_type_codigo" invisible="1"/>
 
                 <button name="call_wizard" type="object" string="Subir archivo" icon="fa-area-chart"
-                        invisible="not has_aviso_in_attributes or picking_type_codigo != 'incoming'"/>
+                        invisible="picking_type_codigo != 'incoming'"/>
             </xpath>
         </field>
     </record>
