@@ -16,6 +16,9 @@ class StockMove(models.Model):
         string="Tiene 'aviso' en atributos",
         compute='_compute_has_aviso_in_attributes'
     )
+    picking_type_codigo = fields.Selection(
+        related='picking_type_id.code',
+        readonly=True)
 
     @api.depends('product_id.attribute_line_ids')
     def _compute_has_aviso_in_attributes(self):
