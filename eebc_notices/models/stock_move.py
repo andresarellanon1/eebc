@@ -8,6 +8,10 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
 
+# TODO: que picking id sea tipo de entrada para que salga el boton de aviso
+# campo que muestre el aviso relacionado
+
+
     has_aviso_in_attributes = fields.Boolean(
         string="Tiene 'aviso' en atributos",
         compute='_compute_has_aviso_in_attributes'
