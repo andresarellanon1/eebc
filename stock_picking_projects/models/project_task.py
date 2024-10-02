@@ -4,7 +4,7 @@ class ProjectTask(models.Model):
 
     _inherit = 'project.task'
 
-    stock_ids = fields.One2many('stock.picking', 'project_id', string="stock")
+    stock_ids = fields.One2many('stock.picking', 'task_id', string="stock")
 
     @api.depends('project_id.default_picking_type_id')
     def _compute_stock_ids(self):

@@ -12,4 +12,7 @@ class TimesheetLine(models.Model):
     @api.depends('task_id.stock_ids')
     def _compute_pickin_ids(self):
         for line in self:
-            line.pickin_ids = line.task_id.stock_ids
+            pickins = line.task_id.stock_ids
+            ids = pickins.mapped('id')
+            
+            line.pickin_ids = self.env['stock.picking'].search([('task_id','in', ids)])
