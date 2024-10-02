@@ -23,6 +23,7 @@
     </record>
 
 
+    
     <record id="wizard_notice_error" model="ir.ui.view">
         <field name="name">Wizard Error</field>
         <field name="model">notice.file.wizard</field>

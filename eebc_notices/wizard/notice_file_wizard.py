@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 #  Dejar de buscar en todas las hojas del excel - LISTO!!
 #  Crear ventanas emergentes para validacion en caso de que la cantidad del excel sea mayor a la de la orden de compra, es decir que la cantidad de orden de compra debe ser menor o igual al del excel  -  LISTO!!
 # Agregar a la vista del wizard la cantidad de la linea de la orden de compra y la cantidad que esta en el excel del respectivo producto al cual se le desea crear aviso. - LISTO (?)
-# No permitir de momento que se registren nuevos productos con el mismo numero de folio en caso de haber sido registrado previamente. (colocar ventana emergente que mencione el error)
+# No permitir de momento que se registren nuevos productos con el mismo numero de folio en caso de haber sido registrado previamente. (colocar ventana emergente que mencione el error)- LISTO!!
 
 class NoticeFileWizard(models.TransientModel):
     """
