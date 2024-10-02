@@ -159,7 +159,7 @@ class NoticeFileWizard(models.TransientModel):
             _logger.info(f"Creando aviso para el producto {data['resource']} con cantidad {data['quantity']}")
             its_created = self.env['notices.notices'].search([('notice','=', data['notice'])])
             _logger.warning('VALOR DE ITS CREATED : %s', its_created)
-
+            valor_test =  data['folio']
 
             if its_created:
                 _logger.warning('1')
@@ -168,7 +168,7 @@ class NoticeFileWizard(models.TransientModel):
                 _logger.warning('VALOR DE data folio : %s', data['folio'])
 
 
-                if int(its_created.folio) == data['folio']:
+                if int(its_created.folio) ==valor_test:
                      _logger.warning('2')
 
                      return {
@@ -178,7 +178,7 @@ class NoticeFileWizard(models.TransientModel):
                         'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
                         'target': 'new',
                         'context': {
-                            'default_message': f"El folio del archivo ({data['folio']}) ya existe en el folio ({its_created.display_name}).",
+                            'default_message': f"El folio del archivo ({valor_test}) ya existe en el folio ({its_created}).",
                         }
                         
                     }
