@@ -4,4 +4,4 @@ class StockPicking(models.Model):
 
     _inherit = 'stock.picking'
 
-    project_id = fields.Many2one('project.task', string='projects')
+    task_id = fields.Many2one('project.task', string='projects')
