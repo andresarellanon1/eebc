@@ -25,7 +25,7 @@ class ProjectTask(models.Model):
         inventory_vals = {
             'origin': self.name,
             'picking_type_id': self.project_id.default_picking_type_id.id,
-            'project_id': self.id,
+            'task_id': self.id,
         }
         inventory = self.env['stock.picking'].create(inventory_vals)
         return {
