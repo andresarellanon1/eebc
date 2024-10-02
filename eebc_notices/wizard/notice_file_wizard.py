@@ -149,7 +149,7 @@ class NoticeFileWizard(models.TransientModel):
 
         # Llamar a _create_notice si se encontraron datos
         if notice_data:
-            self._create_notice(notice_data)
+           return self._create_notice(notice_data)
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -165,10 +165,10 @@ class NoticeFileWizard(models.TransientModel):
                 _logger.warning('1')
                 _logger.warning('VALOR DE ITS CREATED folio : %s', its_created.folio)
 
-                _logger.warning('VALOR DE data folio : %s', data['folio'])
+                _logger.warning('VALOR DE data folio : %s', valor_test)
 
 
-                if int(its_created.folio) ==valor_test:
+                if int(its_created.folio) == valor_test:
                      _logger.warning('2')
 
                      return {
