@@ -167,8 +167,10 @@ class NoticeFileWizard(models.TransientModel):
 
                 _logger.warning('VALOR DE data folio : %s', valor_test)
 
+                history_match = its_created.history_ids.filtered(lambda h: h.folio == valor_test)
+                _logger.warning('valor de history match: %s', history_match)
 
-                if int(its_created.folio) == valor_test:
+                if history_match:
                      _logger.warning('2')
 
                      return {
@@ -184,7 +186,7 @@ class NoticeFileWizard(models.TransientModel):
                     }
                 else:
                     _logger.warning('3')
-                    
+                    _logger.warning('No se encontró ningún registro en history_ids con folio: %s', valor_test)
                     its_created.write({
                     'history_ids': [(0, 0, {
                         'location_dest': data['location_dest'],  # Añade los campos necesarios para history
@@ -215,6 +217,8 @@ class NoticeFileWizard(models.TransientModel):
                     'quantity': data['quantity'],  # Cantidad extraída del archivo
                     'picking_code': data['picking_code'],
                     'notice_id':notice.id,
+                    'folio':data['folio'],
+                    
                     
                     
                 })

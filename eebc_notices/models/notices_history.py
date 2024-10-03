@@ -32,6 +32,7 @@ class NoticesHistory(models.Model):
 
     origin = fields.Char(string='Documento origen')
 
+    folio = fields.Char(string='Folio')
     
     # picking_ids = fields.Many2many(
     #     'stock.picking', 
