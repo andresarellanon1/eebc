@@ -1,7 +1,7 @@
 from odoo import fields, models, api
 # TODO: Pendiente validaciones de readonly en campos
 
-# campo nuevo total computada(sumatoria de la cantidad de historiales)
+# campo nuevo total computada(sumatoria de la cantidad de historiales) - lISTO!!
 
 class Notices(models.Model):
 
