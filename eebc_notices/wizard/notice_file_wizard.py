@@ -120,7 +120,7 @@ class NoticeFileWizard(models.TransientModel):
                     'quantity': row.get('Cantidad', 0),  # notices.notices
                     'description': row.get('Descripción', 0),  # notices.notices
                     'supplier': supplier,  # notices.notices
-                    'notice': row.get('Aviso', 0),  # notices.notices
+                    'notice': int(row.get('Aviso', 0)),  # notices.notices
                     'folio': int(row.get('Folio ', 0)), # notices.notices
                     'location_id': location_id,  # notices.history
                     'location_dest': location_dest_id,  # notices.history
