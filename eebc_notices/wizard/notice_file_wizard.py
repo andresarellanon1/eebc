@@ -172,7 +172,7 @@ class NoticeFileWizard(models.TransientModel):
 
                     _logger.warning('valor de registro folio: %s', i.folio)
 
-                history_match = its_created.history_ids.filtered(lambda h: h.folio == valor_test)
+                history_match = its_created.history_ids.filtered(lambda h: int(h.folio) == valor_test)
                 _logger.warning('valor de history match: %s', history_match)
 
                 if history_match:
