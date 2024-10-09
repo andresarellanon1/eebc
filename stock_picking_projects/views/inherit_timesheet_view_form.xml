@@ -2,20 +2,22 @@
 <odoo>
     <record id="inherit_timesheet_view_form" model="ir.ui.view">
         <field name="name">inherit.timesheet.view.form</field>
-        <field name="model">project.project</field>
-        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
             <xpath expr="//group//field[@name='company_id']" position="after">
                 <field name="pickin_ids" widget="many2many_tags" options="{'no_create': True}" string="Operaciones de Inventario"/>
             </xpath>
-            <xpath expr="//notebook//page[@name='extra_info']" position="before">
-                <field name="Actividades" context="{'default_project_id': project_id, 'default_display_in_project': False, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}" widget="subtasks_one2many">
-                    <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
-                        <field name="activity_id" string="Actividades"/>
-                        <field name="activity_summary" string="Descripción"/>
-                        <field name="timesheet_id" widget="handle"/>
-                    </tree>
-                </field>
+            <xpath expr="//notebook//page[@name='task_dependencies']" position="before">
+                <page name="planeacion" string="Planeación" invisible="not project_id">
+                    <field name="Actividades" context="{'default_project_id': project_id, 'default_display_in_project': False, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}" widget="subtasks_one2many">
+                        <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
+                            <field name="activity_ids" string="Actividades"/>
+                            <field name="activity_summary" string="Descripción"/>
+                            <field name="timesheet_ids" widget="handle"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
         </field>
     </record>
