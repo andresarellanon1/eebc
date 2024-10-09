@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_country_form_inherit_custom">
+        <field name="name">res.country.form.inherit.custom</field>
+        <field name="model">res.country</field>
+        <field name="inherit_id" ref="base.view_country_state_form" />
+        <field name="arch" type="xml">
+
+            <field name="code" position="after">
+                <field name="foreign_name" string="Extranjero"/>
+            </field>
+
+        </field>
+    </record>
+</odoo>
