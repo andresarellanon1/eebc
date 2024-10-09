@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='code']" position="after">
-                <field name="foreign_name" string="Extranjero"/>
+                <field name="foreign_name" string="Nacionalidad"/>
             </xpath>
 
         </field>
@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='code']" position="after">
-                <field name="foreign_name" string="Extranjero"/>
+                <field name="foreign_name" string="Nacionalidad"/>
             </xpath>
 
         </field>
