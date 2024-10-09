@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="ir.ui.view" id="view_country_tree_inherit_custom">
-        <field name="name">res.country.tree.inherit.custom</field>
+    <record model="ir.ui.view" id="view_country_show_form_inherit_custom">
+        <field name="name">res.country.show.form.inherit.custom</field>
         <field name="model">res.country</field>
         <field name="inherit_id" ref="base.view_country_tree" />
         <field name="arch" type="xml">
