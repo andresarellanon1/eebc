@@ -19,13 +19,8 @@
                                                 Orden de Compra
                                             </span>
                       <br/>
-                      <span class="span-n">
-                                                No.-MXL30378
-                                            </span>
+                       No. <span t-field="compra.name" class="span-n"/>
                       <br/>
-                      <span class="span-n" style="padding-bottom:0; font-size:12px; font-weight:bold; color:#ff0505;">
-                                                No. de Modificación: 1 ORIGINAL
-                                            </span>
                     </td>
                   </tr>
                   <tr style="border: none;">
@@ -61,25 +56,25 @@
                 <div class="col-auto col_tags">
                   <span class="span-n" style="font-weight:bold;">Almacen:</span>
                   <br/>
-                  <span class="span-n">Proveedor:</span>
+                  <span class="span-n" style="font-weight:bold;">Proveedor:</span>
                   <br/>
-                  <span class="span-n">Domicilio:</span>
+                  <span class="span-n" style="font-weight:bold;">Domicilio:</span>
                   <br/>
-                  <span class="span-n">FOB:</span>
+                  <span class="span-n" style="font-weight:bold;">FOB:</span>
                   <br/>
-                  <span class="span-n">Modo de envio:</span>
+                  <span class="span-n" style="font-weight:bold;">Modo de envio:</span>
                   <br/>
                 </div>
-                <div class="col-auto col_fields" style="padding-right:16px">
-                  <span class="span-n" style="font-weight:bold;">001 MEXICALI</span>
+                <div class="col-6 col_fields" style="padding-right:16px">
+                  <span class="span-n" style="font-weight:bold;"/>
                   <br/>
                   <span t-field="compra.partner_id" class="span-n"/>
                   <br/>
-                  <span class="span-n">BOUQUET CANYON ROAD 1713</span>
+                  <span t-field="compra.dest_address_id" class="span-n"/>
                   <br/>
-                  <span class="span-n">NTO. ALMACEN</span>
+                  <span class="span-n"/>
                   <br/>
-                  <span class="span-n">PROPIO</span>
+                  <span class="span-n"/>
                   <br/>
                 </div>
                 <div class="col-auto col_tags">
@@ -87,17 +82,22 @@
                   <br/>
                   <span class="span-n" style="font-weight:bold;">Tiempo Entrega:</span>
                   <br/>
+                  <span class="span-n" style="font-weight:bold;">Semanas:</span>
+                  <br/>
                   <span class="span-n" style="font-weight:bold;">Terminos:</span>
                   <br/>
                   <span class="span-n" style="font-weight:bold;">Referencia:</span>
                   <br/>
                   <span class="span-n" style="font-weight:bold;">Moneda:</span>
                   <br/>
+                  
                 </div>
                 <div class="col-auto col_fields">
                   <span t-field="compra.date_planned" class="span-n" style="font-weight:bold;"/>
                   <br/>
-                  <span t-field="compra.payment_term_id" class="span-n" style="font-weight:bold;">INMEDIATO</span>
+                  <span t-field="compra.payment_term_id" class="span-n" style="font-weight:bold;"/>
+                  <br/>
+                  <span t-field="compra.sem" class="span-n" style="font-weight:bold;"/>
                   <br/>
                   <span t-field="compra.incoterm_id" class="span-n" style="font-weight:bold;"/>
                   <br/>
@@ -114,40 +114,34 @@
                   <th style="width: 5%;">Pda.</th>
                   <th style="width: 9%;">Cantidad</th>
                   <th style="width: 9%;">Unidad</th>
-                  <th style="width: 9%;">Articulo/Descripción</th>
-                  <th style="width: 39%;">Fec. Entrega</th>
-                  <th style="width: 9%;">Sem.</th>
+                  <th style="width: 29%;">Articulo/Descripción</th>
+                  <th style="width: 15%;">Fec. Entrega</th>
                   <th style="width: 10%;">P. Unitario</th>
                   <th style="width: 10%;">Importe</th>
                 </thead>
                 <tbody>
                   <t t-set="contador_productos" t-value="0"/>
                   <t t-set="total_importe" t-value="0"/>
-                  <t t-foreach="compra.order_line" t-as="linea" t-index="i">
-                    <t t-if="linea.display_type == 'product'">
-                      <t t-set="contador_productos" t-value="contador_productos + 1"/>
-                    </t>
+                  <t t-foreach="compra.order_line" t-as="linea">
                     <t t-if="linea.display_type == 'line_section'">
-                      <tr>
-                        <td colspan="8" style="font-weight: bold; background-color: #f5f5f5; text-align: center;">
-                          <t t-esc="linea.name"/>
-                        </td>
-                      </tr>
+                        <tr>
+                            <td colspan="8" style="font-weight: bold; background-color: #f5f5f5; text-align: center;">
+                                <span t-field="linea.name"/>
+                            </td>
+                        </tr>
                     </t>
-                    <t t-if="linea.display_type == 'line_note'">
-                      <tr>
-                        <td colspan="8" style="font-style: italic; background-color: #fafafa;">
-                          <t t-esc="linea.name"/>
-                        </td>
-                      </tr>
+                    <t t-elif="linea.display_type == 'line_note'">
+                        <tr>
+                            <td colspan="8" style="font-style: italic; background-color: #fafafa;">
+                                <span t-field="linea.name"/>
+                            </td>
+                        </tr>
                     </t>
-                    <t t-if="linea.display_type == 'product'">
-                      <tr>
+                    <t t-else="">
+                        <t t-set="contador_productos" t-value="contador_productos + 1"/>
+                        <tr>
                         <td>
                           <t t-esc="contador_productos"/>
-                        </td>
-                        <td>
-                          <t t-esc="linea.product_id.default_code or ''"/>
                         </td>
                         <td>
                           <t t-esc="linea.product_qty or ''"/>
@@ -165,16 +159,13 @@
                           <t t-esc="linea.price_unit or ''"/>
                         </td>
                         <td style="text-align: right;">
-                          <t t-esc="linea.price_unit or ''"/>
-                        </td>
-                        <td style="text-align: right;">
-                          <t t-set="importe" t-value="(linea.price_unit or 0) * (linea.quantity or 0)"/>
+                          <t t-set="importe" t-value="(linea.price_unit or 0) * (linea.product_qty or 0)"/>
                           <t t-esc="importe"/>
                           <t t-set="total_importe" t-value="total_importe + importe"/>
                         </td>
                       </tr>
                     </t>
-                  </t>
+                </t>
                 </tbody>
               </table>
               <t t-if="compra.state == 'cancel'">
@@ -193,9 +184,7 @@
                             <br/>
                             <span t-field="compra.partner_id" class="span-n"/>
                             <br/>
-                            <span class="span-n">CANCELACION PRO CAMBIO DE NUM. DE PROVEEDOR PARA ESTA SOLICITUD DE 
-                                                MATERIAL. POR ING. C. GARCIA Y/O M. BRAMASCO.</span>
-                            <br/>
+                            <span class="span-n">..... </span>
                             <br/>
                             <br/>
                         </div>
@@ -235,6 +224,7 @@
                     <p style="display: flex; justify-content: space-between;">
                                                 IVA 16% :
                                                 $
+                                                <t t-esc="total_importe * 0.16"/>
                                             </p>
                     <p style="display: flex; justify-content: space-between;">
                                                 Otros Imp. :
@@ -247,6 +237,7 @@
                     <p style="display: flex; justify-content: space-between;">
                                                 Total :
                                                 $
+                                                <t t-esc="total_importe + (total_importe * 0.16)"/>
                                             </p>
                   </td>
                 </tr>
