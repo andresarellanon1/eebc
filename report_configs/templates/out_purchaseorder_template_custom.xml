@@ -21,9 +21,6 @@
                       <br/>
                        No. <span t-field="compra.name" class="span-n"/>
                       <br/>
-                      <span class="span-n" style="padding-bottom:0; font-size:12px; font-weight:bold; color:#ff0505;">
-                                                No. de Modificación: 1 ORIGINAL
-                                            </span>
                     </td>
                   </tr>
                   <tr style="border: none;">
