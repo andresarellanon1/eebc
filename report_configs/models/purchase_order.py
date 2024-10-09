@@ -4,7 +4,7 @@ class AccountMove(models.Model):
 
     _inherit = 'purchase.order'
 
-    sem = field.Integer (string="Sem", compute='_compute_sem')
+    sem = fields.Integer (string="Sem", compute='_compute_sem')
 
     def _compute_sem(self):
         for record in self:
