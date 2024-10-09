@@ -16,6 +16,8 @@ class AccountMove(models.Model):
                 # Calcular la diferencia en semanas
                 diferencia = (fecha_entrega - fecha_creacion).days
                 record.sem = diferencia // 7  # División entera para obtener semanas
+                if record.sem == -1:
+                    record.sem = 0
             else:
                 record.sem = 0
 
