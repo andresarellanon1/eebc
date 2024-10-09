@@ -8,13 +8,13 @@ class AccountMove(models.Model):
 
     def _compute_sem(self):
         for record in self:
-            if record.date_planned and record.create_date:
+            if record.date_planned and record.date_approve:
                 # Convertir las fechas a datetime
-                fecha_creacion = fields.Datetime.from_string(record.create_date)
+                fecha_aprovacion = fields.Datetime.from_string(record.date_approve)
                 fecha_entrega = fields.Datetime.from_string(record.date_planned)
 
                 # Calcular la diferencia en semanas
-                diferencia = (fecha_entrega - fecha_creacion).days
+                diferencia = (fecha_entrega - fecha_aprovacion).days
                 record.sem = diferencia // 7  # División entera para obtener semanas
             else:
                 record.sem = 0
