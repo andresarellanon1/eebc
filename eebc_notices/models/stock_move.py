@@ -8,10 +8,17 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
 
+# TODO: que picking id sea tipo de entrada para que salga el boton de aviso
+# campo que muestre el aviso relacionado
+
+
     has_aviso_in_attributes = fields.Boolean(
         string="Tiene 'aviso' en atributos",
         compute='_compute_has_aviso_in_attributes'
     )
+    picking_type_codigo = fields.Selection(
+        related='picking_type_id.code',
+        readonly=True)
 
     @api.depends('product_id.attribute_line_ids')
     def _compute_has_aviso_in_attributes(self):
@@ -32,14 +39,15 @@ class StockMove(models.Model):
             'name': 'Wizard File Upload',
             'res_model': 'notice.file.wizard',
             'view_mode': 'form',
+            'view_id': self.env.ref('eebc_notices.wizard_notice_file_view').id,  # Aquí se especifica el ID correcto de la vista
             'target': 'new',
             'context': {
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
                 'proveedor': self.picking_id.partner_id.id,
                 'type': self.picking_id.picking_type_code,
-                'location_id':self.picking_id.location_id,
-                'location_dest_id':self.picking_id.location_dest_id,
+                'location_id':self.picking_id.location_id.id,
+                'location_dest_id':self.picking_id.location_dest_id.id,
                 'origin': self.picking_id.origin
                 
             }
