@@ -8,6 +8,9 @@
             <xpath expr="//group//field[@name='company_id']" position="after">
                 <field name="pickin_ids" widget="many2many_tags" options="{'no_create': True}" string="Operaciones de Inventario"/>
             </xpath>
+            <xpath expr="//notebook//page[@name='studio_page_6ii_1i99tgl6c']" position="replace">
+                
+            </xpath>
         </field>
     </record>
 </odoo>
