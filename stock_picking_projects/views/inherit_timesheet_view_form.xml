@@ -9,7 +9,13 @@
                 <field name="pickin_ids" widget="many2many_tags" options="{'no_create': True}" string="Operaciones de Inventario"/>
             </xpath>
             <xpath expr="//notebook//page[@name='studio_page_6ii_1i99tgl6c']" position="replace">
-                
+                <field name="Actividades" context="{'default_project_id': project_id, 'default_display_in_project': False, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}" widget="subtasks_one2many">
+                    <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
+                        <field name="activity_id" string="Actividades"/>
+                        <field name="activity_summary" string="Descripción"/>
+                        <field name="timesheet_id" widget="handle"/>
+                    </tree>
+                </field>
             </xpath>
         </field>
     </record>
