@@ -1,4 +1,8 @@
 from odoo import fields, models, api
+# TODO: Pendiente validaciones de readonly en campos
+# En el historial de aviso no puede existir dos entradas con el mismo folio
+# Relacionar a los stock move line los registros de historial
+
 
 class NoticesHistory(models.Model):
 
@@ -7,15 +11,14 @@ class NoticesHistory(models.Model):
 
     location_dest = fields.Many2one(
         'stock.location', "Destination Location",
-        compute="_compute_location_id", store=True, precompute=True, readonly=False,
-        check_company=True, required=True)
+        required=True)
 
     location_id = fields.Many2one(
         'stock.location', "Source Location",
-        compute="_compute_location_id", store=True, precompute=True, readonly=False,
-        check_company=True, required=True)
+        required=True)
 
     quantity = fields.Float(string='Cantidad')
+
 
 
     picking_code = fields.Char(
@@ -23,26 +26,25 @@ class NoticesHistory(models.Model):
     )
     
 
-    notice_id = fields.Many2one(
-        'notices.notices', "Aviso relacionado"
+    notice_id = fields.Many2one('notices.notices', string="Aviso relacionado")
 
 
-    )
 
     origin = fields.Char(string='Documento origen')
 
+    folio = fields.Char(string='Folio')
     
-    picking_ids = fields.Many2many(
-        'stock.picking', 
-        compute = "_compute_picking_ids",
-        string='Operaciones de Almacén'
-    )
+    # picking_ids = fields.Many2many(
+    #     'stock.picking', 
+    #     compute = "_compute_picking_ids",
+    #     string='Operaciones de Almacén'
+    # )
     
-    @api.depends("origin")
-    def _compute_picking_ids(self):
+    # @api.depends("origin")
+    # def _compute_picking_ids(self):
 
-        po = self.env['purchase.order'].search([('name','=',self.origin)])
-        self.picking_ids = po.picking_ids 
+    #     po = self.env['purchase.order'].search([('name','=',self.origin)])
+    #     self.picking_ids = po.picking_ids 
 
         # Hay que mapear por el producto que se encuentra por picking id
 

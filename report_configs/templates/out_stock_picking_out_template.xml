@@ -42,15 +42,25 @@
                                             <div style="height: 5px;"/>
                                         </span>
                                         <br/>
-                                        <span>EQUIPOS ELECTRICOS DE BAJA CALIFORNIA</span>
+                                        <span>
+                                            <t t-esc="doc.company_id.name"/>
+                                        </span>
                                         <br/>
-                                        <span>eeb8111231q4</span>
+                                        <span>
+                                            <t t-esc="doc.company_id.vat"/>
+                                        </span>
                                         <br/>
-                                        <span>21374</span>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
                                         <br/>
-                                        <span>S01</span>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
                                         <br/>
-                                        <span>601</span>
+                                        <span>
+                                            <div style="height: 5px;"/>
+                                        </span>
                                         <br/>
                                     </div>
                                     <div class="col-auto col_tags">
@@ -68,10 +78,16 @@
                                         <br/>
                                     </div>
                                     <div class="col-auto col_fields" style="background-color:#ededed;">
-                                        <span>2024/09/04 10:17:23 AM</span>
-                                        <br/>
                                         <span>
                                             <div style="height: 5px;"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <t t-esc="doc.origin"/>
+                                        </span>
+                                        <br/>
+                                        <span>
+                                            <t t-esc="doc.purchase_id.name"/>
                                         </span>
                                         <br/>
                                         <span>
@@ -85,8 +101,6 @@
                                         <span>
                                             <div style="height: 5px;"/>
                                         </span>
-                                        <br/>
-                                        <span>01</span>
                                         <br/>
                                     </div>
                                 </div>
@@ -108,8 +122,10 @@
                                 <tbody style="text-align: center;">
                                     <t t-set="contador_productos" t-value="0"/>
                                     <t t-set="total_importe" t-value="0"/>
+                                    <t t-set="peso_total" t-value="0"/>
                                     <t t-foreach="doc.move_line_ids" t-as="linea" t-index="i">
                                         <t t-set="contador_productos" t-value="contador_productos + 1"/>
+                                        <t t-set="peso_total" t-value="peso_total + linea.product_id.weight or 0"/>
                                         <tr>
                                             <td>
                                                 <t t-esc="contador_productos"/>
@@ -118,7 +134,7 @@
                                                 <t t-esc="linea.product_id.default_code or ''"/>
                                             </td>
                                             <td>
-                                                <t t-esc="linea.quantity or ''"/>
+                                                <t t-esc="linea.quantity or 0"/>
                                             </td>
                                             <td>
                                                 <t t-esc="linea.product_uom_id.name or ''"/>
@@ -127,13 +143,14 @@
                                                 <t t-esc="linea.display_name or ''"/>
                                             </td>
                                             <td>
-                                                01
+
                                             </td>
                                             <td style="text-align: right;">
-                                                <t t-esc="linea.product_id.standard_price or ''"/>
+                                                <t t-esc="linea.product_id.standard_price or 0"/>
                                             </td>
                                             <td style="text-align: right;">
-                                                <t t-set="importe" t-value="(linea.product_id.standard_price or 0) * (linea.quantity or 0)"/>
+                                                <t t-set="importe"
+                                                   t-value="(linea.product_id.standard_price or 0) * (linea.quantity or 0)"/>
                                                 <t t-esc="importe"/>
                                                 <t t-set="total_importe" t-value="total_importe + importe"/>
                                             </td>
@@ -149,25 +166,25 @@
                                 <div class="d-flex" style="background-color: #f0f0f0;">
                                     <div class="col-3">
                                         <strong>TranspInternac:</strong>
-                                        No
                                     </div>
                                     <div class="col-3">
                                         <strong>EntradaSalidaMerc:</strong>
-                                        No
+
                                     </div>
                                     <div class="col-3">
                                         <strong>PaisOrigenDestino:</strong>
-                                        MX
+                                        <span t-raw="doc.location_id.company_id.country_id.name"/>/
+                                        <span t-raw="doc.location_dest_id.company_id.country_id.name"/>
                                     </div>
                                     <div class="col-3">
                                         <strong>ViaEntradaSalida:</strong>
-                                        Tren
+
                                     </div>
                                 </div>
                                 <div class="d-flex" style="background-color: #f0f0f0;">
                                     <div class="col-3">
                                         <strong>TotalDistRec:</strong>
-                                        70.01
+
                                     </div>
                                     <div class="col-6">
                                         <strong>IdCCP:</strong>
@@ -211,38 +228,71 @@
                                 <tbody style="text-align: center;">
                                     <tr>
                                         <td>Origen</td>
-                                        <td/>
-                                        <td>EEB8111231Q4<br/>CALLE URBANO VASQUEZ
+                                        <td>
+                                            <t t-esc="doc.location_id.id"/>
                                         </td>
-                                        <td>EQUIPOS ELECTRICOS DE BAJA CALIFORNIA<br/>0176
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.vat"/>
+                                            <br/>
+                                            <t t-esc="doc.location_id.company_id.street"/>
                                         </td>
-                                        <td/>
-                                        <td/>
-                                        <td>2024-09-04T10:05:53<br/>BCN
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.name"/>
                                         </td>
-                                        <td/>
-                                        <td/>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.city"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.date"/>
+                                            <br/>
+                                            <t t-esc="doc.location_id.company_id.state_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.country_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_id.company_id.zip"/>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Destino</td>
-                                        <td/>
-                                        <td>EDI740709D71<br/>AVE. YUCATAN Y MANUEL AVILA CAMACHO
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.id"/>
                                         </td>
-                                        <td>ELECTRICA DIAZ<br/>0238
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.company_id.vat"/>
+                                            <br/>
+                                            <t t-esc="doc.location_dest_id.company_id.street"/>
                                         </td>
-                                        <td>01</td>
-                                        <td>055</td>
-                                        <td>2024-09-04T10:05:53<br/>SON
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.company_id.name"/>
                                         </td>
-                                        <td>MEX</td>
-                                        <td>70.01<br/>83430
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.company_id.city"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.date"/>
+                                            <br/>
+                                            <t t-esc="doc.location_dest_id.company_id.state_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.location_dest_id.company_id.country_id.name"/>
+                                        </td>
+                                        <td>
+                                            <br/>
+                                            <t t-esc="doc.location_dest_id.company_id.zip"/>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <div class="m-3" style=" font-size: 12px; width:100%;">
                                 <div class="text-center" style="font-size: 14px; font-weight: bold;">MERCANCIAS</div>
-                                <t t-set="peso_total" t-value="0.00"/>
                                 <div class="d-flex" style="background-color: #f0f0f0;">
                                     <div class="col-3">
                                         <strong>Peso Bruto Total:</strong>
@@ -257,7 +307,7 @@
                                     </div>
                                     <div class="col-3">
                                         <strong>Num Total Mercancias:</strong>
-                                        12
+                                        <t t-esc="contador_productos"/>
                                     </div>
                                 </div>
                             </div>
@@ -277,29 +327,29 @@
                                     </tr>
                                 </thead>
                                 <tbody style="text-align: center;">
-                                <t t-foreach="doc.move_line_ids" t-as="linea" t-index="i">
-                                    <t t-set="peso_total" t-value="peso_total + linea.product_id.weight or 0"/>
-                                    <td>
-                                        <t t-esc="linea.origin or ''"/>
-                                    </td>
-                                    <td style="text-align: left;">
-                                        <t t-esc="linea.display_name or ''"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="linea.quantity"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="linea.product_uom_category_id or ''"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="linea.product_uom_id.name or ''"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="linea.product_id.weight or ''"/>
-                                    </td>
-                                    <td/>
-                                    <td/>
-                                </t>
+                                    <t t-foreach="doc.move_line_ids" t-as="linea" t-index="i">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="linea.origin or ''"/>
+                                            </td>
+                                            <td style="text-align: left;">
+                                                <t t-esc="linea.display_name or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.quantity or 0"/>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_uom_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="linea.product_id.weight or 0"/>
+                                            </td>
+                                            <td/>
+                                            <td/>
+                                        </tr>
+                                    </t>
                                 </tbody>
                             </table>
                             <div class="m-3" style=" font-size: 12px; width:100%;">

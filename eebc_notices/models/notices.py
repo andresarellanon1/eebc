@@ -1,4 +1,7 @@
 from odoo import fields, models, api
+# TODO: Pendiente validaciones de readonly en campos
+
+# campo nuevo total computada(sumatoria de la cantidad de historiales)   - lISTO!!
 
 class Notices(models.Model):
 
@@ -29,6 +32,20 @@ class Notices(models.Model):
   
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
-    quantity = fields.Float(string='Cantidad')
+    quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
     series = fields.Char(string='Series (s)')
+
+    
+    history_ids = fields.One2many(
+        string='Historial de movimientos',
+        comodel_name='notices.history',
+        inverse_name='notice_id',
+    )
+    
+    
+    @api.depends('history_ids.quantity')
+    def _compute_quantity(self):
+        for record in self:
+            # Calcula la suma de las cantidades en history_ids
+            record.quantity = sum(record.history_ids.mapped('quantity'))
 
