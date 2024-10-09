@@ -56,13 +56,13 @@
                 <div class="col-auto col_tags">
                   <span class="span-n" style="font-weight:bold;">Almacen:</span>
                   <br/>
-                  <span class="span-n">Proveedor:</span>
+                  <span class="span-n" style="font-weight:bold;">Proveedor:</span>
                   <br/>
-                  <span class="span-n">Domicilio:</span>
+                  <span class="span-n" style="font-weight:bold;">Domicilio:</span>
                   <br/>
-                  <span class="span-n">FOB:</span>
+                  <span class="span-n" style="font-weight:bold;">FOB:</span>
                   <br/>
-                  <span class="span-n">Modo de envio:</span>
+                  <span class="span-n" style="font-weight:bold;">Modo de envio:</span>
                   <br/>
                 </div>
                 <div class="col-6 col_fields" style="padding-right:16px">
@@ -82,17 +82,22 @@
                   <br/>
                   <span class="span-n" style="font-weight:bold;">Tiempo Entrega:</span>
                   <br/>
+                  <span class="span-n" style="font-weight:bold;">Semanas:</span>
+                  <br/>
                   <span class="span-n" style="font-weight:bold;">Terminos:</span>
                   <br/>
                   <span class="span-n" style="font-weight:bold;">Referencia:</span>
                   <br/>
                   <span class="span-n" style="font-weight:bold;">Moneda:</span>
                   <br/>
+                  
                 </div>
                 <div class="col-auto col_fields">
                   <span t-field="compra.date_planned" class="span-n" style="font-weight:bold;"/>
                   <br/>
                   <span t-field="compra.payment_term_id" class="span-n" style="font-weight:bold;"/>
+                  <br/>
+                  <span t-field="compra.sem" class="span-n" style="font-weight:bold;"/>
                   <br/>
                   <span t-field="compra.incoterm_id" class="span-n" style="font-weight:bold;"/>
                   <br/>
@@ -111,7 +116,6 @@
                   <th style="width: 9%;">Unidad</th>
                   <th style="width: 29%;">Articulo/Descripción</th>
                   <th style="width: 15%;">Fec. Entrega</th>
-                  <th style="width: 13%;">Sem.</th>
                   <th style="width: 10%;">P. Unitario</th>
                   <th style="width: 10%;">Importe</th>
                 </thead>
@@ -147,9 +151,6 @@
                         </td>
                         <td>
                           <t t-esc="linea.name or ''"/>
-                        </td>
-                        <td>
-                          <t t-esc="linea.date_planned or ''"/>
                         </td>
                         <td>
                           <t t-esc="linea.date_planned or ''"/>
