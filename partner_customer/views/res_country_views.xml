@@ -6,10 +6,6 @@
         <field name="inherit_id" ref="base.view_country_state_form" />
         <field name="arch" type="xml">
 
-            <field name="code" position="after">
-                <field name="foreign_name" string="Extranjero"/>
-            </field>
-
             <xpath expr="//field[@name='code']" position="after">
                 <field name="foreign_name" string="Extranjero"/>
             </xpath>
