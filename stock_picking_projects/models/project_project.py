@@ -13,7 +13,7 @@ class ProjectProject(models.Model):
         'actividad_id',     # Campo Many2one en el mismo modelo
         string='Actividades'
     )
-    parent_id = fields.Many2one(
+    actividad_id = fields.Many2one(
         'project.project',  # Referencia al mismo modelo
         string='Actividad'
     )
