@@ -13,7 +13,7 @@
                 <page name="Planeacion" string="Planeación" invisible="not project_id">
                     <group name="planning_container">
                         <group name="activities">
-                            <field name="actividad_id" context="{'default_project_id': project_id, 'default_display_in_project': False, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}" widget="subtasks_one2many">
+                            <field name="actividad_id" widget="subtasks_one2many">
                                 <tree editable="bottom" open_form_view="True">
                                     <field name="activity_summary" string="Descripción"/>
                                     <field name="allocated_hours" widget="handle"/>
