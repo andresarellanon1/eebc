@@ -8,17 +8,14 @@ class ProjectProject(models.Model):
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
     product_ids = fields.One2many('product.product', 'project_id', string='Products')
 
-    actividad_id = fields.Many2one(
-        'project.project',
-        string='Actividades',
-        ondelete='cascade',
-        index=True
+    actividad_ids = fields.One2many(
+        'project.project',  # Referencia al mismo modelo
+        'actividad_id',     # Campo Many2one en el mismo modelo
+        string='Actividades'
     )
-    child_ids = fields.One2many(
-        'project.project',
-        'actividad_id',
-        string='Subtareas',
-        copy=True
+    parent_id = fields.Many2one(
+        'project.project',  # Referencia al mismo modelo
+        string='Actividad'
     )
 
     @api.depends('task_id.stock_ids')
