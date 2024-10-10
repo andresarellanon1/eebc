@@ -14,7 +14,7 @@
                     <group name="planning_container">
                         <group name="activities">
                             <field name="actividad_id" widget="subtasks_one2many">
-                                <tree editable="bottom" open_form_view="True">
+                                <tree>
                                     <field name="activity_summary" string="Descripción"/>
                                     <field name="allocated_hours" widget="handle"/>
                                 </tree>
