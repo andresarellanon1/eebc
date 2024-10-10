@@ -26,14 +26,6 @@
                                 <tree>
                                     <field name="name"/>
                                     <field name="list_price"/>
-                                    <field name="quantity"/>
-                                </tree>
-                            </field>
-                        </group>
-                        <group>
-                            <field name="pickin_ids">
-                                <tree>
-                                    <field name="display_name"/>
                                 </tree>
                             </field>
                         </group>
