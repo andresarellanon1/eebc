@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//group//field[@name='company_id']" position="replace">
-                <field name="pickin_ids" widget="many2many_tags" options="{'no_create': True}"
+                <field name="picking_ids" widget="many2many_tags" options="{'no_create': True}"
                        string="Operaciones de Inventario"/>
             </xpath>
             <xpath expr="//notebook" position="inside">
