@@ -13,7 +13,7 @@
                 <page name="Planeacion" string="Planeación">
                     <group name="planning_container">
                         <group name="activities">
-                            <field name="actividad_id" >
+                            <field name="actividad_ids" >
                                 <tree>
                                     <field name="activity_summary" string="Descripción"/>
                                     <field name="allocated_hours" widget="handle"/>
