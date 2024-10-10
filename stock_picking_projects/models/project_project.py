@@ -8,6 +8,19 @@ class ProjectProject(models.Model):
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
     product_ids = fields.One2many('product.product', 'project_id', string='Products')
 
+    actividad_id = fields.Many2one(
+        'project.project',
+        string='Actividades',
+        ondelete='cascade',
+        index=True
+    )
+    child_ids = fields.One2many(
+        'project.project',
+        'parent_id',
+        string='Subtareas',
+        copy=True
+    )
+
     @api.depends('task_id.stock_ids')
     def _compute_pickin_ids(self):
         for record in self:
