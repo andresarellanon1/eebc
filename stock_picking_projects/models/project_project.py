@@ -16,7 +16,7 @@ class ProjectProject(models.Model):
     )
     child_ids = fields.One2many(
         'project.project',
-        'parent_id',
+        'actividad_id',
         string='Subtareas',
         copy=True
     )
