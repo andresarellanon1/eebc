@@ -16,7 +16,7 @@
                             <field name="actividad_ids">
                                 <tree>
                                     <field name="name" string="Nombre"/>
-                                    <field name="activity_summary" string="Descripción"/>
+                                    <field name="description" string="Descripción"/>
                                     <field name="allocated_hours"  string="Horas" widget="handle"/>
                                 </tree>
                             </field>
