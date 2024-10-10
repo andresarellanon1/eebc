@@ -7,7 +7,7 @@
             <form string="Analisar archivo">
                 <group>
                     <field name="file_xlsx" filename="file_name" />
-                    <field name="file_name"  />
+                    <field name="file_name" invisible = "1" />
 
 
                     <field name="quantity" />
@@ -17,6 +17,23 @@
                 <footer>
                     <button name="action_data_analysis" type="object" string="Analisar archivo" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    
+    <record id="wizard_notice_error" model="ir.ui.view">
+        <field name="name">Wizard Error</field>
+        <field name="model">notice.file.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Error">
+              <group>
+                    <field name="message" readonly="1" />
+                </group>
+                <footer>
+                    <button string="Cerrar" class="btn-primary" special="cancel"/>
                 </footer>
             </form>
         </field>

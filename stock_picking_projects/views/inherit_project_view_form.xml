@@ -5,7 +5,8 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="before">
+            <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
+                <label for="default_picking_type_id" string="Tipo de operación"/>
                 <field name="default_picking_type_id"/>
             </xpath>
         </field>

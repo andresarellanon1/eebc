@@ -7,19 +7,13 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='extra_info']" position="after">
                 <page name="material" string="Material">
-                    <field name="move_ids" widget="one2many_list" mode="tree,form">
-                        <tree editable="bottom">
-                            <field name="product_id" string="Producto"/>
-                            <field name="product_uom_qty" string="Cantidad"/>
-                            <field name="company_id" invisible="1"/>
+                    <button name="action_create_inventory" type="object" string="Crear Inventario" class="oe_highlight"/>
+                    <field name="stock_ids" widget="One2many_list" readonly="1">
+                        <tree editable="false">
+                            <field name="name"/>
+                            <field name="state"/>
+                            <field name="scheduled_date"/>
                         </tree>
-                        <form>
-                            <group>
-                                <field name="product_id"/>
-                                <field name="product_uom_qty"/>
-                                <field name="company_id" invisible="1"/>
-                            </group>
-                        </form>
                     </field>
                 </page>
             </xpath>
