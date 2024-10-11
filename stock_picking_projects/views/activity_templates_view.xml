@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="activity_template_action" model="ir.actions.act_window">
+            <field name="name">activity template action</field>
+            <field name="res_model">activity_template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="activity_template_action_view_tree" model="ir.ui.view">
+                <field name="name">activity.template.action.tree</field>
+                <field name="model">activity_template</field>
+                <field name="arch" type="xml">
+                    <group name="activities">
+                            <field name="actividad_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="allocated_hours" string="Horas" widget="timesheet_uom_no_toggle"/>
+                                </tree>
+                            </field>
+                        </group>
+                </field>
+        </record>
+        <record id="activity_template_view_form" model="ir.ui.view">
+            <field name="name">activity.template.action.form</field>
+            <field name="model">activity_template</field>
+            <field name="arch" type="xml">
+                <form string="Actividades">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="allocated_hours" string="Horas" widget="timesheet_uom_no_toggle"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
