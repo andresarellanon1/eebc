@@ -23,7 +23,7 @@
                             </field>
                         </group>
                         <group name="used_materials">
-                            <field name="product_ids">
+                            <field name="product_ids" options="{'no_create': True}">
                                 <tree>
                                     <field name="name"/>
                                     <field name="list_price"/>
