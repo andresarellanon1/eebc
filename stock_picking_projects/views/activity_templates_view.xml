@@ -3,7 +3,7 @@
     <data>
         <record id="activity_template_action" model="ir.actions.act_window">
             <field name="name">activity template action</field>
-            <field name="res_model">activity_template</field>
+            <field name="res_model">activity.template</field>
             <field name="view_mode">tree,form</field>
         </record>
         <record id="activity_template_action_view_tree" model="ir.ui.view">
@@ -23,7 +23,7 @@
         </record>
         <record id="activity_template_view_form" model="ir.ui.view">
             <field name="name">activity.template.action.form</field>
-            <field name="model">activity_template</field>
+            <field name="model">activity.template</field>
             <field name="arch" type="xml">
                 <form string="Actividades">
                     <sheet>
