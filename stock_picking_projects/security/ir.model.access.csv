@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 eebc.access_activity_template,activity_template,stock_picking_projects.model_activity_template,,1,1,1,1
+eebc.access_line_activities,line_activities,stock_picking_projects.model_line_activities,,1,1,1,1

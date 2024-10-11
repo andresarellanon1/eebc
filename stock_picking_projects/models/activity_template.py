@@ -6,7 +6,6 @@ class ActivityTemplate(models.Model):
 
     name = fields.Char(string="Nombre", store=True)
     description = fields.Char(string="Descripción", store=True)
-    allocated_hours = fields.Float(string="Horas", store=True)
     date_start = fields.Date(string="Fecha planeada", store=True)
 
     project_id = fields.Many2one(
@@ -14,5 +13,11 @@ class ActivityTemplate(models.Model):
         string='Actividad',
         store = True,
         copied = True)
+
+    line_activities_ids = fields.One2many(
+        'line.activities',  # Referencia al modelo
+        'activity_template',     # Campo Many2one
+        string='Actividades'
+        )
 
     

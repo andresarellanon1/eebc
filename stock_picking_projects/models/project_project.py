@@ -26,3 +26,5 @@ class ProjectProject(models.Model):
     def _compute_pickin_ids(self):
         for record in self:
             record.pickin_ids = record.task_id.stock_ids
+
+    
