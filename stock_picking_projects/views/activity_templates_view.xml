@@ -42,10 +42,5 @@
                 </form>
             </field>
         </record>
-
-        <menuitem id="menu_activity_template" 
-                  name="Plantillas de Actividad" 
-                  parent="project.menu_project_configuration" 
-                  action="activity_template_action"/>
     </data>
 </odoo>
