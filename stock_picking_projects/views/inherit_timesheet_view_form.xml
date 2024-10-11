@@ -24,7 +24,7 @@
                         <group name="used_materials">
                             <field name="product_ids" string="Productos">
                                 <tree editable="bottom">
-                                    <field name="product_tmpl_id" string="Producto"/>
+                                    <field name="product_tmpl_id" string="Producto" options="{'no_open': True}"/>
                                     <field name="list_price"/>
                                     <field name="quantity"/>
                                 </tree>
