@@ -10,16 +10,11 @@
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page name="Planeacion" string="Planeación">
+                    <field name="activities_tmpl_id"/>
                     <group name="planning_container">
                         <group name="activities">
-                            <field name="actividad_ids">
-                                <tree>
-                                    <field name="name"/>
-                                    <field name="description"/>
-                                </tree>
-                            </field>
+                            
                         </group>
-                        
                         <group name="used_materials">
                             <field name="product_ids" string="Productos">
                                 <tree editable="bottom">

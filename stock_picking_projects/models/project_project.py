@@ -8,10 +8,9 @@ class ProjectProject(models.Model):
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
     product_ids = fields.One2many('product.product', 'project_id', string='Products')
 
-    actividad_ids = fields.One2many(
+    activities_tmpl_id = fields.Many2one(
         'activity.template',  # Referencia al modelo
-        'project_id',     # Campo Many2one
-        string='Actividades'
+        string='Plantilla de actividades'
     )
 
     # actividad_id = fields.Many2one(
