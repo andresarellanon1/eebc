@@ -15,9 +15,9 @@
                         <group name="activities">
                             <field name="actividad_ids">
                                 <tree editable="bottom">
-                                    <field name="name" string="Nombre"/>
-                                    <field name="description" string="Descripción"/>
-                                    <field name="allocated_hours"  string="Horas" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="allocated_hours" widget="handle"/>
                                 </tree>
                             </field>
                         </group>
