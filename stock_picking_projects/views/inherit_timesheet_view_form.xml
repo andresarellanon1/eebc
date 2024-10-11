@@ -21,7 +21,7 @@
                                 </tree>
                             </field>
                         </group>
-                        <button name="action_change_view" type="object" string="Cambiar plantilla"/>
+                        
                         <group name="used_materials">
                             <field name="product_ids">
                                 <tree>
