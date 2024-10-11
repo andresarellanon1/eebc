@@ -15,7 +15,9 @@ class ProjectProject(models.Model):
     )
     actividad_id = fields.Many2one(
         'project.project',  # Referencia al mismo modelo
-        string='Actividad'
+        string='Actividad',
+        store = True,
+        copied = True
     )
 
     @api.depends('task_id.stock_ids')
