@@ -22,7 +22,7 @@
                             </field>
                         </group>
                         <group name="used_materials">
-                            <field name="product_ids">
+                            <field name="product_ids" string="Productos">
                                 <tree editable="bottom">
                                     <field name="name"/>
                                     <field name="list_price"/>
