@@ -9,7 +9,7 @@ class ActivityTemplate(models.Model):
     allocated_hours = fields.Float(string="Horas", store=True)
 
     project_id = fields.Many2one(
-        'project_project',  # Referencia al modelo
+        'project.project',  # Referencia al modelo
         string='Actividad',
         store = True,
         copied = True)

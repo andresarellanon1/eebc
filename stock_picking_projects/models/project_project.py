@@ -9,8 +9,8 @@ class ProjectProject(models.Model):
     product_ids = fields.One2many('product.product', 'project_id', string='Products')
 
     actividad_ids = fields.One2many(
-        'activity_template',  # Referencia al modelo
-        'project_id',     # Campo Many2one en el mismo modelo
+        'activity.template',  # Referencia al modelo
+        'project_id',     # Campo Many2one
         string='Actividades'
     )
 
