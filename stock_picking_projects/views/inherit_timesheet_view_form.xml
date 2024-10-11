@@ -17,7 +17,7 @@
                                 <tree editable="bottom">
                                     <field name="name"/>
                                     <field name="description"/>
-                                    <field name="allocated_hours" widget="handle"/>
+                                    <field name="allocated_hours" widget="timesheet_uom_no_toggle"/>
                                 </tree>
                             </field>
                         </group>
