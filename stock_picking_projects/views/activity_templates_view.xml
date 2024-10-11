@@ -33,7 +33,6 @@
                                         <field name="line_activities_ids">
                                             <field name="name"/>
                                             <field name="description"/>
-                                            <field name="allocated_hours" widget="timesheet_uom_no_toggle"/>
                                         </field>
                                     </tree>
                                 </group>
