@@ -14,7 +14,6 @@
                 <tree>
                     <field name="name"/>
                     <field name="description"/>
-                    <field name="allocated_hours" string="Horas" widget="timesheet_uom_no_toggle"/>
                 </tree>
             </field>
         </record>
@@ -27,14 +26,13 @@
                     <sheet>
                         <field name="name"/>
                         <field name="description"/>
-                        <field name="allocated_hours" string="Horas" widget="timesheet_uom_no_toggle"/>
                         <notebook>
                             <page string="Actividades">
                                 <group>
                                     <field name="line_activities_ids">
                                         <field name="name"/>
                                         <field name="description"/>
-                                        <field name="allocated_hours" widget="timesheet_uom"/>
+                                        <field name="allocated_hours" widget="timesheet_uom_no_toggle"/>
                                     </field>
                                 </group>
                             </page>
