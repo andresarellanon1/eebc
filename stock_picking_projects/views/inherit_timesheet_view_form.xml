@@ -14,7 +14,7 @@
                     <group name="planning_container">
                         <group name="activities">
                             <field name="actividad_ids">
-                                <tree>
+                                <tree editable="bottom">
                                     <field name="name" string="Nombre"/>
                                     <field name="description" string="Descripción"/>
                                     <field name="allocated_hours"  string="Horas" widget="handle"/>
