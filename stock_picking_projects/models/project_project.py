@@ -6,7 +6,7 @@ class ProjectProject(models.Model):
 
     default_picking_type_id = fields.Many2one('stock.picking.type', string="Operation type", required=True)
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
-    product_ids = fields.Many2many('product.product', 'project_id', string='Products')
+    product_ids = fields.Many2many('product.product', string='Products')
 
     @api.depends('task_id.stock_ids')
     def _compute_pickin_ids(self):
