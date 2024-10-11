@@ -14,7 +14,7 @@
                     <group name="planning_container">
                         <group name="activities">
                             <field name="actividad_ids">
-                                <tree editable="bottom">
+                                <tree>
                                     <field name="name"/>
                                     <field name="description"/>
                                     <field name="allocated_hours" string="Horas" widget="timesheet_uom_no_toggle"/>
