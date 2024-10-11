@@ -35,11 +35,9 @@
                             </page>
                             <page string="Plantilla 2">
                                 <group>
-                                    <field name="line_activities_ids">
-                                        <field name="name"/>
-                                        <field name="description"/>
-                                        <field name="date_start"  widget="daterange"/>
-                                    </field>
+                                    <field name="line_activities_ids.name"/>
+                                    <field name="line_activities_ids.description"/>
+                                    <field name="line_activities_ids.date_start"  widget="daterange"/>
                                 </group>
                             </page>
                         </notebook>
