@@ -25,17 +25,17 @@
             <field name="arch" type="xml">
                 <form string="Actividades">
                     <sheet>
-                    <group>
                         <field name="name"/>
                         <field name="description"/>
                         <field name="allocated_hours" string="Horas" widget="timesheet_uom_no_toggle"/>
-                    </group>
                         <notebook>
                             <page string="Actividades">
                                 <group>
-                                    <field name="line_activities_ids.name"/>
-                                    <field name="line_activities_ids.description"/>
-                                    <field name="line_activities_ids.date_start"  widget="daterange"/>
+                                    <field name="line_activities_ids">
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                        <field name="date_start"  widget="daterange"/>
+                                    </field>
                                 </group>
                             </page>
                         </notebook>
