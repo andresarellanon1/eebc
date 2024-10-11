@@ -34,7 +34,7 @@
                                     <field name="line_activities_ids">
                                         <field name="name"/>
                                         <field name="description"/>
-                                        <field name="date_start"  widget="daterange"/>
+                                        <field name="allocated_hours" widget="timesheet_uom"/>
                                     </field>
                                 </group>
                             </page>
