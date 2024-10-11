@@ -24,11 +24,9 @@
                         <group name="used_materials">
                             <field name="product_ids" string="Productos">
                                 <tree editable="bottom">
-                                    <field name="product_ids">
-                                        <field name="product_tmpl_id" string="Producto"/>
-                                        <field name="list_price"/>
-                                        <field name="quantity"/>
-                                    </field>
+                                    <field name="product_tmpl_id" string="Producto"/>
+                                    <field name="list_price"/>
+                                    <field name="quantity"/>
                                 </tree>
                             </field>
                         </group>
