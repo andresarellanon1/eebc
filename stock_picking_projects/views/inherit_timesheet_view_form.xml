@@ -25,6 +25,7 @@
                             <field name="product_ids" string="Productos">
                                 <tree editable="bottom">
                                     <field name="product_tmpl_id" string="Producto"/>
+                                    <field name="name"></field>
                                     <field name="list_price"/>
                                     <field name="quantity"/>
                                 </tree>
