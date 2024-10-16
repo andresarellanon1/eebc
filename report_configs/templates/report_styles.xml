@@ -20,19 +20,16 @@
                     padding: 0;
                     width: 100%;
                 }
+                p {
+                    margin: 0;
+                    font-weight: bold;
+                }
+                .table {
+                    margin-top: 30px;
+                }
                 #encabezados-tabla {
                     background-color: #00006b;
-                    border-color: #f0f0f0;
-                }
-                #td-text-fix{
-                    max-width: 70%;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    word-wrap: break-word;
-                }
-                #span-n{
-                    color: #9292c9;
-                    font-size: 12px;
+                    border-color: #000000;
                 }
             </style>
     </template>
