@@ -11,17 +11,24 @@
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page name="Planeacion" string="Planeación">
+                    <label for="activities_tmpl_id" string="Cargar plantilla: "/>
                     <field name="activities_tmpl_id"/>
                     <group name="planning_container">
                         <group name="activities">
-                            
+                            <field name="line_activities_ids">
+                                <tree>
+                                    <field name="name" />
+                                    <field name="description"/>
+                                </tree>
+                            </field>
                         </group>
                         <group name="used_materials">
                             <field name="product_ids">
-                                <tree>
-                                    <field name="name"/>
-                                    <field name="list_price"/>
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
                                     <field name="quantity"/>
+                                    <field name="reserved_qty"/>
+                                    <field name="name" column_invisible="true"/>
                                 </tree>
                             </field>
                         </group>
