@@ -7,11 +7,11 @@ class ActivityTemplate(models.Model):
     name = fields.Char(string="Nombre", store=True)
     description = fields.Char(string="Descripción", store=True)
 
-    project_id = fields.Many2one(
+    project_id = fields.One2many(
         'project.project',  # Referencia al modelo
+        'activities_tmpl_id',
         string='Actividad',
-        store = True,
-        copied = True)
+        )
 
     line_activities_ids = fields.One2many(
         'line.activities',  # Referencia al modelo
