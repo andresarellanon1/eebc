@@ -5,7 +5,7 @@ class ProductProduct(models.Model):
     
     quantity = fields.Integer(string='Cantidad')
     reserved_qty = fields.Float(string='Reservado')
-    total_cost = fields.Float(string='Costo total' compute="_compute_total_cost" store=True)
+    total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
     
     project_id = fields.Many2one(
         'project.project', 
