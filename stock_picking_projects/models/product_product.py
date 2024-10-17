@@ -29,4 +29,4 @@ class ProductProduct(models.Model):
     @api.onchange('quantity')
     def _compute_total_cost(self):
         for record in self:
-            record.total_cost = record.lst_price * record.quantity
+            record.total_cost = record.product_id.lst_price * record.quantity
