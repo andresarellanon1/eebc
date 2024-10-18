@@ -9,7 +9,6 @@ class ProjectProject(models.Model):
     default_picking_type_id = fields.Many2one('stock.picking.type', string="Operation type", required=True)
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
     bid_code = fields.Char(string='Licitación')
-    bid_date = fields.Date()
     exchange_rate = fields.Float(string="Tipo de cambio")
     
     product_ids = fields.One2many(
@@ -33,7 +32,7 @@ class ProjectProject(models.Model):
     def _check_bid_code_format(self):
         for record in self:
             if record.bid_code:
-                pattern = r'^\d{6}[a-zA-Z]{3}\d{2}-\d{3}$'
+                pattern = r'^\d{6}[a-zA-Z]{4}\d{2}-\d{3}$' #{6 numeros} {4 letras} {2 numeros} {-} {2 numeros}
                 if not re.match(pattern, record.bid_code):
                     raise ValidationError(
                         "El formato de la licitacion debe ser: (171024obrA24-201)."
