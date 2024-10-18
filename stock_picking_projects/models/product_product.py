@@ -28,7 +28,7 @@ class ProductProduct(models.Model):
             record.name = record.product_id.name
             record.supplier_cost = record.product_id.product_tmpl_id.last_supplier_last_price
             
-    @api.onchange('quantity')
+    @api.depends('quantity','product_id')
     def _compute_total_cost(self):
         for record in self:
-            record.total_cost = (record.supplier_cost * record.quantity) + ((record.supplier_cost * record.quantity) * record.product_id.product_tmpl_id.taxes_id)
+            record.total_cost = (record.supplier_cost * record.quantity) + ((record.supplier_cost * record.quantity) * record.product_id.product_tmpl_id.taxes_id.amount)/100
