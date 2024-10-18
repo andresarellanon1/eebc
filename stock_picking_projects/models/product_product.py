@@ -27,7 +27,7 @@ class ProductProduct(models.Model):
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
-            tipo_cambio = record.exchange_rate
+            tipo_cambio = record.project_id.exchange_rate
 
             if record.currency_id.name == 'USD' and record.exchange_rate > 0:
                 record.supplier_cost = pesos_a_dolares(monto,tipo_cambio)
@@ -40,7 +40,7 @@ class ProductProduct(models.Model):
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.product_id.product_tmpl_id.taxes_id.amount)/100
-            tipo_cambio = record.exchange_rate
+            tipo_cambio = record.project_id.exchange_rate
             monto = total + impuestos
 
             if record.currency_id.name == 'USD' and record.exchange_rate > 0:
