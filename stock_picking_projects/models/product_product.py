@@ -35,7 +35,7 @@ class ProductProduct(models.Model):
             if record.currency_id.name == 'MXN' and record.exchange_rate > 0:
                 record.supplier_cost = dolares_a_pesos(monto,tipo_cambio)
             
-    @api.depends('quantity','product_id','exchange_rate','currency_id')
+    @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
     def _compute_total_cost(self):
         for record in self:
             total = (record.supplier_cost * record.quantity)
