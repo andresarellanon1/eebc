@@ -8,7 +8,7 @@
         </record>
 
         <record id="menu_project_config" model="ir.ui.menu">
-            <field name="name">menu.project.config</field>
+            <field name="name">Plantillas</field>
             <field name="parent_id" ref="project.menu_main_pm" />
             <field name="sequence" eval="20" />
         </record>
@@ -17,6 +17,14 @@
             id="menu_project_config_new_option"
             name="Plantillas planes de proyecto"
             action="plan_template_action"
+            parent="menu_project_config"
+            sequence="20"
+        />
+
+        <menuitem
+            id="menu_project_config_new_activities"
+            name="Plantillas de actividades"
+            action="activity_template_action"
             parent="menu_project_config"
             sequence="20"
         />
