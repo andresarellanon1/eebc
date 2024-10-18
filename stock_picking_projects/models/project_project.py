@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-import datetime
+import datetime, re
 from odoo.exceptions import ValidationError
 from datetime import datetime
 
@@ -9,8 +9,7 @@ class ProjectProject(models.Model):
 
     default_picking_type_id = fields.Many2one('stock.picking.type', string="Operation type", required=True)
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
-    bid_date = fields.Date(string="Fecha de licitación")
-    bid_string = fields.Char(string="Clave de licitación", readonly=True)
+    bid_code = fields.Char(string='Licitación')
     exchange_rate = fields.Float(string="Tipo de cambio")
     creation_date = fields.Date(string="Creation Date", default=fields.Date.context_today, readonly=True)
     submission_date = fields.Date(string="Submission Date")
@@ -33,18 +32,22 @@ class ProjectProject(models.Model):
         string='Lineas de actividades'
     )
 
-    @api.onchange('bid_date')
-    def bid_date_onchange_(self):
+    # Valida la fecha en formato DDMMYY y que no pase de 16 car.
+    @api.constrains('bid_code')
+    def _check_bid_code_format(self):
         for record in self:
-            code = record.id
-            if record.bid_date:
-                day = f"{record.bid_date.day:02}"
-                month = f"{record.bid_date.month:02}"
-                year = f"{record.bid_date.year % 100:02}"
-                record.bid_string = f"{day}{month}{year}{code}"
-            else:
-                record.bid_string = ""
-
+            if record.bid_code:
+                if len(record.bid_code) > 16:
+                    raise ValidationError("El código no puede tener más de 16 caracteres.")
+                
+                date_str = record.bid_code[:6]
+                try:
+                    day = int(date_str[:2])
+                    month = int(date_str[2:4])
+                    year = int(date_str[4:6]) + 2000 
+                    datetime(year, month, day)
+                except ValueError:
+                    raise ValidationError("La fecha debe ser válida en el formato DDMMYY.")
     
     @api.onchange('activities_tmpl_id')
     def _onchange_activities_tmpl_id(self):
@@ -67,5 +70,3 @@ class ProjectProject(models.Model):
         for record in self:
             if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
                 raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
-
-    
