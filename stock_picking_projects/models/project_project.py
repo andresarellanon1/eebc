@@ -32,6 +32,7 @@ class ProjectProject(models.Model):
         string='Lineas de actividades'
     )
 
+    # Valida la fecha en formato DDMMYY y que no pase de 16 car.
     @api.constrains('bid_code')
     def _check_bid_code_format(self):
         for record in self:
@@ -69,5 +70,3 @@ class ProjectProject(models.Model):
         for record in self:
             if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
                 raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
-
-    
