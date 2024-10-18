@@ -19,7 +19,7 @@
         'templates/report_invoice_inherit_custom.xml',
         'templates/report_styles.xml',
         'views/account_invoice_views.xml',
-        'views/account_material_views',
+        'views/account_material_views.xml',
         'views/account_stock_views.xml',
         'views/account_saleorder_views.xml',
     ],
