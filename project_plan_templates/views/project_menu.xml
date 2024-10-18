@@ -20,13 +20,5 @@
             parent="menu_project_config"
             sequence="20"
         />
-
-        <menuitem
-            id="menu_project_config_new_activities"
-            name="Plantillas de actividades"
-            action="activity_template_action"
-            parent="menu_project_config"
-            sequence="20"
-        />
     </data>
 </odoo>
