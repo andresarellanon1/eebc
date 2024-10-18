@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 import datetime
+from odoo.exceptions import ValidationError
 
 class ProjectProject(models.Model):
 
@@ -9,6 +10,7 @@ class ProjectProject(models.Model):
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
     bid_date = fields.Date(string="Fecha de licitación")
     bid_string = fields.String(string="Clave de licitacion", readonly=True)
+    exchange_rate = fields.Float(string="Tipo de cambio")
     
     product_ids = fields.One2many(
         'product.product', 
@@ -48,5 +50,17 @@ class ProjectProject(models.Model):
     def _compute_pickin_ids(self):
         for record in self:
             record.pickin_ids = record.task_id.stock_ids()
+
+    @api.constrains('currency_id', 'exchange_rate')
+    def _check_exchange_rate(self):
+        for record in self:
+            if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
+                raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
+
+    @api.constrains('currency_id', 'exchange_rate')
+    def _check_exchange_rate(self):
+        for record in self:
+            if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
+                raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
 
     
