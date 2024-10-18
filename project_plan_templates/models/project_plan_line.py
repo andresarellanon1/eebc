@@ -1,4 +1,4 @@
-from odoo import fields, name, models
+from odoo import fields, models, api
 
 class ProjectLines(models.Model):
 
