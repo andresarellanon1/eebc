@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="plan_template_action" model="ir.actiones.act_window">
+        <record id="plan_template_action" model="ir.actions.act_window">
             <field name="name">plan.template.action</field>
             <field name="res_model">project.plan</field>
             <field name="view_mode">tree,form</field>
