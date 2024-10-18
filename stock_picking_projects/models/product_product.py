@@ -27,31 +27,31 @@ class ProductProduct(models.Model):
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
+            tipo_cambio = record.exchange_rate
 
             if record.currency_id.name == 'USD' and record.exchange_rate > 0:
-                record.supplier_cost = pesos_a_dolares(monto)
+                record.supplier_cost = pesos_a_dolares(monto,tipo_cambio)
 
             if record.currency_id.name == 'MXN' and record.exchange_rate > 0:
-                record.supplier_cost = dolares_a_pesos(monto)
+                record.supplier_cost = dolares_a_pesos(monto,tipo_cambio)
             
     @api.depends('quantity','product_id','exchange_rate','currency_id')
     def _compute_total_cost(self):
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.product_id.product_tmpl_id.taxes_id.amount)/100
+            tipo_cambio = record.exchange_rate
             monto = total + impuestos
 
-            
-
             if record.currency_id.name == 'USD' and record.exchange_rate > 0:
-                record.total_cost = pesos_a_dolares(monto)
+                record.total_cost = pesos_a_dolares(monto,tipo_cambio)
 
             if record.currency_id.name == 'MXN' and record.exchange_rate > 0:
-                record.total_cost = dolares_a_pesos(monto)
+                record.total_cost = dolares_a_pesos(monto,tipo_cambio)
 
 
-    def pesos_a_dolares(self, monto):
-        return monto / record.exchange_rate
+    def pesos_a_dolares(self, monto, tipo_cambio):
+        return monto / tipo_cambio
 
-    def dolares_a_pesos(self, monto):
-        return monto * record.exchange:rate
+    def dolares_a_pesos(self, monto, tipo_cambio):
+        return monto * tipo_cambio
