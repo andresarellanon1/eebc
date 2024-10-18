@@ -29,9 +29,11 @@
                         <notebook>
                             <page string="Tasks">
                                 <field name="project_plan_line">
-                                    <field name="chapter"/>
-                                    <field name="name"/>
-                                    <field name="description"/>
+                                    <tree editable="bottom">
+                                        <field name="chapter"/>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                    </tree>
                                 </field>
                             </page>
                         </notebook>
