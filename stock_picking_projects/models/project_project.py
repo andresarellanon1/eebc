@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from datetime import datetime
 
 class ProjectProject(models.Model):
 
@@ -8,6 +9,9 @@ class ProjectProject(models.Model):
     default_picking_type_id = fields.Many2one('stock.picking.type', string="Operation type", required=True)
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
     exchange_rate = fields.Float(string="Tipo de cambio")
+    creation_date = fields.Date(string="Creation Date", default=fields.Date.context_today, readonly=True)
+    submission_date = fields.Date(string="Submission Date")
+    publication_date = fields.Date(string="Publication Date")
     
     product_ids = fields.One2many(
         'product.product', 

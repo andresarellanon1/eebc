@@ -9,6 +9,9 @@
                 <field name="default_picking_type_id"/>
                 <field name="currency_id" readonly="0"/>
                 <field name="exchange_rate"/>
+                <field name="creation_date"/>
+                <field name="submission_date"/>
+                <field name="publication_date"/>
             </xpath>
         </field>
     </record>
