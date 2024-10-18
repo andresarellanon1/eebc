@@ -15,8 +15,6 @@
                 <field name="creation_date"/>
                 <field name="submission_date"/>
                 <field name="publication_date"/>
-                <field name="site_supervisor"/>
-                <field name="subcontractor"/>
             </xpath>
         </field>
     </record>
