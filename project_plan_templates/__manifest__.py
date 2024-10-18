@@ -10,7 +10,7 @@
                 
                ],
     'data': [
-        "views/project_manu.xml",
+        "views/project_menu.xml",
         "plan_template_view.xml",
         "security/ir.model.access.csv",
     ],
