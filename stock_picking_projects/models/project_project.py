@@ -37,12 +37,13 @@ class ProjectProject(models.Model):
     def bid_date_onchange_(self):
         for record in self:
             code = record.id
-            date = datetime.strptime(record.bid_date, "%Y-%m-%d")
-            day = f"{date.day:02}"
-            month = f"{date.month:02}"
-            year = f"{date.year % 100:02}"
-
-            record.bid_string = "{day}{month}{year}{code}"
+            if record.bid_date:
+                day = f"{record.bid_date.day:02}"
+                month = f"{record.bid_date.month:02}"
+                year = f"{record.bid_date.year % 100:02}"
+                record.bid_string = f"{day}{month}{year}{code}"
+            else:
+                record.bid_string = ""
 
     
     @api.onchange('activities_tmpl_id')
