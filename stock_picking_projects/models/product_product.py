@@ -26,7 +26,7 @@ class ProductProduct(models.Model):
     def _onchange_activities_tmpl_id(self):
         for record in self:
             record.name = record.product_id.name
-            record.supplier_cost = record.product_tmpl_id.last_supplier_last_price
+            record.supplier_cost = record.product_id.product_tmpl_id.last_supplier_last_price
             
     @api.onchange('quantity')
     def _compute_total_cost(self):
