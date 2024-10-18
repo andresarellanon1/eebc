@@ -11,6 +11,7 @@
                ],
     'data': [
         'templates/out_invoice_template_custom.xml',
+        'templates/out_material_template.xml',
         'templates/out_saleorder_template_custom.xml',
         'templates/out_purchaseorder_template_custom.xml',
         'templates/out_stock_picking_out_template.xml',
@@ -18,6 +19,7 @@
         'templates/report_invoice_inherit_custom.xml',
         'templates/report_styles.xml',
         'views/account_invoice_views.xml',
+        'views/account_material_views.xml',
         'views/account_stock_views.xml',
         'views/account_saleorder_views.xml',
     ],
