@@ -11,7 +11,7 @@
                ],
     'data': [
         "views/project_menu.xml",
-        "plan_template_view.xml",
+        "views/plan_template_view.xml",
         "security/ir.model.access.csv",
     ],
     "license": "LGPL-3",
