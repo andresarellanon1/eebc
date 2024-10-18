@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <record id="activity_template_action" model="ir.actions.act_window">
+            <field name="name">activity.template.action</field>
+            <field name="res_model">activity.template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
         <menuitem
             id="menu_project_config_new_activities"
             name="Plantillas planes de proyecto"
