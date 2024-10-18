@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="plan_template_action" model="ir.actiones.act_window">
-            <field name="name">Plantillas planes de proyecto</field>
-            <field name="res_model">project.plan</field>
-            <field name="view_mode">tree,form</field>
-            <field name="target">current</field>
-        </record>
-
         <record id="plan_template_view_tree" model="ir.ui.view">
             <field name="name">plan.template.tree</field>
             <field name="model">project.plan</field>
