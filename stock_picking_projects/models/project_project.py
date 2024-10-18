@@ -14,6 +14,8 @@ class ProjectProject(models.Model):
     creation_date = fields.Date(string="Creation Date", default=fields.Date.context_today, readonly=True)
     submission_date = fields.Date(string="Submission Date")
     publication_date = fields.Date(string="Publication Date")
+    site_supervisor_id = fields.Many2one('res.user', string="Site Supervisor")
+    subcontractor_id = fields.Many2one('res.user', string="Subcontractor")
     
     product_ids = fields.One2many(
         'product.product', 
