@@ -36,10 +36,25 @@ class ProjectProject(models.Model):
     def _check_bid_code_format(self):
         for record in self:
             if record.bid_code:
-                pattern = r'^\d{6}[a-zA-Z]{4}\d{2}-\d{3}$' #{6 numeros} {4 letras} {2 numeros} {-} {2 numeros}
-                if not re.match(pattern, record.bid_code):
+                # Validar longitud total
+                if len(record.bid_code) > 16:
+                    raise ValidationError("El código no puede tener más de 16 caracteres.")
+                
+                # Validar formato de fecha DDMMYY
+                date_str = record.bid_code[:6]
+                try:
+                    day = int(date_str[:2])
+                    month = int(date_str[2:4])
+                    year = int(date_str[4:6]) + 2000  # Asumiendo que el año está en el siglo XXI
+                    datetime(year, month, day)  # Esto lanzará un ValueError si la fecha es inválida
+                except ValueError:
+                    raise ValidationError("La fecha debe ser válida en el formato DDMMYY.")
+                
+                # Validar patrón del resto del string
+                pattern = r'^[a-zA-Z0-9]{10}-\d{3}$'  # Ajuste para que acepte cualquier UID de longitud adecuada
+                if not re.match(pattern, record.bid_code[6:]):
                     raise ValidationError(
-                        "El formato de la licitacion debe ser: (171024obrA24-201)."
+                        "El formato del UID debe ser válido (ejemplo: obrA25-102)."
                     )
     
     @api.onchange('activities_tmpl_id')
