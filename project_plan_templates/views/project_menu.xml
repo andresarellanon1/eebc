@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="menu_project_config" model="ir.ui.menu"/>
+        <record id="menu_project_config" model="ir.ui.menu">
+            <field name="name">Configuración de Proyecto</field>
+            <field name="parent_id" ref="project.menu_main_pm" />
+            <field name="sequence" eval="20" />
+        </record>
 
         <menuitem
             id="menu_project_config_new_option"
