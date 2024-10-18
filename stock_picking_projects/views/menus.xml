@@ -6,7 +6,13 @@
             <field name="res_model">activity.template</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
+
+        <record id="menu_project_config" model="ir.ui.menu">
+            <field name="name">Plantillas</field>
+            <field name="parent_id" ref="project.menu_main_pm" />
+            <field name="sequence" eval="20" />
+        </record>
+
         <menuitem
             id="menu_project_config_new_activities"
             name="Plantillas planes de proyecto"
