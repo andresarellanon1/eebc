@@ -9,7 +9,7 @@ class ProjectProject(models.Model):
     default_picking_type_id = fields.Many2one('stock.picking.type', string="Operation type", required=True)
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
     bid_date = fields.Date(string="Fecha de licitación")
-    bid_string = fields.String(string="Clave de licitación", readonly=True)
+    bid_string = fields.Char(string="Clave de licitación", readonly=True)
     exchange_rate = fields.Float(string="Tipo de cambio")
     
     product_ids = fields.One2many(
