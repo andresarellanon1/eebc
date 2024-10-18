@@ -43,11 +43,14 @@ class ProductProduct(models.Model):
             tipo_cambio = record.project_id.exchange_rate
             monto = total + impuestos
 
-            if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
-                record.total_cost = self.pesos_a_dolares(monto,tipo_cambio)
+            record.total_cost = total + impuestos
 
-            if record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
-                record.total_cost = self.dolares_a_pesos(monto,tipo_cambio)
+
+            # if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
+            #     record.total_cost = self.pesos_a_dolares(monto,tipo_cambio)
+
+            # if record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
+            #     record.total_cost = self.dolares_a_pesos(monto,tipo_cambio)
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
