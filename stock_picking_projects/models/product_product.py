@@ -26,7 +26,7 @@ class ProductProduct(models.Model):
         for record in self:
             record.name = record.product_id.name
             for tmpl in record.product_tmpl_id:
-                if tmlp.name == record.name:
+                if tmpl.name == record.name:
                     record.last_supplier_last_price = record.product_tmpl_id.last_supplier_last_price
             
     @api.onchange('quantity')
