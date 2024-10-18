@@ -29,10 +29,10 @@ class ProductProduct(models.Model):
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
 
-            if record.currency_id.name == 'USD' and record.exchange_rate > 0:
+            if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
                 record.supplier_cost = pesos_a_dolares(monto,tipo_cambio)
 
-            if record.currency_id.name == 'MXN' and record.exchange_rate > 0:
+            if record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
                 record.supplier_cost = dolares_a_pesos(monto,tipo_cambio)
             
     @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
@@ -43,10 +43,10 @@ class ProductProduct(models.Model):
             tipo_cambio = record.project_id.exchange_rate
             monto = total + impuestos
 
-            if record.currency_id.name == 'USD' and record.exchange_rate > 0:
+            if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
                 record.total_cost = pesos_a_dolares(monto,tipo_cambio)
 
-            if record.currency_id.name == 'MXN' and record.exchange_rate > 0:
+            if record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
                 record.total_cost = dolares_a_pesos(monto,tipo_cambio)
 
 
