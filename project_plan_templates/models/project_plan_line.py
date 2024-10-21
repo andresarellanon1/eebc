@@ -17,7 +17,7 @@ class ProjectLines(models.Model):
     use_project_task = fields.Boolean(default=True)
     stage_id = fields.Char(string="Stage")
     planned_date_begin = fields.Date(default=fields.Date.context_today, string="Begin date")
-    project_id = fields.Many2one(string="project", 'project.project')
+    project_id = fields.Many2one('project.project', string="Project")
 
     def action_preview_task(self):
         task_vals = {
@@ -29,8 +29,8 @@ class ProjectLines(models.Model):
         task = self.env['project.task'].create(task_vals)
         return {
             'type': 'ir.actions.act_window',
-            'res.model': 'project.task',
-            'res.id': task.id,
+            'res_model': 'project.task',
+            'res_id': task.id,
             'view_mode': 'form',
             'target': 'new',
         }

@@ -17,6 +17,7 @@ class ProjectProject(models.Model):
                 project.project_plan_description = project.project_plan_id.description
             else:
                 project.project_plan_lines = [(5, 0, 0)]
+                project.project_plan_description = False
 
     #def action_create_tasks(self):
     #    tasks_vals = {
