@@ -7,5 +7,5 @@ class ProjectPlan(models.Model):
     name = fields.Char(string="Name", required=True)
     project_name = fields.Char(string="Project name")
     description = fields.Char(string="Description")
-    project_plan_line = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
+    project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
 
