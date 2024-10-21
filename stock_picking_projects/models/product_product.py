@@ -12,6 +12,7 @@ class ProductProduct(models.Model):
     reserved_qty = fields.Float(string='Reservado')
     total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
+    currency = fields.Char(string="Currency", default="MXN")
     
     project_id = fields.Many2one(
         'project.project', 
@@ -33,7 +34,7 @@ class ProductProduct(models.Model):
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
-            currency = 'MXN'
+            
 
             if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
                 if currency != 'USD':
