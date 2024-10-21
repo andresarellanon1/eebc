@@ -80,13 +80,13 @@ class ProjectProject(models.Model):
     @api.onchange('currency_id', 'exchange_rate')
     def _product_currency(self):
         for record in self:
-            _logger.warning(f'La divisa original es: {record.currency_id.name}')
             for product in record.product_ids:
                 if record.currency_id.name == 'USD':
                     product.currency = 'USD'
-                    _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
-                    _logger.warning(f'Se cambió la divisa a: {product.currency}')
-                else:
-                    product.currency = 'MXN'
-                    _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
-                    _logger.warning(f'Se cambió la divisa a: {product.currency}')
+        #             _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
+        #             _logger.warning(f'Se cambió la divisa a: {record.product_ids.currency}')
+        #         else:
+        #             record.product_ids.currency = 'MXN'
+        #             _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
+        #             _logger.warning(f'Se cambió la divisa a: {record.product_ids.currency}')
+            _logger.warning(f'La divisa original es: {record.currency_id.name}')
