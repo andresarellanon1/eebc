@@ -19,14 +19,14 @@ class ProjectLines(models.Model):
         string="Stage",
         selection=[('first', 'First stage'), ('second', 'Second stage'), ('third', 'Third stage')]
         )
-    planned_date_begin = fields.Date(default=fields.Date.context_today, string="Begin date")
-    planned_date_end = fields.Date(default=fields.Date.context_today, string="End date")
+    planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Begin date")
+    planned_date_end = fields.Datetime(default=fields.Date.context_today, string="End date")
     origin_project_id = fields.Many2one('project.project', string="Project")
     partner_id = fields.Many2many('res.users', string="Assigned user")
 
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
-        
+
         task_vals = {
             'name': self.name,
             'user_ids': [(6, 0, user_ids)] if user_ids else False,
