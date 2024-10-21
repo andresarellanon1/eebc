@@ -36,7 +36,7 @@ class ProductProduct(models.Model):
             tipo_cambio = record.project_id.exchange_rate
 
             if not record.currency:
-                currency = record.project_id.currency_id.name
+                record.currency = record.project_id.currency_id.name
 
             _logger.warning(f'La divisa del producto es: {record.currency}')
             _logger.warning(f'La divisa del formulario es: {record.project_id.currency_id.name}')
