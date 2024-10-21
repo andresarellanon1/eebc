@@ -21,14 +21,14 @@ class ProjectLines(models.Model):
         )
     planned_date_begin = fields.Date(default=fields.Date.context_today, string="Begin date")
     origin_project_id = fields.Many2one('project.project', string="Project")
-    partner_id = fields.Many2one('res.users', string="Assigned user")
+    partner_id = fields.Many2many('res.users', string="Assigned user")
 
     def action_preview_task(self):
         task_vals = {
             'name': self.name,
             'user_ids': [(6, 0, [self.partner_id.id])] if self.partner_id else False,
             'description': self.description,
-            'planned_date_begin': self.planned_date_begin,
+            'date_deadline': self.planned_date_begin,
         }
         task = self.env['project.task'].create(task_vals)
         return {

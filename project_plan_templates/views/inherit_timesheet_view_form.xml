@@ -18,8 +18,8 @@
                                 <field name="chapter"/>
                                 <field name="description"/>
                                 <field name="use_project_task"/>
-                                <field name="planned_date_begin"/>
-                                <field name="partner_id"/>
+                                <field name="planned_date_begin" widget="daterange"/>
+                                <field name="partner_id" widget="many2many_avatar_user"/>
                                 <field name="stage_id"/>
                                 <button name="action_preview_task" type="object" class="oe_highlight" string="Preview task"/>
                             </tree>
