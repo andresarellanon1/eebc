@@ -13,7 +13,7 @@ class ProductProduct(models.Model):
     total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
     currency = fields.Char(string="Currency", default="MXN")
-    
+
     project_id = fields.Many2one(
         'project.project', 
         string='Proyecto',
@@ -37,17 +37,17 @@ class ProductProduct(models.Model):
             
 
             if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
-                if currency != 'USD':
+                if self.currency != 'USD':
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
-                    currency = 'USD'
+                    self.currency = 'USD'
                     _logger.warning('Hizo cambio a dolares.')
-                    _logger.warning(f'Se cambió la divisa a: {currency}')
+                    _logger.warning(f'Se cambió la divisa a: {self.currency}')
             elif record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
-                if currency != 'MXN':
+                if self.currency != 'MXN':
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
-                    currency = 'MXN'
+                    self.currency = 'MXN'
                     _logger.warning('Hizo cambio a pesos.')
-                    _logger.warning(f'Se cambió la divisa a: {currency}')
+                    _logger.warning(f'Se cambió la divisa a: {self.currency}')
             else :
                 record.supplier_cost = monto
                 _logger.warning('No hizo cambio.')
