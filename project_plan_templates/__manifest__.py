@@ -13,6 +13,7 @@
         "views/project_menu.xml",
         "views/plan_template_view.xml",
         "security/ir.model.access.csv",
+        "views/inherit_timesheet_view_form.xml"
     ],
     "license": "LGPL-3",
     'installable': True,
