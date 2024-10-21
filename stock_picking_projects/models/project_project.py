@@ -3,6 +3,10 @@ import datetime, re
 from odoo.exceptions import ValidationError
 from datetime import datetime
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 class ProjectProject(models.Model):
 
     _inherit = 'project.project'
@@ -65,10 +69,23 @@ class ProjectProject(models.Model):
     def _check_exchange_rate(self):
         for record in self:
             if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
-                raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
+                raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")     
 
     @api.constrains('currency_id', 'exchange_rate')
     def _check_exchange_rate(self):
         for record in self:
             if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
                 raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
+
+    @api.onchange('currency_id', 'exchange_rate')
+    def _product_currency(self):
+        for record in self:
+            _logger.warning(f'La divisa original es: {record.currency_id.name}')
+            if record.currency_id.name == 'USD'
+                record.product_ids.currency = 'USD'
+                _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
+                _logger.warning(f'Se cambió la divisa a: {record.product_ids.currency}')
+            else:
+                record.product_ids.currency = 'MXN'
+                _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
+                _logger.warning(f'Se cambió la divisa a: {record.product_ids.currency}')
