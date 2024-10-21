@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="activity_template_action" model="ir.actions.act_window">
-            <field name="name">activity template action</field>
-            <field name="res_model">activity.template</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
         <record id="activity_template_action_view_tree" model="ir.ui.view">
             <field name="name">activity.template.action.tree</field>
             <field name="model">activity.template</field>
