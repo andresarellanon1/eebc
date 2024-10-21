@@ -8,4 +8,4 @@ class ProjectPlan(models.Model):
     project_name = fields.Char(string="Project name")
     description = fields.Char(string="Description")
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
-
+    project_id = fields.Many2one(string="Project", 'project.project')
