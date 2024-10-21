@@ -57,8 +57,8 @@ class ProductProduct(models.Model):
             #         _logger.warning('Hizo cambio a pesos.')
             #         _logger.warning(f'Se cambió la divisa a: {record.currency}')
             # else :
-                record.supplier_cost = monto
-                _logger.warning('Se activó el método en PRODUCT.PRODUCT')
+            record.supplier_cost = monto
+            _logger.warning('Se activó el método en PRODUCT.PRODUCT')
             
     @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
     def _compute_total_cost(self):
