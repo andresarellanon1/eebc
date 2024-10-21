@@ -28,13 +28,13 @@ class ProductProduct(models.Model):
         copied = True
     )
 
-    @api.onchange('product_id','project_id.exchange_rate','project_id.currency_id')
+    @api.depends('product_id','project_id.exchange_rate','project_id.currency_id')
     def _onchange_activities_tmpl_id(self):
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
-            
+            _logger.warning(f'La divisa del producto es: {self.currency}')
 
             if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
                 if self.currency != 'USD':
