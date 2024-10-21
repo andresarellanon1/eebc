@@ -20,7 +20,7 @@ class ProjectLines(models.Model):
         selection=[('first', 'First stage'), ('second', 'Second stage'), ('third', 'Third stage')]
         )
     planned_date_begin = fields.Date(default=fields.Date.context_today, string="Begin date")
-    planned_date_begin = fields.Date(default=fields.Date.context_today, string="End date")
+    planned_date_end = fields.Date(default=fields.Date.context_today, string="End date")
     origin_project_id = fields.Many2one('project.project', string="Project")
     partner_id = fields.Many2many('res.users', string="Assigned user")
 
