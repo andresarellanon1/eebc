@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+import logging
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -28,19 +29,25 @@ class ProductProduct(models.Model):
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
-            origin_currency = record.product_tmpl_id.currency_id.name
-
+            if not origin_currency:
+                origin_currency = record.product_tmpl_id.currency_id.name
+            _logger.warning(f'Divisa Original: {origin_currency}')
             
             if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
                 if origin_currency != 'USD':
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
                     origin_currency = 'USD'
+                    _logger.warning('Hizo cambio a dolares.')
+                    _logger.warning(f'Se cambió la divisa a: {origin_currency}')
             elif record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
                 if origin_currency != 'MXN':
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
                     origin_currency = 'MXN'
+                    _logger.warning('Hizo cambio a pesos.')
+                    _logger.warning(f'Se cambió la divisa a: {origin_currency}')
             else :
                 record.supplier_cost = monto
+                _logger.warning('No hizo cambio.')
             
     @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
     def _compute_total_cost(self):
