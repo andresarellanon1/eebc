@@ -26,7 +26,7 @@ class ProjectLines(models.Model):
     def action_preview_task(self):
         task_vals = {
             'name': self.name,
-            'user_ids': self.partner_id.id if self.partner_id else False,
+            'user_ids': [(6, 0, [self.partner_id.id])] if self.partner_id else False,
             'description': self.description,
             'planned_date_begin': self.planned_date_begin,
         }
