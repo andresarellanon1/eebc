@@ -3,7 +3,9 @@ import logging
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
-    
+    _logger = logging.getLogger(__name__)
+
+
     quantity = fields.Integer(string='Cantidad')
     reserved_qty = fields.Float(string='Reservado')
     total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
