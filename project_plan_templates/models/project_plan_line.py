@@ -16,7 +16,7 @@ class ProjectLines(models.Model):
     amount_total = fields.Float(string="Amount total")
     use_project_task = fields.Boolean(default=True, string="Use task")
     stage_id = fields.Selection(
-        string="Stage"
+        string="Stage",
         selection=[('first', 'First stage'), ('second', 'Second stage'), ('third', 'Third stage')]
         )
     planned_date_begin = fields.Date(default=fields.Date.context_today, string="Begin date")
