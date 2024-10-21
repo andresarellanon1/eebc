@@ -35,7 +35,7 @@ class ProductProduct(models.Model):
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
 
-            if not currency:
+            if not record.currency:
                 currency = record.project_id.currency_id.name
 
             _logger.warning(f'La divisa del producto es: {record.currency}')
