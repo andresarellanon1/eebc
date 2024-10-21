@@ -12,6 +12,7 @@
                         <tree editable="false">
                             <field name="name"/>
                             <field name="state"/>
+                            <field name="task_id.new_selection"/>
                             <field name="scheduled_date"/>
                         </tree>
                     </field>
