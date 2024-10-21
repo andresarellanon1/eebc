@@ -1,9 +1,11 @@
 from odoo import models, fields, api
 import logging
 
+_logger = logging.getLogger(__name__)
+
 class ProductProduct(models.Model):
     _inherit = 'product.product'
-    _logger = logging.getLogger(__name__)
+    
 
 
     quantity = fields.Integer(string='Cantidad')
