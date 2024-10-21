@@ -35,7 +35,7 @@ class ProductProduct(models.Model):
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
             _logger.warning(f'La divisa del producto es: {self.currency}')
-            _logger.warning(f'La divisa del formulario es: {ecord.currency_id.name}')
+            _logger.warning(f'La divisa del formulario es: {record.currency_id.name}')
             if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
                 if self.currency != 'USD':
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
