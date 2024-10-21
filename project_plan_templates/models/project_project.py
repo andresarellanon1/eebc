@@ -5,9 +5,9 @@ class ProjectProject(models.Model):
 
     _inherit = 'project.project'
     
-    project_plan_id = fields.One2many(string="Project template")
+    project_plan_id = fields.One2many('project.plan', 'project_id',string="Project template")
     project_plan_description = fields.Char(string="Project description")
-    project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
+    project_plan_lines = fields.One2many('project.plan.line', 'project_id', string="Project plan lines")
 
     @api.depends('project_plan_id')
     def plan_lines(self):
