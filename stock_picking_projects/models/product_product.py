@@ -31,22 +31,24 @@ class ProductProduct(models.Model):
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
-            if not origin_currency:
-                origin_currency = record.product_tmpl_id.currency_id.name
+            origin_currency = record.product_tmpl_id.currency_id.name
+            if origin_currency and not currency:
+                currency = origin_currency
+
             _logger.warning(f'Divisa Original: {origin_currency}')
             
             if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
-                if origin_currency != 'USD':
+                if currency != 'USD':
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
-                    origin_currency = 'USD'
+                    currency = 'USD'
                     _logger.warning('Hizo cambio a dolares.')
-                    _logger.warning(f'Se cambió la divisa a: {origin_currency}')
+                    _logger.warning(f'Se cambió la divisa a: {currency}')
             elif record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
-                if origin_currency != 'MXN':
+                if currency != 'MXN':
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
-                    origin_currency = 'MXN'
+                    currency = 'MXN'
                     _logger.warning('Hizo cambio a pesos.')
-                    _logger.warning(f'Se cambió la divisa a: {origin_currency}')
+                    _logger.warning(f'Se cambió la divisa a: {currency}')
             else :
                 record.supplier_cost = monto
                 _logger.warning('No hizo cambio.')
