@@ -12,7 +12,7 @@ class ProductProduct(models.Model):
     reserved_qty = fields.Float(string='Reservado')
     total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
-    currency = fields.Char(string="Currency", default="USD")
+    currency = fields.Char(string="Currency")
 
     project_id = fields.Many2one(
         'project.project', 
@@ -34,20 +34,25 @@ class ProductProduct(models.Model):
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
-            _logger.warning(f'La divisa del producto es: {self.currency}')
+
+            _logger.warning(f'La divisa del producto es: {record.currency}')
             _logger.warning(f'La divisa del formulario es: {record.project_id.currency_id.name}')
+            
             if record.project_id.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
-                if self.currency != 'USD':
+                if record.currency != 'USD':
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
-                    self.currency = 'USD'
+                    record.currency = 'USD'
+
                     _logger.warning('Hizo cambio a dolares.')
-                    _logger.warning(f'Se cambió la divisa a: {self.currency}')
+                    _logger.warning(f'Se cambió la divisa a: {record.currency}')
+
             elif record.project_id.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
-                if self.currency != 'MXN':
+                if record.currency != 'MXN':
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
-                    self.currency = 'MXN'
+                    record.currency = 'MXNrecord
+
                     _logger.warning('Hizo cambio a pesos.')
-                    _logger.warning(f'Se cambió la divisa a: {self.currency}')
+                    _logger.warning(f'Se cambió la divisa a: {record.currency}')
             else :
                 record.supplier_cost = monto
                 _logger.warning('No hizo cambio.')
