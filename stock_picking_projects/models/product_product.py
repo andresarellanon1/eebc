@@ -22,17 +22,23 @@ class ProductProduct(models.Model):
         copied = True
     )
 
-    @api.onchange('product_id')
+    @api.onchange('product_id','project_id.exchange_rate','project_id.currency_id')
     def _onchange_activities_tmpl_id(self):
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
+            origin_currency = record.product_tmpl_id.currency_id.name
 
+            
             if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
-                record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)    
+                if origin_currency != 'USD':
+                    record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
+                    origin_currency = 'USD'
             elif record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
-                record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
+                if origin_currency != 'MXN':
+                    record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
+                    origin_currency = 'MXN'
             else :
                 record.supplier_cost = monto
             
@@ -46,12 +52,12 @@ class ProductProduct(models.Model):
 
             record.total_cost = total + impuestos
 
-
-            # if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
-            #     record.total_cost = self.pesos_a_dolares(monto,tipo_cambio)
-
-            # if record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
-            #     record.total_cost = self.dolares_a_pesos(monto,tipo_cambio)
+            if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
+                record.total_cost = self.pesos_a_dolares(monto,tipo_cambio)
+            elif record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
+                record.total_cost = self.dolares_a_pesos(monto,tipo_cambio)
+            else : 
+                record.total_cost = monto
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
