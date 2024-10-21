@@ -5,7 +5,6 @@ class ProjectTask(models.Model):
     _inherit = 'project.task'
 
     stock_ids = fields.One2many('stock.picking', 'task_id', string="stock")
-    new_selection = fields.Selection(string='Nueva selección', copy=False, selection=[('estimacion','Estimación'),('traslado','Traslado')])
 
     @api.depends('project_id.default_picking_type_id')
     def _compute_stock_ids(self):
