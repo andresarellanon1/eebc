@@ -81,7 +81,7 @@ class ProjectProject(models.Model):
     def _product_currency(self):
         for record in self:
             _logger.warning(f'La divisa original es: {record.currency_id.name}')
-            if record.currency_id.name == 'USD'
+            if record.currency_id.name == 'USD':
                 record.product_ids.currency = 'USD'
                 _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
                 _logger.warning(f'Se cambió la divisa a: {record.product_ids.currency}')
