@@ -28,7 +28,7 @@ class ProductProduct(models.Model):
         copied = True
     )
 
-    @api.depends('product_id','project_id.exchange_rate','project_id.currency_id')
+    @api.onchange('product_id','project_id.exchange_rate','project_id.currency_id')
     def _onchange_activities_tmpl_id(self):
         for record in self:
             record.name = record.product_id.name
