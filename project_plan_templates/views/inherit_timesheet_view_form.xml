@@ -19,6 +19,7 @@
                                 <field name="description"/>
                                 <field name="use_project_task"/>
                                 <field name="planned_date_begin"/>
+                                <field name="partner_id"/>
                                 <button name="action_preview_task" type="object" class="oe_highlight" string="Preview task"/>
                             </tree>
                         </field>

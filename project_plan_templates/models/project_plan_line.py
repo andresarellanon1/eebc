@@ -18,6 +18,7 @@ class ProjectLines(models.Model):
     stage_id = fields.Char(string="Stage")
     planned_date_begin = fields.Date(default=fields.Date.context_today, string="Begin date")
     project_id = fields.Many2one('project.project', string="Project")
+    partner_id = fields.Many2one('res.users', string="Assinged user")
 
     def action_preview_task(self):
         task_vals = {
