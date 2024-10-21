@@ -28,7 +28,7 @@
                         </div>
                         <notebook>
                             <page string="Tasks">
-                                <field name="project_plan_line">
+                                <field name="project_plan_lines">
                                     <tree editable="bottom">
                                         <field name="chapter"/>
                                         <field name="name"/>

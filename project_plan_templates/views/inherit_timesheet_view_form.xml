@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_timesheet_view_form" model="ir.ui.view">
+        <field name="name">inherit.timesheet.view.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="Planeacion" string="Planeación">
+                    <group name="planning_container">
+                        <field name="project_plan_id"/>
+                        <field name="project_plan_description"/>
+                    </group>
+                    <group name="planning_lines">
+                        <field name="project_plan_lines">
+                            <tree editable="editable_bottom">
+                                <field name="name"/>
+                                <field name="chapter"/>
+                                <field name="description"/>
+                                <field name="use_project_task"/>
+                                <field name="planned_date_begin"/>
+                                <button name="action_preview_task" type="object" class="oe_highlight" string="Preview task"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
