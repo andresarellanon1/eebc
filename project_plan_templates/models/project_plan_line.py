@@ -25,11 +25,8 @@ class ProjectLines(models.Model):
     partner_id = fields.Many2many('res.users', string="Assigned user")
 
     def action_preview_task(self):
-        if self.partner_id:
-            user_ids = [self.partner_id.id]
-        else:
-            user_ids = []
-
+        user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
+        
         task_vals = {
             'name': self.name,
             'user_ids': [(6, 0, user_ids)] if user_ids else False,
