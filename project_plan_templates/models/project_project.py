@@ -13,7 +13,7 @@ class ProjectProject(models.Model):
     def plan_lines(self):
         for project in self:
             if project.project_plan_id:
-                project.project_plan_lines = [(6, 0, project.project_plan_id.plan_line_ids.ids)]
+                project.project_plan_lines = [(6, 0, project.project_plan_id.project_plan_lines.ids)]
                 project.project_plan_description = project.project_plan_id.description
             else:
                 project.project_plan_lines = [(5, 0, 0)]
