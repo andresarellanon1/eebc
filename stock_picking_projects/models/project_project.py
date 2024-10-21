@@ -77,7 +77,7 @@ class ProjectProject(models.Model):
             if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
                 raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
 
-    @api.depends('currency_id', 'exchange_rate')
+    @api.onchange('currency_id', 'exchange_rate')
     def _product_currency(self):
         for record in self:
             _logger.warning(f'La divisa original es: {record.currency_id.name}')
