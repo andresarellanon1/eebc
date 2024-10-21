@@ -32,7 +32,7 @@ class ProjectLines(models.Model):
             'user_ids': [(6, 0, user_ids)] if user_ids else False,
             'description': self.description,
             'planned_date_begin': self.planned_date_begin,
-            'date_end': self.planned_date_end,
+            'date_deadline': self.planned_date_end,
         }
         task = self.env['project.task'].create(task_vals)
         return {
