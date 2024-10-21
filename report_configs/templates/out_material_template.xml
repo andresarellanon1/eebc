@@ -7,17 +7,123 @@
                     <t t-call="report_configs.external_layout_invoice_custom">
                         <t t-call="report_configs.report_styles"/>
                         <div class="page">
-                            <div class="row">
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0; ">
+                                <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgba(0,58,112,255); font-size: 21px; padding: 2px important!">
+                                    <tr>
+                                        <th style="width: 58%; "/>
+                                        <th style="width: 45%; background-color: white; font-weight: 900 ">
+                                            REQUISICION DE MATERIAL
+                                        </th>
+                                        <th style="width: 17%; font-weight: 900">
+                                            19198
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="row mt32 mb32">
                                 <div class="col-6">
-                                    <h3>REQUISICION DE MATERIAL</h3>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="font-weight: bold;">Cliente:</td>
+                                            <td>51100 RESIDENCIALES CADENA</td>
+                                        </tr>
+                                        <tr>
+                                            <td/>
+                                            <td>BLVD. LAZARO CARDENAS 1601 INT. L4,5Y6 COL. RANCHO LA BODEGA</td>
+                                        </tr>
+                                        <tr>
+                                            <td/>
+                                            <td>MEXICALI BCN MEXICO C.P. 21379</td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 <div class="col-6" style="text-align: right;">
-                                    <h2><strong>19198</strong></h2>
-                                    <p>Fecha: 10/09/2024</p>
-                                    <p>Solicitado para: Obra</p>
-                                    <p>Importar a: Frontera</p>
-                                </div>    
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="text-align: right;">Fecha:</td>
+                                            <td style="font-weight: bold; text-align: left;">10/09/2024</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;">Solicitado para:</td>
+                                            <td style="font-weight: bold; text-align: left;">Obra</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;">Importar a:</td>
+                                            <td style="font-weight: bold; text-align: left;">Frontera</td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
+                            <table class="table" style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                                <thead style="border-bottom: 2px solid black;">
+                                    <tr>
+                                        <th style="width: 5%; text-align: center; border: 2px solid black;">Pda.</th>
+                                        <th style="width: 10%; text-align: center; border: 2px solid black;">Cantidad</th>
+                                        <th style="width: 10%; text-align: center; border: 2px solid black;">Unidad</th>
+                                        <th style="width: 45%; text-align: left; border: 2px solid black;">Artículo/Descripción</th>
+                                        <th style="width: 15%; text-align: right; border: 2px solid black;">P. Unitario</th>
+                                        <th style="width: 15%; text-align: right; border: 2px solid black;">Importe</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: center; border: none;">1</td>
+                                        <td style="text-align: center; border: none;">2,000</td>
+                                        <td style="text-align: center; border: none;">PZA</td>
+                                        <td style="border: none;">8318 POZO DE VISITA 260X260X150 CM CFE-PVMTBX-TC NORMA 2008</td>
+                                        <td style="text-align: right; border: none;">21,700.00</td>
+                                        <td style="text-align: right; border: none;">43,400.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; border: none;">2</td>
+                                        <td style="text-align: center; border: none;">3,000</td>
+                                        <td style="text-align: center; border: none;">PZA</td>
+                                        <td style="border: none;">8345 POZO DE VISITA 260X260X150 CM PVM TAX CFE-2008</td>
+                                        <td style="text-align: right; border: none;">28,800.00</td>
+                                        <td style="text-align: right; border: none;">86,400.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; border: none;">3</td>
+                                        <td style="text-align: center; border: none;">5,000</td>
+                                        <td style="text-align: center; border: none;">PZA</td>
+                                        <td style="border: none;">8301 REG. CONCRETO MT CFE TN-RMTB4 (1.50X1.50X0.90 M)</td>
+                                        <td style="text-align: right; border: none;">6,850.00</td>
+                                        <td style="text-align: right; border: none;">34,250.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; border: none;">4</td>
+                                        <td style="text-align: center; border: none;">17,000</td>
+                                        <td style="text-align: center; border: none;">PZA</td>
+                                        <td style="border: none;">8302 REG. CONCRETO MT N-CFE TN-RMTA-4 C/ARO TAPA 1.5X1.5X0.90</td>
+                                        <td style="text-align: right; border: none;">10,504.00</td>
+                                        <td style="text-align: right; border: none;">178,568.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td><strong>Observaciones:</strong></td>
+                                    <td>COTIZACION ACONCAGUA NO. 6710</td>
+                                <td style="text-align: right;">
+                                    <div style="border: 1px solid black; border-radius: 10px;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td><strong>SUBTOTAL :</strong></td>
+                                                <td>342,618.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>IVA: 8% :</strong></td>
+                                                <td>27,409.44</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>TOTAL EN PESOS :</strong></td>
+                                                <td>370,027.44</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
                         </div>
                     </t>
                 </t>

@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="plan_template_action" model="ir.actions.act_window">
-            <field name="name">plan.template.action</field>
+            <field name="name">Plantillas de planes de proyecto</field>
             <field name="res_model">project.plan</field>
             <field name="view_mode">tree,form</field>
         </record>
