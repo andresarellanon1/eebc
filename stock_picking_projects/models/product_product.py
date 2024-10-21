@@ -31,12 +31,8 @@ class ProductProduct(models.Model):
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
-            origin_currency = record.product_tmpl_id.currency_id.name
-            if origin_currency and not currency:
-                currency = origin_currency
+            currency = 'MXN'
 
-            _logger.warning(f'Divisa Original: {origin_currency}')
-            
             if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
                 if currency != 'USD':
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
