@@ -32,7 +32,7 @@ class ProductProduct(models.Model):
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
-            origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id
+            origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
             tipo_cambio = record.project_id.exchange_rate
             project_currency = record.project_id.currency_id.name
             _logger.warning(f'La divisa original es: {origin_currency}')
