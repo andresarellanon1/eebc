@@ -40,6 +40,7 @@ class ProductProduct(models.Model):
             _logger.warning(f'La divisa del formulario es: {record.project_id.currency_id.name}')
 
             if project_currency == 'USD' and record.project_id.exchange_rate > 0:
+                _logger.warning('Entró al if.')
                 if record.currency != 'USD':
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
                     record.currency = 'USD'
@@ -48,6 +49,7 @@ class ProductProduct(models.Model):
                     _logger.warning(f'Se cambió la divisa a: {record.currency}')
 
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
+                _logger.warning('Entró al Elif.')
                 if record.currency != 'MXN':
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
                     record.currency = 'MXN'
