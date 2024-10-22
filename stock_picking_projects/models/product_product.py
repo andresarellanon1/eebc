@@ -36,7 +36,7 @@ class ProductProduct(models.Model):
             tipo_cambio = record.project_id.exchange_rate
             project_currency = record.project_id.currency_id.name
 
-            if not record.currency:
+            if record.currency == False:
                 record.currency == project_currency
 
             _logger.warning(f'La divisa del producto es: {record.currency}')
