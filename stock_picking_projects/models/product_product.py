@@ -34,7 +34,7 @@ class ProductProduct(models.Model):
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             tipo_cambio = record.project_id.exchange_rate
-            record.currency = record.project_id.currency_id.name
+            origin_currency = record.project_id.currency_id.name
 
             _logger.warning(f'La divisa del producto es: {record.currency}')
             _logger.warning(f'La divisa del formulario es: {record.project_id.currency_id.name}')
