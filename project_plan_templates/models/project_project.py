@@ -29,10 +29,10 @@ class ProjectProject(models.Model):
                     'location_id': False,
                     'picking_name': picking.name
                 })
-                project.project_picking_lines += separator
+                project.project_picking_lines = [(4, separator[1])]
 
-                for line in picking.product_ids:
-                    project.project_picking_lines += line
+                for line in picking.project_picking_lines:
+                    project.project_picking_lines = [(4, line.id)]
 
             if not project.project_plan_id:
                 project.project_plan_lines = [(5, 0, 0)]
