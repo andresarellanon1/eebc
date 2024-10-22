@@ -12,7 +12,7 @@ class ProjectPlan(models.Model):
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
 
     picking_lines = fields.One2many(
-        'project.plan.picking.line',
+        'project.picking.lines',
         'project_plan_id',
         string="Picking Lines",
         compute='_compute_picking_lines',
@@ -22,7 +22,7 @@ class ProjectPlan(models.Model):
     @api.depends('project_plan_pickings')
     def _compute_picking_lines(self):
         for record in self:
-            lines = self.env['project.plan.picking.line']
+            lines = self.env['project.picking.lines']
             for picking in record.project_plan_pickings:
                 lines |= picking.project_picking_lines
             record.picking_lines = lines
