@@ -28,7 +28,7 @@
         />
 
         <menuitem
-            id="menu_project_config_new_option"
+            id="project_picking_option"
             name="Plantillas de operaciones de inventario"
             action="plan_picking_templates_action"
             parent="menu_project_config"
