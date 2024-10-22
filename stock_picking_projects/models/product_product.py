@@ -11,7 +11,7 @@ class ProductProduct(models.Model):
     total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
     currency = fields.Char(string="Currency")
-    cambio = fields.Boolean(string="Cambio", default="False")
+    cambio = fields.Boolean(string="Cambio", default=False)
 
     project_id = fields.Many2one(
         'project.project', 
