@@ -9,7 +9,7 @@ class ProjectProject(models.Model):
     project_plan_description = fields.Char(string="Project description")
     project_plan_lines = fields.One2many('project.plan.line', 'origin_project_id', string="Project plan lines")
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Stock picking")
-    project_picking_lines = fields.One2many('project.picking.line', 'project_id', string="Project picking lines")
+    project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
 
     @api.onchange('project_plan_id', 'project_picking_ids')
     def plan_lines(self):
