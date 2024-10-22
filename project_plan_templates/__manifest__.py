@@ -7,13 +7,14 @@
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [
-                
+                'project'
                ],
     'data': [
         "views/project_menu.xml",
         "views/plan_template_view.xml",
         "security/ir.model.access.csv",
-        "views/inherit_timesheet_view_form.xml"
+        "views/inherit_timesheet_view_form.xml",
+        "views/inherit_task_view_form.xml"
     ],
     "license": "LGPL-3",
     'installable': True,
