@@ -31,34 +31,34 @@ class ProductProduct(models.Model):
     @api.onchange('product_id','currency')
     def _onchange_activities_tmpl_id(self):
         for record in self:
-            record.name = record.product_id.name
+            # record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
-            tipo_cambio = record.project_id.exchange_rate
+            # tipo_cambio = record.project_id.exchange_rate
 
-            if not record.currency:
-                record.currency = record.project_id.currency_id.name
+            # if not record.currency:
+            #     record.currency = record.project_id.currency_id.name
 
-            _logger.warning(f'La divisa del producto es: {record.currency}')
-            _logger.warning(f'La divisa del formulario es: {record.project_id.currency_id.name}')
+            # _logger.warning(f'La divisa del producto es: {record.currency}')
+            # _logger.warning(f'La divisa del formulario es: {record.project_id.currency_id.name}')
 
-            if record.currency == 'USD' and record.project_id.exchange_rate > 0:
-                if record.currency != 'USD':
-                    record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
-                    record.currency = 'USD'
+            # if record.currency == 'USD' and record.project_id.exchange_rate > 0:
+            #     if record.currency != 'USD':
+            #         record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
+            #         record.currency = 'USD'
 
-                    _logger.warning('Hizo cambio a dolares.')
-                    _logger.warning(f'Se cambió la divisa a: {record.currency}')
+            #         _logger.warning('Hizo cambio a dolares.')
+            #         _logger.warning(f'Se cambió la divisa a: {record.currency}')
 
-            elif record.currency == 'MXN' and record.project_id.exchange_rate > 0:
-                if record.currency != 'MXN':
-                    record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
-                    record.currency = 'MXN'
+            # elif record.currency == 'MXN' and record.project_id.exchange_rate > 0:
+            #     if record.currency != 'MXN':
+            #         record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
+            #         record.currency = 'MXN'
 
-                    _logger.warning('Hizo cambio a pesos.')
-                    _logger.warning(f'Se cambió la divisa a: {record.currency}')
-            else :
-                record.supplier_cost = monto
-                _logger.warning('No hizo cambio.')
+            #         _logger.warning('Hizo cambio a pesos.')
+            #         _logger.warning(f'Se cambió la divisa a: {record.currency}')
+            # else :
+            record.supplier_cost = monto
+            _logger.warning('Se activó el método en PRODUCT.PRODUCT')
             
     @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
     def _compute_total_cost(self):
