@@ -14,22 +14,21 @@ class ProjectProject(models.Model):
     @api.onchange('project_plan_id', 'project_picking_ids')
     def plan_lines(self):
         for project in self:
-            project.project_picking_lines = [(5, 0, 0)]  
+            project.project_picking_lines = [(5, 0, 0)]
             
             if project.project_plan_id:
                 project.project_plan_lines = [(6, 0, project.project_plan_id.project_plan_lines.ids)]
                 project.project_plan_description = project.project_plan_id.description
 
             for picking in project.project_picking_ids:
-                separator = self.env['project.plan.picking.line'].create({
+                separator = self.env['project.picking.lines'].create({
                     'project_id': project.id,
                     'picking_id': picking.id,
                     'product_id': False,
                     'quantity': 0,
                     'location_id': False,
-                    'picking_name': picking.name
                 })
-                project.project_picking_lines = [(4, separator[1])]
+                project.project_picking_lines = [(4, separator.id)]
 
                 for line in picking.project_picking_lines:
                     project.project_picking_lines = [(4, line.id)]

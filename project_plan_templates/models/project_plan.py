@@ -24,5 +24,5 @@ class ProjectPlan(models.Model):
         for record in self:
             lines = self.env['project.plan.picking.line']
             for picking in record.project_plan_pickings:
-                lines |= picking.product_ids
+                lines |= picking.project_picking_lines
             record.picking_lines = lines
