@@ -9,7 +9,7 @@ class ProjectProject(models.Model):
     project_plan_description = fields.Char(string="Project description")
     project_plan_lines = fields.One2many('project.plan.line', 'origin_project_id', string="Project plan lines")
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Stock picking")
-    project_picking_lines = fields.One2many('project.plan.line', 'project_id', string="Project picking lines")
+    project_picking_lines = fields.One2many('project.picking.line', 'project_id', string="Project picking lines")
 
     @api.onchange('project_plan_id', 'project_picking_ids')
     def plan_lines(self):
@@ -22,16 +22,17 @@ class ProjectProject(models.Model):
 
             for picking in project.project_picking_ids:
                 separator = self.env['project.plan.picking.line'].create({
-                    'project_plan_id': project.id,
+                    'project_id': project.id,
+                    'picking_id': picking.id,
                     'product_id': False,
                     'quantity': 0,
                     'location_id': False,
                     'picking_name': picking.name
                 })
-                project.project_picking_lines += separator
+                project.project_picking_lines = [(4, separator[1])]
 
-                for line in picking.product_ids:
-                    project.project_picking_lines += line
+                for line in picking.project_picking_lines:
+                    project.project_picking_lines = [(4, line.id)]
 
             if not project.project_plan_id:
                 project.project_plan_lines = [(5, 0, 0)]
