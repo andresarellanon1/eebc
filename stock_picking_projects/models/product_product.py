@@ -6,13 +6,12 @@ _logger = logging.getLogger(__name__)
 class ProductProduct(models.Model):
     _inherit = 'product.product'
     
-
-
     quantity = fields.Integer(string='Cantidad')
     reserved_qty = fields.Float(string='Reservado')
     total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
     currency = fields.Char(string="Currency")
+    cambio = fields.Boolean(string="Cambio", default="False")
 
     project_id = fields.Many2one(
         'project.project', 
@@ -33,32 +32,48 @@ class ProductProduct(models.Model):
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
+            origin_currency = record.product_id.product_tmpl_id.currency_id.name
             tipo_cambio = record.project_id.exchange_rate
             project_currency = record.project_id.currency_id.name
-
-            if record.currency == False:
-                record.currency == project_currency
-
+            _logger.warning(f'La divisa original es: {origin_currency}')
             _logger.warning(f'La divisa del producto es: {record.currency}')
             _logger.warning(f'La divisa del formulario es: {record.project_id.currency_id.name}')
 
+            if record.currency == False:
+                _logger.warning('La divisa del producto era False')
+                record.currency == project_currency
+
             if project_currency == 'USD' and record.project_id.exchange_rate > 0:
                 _logger.warning('Entró al if.')
-                if record.currency != 'USD':
+                if origin_currency != 'USD' or record.cambio == True :
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
                     record.currency = 'USD'
 
+                    if origin_currency == 'USD':
+                        record.cambio = False
+                    else:
+                        record.cambio = True
+
                     _logger.warning('Hizo cambio a dolares.')
                     _logger.warning(f'Se cambió la divisa a: {record.currency}')
+                else:
+                    record.supplier_cost = monto
 
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
                 _logger.warning('Entró al Elif.')
-                if record.currency != 'MXN':
+                if origin_currency != 'MXN' or record.cambio == True :
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
                     record.currency = 'MXN'
 
+                    if origin_currency == 'MXN':
+                        record.cambio = False
+                    else:
+                        record.cambio = True
+
                     _logger.warning('Hizo cambio a pesos.')
                     _logger.warning(f'Se cambió la divisa a: {record.currency}')
+                else:
+                    record.supplier_cost = monto
             else :
                 record.supplier_cost = monto
                 _logger.warning('Se activó el método en PRODUCT.PRODUCT')
