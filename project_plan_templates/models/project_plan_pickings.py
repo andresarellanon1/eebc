@@ -32,4 +32,5 @@ class ProjectPlanPickingLine(models.Model):
     quantity = fields.Float(string="Quantity", required=True)
     location_id = fields.Many2one('stock.location', string="Location", required=True)
     picking_name = fields.Char(string="Picking Name")
+    project_plan_id = fields.Many2one('project.plan', string="Project plan")
     
