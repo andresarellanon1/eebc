@@ -35,9 +35,6 @@ class ProductProduct(models.Model):
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
             tipo_cambio = record.project_id.exchange_rate
             project_currency = record.project_id.currency_id.name
-            _logger.warning(f'La divisa original es: {origin_currency}')
-            _logger.warning(f'La divisa del producto es: {record.currency}')
-            _logger.warning(f'La divisa del formulario es: {record.project_id.currency_id.name}')
 
             if record.currency == False:
                 _logger.warning('La divisa del producto era False')
@@ -46,8 +43,6 @@ class ProductProduct(models.Model):
             if project_currency == 'USD' and record.project_id.exchange_rate > 0:
                 _logger.warning('Entró al if.')
                 if origin_currency == 'MXN' or record.cambio == True :
-                    _logger.warning(f'La original es: {origin_currency}')
-                    _logger.warning(f'El cambio es: {record.cambio}')
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
                     record.currency = 'USD'
 
@@ -55,17 +50,12 @@ class ProductProduct(models.Model):
                         record.cambio = False
                     else:
                         record.cambio = True
-
-                    _logger.warning('Hizo cambio a dolares.')
-                    _logger.warning(f'Se cambió la divisa a: {record.currency}')
                 else:
                     record.supplier_cost = monto
 
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
                 _logger.warning('Entró al Elif.')
                 if origin_currency == 'USD' or record.cambio == True :
-                    _logger.warning(f'La original es: {origin_currency}')
-                    _logger.warning(f'El cambio es: {record.cambio}')
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
                     record.currency = 'MXN'
 
@@ -73,9 +63,6 @@ class ProductProduct(models.Model):
                         record.cambio = False
                     else:
                         record.cambio = True
-
-                    _logger.warning('Hizo cambio a pesos.')
-                    _logger.warning(f'Se cambió la divisa a: {record.currency}')
                 else:
                     record.supplier_cost = monto
             else :
@@ -87,17 +74,8 @@ class ProductProduct(models.Model):
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.product_id.product_tmpl_id.taxes_id.amount)/100
-            tipo_cambio = record.project_id.exchange_rate
-            monto = total + impuestos
 
             record.total_cost = total + impuestos
-
-            if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
-                record.total_cost = self.pesos_a_dolares(monto,tipo_cambio)
-            elif record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
-                record.total_cost = self.dolares_a_pesos(monto,tipo_cambio)
-            else : 
-                record.total_cost = monto
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
