@@ -45,7 +45,9 @@ class ProductProduct(models.Model):
 
             if project_currency == 'USD' and record.project_id.exchange_rate > 0:
                 _logger.warning('Entró al if.')
-                if origin_currency != 'USD' or record.cambio == True :
+                if origin_currency == 'MXN' or record.cambio == True :
+                    _logger.warning(f'La original es: {origin_currency}')
+                    _logger.warning(f'El cambio es: {record.cambio}')
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
                     record.currency = 'USD'
 
@@ -61,7 +63,9 @@ class ProductProduct(models.Model):
 
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
                 _logger.warning('Entró al Elif.')
-                if origin_currency != 'MXN' or record.cambio == True :
+                if origin_currency == 'USD' or record.cambio == True :
+                    _logger.warning(f'La original es: {origin_currency}')
+                    _logger.warning(f'El cambio es: {record.cambio}')
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
                     record.currency = 'MXN'
 
