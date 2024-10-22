@@ -30,7 +30,7 @@
         <menuitem
             id="menu_project_config_new_option"
             name="Plantillas de operaciones de inventario"
-            action="plan_template_action"
+            action="plan_picking_templates_action"
             parent="menu_project_config"
             sequence="20"
         />
