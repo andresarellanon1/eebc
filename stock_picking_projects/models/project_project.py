@@ -83,9 +83,7 @@ class ProjectProject(models.Model):
             if record.currency_id.name == 'USD': 
                 _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
                 record.product_ids._onchange_activities_tmpl_id()
-                _logger.warning(f'Se cambió la divisa a: {record.product_ids.currency}')
             else:
                 record.product_ids.currency = 'MXN'
                 _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
                 record.product_ids._onchange_activities_tmpl_id()
-                _logger.warning(f'Se cambió la divisa a: {record.product_ids.currency}') 
