@@ -59,7 +59,7 @@ class StockMove(models.Model):
                 'origin': self.picking_id.origin,
                 'date_aprovee': order.date_approve,
                 'product_description': self.product_id.description,
-                '':invoice_ids
+                'invoice':invoice_ids.ids if invoice_ids else [] 
                 
             }
         }
