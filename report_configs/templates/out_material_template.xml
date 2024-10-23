@@ -22,7 +22,7 @@
                             </table>
                             <div class="row mt32 mb32" style="font-size: 13px;">
                                 <div class="col-6">
-                                    <table style="width: 100%; border-collapse: collapse; border: none;">
+                                    <table class="table-borderless" style="width: 100%; border-collapse: collapse; border: none;">
                                         <tr>
                                             <td style="font-weight: bold;">Cliente:</td>
                                             <td>51100 RESIDENCIALES CADENA</td>
@@ -73,8 +73,8 @@
                                         <td style="border: none; line-height: 1;">
                                             <table style="width: 100%; border-collapse: collapse; border: none;">
                                                 <tr>
-                                                    <td style="width: 15%; text-align: left; border: none;">8318</td>
-                                                    <td style="width: 85%; text-align: left; border: none;">POZO DE VISITA 260X260X150 CM CFE-PVMTBX-TC NORMA 2008</td>
+                                                    <td class="table-borderless" style="width: 15%; text-align: left; border: none;">8318</td>
+                                                    <td class="table-borderless" style="width: 85%; text-align: left; border: none;">POZO DE VISITA 260X260X150 CM CFE-PVMTBX-TC NORMA 2008</td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -128,14 +128,14 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <table style="width: 100%; border-collapse: collapse; border: none; font-size: 13px;">
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; border: none; font-size: 13px;">
                               <tr>
                                     <td style="vertical-align: top;">
                                         <strong>Observaciones: </strong> COTIZACION ACONCAGUA NO. 6710
                                     </td>
                                   <td style="text-align: right; vertical-align: top;">
                                       <div style="border: 1px solid black; border-radius: 10px;">
-                                          <table style="width: 100%; border: none;">
+                                          <table class="table-borderless" style="width: 100%; border: none;">
                                               <tr>
                                                   <td><strong>SUBTOTAL :</strong></td>
                                                   <td>342,618.00</td>
