@@ -9,7 +9,7 @@
 
         <menuitem
             id="project_history_action_option"
-            name="Historial general"
+            name="Historial"
             action="project_history_action"
             parent="menu_project_config"
             sequence="23"
