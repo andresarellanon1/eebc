@@ -6,10 +6,10 @@
             <field name="model">project.version</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="project_name"/>
-                    <field name="motive"/>
-                    <field name="modification_date"/>
-                    <field name="modified_by" />
+                    <field name="project_name" string="Nombre del proyecto"/>
+                    <field name="motive" string="Motivo del cambio"/>
+                    <field name="modification_date" string="Fecha de modificacion"/>
+                    <field name="modified_by" string="Modificado por"/>
                 </tree>
             </field>
         </record>
@@ -33,10 +33,10 @@
                             <page string="Changes">
                                 <group>
                                     <tree>
-                                        <field name="project_name"/>
-                                        <field name="motive"/>
-                                        <field name="modification_date"/>
-                                        <field name="modified_by" />
+                                        <field name="project_name" string="Nombre del proyecto"/>
+                                        <field name="motive" string="Motivo del cambio"/>
+                                        <field name="modification_date" string="Fecha de modificacion"/>
+                                        <field name="modified_by" string="Modificado por"/>
                                     </tree>
                                 </group>
                             </page>
