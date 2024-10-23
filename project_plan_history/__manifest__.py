@@ -10,6 +10,7 @@
                 'project'
                ],
     'data': [
+        "views/projects_history_view.xml",
     ],
     "license": "LGPL-3",
     'installable': True,
