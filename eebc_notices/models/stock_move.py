@@ -36,7 +36,7 @@ class StockMove(models.Model):
 
         _logger.warning('documento origen: %s', self.origin)
 
-        order = self.env['purchase.order'].search('name', '=', self.origin )
+        order = self.env['purchase.order'].search([('name', '=', self.origin )])
 
         invoice_ids = order.invoices_ids
         _logger.warning('invoices: %s', invoice_ids)
