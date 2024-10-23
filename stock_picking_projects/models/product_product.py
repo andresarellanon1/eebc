@@ -81,6 +81,7 @@ class ProductProduct(models.Model):
     @api.onchange('quantity','product_id')
     def _compute_total_cost(self):
         for record in self:
+            _logger.warning('Se ejecuta funcion product product')
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.product_id.product_tmpl_id.taxes_id.amount)/100
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
@@ -88,6 +89,7 @@ class ProductProduct(models.Model):
             record.total_cost = total + impuestos
 
             if origin_currency == 'USD' or origin_currency == 'MXN':
+                _logger.warning('Entro al if')
                 if origin_currency == 'MXN' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
                 elif origin_currency == 'USD' and record.cambio == True :
