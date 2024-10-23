@@ -82,35 +82,20 @@ class ProductProduct(models.Model):
     def _compute_total_cost(self):
         self._onchange_activities_tmpl_id()
         for record in self:
-            _logger.warning('Se ejecuta funcion product product')
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.product_id.product_tmpl_id.taxes_id.amount)/100
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
-            _logger.warning(f'El total al inicio es: {total}')
-            _logger.warning(f'Los impuestos al inicio son: {impuestos}')
-
             record.total_cost = total + impuestos
-            _logger.warning(f'El costo total al inicio es: {record.total_cost}')
 
             if origin_currency == 'USD' or origin_currency == 'MXN':
-                _logger.warning('Entro al if')
-                _logger.warning(f'La divisa es {origin_currency}')
                 if origin_currency == 'MXN' and record.cambio == True :
-                    _logger.warning('Se le dio el valor del if')
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
-                    _logger.warning(f'el valor total es {record.display_total_cost}')
                 elif origin_currency == 'USD' and record.cambio == True :
-                    _logger.warning('Se le dio el valor del elif')
                     record.display_total_cost = f"{record.total_cost:.2f} MXN"
-                    _logger.warning(f'el valor total es {record.display_total_cost}')
                 else:
-                    _logger.warning('Se le dio el valor de original')
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
-                    _logger.warning(f'el valor total es {record.display_total_cost}')
             else:
-                _logger.warning('NO Entro al if')
-                _logger.warning(f'La divisa es {origin_currency}')
                 record.display_total_cost = f"{record.total_cost:.2f} USD"
 
 
