@@ -50,8 +50,8 @@ class ProductProduct(models.Model):
                 else:
                     if origin_currency == 'USD' or origin_currency == 'MXN':
                         record.supplier_cost = monto
-                        display_supplier_cost = str(supplier_cost) + ' ' + origin_currency
-                        
+                        display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
+
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
                 if origin_currency == 'USD' or record.cambio == True :
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
@@ -64,11 +64,11 @@ class ProductProduct(models.Model):
                 else:
                     if origin_currency == 'USD' or origin_currency == 'MXN':
                         record.supplier_cost = monto
-                        display_supplier_cost = str(supplier_cost) + ' ' + origin_currency
+                        display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
             else :
                 if origin_currency == 'USD' or origin_currency == 'MXN':
                     record.supplier_cost = monto
-                    display_supplier_cost = str(supplier_cost) + ' ' + origin_currency
+                    display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
 
             
     @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
