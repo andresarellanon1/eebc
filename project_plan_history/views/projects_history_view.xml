@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="project_history_action_view_tree" model="ir.ui.view">
+            <field name="name">project.version.action.tree</field>
+            <field name="model">project.version</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="project_name"/>
+                    <field name="motive"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="project_history_view_form" model="ir.ui.view">
+            <field name="name">project.version.action.form</field>
+            <field name="model">project.version</field>
+            <field name="arch" type="xml">
+                <form string="History of changes">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="project_name"/>
+                            <h1>
+                                <field name="project_name" class="w-100" required="1"/>
+                            </h1>
+                            <group>
+                                <field name="motive" required="1"/>
+                            </group>
+                        </div>
+                        <notebook>
+                            <page string="Changes">
+                                <group>
+                                    <tree>
+                                        <field name="project_name"/>
+                                        <field name="motive"/>
+                                        <field name="modification_date"/>
+                                        <field name="modified_by" />
+                                    </tree>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

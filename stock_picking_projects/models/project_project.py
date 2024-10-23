@@ -82,3 +82,4 @@ class ProjectProject(models.Model):
         for record in self:
             _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
             record.product_ids._onchange_activities_tmpl_id()
+            record.product_ids._compute_total_cost()

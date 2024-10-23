@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 import logging
+_logger = logging.getLogger(__name__)
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -10,6 +11,8 @@ class ProductProduct(models.Model):
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
     currency = fields.Char(string="Currency")
     cambio = fields.Boolean(string="Cambio", default=False)
+    display_supplier_cost = fields.Char(string="Costo")
+    display_total_cost = fields.Char(string="Costo Total")
 
     project_id = fields.Many2one(
         'project.project', 
@@ -42,36 +45,60 @@ class ProductProduct(models.Model):
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
                     record.currency = 'USD'
 
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + record.currency
+                    
                     if origin_currency == 'USD':
                         record.cambio = False
                     else:
                         record.cambio = True
                 else:
-                    record.supplier_cost = monto
+                    if origin_currency == 'USD' or origin_currency == 'MXN': 
+                        record.supplier_cost = monto
+                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
 
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
                 if origin_currency == 'USD' or record.cambio == True :
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
                     record.currency = 'MXN'
 
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + record.currency
+
                     if origin_currency == 'MXN':
                         record.cambio = False
                     else:
                         record.cambio = True
                 else:
-                    record.supplier_cost = monto
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        record.supplier_cost = monto
+                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency  
             else :
-                if origin_currency == 'USD' or 'MXN'
-                    record.supplier_cost = str(monto) + ' ' + origin_currency
+                if origin_currency == 'USD' or origin_currency == 'MXN':
+                    record.supplier_cost = monto
+                    record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
 
             
-    @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
+    @api.depends('quantity','product_id')
     def _compute_total_cost(self):
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.product_id.product_tmpl_id.taxes_id.amount)/100
+            origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
+
+            if origin_currency == 'USD' or origin_currency == 'MXN':
+                _logger.warning('Entro al if')
+                if origin_currency == 'MXN' or record.cambio == True :
+                    record.display_total_cost = str(record.total_cost) + ' ' + 'MXN'
+                    _logger.warning(f'El valor de display total cost es: {record.display_total_cost}')
+                elif origin_currency == 'USD' or record.cambio == True :
+                    record.display_total_cost = str(record.total_cost) + ' ' + 'USD'
+                    _logger.warning(f'El valor de display total cost es: {record.display_total_cost}')
+                else:
+                    record.display_total_cost = str(record.total_cost) + ' ' + origin_currency
+                    _logger.warning(f'El valor de display total cost es: {record.display_total_cost}')
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
