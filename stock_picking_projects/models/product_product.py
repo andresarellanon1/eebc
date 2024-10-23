@@ -46,8 +46,7 @@ class ProductProduct(models.Model):
                     record.currency = 'USD'
 
                     if origin_currency == 'USD' or origin_currency == 'MXN':
-                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + record.currency
-                    
+                        record.display_supplier_cost = f"{record.supplier_cost:.2f} {record.currency}"
                     if origin_currency == 'USD':
                         record.cambio = False
                     else:
@@ -55,7 +54,7 @@ class ProductProduct(models.Model):
                 else:
                     if origin_currency == 'USD' or origin_currency == 'MXN': 
                         record.supplier_cost = monto
-                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
+                        record.display_supplier_cost = f"{record.supplier_cost:.2f} {origin_currency}"
 
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
                 if origin_currency == 'USD' or record.cambio == True :
@@ -63,7 +62,7 @@ class ProductProduct(models.Model):
                     record.currency = 'MXN'
 
                     if origin_currency == 'USD' or origin_currency == 'MXN':
-                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + record.currency
+                        record.display_supplier_cost = f"{record.supplier_cost:.2f} {record.currency}"
 
                     if origin_currency == 'MXN':
                         record.cambio = False
@@ -72,14 +71,14 @@ class ProductProduct(models.Model):
                 else:
                     if origin_currency == 'USD' or origin_currency == 'MXN':
                         record.supplier_cost = monto
-                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency  
+                        record.display_supplier_cost = f"{record.supplier_cost:.2f} {origin_currency}"
             else :
                 if origin_currency == 'USD' or origin_currency == 'MXN':
                     record.supplier_cost = monto
-                    record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
+                    record.display_supplier_cost = f"{record.supplier_cost:.2f} {origin_currency}"
 
             
-    @api.depends('quantity','product_id')
+    @api.onchange('quantity','product_id')
     def _compute_total_cost(self):
         for record in self:
             total = (record.supplier_cost * record.quantity)
@@ -89,16 +88,12 @@ class ProductProduct(models.Model):
             record.total_cost = total + impuestos
 
             if origin_currency == 'USD' or origin_currency == 'MXN':
-                _logger.warning('Entro al if')
                 if origin_currency == 'MXN' and record.cambio == True :
-                    record.display_total_cost = str(record.total_cost) + ' ' + 'USD'
-                    _logger.warning(f'El valor de display total cost es: {record.display_total_cost}')
+                    record.display_total_cost = f"{record.total_cost:.2f} USD"
                 elif origin_currency == 'USD' and record.cambio == True :
-                    record.display_total_cost = str(record.total_cost) + ' ' + 'MXN'
-                    _logger.warning(f'El valor de display total cost es: {record.display_total_cost}')
+                    record.display_total_cost = f"{record.total_cost:.2f} MXN"
                 else:
-                    record.display_total_cost = str(record.total_cost) + ' ' + origin_currency
-                    _logger.warning(f'El valor de display total cost es: {record.display_total_cost}')
+                    record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
