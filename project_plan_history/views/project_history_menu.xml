@@ -7,5 +7,12 @@
             <field name="action" ref="project_history_action"/>
         </record>
 
+        <menuitem
+            id="project_history_action_option"
+            name="Historial"
+            action="project_history_action"
+            parent="menu_project_config"
+            sequence="23"
+        />
     </data>
 </odoo>
