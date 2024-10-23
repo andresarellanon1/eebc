@@ -83,7 +83,7 @@ class ProductProduct(models.Model):
         self._onchange_activities_tmpl_id()
         for record in self:
             total = (record.supplier_cost * record.quantity)
-            impuestos = ((total) * record.product_id.product_tmpl_id.taxes_id.amount)/100
+            impuestos = ((total) * record.project_id.taxes_id.amount)/100
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos

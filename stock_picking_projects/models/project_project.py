@@ -40,10 +40,10 @@ class ProjectProject(models.Model):
 
     taxes_id = fields.Many2many(
         'account.tax',  
-        string='Taxes',
+        string='Impuestos del cliente',
         help='Select taxes that apply to this project.'
     )
-    
+
     # Valida la fecha en formato DDMMYY y que no pase de 16 car.
     @api.constrains('bid_code')
     def _check_bid_code_format(self):
@@ -83,7 +83,7 @@ class ProjectProject(models.Model):
             if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
                 raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
 
-    @api.onchange('currency_id', 'exchange_rate')
+    @api.onchange('currency_id', 'exchange_rate', 'taxes_id')
     def _product_currency(self):
         for record in self:
             _logger.warning('Funcion de product product')
