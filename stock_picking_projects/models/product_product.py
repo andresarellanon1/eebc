@@ -91,7 +91,7 @@ class ProductProduct(models.Model):
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' or record.cambio == True :
                     record.display_supplier_cost = str(record.total_cost) + ' ' + 'MXN'
-                elif if origin_currency == 'USD' or record.cambio == True :
+                elif origin_currency == 'USD' or record.cambio == True :
                     record.display_supplier_cost = str(record.total_cost) + ' ' + 'USD'
                 else:
                     record.display_supplier_cost = str(record.total_cost) + ' ' + origin_currency
