@@ -3,9 +3,16 @@
     <data>
         <record id="project_history_menu" model="ir.ui.menu">
             <field name="name">Historial</field>
-            <field action="action"> project_history_action_view_tree </field>
             <field name="parent_id" ref="project.menu_main_pm" />
             <field name="sequence" eval="20" />
         </record>
+
+        <menuitem
+            id="menu_project_history_action"
+            name="Historial general"
+            action="project_history_action_view_tree"
+            parent="project_history_menu"
+            sequence="20"
+        />
     </data>
 </odoo>
