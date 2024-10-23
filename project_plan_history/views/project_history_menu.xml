@@ -10,7 +10,7 @@
         <menuitem
             id="menu_project_history_action"
             name="Historial general"
-            action="project_history_action_view_tree"
+            action="project_history_action"
             parent="project_history_menu"
             sequence="20"
         />
