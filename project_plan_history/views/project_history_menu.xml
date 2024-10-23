@@ -6,5 +6,12 @@
             <field name="res_model">project.version</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+        <menuitem
+            id="project_history_menu"
+            name="project_history_item"
+            action="project_history_action"
+            parent="menu_project_config"
+            sequence="20"/>
     </data>
 </odoo>
