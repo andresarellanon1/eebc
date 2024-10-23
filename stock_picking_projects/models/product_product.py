@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 import logging
+_logger = logging.getLogger(__name__)
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -49,8 +50,10 @@ class ProductProduct(models.Model):
                         record.cambio = True
                 else:
                     if origin_currency == 'USD' or origin_currency == 'MXN':
+                        _logger.warning('Entro al if USD')
                         record.supplier_cost = monto
-                        display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
+                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
+                        _logger.warning(f'Display supplier cost es: {record.display_supplier_cost}')
 
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
                 if origin_currency == 'USD' or record.cambio == True :
@@ -63,12 +66,16 @@ class ProductProduct(models.Model):
                         record.cambio = True
                 else:
                     if origin_currency == 'USD' or origin_currency == 'MXN':
+                        _logger.warning('Entro al elif MXN')
                         record.supplier_cost = monto
-                        display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
+                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
+                        _logger.warning(f'Display supplier cost es: {record.display_supplier_cost}')
             else :
                 if origin_currency == 'USD' or origin_currency == 'MXN':
+                    _logger.warning('Entro al else')
                     record.supplier_cost = monto
-                    display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
+                    record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
+                    _logger.warning(f'Display supplier cost es: {record.display_supplier_cost}')
 
             
     @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
