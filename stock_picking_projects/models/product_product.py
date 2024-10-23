@@ -89,12 +89,16 @@ class ProductProduct(models.Model):
             record.total_cost = total + impuestos
 
             if origin_currency == 'USD' or origin_currency == 'MXN':
+                _logger.warning('Entro al if')
                 if origin_currency == 'MXN' or record.cambio == True :
                     record.display_total_cost = str(record.total_cost) + ' ' + 'MXN'
+                    _logger.warning(f'El valor de display total cost es: {record.display_total_cost}')
                 elif origin_currency == 'USD' or record.cambio == True :
                     record.display_total_cost = str(record.total_cost) + ' ' + 'USD'
+                    _logger.warning(f'El valor de display total cost es: {record.display_total_cost}')
                 else:
                     record.display_total_cost = str(record.total_cost) + ' ' + origin_currency
+                    _logger.warning(f'El valor de display total cost es: {record.display_total_cost}')
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
