@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="project_history_action" model="ir.actions.act_window">
-            <field name="name">Historial</field>
-            <field name="res_model">project.version</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
         <record id="project_history_menu" model="ir.ui.menu">
             <field name="name">Historial</field>
+            <field action="action"> project_history_action_view_tree </field>
             <field name="parent_id" ref="project.menu_main_pm" />
             <field name="sequence" eval="20" />
         </record>
