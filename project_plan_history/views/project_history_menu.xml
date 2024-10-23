@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="project_history_menu" model="ir.ui.menu">
-            <field name="name">Historial</field>
-            <field name="parent_id" ref="project.menu_main_pm" />
-            <field name="sequence" eval="20" />
+        <record id="menu_project_history" model="ir.ui.menu">
+            <field name="name">Historial de Proyectos</field>
+            <field name="parent_id" ref="project.menu_main_pm"/>
+            <field name="action" ref="project_history_action"/>
         </record>
 
-        <menuitem
-            id="menu_project_history_action"
-            name="Historial general"
-            action="project_history_action"
-            parent="project_history_menu"
-            sequence="20"
-        />
     </data>
 </odoo>
