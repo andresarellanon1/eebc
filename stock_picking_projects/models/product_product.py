@@ -10,6 +10,7 @@ class ProductProduct(models.Model):
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
     currency = fields.Char(string="Currency")
     cambio = fields.Boolean(string="Cambio", default=False)
+    display_supplier_cost = fields.Char(string="Costo con moneda")
 
     project_id = fields.Many2one(
         'project.project', 
@@ -47,8 +48,10 @@ class ProductProduct(models.Model):
                     else:
                         record.cambio = True
                 else:
-                    record.supplier_cost = monto
-
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        record.supplier_cost = monto
+                        display_supplier_cost = str(supplier_cost) + ' ' + origin_currency
+                        
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
                 if origin_currency == 'USD' or record.cambio == True :
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
@@ -59,10 +62,13 @@ class ProductProduct(models.Model):
                     else:
                         record.cambio = True
                 else:
-                    record.supplier_cost = monto
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        record.supplier_cost = monto
+                        display_supplier_cost = str(supplier_cost) + ' ' + origin_currency
             else :
-                if origin_currency == 'USD' or 'MXN':
-                    record.supplier_cost = str(monto) + ' ' + origin_currency
+                if origin_currency == 'USD' or origin_currency == 'MXN':
+                    record.supplier_cost = monto
+                    display_supplier_cost = str(supplier_cost) + ' ' + origin_currency
 
             
     @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
