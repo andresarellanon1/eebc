@@ -38,6 +38,12 @@ class ProjectProject(models.Model):
         string='Lineas de actividades'
     )
 
+    taxes_id = fields.Many2many(
+        'account.tax',  
+        string='Taxes',
+        help='Select taxes that apply to this project.'
+    )
+    
     # Valida la fecha en formato DDMMYY y que no pase de 16 car.
     @api.constrains('bid_code')
     def _check_bid_code_format(self):
