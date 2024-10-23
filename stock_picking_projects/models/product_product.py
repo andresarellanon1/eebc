@@ -100,7 +100,7 @@ class ProductProduct(models.Model):
             else:
                 _logger.warning('NO Entro al if')
                 _logger.warning(f'La divisa es {origin_currency}')
-                record.display_total_cost = f"{record.total_cost:.2f}
+                record.display_total_cost = f"{record.total_cost:.2f} USD"
 
 
     def pesos_a_dolares(self, monto, tipo_cambio):
