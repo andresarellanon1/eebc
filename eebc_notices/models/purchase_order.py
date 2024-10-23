@@ -11,8 +11,4 @@ class AccountMove(models.Model):
         string='Aviso relacionado'
     )
 
-    notice_file_wizard_id = fields.Many2one(
-        comodel_name='notice.file.wizard',
-        
-    )
 
