@@ -38,7 +38,7 @@ class StockMove(models.Model):
 
         order = self.env['purchase.order'].search([('name', '=', self.origin )])
 
-        invoice_ids = order.invoices_ids
+        invoice_ids = order.invoice_ids
         _logger.warning('invoices: %s', invoice_ids)
 
         
