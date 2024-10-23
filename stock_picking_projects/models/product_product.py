@@ -80,6 +80,7 @@ class ProductProduct(models.Model):
             
     @api.onchange('quantity','product_id')
     def _compute_total_cost(self):
+        self._onchange_activities_tmpl_id()
         for record in self:
             _logger.warning('Se ejecuta funcion product product')
             total = (record.supplier_cost * record.quantity)
