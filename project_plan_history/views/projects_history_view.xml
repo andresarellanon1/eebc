@@ -8,6 +8,8 @@
                 <tree>
                     <field name="project_name"/>
                     <field name="motive"/>
+                    <field name="modification_date"/>
+                    <field name="modified_by" />
                 </tree>
             </field>
         </record>
