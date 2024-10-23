@@ -61,7 +61,7 @@ class ProductProduct(models.Model):
                 else:
                     record.supplier_cost = monto
             else :
-                if origin_currency == 'USD' or 'MXN'
+                if origin_currency == 'USD' or 'MXN':
                     record.supplier_cost = str(monto) + ' ' + origin_currency
 
             
