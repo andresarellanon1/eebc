@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="project_history_action" model="ir.actions.act_window">
+            <field name="name">Historial</field>
+            <field name="res_model">project.version</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>
