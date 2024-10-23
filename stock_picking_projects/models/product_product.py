@@ -28,12 +28,6 @@ class ProductProduct(models.Model):
         copied = True
     )
 
-    taxes_id = fields.Many2many(
-        'account.tax',  
-        string='Taxes',
-        help='Select taxes that apply to this project.'
-    )
-
     @api.onchange('product_id','currency')
     def _onchange_activities_tmpl_id(self):
         for record in self:
