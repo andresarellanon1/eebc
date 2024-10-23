@@ -86,7 +86,11 @@ class ProductProduct(models.Model):
             impuestos = ((total) * record.product_id.product_tmpl_id.taxes_id.amount)/100
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
+            _logger.warning(f'El total al inicio es: {total}')
+            _logger.warning(f'Los impuestos al inicio son: {impuestos}')
+
             record.total_cost = total + impuestos
+            _logger.warning(f'El costo total al inicio es: {record.total_cost}')
 
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 _logger.warning('Entro al if')
