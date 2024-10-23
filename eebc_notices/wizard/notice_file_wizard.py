@@ -36,12 +36,14 @@ class NoticeFileWizard(models.TransientModel):
     notice = fields.Char(string='Aviso')
     folio = fields.Char(string='Folio')
     description = fields.Text(string='Descripción de producto', readonly=True)
-    account_move_invoice_ids = fields.Many2one('account.move', string= "Facturas")
-    res_partner_supplier_id = fields.One2many('res.partner', 'notice_file_wizard_id', String = "Proveedor")
-  
-    purchases_order_id = fields.One2many('purchase.order','notice_file_wizard_id', string="Orden de compra")
-    
-    
+  # Cambiar el campo Many2one por Char para almacenar el ID o el nombre de la factura
+    account_move_invoice_ids = fields.Char(string="Facturas")
+
+    # Cambiar One2many a Char para almacenar IDs o nombres de proveedores
+    res_partner_supplier_id = fields.Char(string="Proveedor")
+
+    # Cambiar One2many a Char para almacenar IDs o referencias de órdenes de compra
+    purchases_order_id = fields.Char(string="Orden de compra")
     
     
     @api.model
