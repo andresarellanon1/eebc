@@ -11,7 +11,7 @@ class ProductProduct(models.Model):
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
     currency = fields.Char(string="Currency")
     cambio = fields.Boolean(string="Cambio", default=False)
-    display_supplier_cost = fields.Char(string="Costo con moneda")
+    display_supplier_cost = fields.Char(string="Costo")
 
     project_id = fields.Many2one(
         'project.project', 
@@ -44,21 +44,25 @@ class ProductProduct(models.Model):
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
                     record.currency = 'USD'
 
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + record.currency
+                    
                     if origin_currency == 'USD':
                         record.cambio = False
                     else:
                         record.cambio = True
                 else:
-                    if origin_currency == 'USD' or origin_currency == 'MXN':
-                        _logger.warning('Entro al if USD')
+                    if origin_currency == 'USD' or origin_currency == 'MXN': 
                         record.supplier_cost = monto
                         record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
-                        _logger.warning(f'Display supplier cost es: {record.display_supplier_cost}')
 
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
                 if origin_currency == 'USD' or record.cambio == True :
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
                     record.currency = 'MXN'
+
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + record.currency
 
                     if origin_currency == 'MXN':
                         record.cambio = False
@@ -66,16 +70,12 @@ class ProductProduct(models.Model):
                         record.cambio = True
                 else:
                     if origin_currency == 'USD' or origin_currency == 'MXN':
-                        _logger.warning('Entro al elif MXN')
                         record.supplier_cost = monto
-                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
-                        _logger.warning(f'Display supplier cost es: {record.display_supplier_cost}')
+                        record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency  
             else :
                 if origin_currency == 'USD' or origin_currency == 'MXN':
-                    _logger.warning('Entro al else')
                     record.supplier_cost = monto
                     record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
-                    _logger.warning(f'Display supplier cost es: {record.display_supplier_cost}')
 
             
     @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
