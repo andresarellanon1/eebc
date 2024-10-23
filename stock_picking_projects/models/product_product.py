@@ -1,8 +1,6 @@
 from odoo import models, fields, api
 import logging
 
-_logger = logging.getLogger(__name__)
-
 class ProductProduct(models.Model):
     _inherit = 'product.product'
     
@@ -37,11 +35,9 @@ class ProductProduct(models.Model):
             project_currency = record.project_id.currency_id.name
 
             if record.currency == False:
-                _logger.warning('La divisa del producto era False')
                 record.currency == project_currency
 
             if project_currency == 'USD' and record.project_id.exchange_rate > 0:
-                _logger.warning('Entró al if.')
                 if origin_currency == 'MXN' or record.cambio == True :
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
                     record.currency = 'USD'
@@ -54,7 +50,6 @@ class ProductProduct(models.Model):
                     record.supplier_cost = monto
 
             elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
-                _logger.warning('Entró al Elif.')
                 if origin_currency == 'USD' or record.cambio == True :
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
                     record.currency = 'MXN'
@@ -67,7 +62,7 @@ class ProductProduct(models.Model):
                     record.supplier_cost = monto
             else :
                 record.supplier_cost = monto
-                _logger.warning('Se activó el método en PRODUCT.PRODUCT')
+
             
     @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
     def _compute_total_cost(self):
