@@ -80,6 +80,6 @@ class ProjectProject(models.Model):
     @api.onchange('currency_id', 'exchange_rate')
     def _product_currency(self):
         for record in self:
-            _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
+            _logger.warning('Funcion de product product')
             record.product_ids._onchange_activities_tmpl_id()
             record.product_ids._compute_total_cost()
