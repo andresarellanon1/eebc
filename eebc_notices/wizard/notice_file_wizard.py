@@ -30,9 +30,11 @@ class NoticeFileWizard(models.TransientModel):
     file_xlsx = fields.Binary(string="Archivo" )
     file_name = fields.Char(string="Nombre del archivo")  # Campo para almacenar el nombre del archivo
 
-   
+    
     quantity = fields.Float(string="Cantidad", readonly=True,)
     message = fields.Text(string="Mensaje de Error", readonly=True)  # Campo para el mensaje de error
+    notice = fields.Char(string='Aviso')
+    folio = fields.Char(string='Folio')
 
     
     
