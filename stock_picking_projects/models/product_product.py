@@ -90,11 +90,11 @@ class ProductProduct(models.Model):
 
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' or record.cambio == True :
-                    record.display_supplier_cost = str(record.total_cost) + ' ' + 'MXN'
+                    record.display_total_cost = str(record.total_cost) + ' ' + 'MXN'
                 elif origin_currency == 'USD' or record.cambio == True :
-                    record.display_supplier_cost = str(record.total_cost) + ' ' + 'USD'
+                    record.display_total_cost = str(record.total_cost) + ' ' + 'USD'
                 else:
-                    record.display_supplier_cost = str(record.total_cost) + ' ' + origin_currency
+                    record.display_total_cost = str(record.total_cost) + ' ' + origin_currency
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
