@@ -94,15 +94,15 @@ class ProductProduct(models.Model):
                 if origin_currency == 'MXN' and record.cambio == True :
                     _logger.warning('Se le dio el valor del if')
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
-                    _logger.warning(f'La divisa es {display_total_cost}')
+                    _logger.warning(f'el valor total es {record.display_total_cost}')
                 elif origin_currency == 'USD' and record.cambio == True :
                     _logger.warning('Se le dio el valor del elif')
                     record.display_total_cost = f"{record.total_cost:.2f} MXN"
-                    _logger.warning(f'La divisa es {display_total_cost}')
+                    _logger.warning(f'el valor total es {record.display_total_cost}')
                 else:
                     _logger.warning('Se le dio el valor de original')
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
-                    _logger.warning(f'La divisa es {display_total_cost}')
+                    _logger.warning(f'el valor total es {record.display_total_cost}')
             else:
                 _logger.warning('NO Entro al if')
                 _logger.warning(f'La divisa es {origin_currency}')
