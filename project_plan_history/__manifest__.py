@@ -12,7 +12,7 @@
     'data': [
         "views/projects_history_view.xml",
         "views/project_history_menu.xml",
-        "security/ir.access.models.csv",
+        "security/ir.model.access.csv",
     ],
     "license": "LGPL-3",
     'installable': True,
