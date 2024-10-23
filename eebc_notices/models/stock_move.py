@@ -33,6 +33,14 @@ class StockMove(models.Model):
         _logger.warning('Producto name: %s', self.product_id.name)
         _logger.warning('Cantidad: %s', self.product_uom_qty)
         _logger.warning('type: %s', self.picking_id.picking_type_code)
+
+        _logger.warning('documento origen: %s', self.origin)
+
+        order = self.env['purchase.order'].search('name', '=', self.origin )
+
+        invoice_ids = order.invoices_ids
+        _logger.warning('invoices: %s', invoice_ids)
+
         
         return {
             'type': 'ir.actions.act_window',
@@ -48,7 +56,9 @@ class StockMove(models.Model):
                 'type': self.picking_id.picking_type_code,
                 'location_id':self.picking_id.location_id.id,
                 'location_dest_id':self.picking_id.location_dest_id.id,
-                'origin': self.picking_id.origin
+                'origin': self.picking_id.origin,
+                'date_aprovee': order.date_aprovee,
+                'description': self.product_id.description
                 
             }
         }

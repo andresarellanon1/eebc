@@ -9,6 +9,8 @@
                     <field name="file_xlsx" filename="file_name" />
                     <field name="file_name" invisible = "1" />
 
+                    <field name="notice" />
+                    <field name="folio" />
 
                     <field name="quantity" />
 
