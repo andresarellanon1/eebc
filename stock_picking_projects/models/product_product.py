@@ -90,12 +90,18 @@ class ProductProduct(models.Model):
 
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 _logger.warning('Entro al if')
+                _logger.warning(f'La divisa es {origin_currency}')
                 if origin_currency == 'MXN' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
                 elif origin_currency == 'USD' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} MXN"
                 else:
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
+            else:
+                _logger.warning('NO Entro al if')
+                _logger.warning(f'La divisa es {origin_currency}')
+                record.display_total_cost = f"{record.total_cost:.2f}
+
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
