@@ -35,7 +35,11 @@ class NoticeFileWizard(models.TransientModel):
     message = fields.Text(string="Mensaje de Error", readonly=True)  # Campo para el mensaje de error
     notice = fields.Char(string='Aviso')
     folio = fields.Char(string='Folio')
-
+    description = fields.Text(string='Descripción de producto', readonly=True)
+    account_move_invoice_ids = fields.Many2one('account.move', string= "Facturas")
+    res_partner_supplier_id = fields.One2many('res.partner', 'notice_file_wizard_id', String = "Proveedor")
+  
+    purchases_order_id = fields.One2many('purchase.order','notice_file_wizard_id', string="Orden de compra")
     
     
     
@@ -47,6 +51,14 @@ class NoticeFileWizard(models.TransientModel):
         # Establecer el valor del campo 'quantity' con el valor pasado en el contexto
         if 'cantidad' in self._context:
             res['quantity'] = self._context['cantidad']
+        if 'proveedor' in self._context:
+            res['res_partner_supplier_id'] = self._context['proveedor']
+        if 'origin' in self._context:
+            res['purchases_order_id'] = self._context['origin']
+        if 'description' in self._context:
+            res['product_description'] = self._context['description']
+        if 'invoices' in self._context:
+            res['account_move_invoice_ids'] = self._context['invoices']
         if 'default_message' in self._context:
             res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
         

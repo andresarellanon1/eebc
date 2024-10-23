@@ -11,7 +11,10 @@
 
                     <field name="notice" />
                     <field name="folio" />
-
+                    <field name="description" />
+                    <field name="account_move_invoice_ids" />
+                    <field name="res_partner_supplier_id" />
+                    <field name="purchases_order_id" />
                     <field name="quantity" />
 
                 </group>
