@@ -10,7 +10,7 @@
         <menuitem
             id="project_history_action_option"
             name="Historial"
-            action="project.project_history_action"
+            action="project_history_action"
             parent="menu_project_history"
             sequence="23" />
     </data>
