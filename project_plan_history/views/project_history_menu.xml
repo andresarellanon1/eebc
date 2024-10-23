@@ -5,6 +5,7 @@
             <field name="name">Historial de Proyectos</field>
             <field name="parent_id" ref="project.menu_main_pm"/>
             <field name="action" ref="project_history_action"/>
+             <field name="sequence" eval="30" />
         </record>
 
         <menuitem
