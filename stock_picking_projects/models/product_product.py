@@ -61,7 +61,8 @@ class ProductProduct(models.Model):
                 else:
                     record.supplier_cost = monto
             else :
-                record.supplier_cost = monto
+                if origin_currency == 'USD' or 'MXN'
+                    record.supplier_cost = str(monto) + ' ' + origin_currency
 
             
     @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
