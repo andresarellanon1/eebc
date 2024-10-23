@@ -12,6 +12,7 @@ class ProductProduct(models.Model):
     currency = fields.Char(string="Currency")
     cambio = fields.Boolean(string="Cambio", default=False)
     display_supplier_cost = fields.Char(string="Costo")
+    display_total_cost = fields.Char(string="Costo Total")
 
     project_id = fields.Many2one(
         'project.project', 
@@ -78,13 +79,22 @@ class ProductProduct(models.Model):
                     record.display_supplier_cost = str(record.supplier_cost) + ' ' + origin_currency
 
             
-    @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
+    @api.depends('quantity','product_id')
     def _compute_total_cost(self):
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.product_id.product_tmpl_id.taxes_id.amount)/100
+            origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
+
+            if origin_currency == 'USD' or origin_currency == 'MXN':
+                if origin_currency == 'MXN' or record.cambio == True :
+                    record.display_supplier_cost = str(record.total_cost) + ' ' + 'MXN'
+                elif if origin_currency == 'USD' or record.cambio == True :
+                    record.display_supplier_cost = str(record.total_cost) + ' ' + 'USD'
+                else:
+                    record.display_supplier_cost = str(record.total_cost) + ' ' + origin_currency
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
