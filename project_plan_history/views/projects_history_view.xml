@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="project_history_action" model="ir.actions.act_window">
-            <field name="name">Historial</field>
-            <field name="res_model">project.version</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
         <record id="project_history_action_view_tree" model="ir.ui.view">
             <field name="name">project.version.action.tree</field>
             <field name="model">project.version</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="project_name"/>
-                    <field name="motive"/>
-                    <field name="modification_date"/>
-                    <field name="modified_by" />
+                    <field name="project_name" string="Nombre del proyecto"/>
+                    <field name="motive" string="Motivo del cambio"/>
+                    <field name="modification_date" string="Fecha de modificacion"/>
+                    <field name="modified_by" string="Modificado por"/>
                 </tree>
             </field>
         </record>
@@ -39,10 +33,10 @@
                             <page string="Changes">
                                 <group>
                                     <tree>
-                                        <field name="project_name"/>
-                                        <field name="motive"/>
-                                        <field name="modification_date"/>
-                                        <field name="modified_by" />
+                                        <field name="project_name" string="Nombre del proyecto"/>
+                                        <field name="motive" string="Motivo del cambio"/>
+                                        <field name="modification_date" string="Fecha de modificacion"/>
+                                        <field name="modified_by" string="Modificado por"/>
                                     </tree>
                                 </group>
                             </page>
