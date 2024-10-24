@@ -37,13 +37,13 @@ class NoticeFileWizard(models.TransientModel):
     folio = fields.Char(string='Folio')
     description = fields.Text(string='Descripción de producto', readonly=True)
   # Cambiar el campo Many2one por Char para almacenar el ID o el nombre de la factura
-    account_move_invoice_ids = fields.Char(string="Facturas")
+    account_move_invoice_ids = fields.Char(string="Facturas", readonly=True)
 
     # Cambiar One2many a Char para almacenar IDs o nombres de proveedores
-    res_partner_supplier_id = fields.Char(string="Proveedor")
+    res_partner_supplier_id = fields.Char(string="Proveedor", readonly=True)
 
     # Cambiar One2many a Char para almacenar IDs o referencias de órdenes de compra
-    purchases_order_id = fields.Char(string="Orden de compra")
+    purchases_order_id = fields.Char(string="Orden de compra", readonly=True)
     
     
     @api.model
@@ -57,8 +57,8 @@ class NoticeFileWizard(models.TransientModel):
             res['res_partner_supplier_id'] = self._context['proveedor']
         if 'origin' in self._context:
             res['purchases_order_id'] = self._context['origin']
-        if 'description' in self._context:
-            res['product_description'] = self._context['description']
+        if 'product_description' in self._context:
+            res['description'] = self._context['product_description']
         if 'invoices' in self._context:
             res['account_move_invoice_ids'] = self._context['invoices']
         if 'default_message' in self._context:

@@ -8,7 +8,7 @@
                 <tree>
                     <field name="project_name" string="Nombre del proyecto"/>
                     <field name="motive" string="Motivo del cambio"/>
-                    <field name="modification_date" string="Fecha de modificacion"/>
+                    <field name="version_date" string="Fecha de la version"/>
                     <field name="modified_by" string="Modificado por"/>
                 </tree>
             </field>
@@ -35,7 +35,7 @@
                                     <tree>
                                         <field name="project_name" string="Nombre del proyecto"/>
                                         <field name="motive" string="Motivo del cambio"/>
-                                        <field name="modification_date" string="Fecha de modificacion"/>
+                                        <field name="version_date" string="Fecha de modificacion"/>
                                         <field name="modified_by" string="Modificado por"/>
                                     </tree>
                                 </group>

@@ -13,8 +13,7 @@ class ProductProduct(models.Model):
     cambio = fields.Boolean(string="Cambio", default=False)
     display_supplier_cost = fields.Char(string="Costo")
     display_total_cost = fields.Char(string="Costo Total")
-    costo_total_final = fields.Float(string="Costo final")
-
+    
     project_id = fields.Many2one(
         'project.project', 
         string='Proyecto',
@@ -82,22 +81,27 @@ class ProductProduct(models.Model):
     @api.onchange('quantity','product_id')
     def _compute_total_cost(self):
         self._onchange_activities_tmpl_id()
+
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.project_id.taxes_id.amount)/100
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
-
+            record.project_id.costo_total_final =  record.project_id.costo_total_final + record.total_cost
+        
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
+                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
                 elif origin_currency == 'USD' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} MXN"
+                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
                 else:
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
-            else:
-                record.display_total_cost = f"{record.total_cost:.2f} USD"
+                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
+            
+            _logger.warning(f"Costo total, {record.project_id.costo_total_final}")
 
 
     def pesos_a_dolares(self, monto, tipo_cambio):

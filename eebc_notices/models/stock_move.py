@@ -33,6 +33,9 @@ class StockMove(models.Model):
         _logger.warning('Producto name: %s', self.product_id.name)
         _logger.warning('Cantidad: %s', self.product_uom_qty)
         _logger.warning('type: %s', self.picking_id.picking_type_code)
+        
+        _logger.warning('Descripcion: %s', self.description_picking)
+        
 
         _logger.warning('documento origen: %s', self.origin)
 
@@ -47,6 +50,10 @@ class StockMove(models.Model):
         # Obtener el nombre del proveedor
         proveedor_name = self.picking_id.partner_id.name if self.picking_id.partner_id else "Proveedor no definido"
 
+        
+       
+        # Obtener la descripción del producto en la línea del picking
+        product_description = self.description_picking if self.description_picking else "Sin descripción"
         return {
             'type': 'ir.actions.act_window',
             'name': 'Wizard File Upload',
@@ -63,7 +70,7 @@ class StockMove(models.Model):
                 'location_dest_id': self.picking_id.location_dest_id.id,
                 'origin': self.picking_id.origin,
                 'date_aprovee': order.date_approve,
-                'product_description': self.product_id.description,
+                'product_description':product_description,
                 'invoices': invoice_names  # Pasar los nombres de las facturas
             }
         }
