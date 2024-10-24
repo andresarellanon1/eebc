@@ -33,6 +33,9 @@ class StockMove(models.Model):
         _logger.warning('Producto name: %s', self.product_id.name)
         _logger.warning('Cantidad: %s', self.product_uom_qty)
         _logger.warning('type: %s', self.picking_id.picking_type_code)
+        
+        _logger.warning('Descripcion: %s', self.description_picking)
+        
 
         _logger.warning('documento origen: %s', self.origin)
 
@@ -48,11 +51,9 @@ class StockMove(models.Model):
         proveedor_name = self.picking_id.partner_id.name if self.picking_id.partner_id else "Proveedor no definido"
 
         
-        # Obtener la línea de picking que corresponde al producto seleccionado
-        picking_line = self.picking_id.move_ids_without_package.filtered(lambda line: line.product_id == self.product_id)
-
+       
         # Obtener la descripción del producto en la línea del picking
-        product_description = picking_line.description_picking if picking_line else "Sin descripción"
+        product_description = self.description_picking if self.description_picking else "Sin descripción"
         return {
             'type': 'ir.actions.act_window',
             'name': 'Wizard File Upload',
