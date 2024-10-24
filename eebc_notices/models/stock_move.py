@@ -49,7 +49,7 @@ class StockMove(models.Model):
 
         
         # Obtener la línea de picking que corresponde al producto seleccionado
-        picking_line = self.picking_id.move_lines.filtered(lambda line: line.product_id == self.product_id)
+        picking_line = self.picking_id.move_ids_without_package.filtered(lambda line: line.product_id == self.product_id)
 
         # Obtener la descripción del producto en la línea del picking
         product_description = picking_line.description_picking if picking_line else "Sin descripción"
