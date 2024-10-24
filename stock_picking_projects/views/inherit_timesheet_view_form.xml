@@ -26,11 +26,6 @@
                             </tree>
                         </field>
                     </group>
-                    <group name="used_materials">
-                        <field name="product_ids">
-                            <field name="display_costo_total_final"/>
-                        </field>
-                    </group>
                 </page>
             </xpath>
             <xpath expr="//group//field[@name='date']" position="after">
