@@ -6,7 +6,7 @@ class ProjectPlan(models.Model):
 
     name = fields.Char(string="Name", required=True)
     project_name = fields.Char(string="Project name")
-    description = fields.Char(string="Description")
+    description = fields.Html(string="Description")
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
     project_id = fields.Many2one('project.project', string="Project")
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
@@ -19,7 +19,7 @@ class ProjectPlan(models.Model):
         store=False
     )
 
-    @api.depends('project_plan_pickings')
+    @api.onchange('project_plan_pickings')
     def _compute_picking_lines(self):
         for record in self:
             lines = self.env['project.picking.lines']

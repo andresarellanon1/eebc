@@ -22,12 +22,14 @@
                             <label for="name"/>
                             <h1><field name="name" class="w-100" required="1"/></h1>
                             <group>
-                                <field name="project_name"/>
-                                <field name="description"/>
+                                
                             </group>
                         </div>
                         <notebook>
-                            <page string="Tasks">
+                            <page name="description" string="Description">
+                                <field name="description" options="{'resizable': false}"/>
+                            </page>
+                            <page name="tasks" string="Tasks">
                                 <field name="project_plan_lines">
                                     <tree editable="editable_bottom">
                                         <field name="chapter"/>
@@ -36,6 +38,20 @@
                                         <field name="stage_id"/>
                                     </tree>
                                 </field>
+                            </page>
+                            <page name="stock" string="Stock">
+                                <group name="stock_container">
+                                    <field name="project_picking_ids" widget="many2many_tags"/>
+                                </group>
+                                <group name="stock_lines">
+                                    <field name="picking_lines">
+                                        <tree editable="editable_bottom">
+                                            <field name="product_id"/>
+                                            <field name="quantity"/>
+                                            <field name="location_id"/>
+                                        </tree>
+                                    </field>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>

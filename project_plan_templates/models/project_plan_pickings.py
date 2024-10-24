@@ -6,7 +6,7 @@ class ProjectPlanPickings(models.Model):
     _description = 'Project plan pickings'
 
     name = fields.Char(string="Name")
-    description = fields.Char(string="Description")
+    description = fields.Html(string="Description")
     creation_date = fields.Date(string="Created on", default=fields.Date.context_today, readonly=True)
     creator_id = fields.Many2one('res.users', string="Created by", default=lambda self: self.env.user)
     project_picking_lines = fields.One2many('project.picking.lines', 'picking_id', string="Products")
