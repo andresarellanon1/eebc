@@ -90,8 +90,8 @@ class ProductProduct(models.Model):
 
             record.total_cost = total + impuestos
             record.costo_total_final += record.total_cost
-            logger.warning(f"Costo total, {record.costo_total_final}")
-            
+            _logger.warning(f"Costo total, {record.costo_total_final}")
+
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
