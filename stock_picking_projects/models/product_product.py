@@ -90,17 +90,18 @@ class ProductProduct(models.Model):
 
             record.total_cost = total + impuestos
             record.costo_total_final += record.total_cost
-
+            logger.warning(f"Costo total, {record.costo_total_final}")
+            
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
-                    record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
+                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
                 elif origin_currency == 'USD' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} MXN"
-                    record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
+                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
                 else:
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
-                    record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
+                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
