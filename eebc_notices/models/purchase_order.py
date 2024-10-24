@@ -10,3 +10,5 @@ class AccountMove(models.Model):
         comodel_name='notices.notices',
         string='Aviso relacionado'
     )
+
+

@@ -33,7 +33,20 @@ class StockMove(models.Model):
         _logger.warning('Producto name: %s', self.product_id.name)
         _logger.warning('Cantidad: %s', self.product_uom_qty)
         _logger.warning('type: %s', self.picking_id.picking_type_code)
-        
+
+        _logger.warning('documento origen: %s', self.origin)
+
+        # Buscar la orden de compra relacionada con el origen
+        order = self.env['purchase.order'].search([('name', '=', self.origin)])
+
+        # Obtener las facturas y sus nombres
+        invoice_names = ", ".join(order.invoice_ids.mapped('name')) if order.invoice_ids else "No hay facturas"
+
+        _logger.warning('invoices: %s', invoice_names)
+
+        # Obtener el nombre del proveedor
+        proveedor_name = self.picking_id.partner_id.name if self.picking_id.partner_id else "Proveedor no definido"
+
         return {
             'type': 'ir.actions.act_window',
             'name': 'Wizard File Upload',
@@ -44,12 +57,14 @@ class StockMove(models.Model):
             'context': {
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
-                'proveedor': self.picking_id.partner_id.id,
+                'proveedor': proveedor_name,  # Pasar el nombre del proveedor
                 'type': self.picking_id.picking_type_code,
-                'location_id':self.picking_id.location_id.id,
-                'location_dest_id':self.picking_id.location_dest_id.id,
-                'origin': self.picking_id.origin
-                
+                'location_id': self.picking_id.location_id.id,
+                'location_dest_id': self.picking_id.location_dest_id.id,
+                'origin': self.picking_id.origin,
+                'date_aprovee': order.date_approve,
+                'product_description': self.product_id.description,
+                'invoices': invoice_names  # Pasar los nombres de las facturas
             }
         }
         

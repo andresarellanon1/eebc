@@ -13,6 +13,7 @@ class ProductProduct(models.Model):
     cambio = fields.Boolean(string="Cambio", default=False)
     display_supplier_cost = fields.Char(string="Costo")
     display_total_cost = fields.Char(string="Costo Total")
+    costo_total_final = fields.Float(string="Costo final")
 
     project_id = fields.Many2one(
         'project.project', 
