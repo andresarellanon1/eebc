@@ -14,6 +14,7 @@ class ProductProduct(models.Model):
     display_supplier_cost = fields.Char(string="Costo")
     display_total_cost = fields.Char(string="Costo Total")
     costo_total_final = fields.Float(string="Costo final")
+    display_costo_total_final = fields.Char(string="Costo Final")
 
     project_id = fields.Many2one(
         'project.project', 
@@ -88,17 +89,18 @@ class ProductProduct(models.Model):
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
+            record.costo_total_final += record.total_cost
 
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
+                    record.display.costo_total_final = f"{record.costo_total_final:.2f} USD"
                 elif origin_currency == 'USD' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} MXN"
+                    record.display.costo_total_final = f"{record.costo_total_final:.2f} MXN"
                 else:
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
-            else:
-                record.display_total_cost = f"{record.total_cost:.2f} USD"
-
+                    record.display.costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
