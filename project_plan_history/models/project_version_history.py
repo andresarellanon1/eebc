@@ -7,13 +7,13 @@ class ProjectVersion(models.Model):
     _description = 'Project Version History'
 
     project_id = fields.Many2one('project.project', string='Project')
-    version_date = fields.Date(string='Modification date')
+    version_date = fields.Date(string='Version date')
     modified_by = fields.Char(string='Modified by')
     project_name = fields.Char(string='Project name')
     motive = fields.Char(string='Motive of adjustment')
 
     @api.model
-    def create_version(self, project):
+    def create_version(self, project, user):
         project_data = {
             # Datos del proyecto que se van a guardar
             'name': project.name,
@@ -21,11 +21,11 @@ class ProjectVersion(models.Model):
             'date_start': project.date_start,
             'date': project.date,
             'site_supervisor': project.site_supervisor_id,
-
         }
 
         # Guardamos los datos del proyecto en formato JSON para hacer una "snapshot"
         self.create({
+            'modified_by': user.name,
             'project_id': project.id,
             'data_snapshot': json.dumps(project_data),
             'version_date': fields.Datetime.now(),

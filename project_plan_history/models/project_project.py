@@ -10,7 +10,7 @@ class ProjectProject(models.Model):
         # Se guarda el estado actual antes de modificar
         project_version = self.env['project.version']
         for project in self:
-            project_version.create_version(project)
+            project_version.create_version(project, self.env.user)
 
         # Se modifica
         return super(ProjectProject, self).write(vals)
