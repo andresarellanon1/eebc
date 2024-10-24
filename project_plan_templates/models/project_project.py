@@ -19,11 +19,11 @@ class ProjectProject(models.Model):
             if project.project_plan_id:
                 project.project_plan_lines = [(6, 0, project.project_plan_id.project_plan_lines.ids)]
                 project.project_plan_description = project.project_plan_id.description
-                project.project_picking_ids = [(6, 0, project.project_plan_id.project_picking_ids.ids)]
+                project.project_picking_ids = [(6, 0, project.project_plan_id.project_plan_pickings.ids)]
             else:
                 project.project_plan_lines = [(5, 0, 0)]
                 project.project_plan_description = False
-                project.project_picking_ids = [(5, 0, 0)]
+                project_plan_pickings = [(5, 0, 0)]
 
     @api.onchange('project_picking_ids')
     def update_picking_lines(self):
