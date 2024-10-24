@@ -81,6 +81,7 @@ class ProductProduct(models.Model):
             
     @api.onchange('quantity','product_id')
     def _compute_total_cost(self):
+        self.project_id._product_currency()
         self._onchange_activities_tmpl_id()
 
         for record in self:
