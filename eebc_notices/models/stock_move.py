@@ -47,6 +47,12 @@ class StockMove(models.Model):
         # Obtener el nombre del proveedor
         proveedor_name = self.picking_id.partner_id.name if self.picking_id.partner_id else "Proveedor no definido"
 
+        
+        # Obtener la línea de picking que corresponde al producto seleccionado
+        picking_line = self.picking_id.move_lines.filtered(lambda line: line.product_id == self.product_id)
+
+        # Obtener la descripción del producto en la línea del picking
+        product_description = picking_line.description_picking if picking_line else "Sin descripción"
         return {
             'type': 'ir.actions.act_window',
             'name': 'Wizard File Upload',
@@ -63,7 +69,7 @@ class StockMove(models.Model):
                 'location_dest_id': self.picking_id.location_dest_id.id,
                 'origin': self.picking_id.origin,
                 'date_aprovee': order.date_approve,
-                'product_description': self.description_picking,
+                'product_description':product_description,
                 'invoices': invoice_names  # Pasar los nombres de las facturas
             }
         }
