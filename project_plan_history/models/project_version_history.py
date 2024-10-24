@@ -28,5 +28,4 @@ class ProjectVersion(models.Model):
             'description': project.description,
             'date_start': project.date_start,
             'date': project.date,
-            'site_supervisor': project.site_supervisor_id,
         })
