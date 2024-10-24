@@ -34,7 +34,7 @@
                         </div>
                         <notebook>
                             <page name="description" string="Description">
-                                <field name="description"/>
+                                <field name="description" options="{'resizable': false}"/>
                             </page>
                             <page name="picking_lines" string="Pickings">
                                 <field name="project_picking_lines">
