@@ -9,6 +9,8 @@
                 <field name="pickin_ids" widget="many2many_tags" options="{'no_create': True}" string="Operaciones de Inventario"/>
                 <field name="site_supervisor_id" widget="many2one_avatar_user"/>
                 <field name="subcontractor_id" widget="many2one_avatar_user"/>
+                <field name="subcontractor_id" widget="many2one_avatar_user"/>
+                <field name="taxes_id" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page name="Products" string="Productos">
@@ -18,10 +20,11 @@
                                 <field name="product_id"/>
                                 <field name="quantity"/>
                                 <field name="reserved_qty"/>
-                                <field name="supplier_cost"/>
-                                <field name="total_cost"/>
+                                <field name="display_supplier_cost"/>
+                                <field name="display_total_cost"/>
                                 <field name="name" column_invisible="true"/>
                             </tree>
+                                <field name="display_total_final_cost"/>
                         </field>
                     </group>
                 </page>

@@ -30,12 +30,20 @@ class NoticeFileWizard(models.TransientModel):
     file_xlsx = fields.Binary(string="Archivo" )
     file_name = fields.Char(string="Nombre del archivo")  # Campo para almacenar el nombre del archivo
 
-   
+    
     quantity = fields.Float(string="Cantidad", readonly=True,)
     message = fields.Text(string="Mensaje de Error", readonly=True)  # Campo para el mensaje de error
+    notice = fields.Char(string='Aviso')
+    folio = fields.Char(string='Folio')
+    description = fields.Text(string='Descripción de producto', readonly=True)
+  # Cambiar el campo Many2one por Char para almacenar el ID o el nombre de la factura
+    account_move_invoice_ids = fields.Char(string="Facturas")
 
-    
-    
+    # Cambiar One2many a Char para almacenar IDs o nombres de proveedores
+    res_partner_supplier_id = fields.Char(string="Proveedor")
+
+    # Cambiar One2many a Char para almacenar IDs o referencias de órdenes de compra
+    purchases_order_id = fields.Char(string="Orden de compra")
     
     
     @api.model
@@ -45,6 +53,14 @@ class NoticeFileWizard(models.TransientModel):
         # Establecer el valor del campo 'quantity' con el valor pasado en el contexto
         if 'cantidad' in self._context:
             res['quantity'] = self._context['cantidad']
+        if 'proveedor' in self._context:
+            res['res_partner_supplier_id'] = self._context['proveedor']
+        if 'origin' in self._context:
+            res['purchases_order_id'] = self._context['origin']
+        if 'description' in self._context:
+            res['product_description'] = self._context['description']
+        if 'invoices' in self._context:
+            res['account_move_invoice_ids'] = self._context['invoices']
         if 'default_message' in self._context:
             res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
         
