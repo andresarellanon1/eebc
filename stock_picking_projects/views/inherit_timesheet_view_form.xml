@@ -22,9 +22,9 @@
                                 <field name="reserved_qty"/>
                                 <field name="display_supplier_cost"/>
                                 <field name="display_total_cost"/>
+                                <field name="display_costo_total_final"/>
                                 <field name="name" column_invisible="true"/>
                             </tree>
-                            <field name="display_costo_total_final"/>
                         </field>
                     </group>
                 </page>
