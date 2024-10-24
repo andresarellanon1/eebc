@@ -83,7 +83,6 @@ class ProductProduct(models.Model):
     @api.onchange('quantity','product_id')
     def _compute_total_cost(self):
         self._onchange_activities_tmpl_id()
-        total_final = 0
 
         for record in self:
             total = (record.supplier_cost * record.quantity)
@@ -91,9 +90,7 @@ class ProductProduct(models.Model):
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
-            total_final += record.total_cost
-
-            record.costo_total_final += record.total_cost
+            record.costo_total_final =  record.costo_total_final + record.total_cost
         
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' and record.cambio == True :
@@ -105,10 +102,9 @@ class ProductProduct(models.Model):
                 else:
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
                     #record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
-        
-        for record in self:
-            record.costo_total_final = total_final
+            
             _logger.warning(f"Costo total, {record.costo_total_final}")
+
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
