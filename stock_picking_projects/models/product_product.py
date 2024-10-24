@@ -1,19 +1,20 @@
 from odoo import models, fields, api
 import logging
-
 _logger = logging.getLogger(__name__)
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
     
-
-
     quantity = fields.Integer(string='Cantidad')
     reserved_qty = fields.Float(string='Reservado')
     total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
     currency = fields.Char(string="Currency")
-
+    cambio = fields.Boolean(string="Cambio", default=False)
+    display_supplier_cost = fields.Char(string="Costo")
+    display_total_cost = fields.Char(string="Costo Total")
+    display_costo_total_final = fields.Char(string="Costo Final")
+    
     project_id = fields.Many2one(
         'project.project', 
         string='Proyecto',
@@ -33,49 +34,76 @@ class ProductProduct(models.Model):
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
+            origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
             tipo_cambio = record.project_id.exchange_rate
+            project_currency = record.project_id.currency_id.name
 
-            if not record.currency:
-                record.currency = record.project_id.currency_id.name
+            if record.currency == False:
+                record.currency == project_currency
 
-            _logger.warning(f'La divisa del producto es: {record.currency}')
-            _logger.warning(f'La divisa del formulario es: {record.project_id.currency_id.name}')
-
-            if record.currency == 'USD' and record.project_id.exchange_rate > 0:
-                if record.currency != 'USD':
+            if project_currency == 'USD' and record.project_id.exchange_rate > 0:
+                if origin_currency == 'MXN' or record.cambio == True :
                     record.supplier_cost = self.pesos_a_dolares(monto,tipo_cambio)
                     record.currency = 'USD'
 
-                    _logger.warning('Hizo cambio a dolares.')
-                    _logger.warning(f'Se cambió la divisa a: {record.currency}')
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        record.display_supplier_cost = f"{record.supplier_cost:.2f} {record.currency}"
+                    if origin_currency == 'USD':
+                        record.cambio = False
+                    else:
+                        record.cambio = True
+                else:
+                    if origin_currency == 'USD' or origin_currency == 'MXN': 
+                        record.supplier_cost = monto
+                        record.display_supplier_cost = f"{record.supplier_cost:.2f} {origin_currency}"
 
-            elif record.currency == 'MXN' and record.project_id.exchange_rate > 0:
-                if record.currency != 'MXN':
+            elif project_currency == 'MXN' and record.project_id.exchange_rate > 0:
+                if origin_currency == 'USD' or record.cambio == True :
                     record.supplier_cost = self.dolares_a_pesos(monto,tipo_cambio)
                     record.currency = 'MXN'
 
-                    _logger.warning('Hizo cambio a pesos.')
-                    _logger.warning(f'Se cambió la divisa a: {record.currency}')
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        record.display_supplier_cost = f"{record.supplier_cost:.2f} {record.currency}"
+
+                    if origin_currency == 'MXN':
+                        record.cambio = False
+                    else:
+                        record.cambio = True
+                else:
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        record.supplier_cost = monto
+                        record.display_supplier_cost = f"{record.supplier_cost:.2f} {origin_currency}"
             else :
-                record.supplier_cost = monto
-                _logger.warning('No hizo cambio.')
+                if origin_currency == 'USD' or origin_currency == 'MXN':
+                    record.supplier_cost = monto
+                    record.display_supplier_cost = f"{record.supplier_cost:.2f} {origin_currency}"
+
             
-    @api.depends('quantity','product_id','project_id.exchange_rate','project_id.currency_id')
+    @api.onchange('quantity','product_id')
     def _compute_total_cost(self):
+        self._onchange_activities_tmpl_id()
+
         for record in self:
             total = (record.supplier_cost * record.quantity)
-            impuestos = ((total) * record.product_id.product_tmpl_id.taxes_id.amount)/100
-            tipo_cambio = record.project_id.exchange_rate
-            monto = total + impuestos
+            impuestos = ((total) * record.project_id.taxes_id.amount)/100
+            origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
+            record.project_id.costo_total_final =  record.project_id.costo_total_final + record.total_cost
+        
+            if origin_currency == 'USD' or origin_currency == 'MXN':
+                if origin_currency == 'MXN' and record.cambio == True :
+                    record.display_total_cost = f"{record.total_cost:.2f} USD"
+                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
+                elif origin_currency == 'USD' and record.cambio == True :
+                    record.display_total_cost = f"{record.total_cost:.2f} MXN"
+                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
+                else:
+                    record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
+                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
+            
+            _logger.warning(f"Costo total, {record.project_id.costo_total_final}")
 
-            if record.currency_id.name == 'USD' and record.project_id.exchange_rate > 0:
-                record.total_cost = self.pesos_a_dolares(monto,tipo_cambio)
-            elif record.currency_id.name == 'MXN' and record.project_id.exchange_rate > 0:
-                record.total_cost = self.dolares_a_pesos(monto,tipo_cambio)
-            else : 
-                record.total_cost = monto
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio

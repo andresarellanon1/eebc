@@ -20,6 +20,7 @@ class ProjectProject(models.Model):
     publication_date = fields.Date(string="Publication Date")
     site_supervisor_id = fields.Many2one('res.users', string="Site Supervisor")
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
+    costo_total_final = fields.Float(string="Costo final")
     
     product_ids = fields.One2many(
         'product.product', 
@@ -36,6 +37,12 @@ class ProjectProject(models.Model):
         'line.activities',  # Referencia al modelo
         'project_id',
         string='Lineas de actividades'
+    )
+
+    taxes_id = fields.Many2many(
+        'account.tax',  
+        string='Impuestos del cliente',
+        help='Select taxes that apply to this project.'
     )
 
     # Valida la fecha en formato DDMMYY y que no pase de 16 car.
@@ -77,15 +84,9 @@ class ProjectProject(models.Model):
             if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
                 raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
 
-    @api.onchange('currency_id', 'exchange_rate')
+    @api.onchange('currency_id', 'exchange_rate', 'taxes_id')
     def _product_currency(self):
         for record in self:
-            _logger.warning(f'La divisa original es: {record.currency_id.name}')
-            if record.currency_id.name == 'USD':
-                record.product_ids.product_id.currency = 'USD'
-                _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
-                _logger.warning(f'Se cambió la divisa a: {record.product_ids.product_id.currency}')
-            else:
-                record.product_ids.product_id.currency = 'MXN'
-                _logger.warning(f'Divisa de project.project: {record.currency_id.name}')
-                _logger.warning(f'Se cambió la divisa a: {record.product_ids.product_id.currency}')
+            _logger.warning('Funcion de product product')
+            record.product_ids._onchange_activities_tmpl_id()
+            record.product_ids._compute_total_cost()
