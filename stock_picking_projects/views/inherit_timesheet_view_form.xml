@@ -24,6 +24,7 @@
                                 <field name="display_total_cost"/>
                                 <field name="name" column_invisible="true"/>
                             </tree>
+                            <field name="display.costo_total_final"/>
                         </field>
                     </group>
                 </page>
