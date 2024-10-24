@@ -14,19 +14,15 @@ class ProjectVersion(models.Model):
 
     @api.model
     def create_version(self, project, user):
-        project_data = {
+        # Guardamos los datos del proyecto
+        self.create({
+            'modified_by': user.name,
+            'project_id': project.id,
+            'version_date': fields.Datetime.now(),
             # Datos del proyecto que se van a guardar
             'name': project.name,
             'description': project.description,
             'date_start': project.date_start,
             'date': project.date,
             'site_supervisor': project.site_supervisor_id,
-        }
-
-        # Guardamos los datos del proyecto en formato JSON para hacer una "snapshot"
-        self.create({
-            'modified_by': user.name,
-            'project_id': project.id,
-            'data_snapshot': json.dumps(project_data),
-            'version_date': fields.Datetime.now(),
         })
