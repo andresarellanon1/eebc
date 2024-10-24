@@ -14,7 +14,6 @@ class ProjectVersion(models.Model):
     project_name = fields.Char(string='Project name')
     description = fields.Text(string='Description')
     date_start = fields.Date(string='Start date')
-    date = fields.Date(string='End date')
 
     @api.model
     def create_version(self, project, user):
@@ -27,5 +26,4 @@ class ProjectVersion(models.Model):
             'project_name': project.name,
             'description': project.description,
             'date_start': project.date_start,
-            'date': project.date,
         })
