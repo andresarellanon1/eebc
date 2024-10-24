@@ -9,12 +9,12 @@ class ProductProduct(models.Model):
     reserved_qty = fields.Float(string='Reservado')
     total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
-    total_final_cost = fields.Float(string="Total Final", compute="_compute_total_cost", store=True)
+    costo_total_final = fields.Float(string="Total Final", compute="_compute_total_cost", store=True)
     currency = fields.Char(string="Currency")
     cambio = fields.Boolean(string="Cambio", default=False)
     display_supplier_cost = fields.Char(string="Costo")
     display_total_cost = fields.Char(string="Costo Total")
-    display_total_cost = fields.Char(string="Costo Total")
+    displaycosto_total_final = fields.Char(string="Costo Total Final")
 
     project_id = fields.Many2one(
         'project.project', 
