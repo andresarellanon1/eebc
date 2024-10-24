@@ -35,7 +35,7 @@ class NoticeFileWizard(models.TransientModel):
     message = fields.Text(string="Mensaje de Error", readonly=True)  # Campo para el mensaje de error
     notice = fields.Char(string='Aviso')
     folio = fields.Char(string='Folio')
-    description = fields.Text(string='Descripción de producto', readonly=True)
+    description = fields.Char(string='Descripción de producto', readonly=True)
   # Cambiar el campo Many2one por Char para almacenar el ID o el nombre de la factura
     account_move_invoice_ids = fields.Char(string="Facturas", readonly=True)
 
