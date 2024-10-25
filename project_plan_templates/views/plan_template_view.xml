@@ -22,7 +22,7 @@
                             <label for="name"/>
                             <h1><field name="name" class="w-100" required="1"/></h1>
                             <group>
-                                
+                                <field name="project_name"/>
                             </group>
                         </div>
                         <notebook>
@@ -48,7 +48,6 @@
                                         <tree editable="editable_bottom">
                                             <field name="product_id"/>
                                             <field name="quantity"/>
-                                            <field name="location_id"/>
                                         </tree>
                                     </field>
                                 </group>
