@@ -30,5 +30,7 @@ class ProjectVersion(models.Model):
             'project_name': project.name,
             'description': project.description,
             'date_start': project.date_start,
-            'project_ids': project.child_ids,
+            'project_ids': [(0, 0, {
+                'name': line.name,
+            }) for line in project.child_ids],
         })
