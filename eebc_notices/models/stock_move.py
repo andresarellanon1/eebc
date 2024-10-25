@@ -50,7 +50,17 @@ class StockMove(models.Model):
         # Obtener el nombre del proveedor
         proveedor_name = self.picking_id.partner_id.name if self.picking_id.partner_id else "Proveedor no definido"
 
-        
+        # Obtener los IDs de las facturas
+        invoice_ids = order.invoice_ids.ids if order.invoice_ids else []
+        _logger.warning('invoice IDs: %s', invoice_ids)
+
+        # Obtener el ID del proveedor
+        proveedor_id = self.picking_id.partner_id.id if self.picking_id.partner_id else False
+        _logger.warning('Proveedor ID: %s', proveedor_id)
+
+        # Obtener el ID de la orden de compra
+        purchase_order_id = order.id if order else False
+        _logger.warning('Purchase Order ID: %s', purchase_order_id)
        
         # Obtener la descripción del producto en la línea del picking
         product_description = self.description_picking if self.description_picking else "Sin descripción"
@@ -65,13 +75,16 @@ class StockMove(models.Model):
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
                 'proveedor': proveedor_name,  # Pasar el nombre del proveedor
+                'proveedor_id': proveedor_id,
                 'type': self.picking_id.picking_type_code,
                 'location_id': self.picking_id.location_id.id,
                 'location_dest_id': self.picking_id.location_dest_id.id,
                 'origin': self.picking_id.origin,
+                'purchase_id': purchase_order_id,
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
-                'invoices': invoice_names  # Pasar los nombres de las facturas
+                'invoices': invoice_names , # Pasar los nombres de las facturas
+                'invoices_ids': invoice_ids
             }
         }
         
