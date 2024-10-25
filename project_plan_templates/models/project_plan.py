@@ -28,10 +28,17 @@ class ProjectPlan(models.Model):
                 lines |= picking.project_picking_lines
             record.picking_lines = lines
 
-    def action_create_project(self):
-        if not self.project_name:
+     @api.model_create_single
+    def create(self, vals):
+        """ Override create method to ensure that a project is created when the record is saved. """
+        record = super(ProjectPlan, self).create(vals)
+        if not record.project_name:
             raise ValidationError("Project name is required to create a project.")
+        
+        record.action_create_project()
+        return record
 
+    def action_create_project(self):
         project_plan_lines_vals = [(0, 0, {
             'name': line.name,
             'chapter': line.chapter,
@@ -55,22 +62,13 @@ class ProjectPlan(models.Model):
             'project_picking_ids': [(6, 0, self.project_plan_pickings.ids)],
             'project_plan_lines': project_plan_lines_vals,
             'project_picking_lines': picking_lines_vals,
-
         }
 
         project = self.env['project.project'].create(project_vals)
 
         self.create_project_tasks(project)
-
         self.project_name = False
-
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'project.project',
-            'res_id': project.id,
-            'view_mode': 'form',
-            'target': 'new',
-        }
+        return project
 
     def create_project_tasks(self, project):
         current_task_type = None
