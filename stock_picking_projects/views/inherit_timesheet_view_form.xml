@@ -27,7 +27,7 @@
                         </field>
                     </group>
                     <group>
-                        <field name="display_costo_total_final"/>
+                        <field name="costo_total_final"/>
                     </group>
                 </page>
             </xpath>
