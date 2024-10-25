@@ -27,6 +27,9 @@
                             </tree>
                         </field>
                     </group>
+                    <group>
+                        <field name="costo_total_final"/>
+                    </group>
                 </page>
             </xpath>
             <xpath expr="//group//field[@name='date']" position="after">
