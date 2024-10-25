@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="view_project_creation_wizard_form" model="ir.ui.view">
-        <field name="name">project.creation.wizard.form</field>
-        <field name="model">project.creation.wizard</field>
-        <field name="arch" type="xml">
-            <form string="Confirm Project Creation">
-                <group>
-                    <field name="project_name" readonly="1"/>
-                </group>
-                <footer>
-                    <button name="action_confirm_create_project" string="Create Project" type="object" class="btn-primary"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel"/>
-                </footer>
-            </form>
-        </field>
-    </record>
+    <data>
+        <record id="view_project_creation_wizard_form" model="ir.ui.view">
+            <field name="name">project.creation.wizard.form</field>
+            <field name="model">project.creation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Confirm Project Creation">
+                    <group>
+                        <field name="project_name" readonly="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm_create_project" string="Create Project" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
 </odoo>
