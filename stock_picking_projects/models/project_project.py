@@ -100,6 +100,8 @@ class ProjectProject(models.Model):
                 origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
 
                 product.total_cost = total + impuestos
+                _logger.warning(f"Costo total: {product.total_cost}")
+                _logger.warning(f"El valor de costo total final anterior: { record.costo_total_final}")
                 record.costo_total_final =  record.costo_total_final + product.total_cost
 
                 _logger.warning(f"Costo total final: {record.costo_total_final}")
