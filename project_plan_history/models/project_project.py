@@ -15,5 +15,5 @@ class ProjectProject(models.Model):
         # Se modifica
         return super(ProjectProject, self).write(vals)
 
-    @api.depends('project_plan_id','project_plan_description','project_plan_lines')
-    def _onchange_plan_template():
+    # @api.depends('project_plan_id','project_plan_description','project_plan_lines')
+    # def _onchange_plan_template():
