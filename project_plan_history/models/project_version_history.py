@@ -36,6 +36,6 @@ class ProjectVersion(models.Model):
                 'name': line.name,
             }) for line in project.project_plan_lines],
             'project_picking_lines': [(0, 0, {
-                'name': line.name,
+                'product_id': line.product_id,
             }) for line in project.project_picking_lines],
         })
