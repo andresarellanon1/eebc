@@ -3,7 +3,7 @@
     <data>
         <template id="report_configs.report_invoice_inherit_custom" inherit_id="account.report_invoice">
             <xpath expr="//t[@t-call=&quot;account.report_invoice_document&quot;]" position="after">
-                <t t-elif="o._get_name_invoice_report() == 'report_configs.out_material_template'" t-call="report_configs.out_material_template" t-lang="lang"/>
+                <t t-elif="o._get_name_invoice_report() == 'report_configs.out_invoice_template_custom'" t-call="report_configs.out_invoice_template_custom" t-lang="lang" />
             </xpath>
         </template>
     </data>
