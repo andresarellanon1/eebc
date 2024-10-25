@@ -66,100 +66,73 @@ class NoticeFileWizard(models.TransientModel):
     def create_notice(self):
         """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
         
-        notice_data = (self.quantity,                           
-                       self.res_partner_supplier_id,
-                       self.purchases_order_id, 
-                       self.description,
-                       self.folio,
-                       self.notice, 
-                       self.account_move_invoice_ids, 
-                       self._context['product_id'], 
-                       self._context['location_id'], 
-                       self._context['location_dest_id'], 
-                       self._context['origin'], 
-                       self._context['type']
-                       )
-        
-
+        notice_data = (self.quantity,                            
+                    self.res_partner_supplier_id,
+                    self.purchases_order_id, 
+                    self.description,
+                    self.folio,
+                    self.notice, 
+                    self.account_move_invoice_ids, 
+                    self._context['product_id'], 
+                    self._context['location_id'], 
+                    self._context['location_dest_id'], 
+                    self._context['origin'], 
+                    self._context['type']
+                    )
 
         _logger.warning('VALORES DE NOTICE DATA:  %s', notice_data)
-        
-        for data in notice_data:
-            its_created = self.env['notices.notices'].search([('notice','=', self.notice)])
-            _logger.warning('VALOR DE ITS CREATED : %s', its_created)
-            valor_test =  self.folio
 
-            if its_created:
-                _logger.warning('1')
-                _logger.warning('VALOR DE ITS CREATED folio : %s', its_created.folio)
+        # Revisa si el aviso ya existe
+        its_created = self.env['notices.notices'].search([('notice', '=', self.notice)])
+        _logger.warning('VALOR DE ITS CREATED : %s', its_created)
+        valor_test = self.folio
 
-                _logger.warning('VALOR DE data folio : %s', valor_test)
-
-                for i in its_created.history_ids:
-                    _logger.warning('valor de registro : %s', i)
-
-                    _logger.warning('valor de registro folio: %s', i.folio)
-
-                history_match = its_created.history_ids.filtered(lambda h: int(h.folio) == valor_test)
-                _logger.warning('valor de history match: %s', history_match)
-
-                if history_match:
-                     _logger.warning('2')
-
-                     return {
-                        'type': 'ir.actions.act_window',
-                        'res_model': 'notice.file.wizard',
-                        'view_mode': 'form',
-                        'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
-                        'target': 'new',
-                        'context': {
-                            'default_message': f"El folio del archivo ({valor_test}) ya existe en el folio ({its_created}).",
-                        }
-                        
+        if its_created:
+            history_match = its_created.history_ids.filtered(lambda h: int(h.folio) == valor_test)
+            if history_match:
+                return {
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'notice.file.wizard',
+                    'view_mode': 'form',
+                    'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
+                    'target': 'new',
+                    'context': {
+                        'default_message': f"El folio del archivo ({valor_test}) ya existe en el folio ({its_created}).",
                     }
-                else:
-                    _logger.warning('3')
-                    _logger.warning('No se encontró ningún registro en history_ids con folio: %s', valor_test)
-                    its_created.write({
-                    'history_ids': [(0, 0, {
-                        'location_dest': data[9],  # Añade los campos necesarios para history
-                        'location_id': data[8],
-                        'quantity': data[0],
-                        'folio': data[4],
-                        'picking_code': data[11],
-                        })]
-                    })
-
-                    _logger.info('Historial actualizado correctamente para el aviso.')
+                }
             else:
-                _logger.warning('4')
-
-                # Crear el nuevo registro en el modelo 'notices.notices'
-                notice = self.env['notices.notices'].create({
-                    'resource': str(data[7]),  # ID del producto
-                    'quantity': data[0],  # Cantidad extraída del archivo
-                    'description': data[3],
-                    'supplier': data[1],
-                    'notice': data[5],
-                    
-                    
+                # Actualizar el historial si no coincide
+                its_created.write({
+                    'history_ids': [(0, 0, {
+                        'location_dest': notice_data[9],  # Utiliza notice_data directamente
+                        'location_id': notice_data[8],
+                        'quantity': notice_data[0],
+                        'folio': notice_data[4],
+                        'picking_code': notice_data[11],
+                    })]
                 })
+                _logger.info('Historial actualizado correctamente para el aviso.')
+        else:
+            # Crear un nuevo registro en 'notices.notices'
+            notice = self.env['notices.notices'].create({
+                'resource': notice_data[7],  # ID del producto
+                'quantity': notice_data[0],
+                'description': notice_data[3],
+                'supplier': notice_data[1],
+                'notice': notice_data[5],
+            })
 
-                self.env['notices.history'].create({
-                    'location_id': data[8], 
-                    'location_dest': data[9], 
-                    'quantity': data[0],  # Cantidad extraída del archivo
-                    'picking_code': data[11],
-                    'notice_id':notice.id,
-                    'folio':data[4],
-                    
-                    
-                    
-                })
+            # Crear el historial correspondiente
+            self.env['notices.history'].create({
+                'location_id': notice_data[8], 
+                'location_dest': notice_data[9], 
+                'quantity': notice_data[0],
+                'picking_code': notice_data[11],
+                'notice_id': notice.id,
+                'folio': notice_data[4],
+            })
 
-
-
-        _logger.info(f"{len(notice_data)} avisos creados correctamente.")
+        _logger.info("Aviso creado correctamente.")
 
         
         
