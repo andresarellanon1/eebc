@@ -101,6 +101,7 @@ class ProductProduct(models.Model):
     @api.onchange('quantity','product_id')
     def _compute_final_cost(self):
         self.project_id._final_cost()
+        self._product_currency()
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
