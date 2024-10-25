@@ -91,10 +91,8 @@ class ProjectProject(models.Model):
             record.product_ids._onchange_activities_tmpl_id()
             record.product_ids._compute_total_cost()
 
+    @api.onchange('currency_id', 'exchange_rate', 'taxes_id')
     def _final_cost(self):
-        # for record in self:
-        #     record.product_ids._onchange_activities_tmpl_id()
-        #     record.product_ids._compute_total_cost()
         for record in self:
             record.costo_total_final = 0 
             for product in record.product_ids:
@@ -121,6 +119,10 @@ class ProjectProject(models.Model):
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
                             _logger.warning(f"Display por defecto: {record.display_costo_total_final}")
+
+        for record in self:
+            record.product_ids._onchange_activities_tmpl_id()
+            record.product_ids._compute_total_cost()
 
             
             
