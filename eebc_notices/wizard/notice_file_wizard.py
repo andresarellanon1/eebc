@@ -136,7 +136,7 @@ class NoticeFileWizard(models.TransientModel):
 
                 # Crear el nuevo registro en el modelo 'notices.notices'
                 notice = self.env['notices.notices'].create({
-                    'resource': int(data[7]),  # ID del producto
+                    'resource': str(data[7]),  # ID del producto
                     'quantity': data[0],  # Cantidad extraída del archivo
                     'description': data[3],
                     'supplier': data[1],
