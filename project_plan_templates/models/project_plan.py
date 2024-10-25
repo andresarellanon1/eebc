@@ -10,6 +10,7 @@ class ProjectPlan(models.Model):
     description = fields.Html(string="Description")
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
     project_id = fields.Many2one('project.project', string="Project")
+    version_id = fields.Many2one('project.version', string="History")
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
 
     picking_lines = fields.One2many(
