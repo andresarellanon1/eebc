@@ -38,6 +38,20 @@ class ProjectPlan(models.Model):
         record.action_create_project()
         return record
 
+    def action_open_create_project_wizard(self):
+        self.ensure_one()
+        return {
+            'name': 'Create Project',
+            'view_mode': 'form',
+            'res_model': 'project.creation.wizard',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_project_plan_id': self.id,
+            }
+        }
+
     def action_create_project(self):
         project_plan_lines_vals = [(0, 0, {
             'name': line.name,
