@@ -32,9 +32,9 @@
                         <notebook>
                             <page string="Changes">
                                 <group>
-                                    <field name="project_picking_lines">
+                                    <field name="project_ids">
                                         <tree>
-                                            <field name="picking_name" string="Nombre"/>
+                                            <field name="name" string="Nombre"/>
                                             <!-- <field name="project_name" string="Nombre del proyecto"/>
                                             <field name="motive" string="Motivo del cambio"/>
                                             <field name="version_date" string="Fecha de modificacion"/>
