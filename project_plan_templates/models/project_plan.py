@@ -28,7 +28,7 @@ class ProjectPlan(models.Model):
                 lines |= picking.project_picking_lines
             record.picking_lines = lines
 
-     @api.model_create_single
+    @api.model_create_single
     def create(self, vals):
         """ Override create method to ensure that a project is created when the record is saved. """
         record = super(ProjectPlan, self).create(vals)
