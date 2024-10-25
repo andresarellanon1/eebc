@@ -101,7 +101,8 @@ class ProjectProject(models.Model):
                 total = (product.supplier_cost * product.quantity)
                 impuestos = ((total) * record.taxes_id.amount)/100
                 origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
-
+                
+                _logger.warning(f"La divisa original es: {origin_currency}")
                 if product.supplier_cost > 0:
                     costo_total = total + impuestos
                     _logger.warning(f"Costo total: {costo_total}")
