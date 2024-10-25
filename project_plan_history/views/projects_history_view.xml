@@ -32,14 +32,16 @@
                         <notebook>
                             <page string="Changes">
                                 <group>
-                                    <field name="project_id.project_plan_lines" widget="One2many_list">
-                                        <tree>
-                                            <field name="name" string="Nombre"/>
-                                            <!-- <field name="project_name" string="Nombre del proyecto"/>
-                                            <field name="motive" string="Motivo del cambio"/>
-                                            <field name="version_date" string="Fecha de modificacion"/>
-                                            <field name="modified_by" string="Modificado por"/> -->
-                                        </tree>
+                                    <field name="project_id">
+                                        <field name="project_plan_lines" widget="One2many_list">
+                                            <tree>
+                                                <field name="name" string="Nombre"/>
+                                                <!-- <field name="project_name" string="Nombre del proyecto"/>
+                                                <field name="motive" string="Motivo del cambio"/>
+                                                <field name="version_date" string="Fecha de modificacion"/>
+                                                <field name="modified_by" string="Modificado por"/> -->
+                                            </tree>
+                                        </field>
                                     </field>
                                 </group>
                             </page>
