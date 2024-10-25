@@ -6,6 +6,18 @@ class ProjectProject(models.Model):
     version_ids = fields.One2many('project.version', 'project_id', string='History')
     version_id = fields.Many2one('project.version', string="History")
 
+    child_ids = fields.One2many(
+        'project.project',
+        'parent_id',
+        string="Subprojects"
+    )
+    
+    parent_id = fields.Many2one(
+        'project.project',
+        string="Parent Project",
+        ondelete='set null'
+    )
+
     @api.model
     def write(self, vals):
         # Se guarda el estado actual antes de modificar
