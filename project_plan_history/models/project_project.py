@@ -4,6 +4,7 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     version_ids = fields.One2many('project.version', 'project_id', string='History')
+    version_id = fields.Many2one('project.version', string="History")
 
     @api.model
     def write(self, vals):
