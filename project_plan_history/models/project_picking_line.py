@@ -1,6 +1,6 @@
 from odoo import fields, models, api
 
-class ProjectProject(models.Model):
+class ProjectPickingLines(models.TransientModel):
     _inherit = 'project.picking.lines'
 
-    version_id = fields.Many2one('project.version', string="History")
+    version_id = fields.Many2one('project.version', string="History ")
