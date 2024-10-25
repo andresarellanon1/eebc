@@ -110,6 +110,7 @@ class NoticeFileWizard(models.TransientModel):
                         'quantity': notice_data[0],
                         'folio': notice_data[4],
                         'picking_code': notice_data[11],
+                        'origin':self._context['origin']
                     })]
                 })
                 _logger.info('Historial actualizado correctamente para el aviso.')
@@ -118,6 +119,7 @@ class NoticeFileWizard(models.TransientModel):
             notice = self.env['notices.notices'].create({
                 'resource': notice_data[7],  # ID del producto
                 'quantity': notice_data[0],
+                'folio': notice_data[4],
                 'description': notice_data[3],
                 'supplier': notice_data[12],
                 'notice': notice_data[5],
@@ -131,6 +133,7 @@ class NoticeFileWizard(models.TransientModel):
                 'picking_code': notice_data[11],
                 'notice_id': notice.id,
                 'folio': notice_data[4],
+                'origin': self._context['origin']
             })
 
         _logger.info("Aviso creado correctamente.")
