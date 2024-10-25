@@ -21,6 +21,7 @@ class ProjectProject(models.Model):
     site_supervisor_id = fields.Many2one('res.users', string="Site Supervisor")
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
     costo_total_final = fields.Float(string="Costo final")
+    display_costo_total_final = fields.Char(string="Costo Final")
     
     product_ids = fields.One2many(
         'product.product', 
@@ -89,3 +90,25 @@ class ProjectProject(models.Model):
         for record in self:
             record.product_ids._onchange_activities_tmpl_id()
             record.product_ids._compute_total_cost()
+
+    def _final_cost(self):
+        for record in self:
+            record.costo_total_final = 0 
+            for product in record.project_id.product_ids:
+                total = (product.supplier_cost * product.quantity)
+                impuestos = ((total) * record.taxes_id.amount)/100
+                origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
+
+                product.total_cost = total + impuestos
+                record.costo_total_final =  record.costo_total_final + product.total_cost
+            
+                if origin_currency == 'USD' or origin_currency == 'MXN':
+                    if origin_currency == 'MXN' and product.cambio == True :
+                        record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
+                    elif origin_currency == 'USD' and record.cambio == True :
+                        record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
+                    else:
+                        record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
+
+            
+            

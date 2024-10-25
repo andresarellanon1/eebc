@@ -13,7 +13,6 @@ class ProductProduct(models.Model):
     cambio = fields.Boolean(string="Cambio", default=False)
     display_supplier_cost = fields.Char(string="Costo")
     display_total_cost = fields.Char(string="Costo Total")
-    display_costo_total_final = fields.Char(string="Costo Final")
     
     project_id = fields.Many2one(
         'project.project', 
@@ -107,7 +106,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('quantity','product_id')
     def _compute_final_cost(self):
-        self.project_id._product_currency()
+        self.project_id._final_cost()
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
