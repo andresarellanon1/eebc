@@ -80,6 +80,8 @@ class NoticeFileWizard(models.TransientModel):
                        self._context['type']
                        )
         
+
+        _logger.warning('VALORES DE NOTICE DATA:  %s', notice_data)
         
         for data in notice_data:
             its_created = self.env['notices.notices'].search([('notice','=', self.notice)])
