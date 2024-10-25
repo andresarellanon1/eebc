@@ -30,6 +30,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('product_id','currency')
     def _onchange_activities_tmpl_id(self):
+        _logger.warning("Se ejucta funcion onche activities")
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
@@ -80,6 +81,7 @@ class ProductProduct(models.Model):
             
     @api.onchange('quantity','product_id')
     def _compute_total_cost(self):
+        _logger.warning("Se ejucta funcion compute total cost")
         self._onchange_activities_tmpl_id()
 
         for record in self:
@@ -100,6 +102,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('quantity','product_id')
     def _compute_final_cost(self):
+        _logger.warning("Se ejucta funcion compute final cost")
         self.project_id._final_cost()
         self.project_id._product_currency()
 
