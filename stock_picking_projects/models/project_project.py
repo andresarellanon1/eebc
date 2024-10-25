@@ -94,7 +94,7 @@ class ProjectProject(models.Model):
     def _final_cost(self):
         for record in self:
             record.product_ids._onchange_activities_tmpl_id()
-            #record.product_ids._compute_total_cost()
+            record.product_ids._compute_total_cost()
         # for record in self:
         #     record.costo_total_final = 0 
         #     for product in record.product_ids:
