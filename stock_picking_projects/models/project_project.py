@@ -87,12 +87,14 @@ class ProjectProject(models.Model):
 
     @api.onchange('currency_id', 'exchange_rate', 'taxes_id')
     def _product_currency(self):
+        _logger.warning("Se ejucta funcion product currency")
         for record in self:
             record.product_ids._onchange_activities_tmpl_id()
             record.product_ids._compute_total_cost()
 
     @api.onchange('currency_id', 'exchange_rate', 'taxes_id')
     def _final_cost(self):
+        _logger.warning("Se ejucta funcion final_cost")
         for record in self:
             record.costo_total_final = 0 
             for product in record.product_ids:
