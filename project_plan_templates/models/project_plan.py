@@ -80,11 +80,11 @@ class ProjectPlan(models.Model):
             if not line.stage_id:
                 current_task_type = self.get_or_create_task_type('Extras', project)
 
-            self.env['project.task'].create([
+            self.env['project.task'].create({
                 'name': line.name,
                 'project_id': project.id,
                 'stage_id': current_task_type.id,
-            ])
+            })
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
@@ -93,9 +93,9 @@ class ProjectPlan(models.Model):
         ], limit=1)
 
         if not task_type:
-            task_type = self.env['project.task.type'].create([
+            task_type = self.env['project.task.type'].create({
                 'name': stage_id,
                 'project_ids': [(4, project.id)],
-            ])
+            })
         
         return task_type
