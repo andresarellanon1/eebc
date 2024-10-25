@@ -30,7 +30,6 @@ class ProductProduct(models.Model):
 
     @api.onchange('product_id','currency')
     def _onchange_activities_tmpl_id(self):
-        _logger.warning("Se ejucta funcion onche activities")
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
@@ -78,12 +77,9 @@ class ProductProduct(models.Model):
                     record.supplier_cost = monto
                     record.display_supplier_cost = f"{record.supplier_cost:.2f} {origin_currency}"
 
-            
-    @api.depends('quantity','product_id')
-    def _compute_total_cost(self):
-        _logger.warning("Se ejucta funcion compute total cost")
-        self._onchange_activities_tmpl_id()
 
+    @api.onchange('quantity','product_id')
+    def _compute_total_cost(self):
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.project_id.taxes_id.amount)/100
@@ -102,9 +98,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('quantity','product_id')
     def _compute_final_cost(self):
-        _logger.warning("Se ejucta funcion compute final cost")
         self.project_id._final_cost()
-        self.project_id._product_currency()
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
