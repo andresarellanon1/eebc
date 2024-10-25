@@ -57,7 +57,12 @@ class ProjectPlan(models.Model):
             'project_picking_lines': picking_lines_vals,
 
         }
+
         project = self.env['project.project'].create(project_vals)
+
+        self.create_project_tasks(project)
+
+        self.project_name = False
 
         return {
             'type': 'ir.actions.act_window',
@@ -66,10 +71,6 @@ class ProjectPlan(models.Model):
             'view_mode': 'form',
             'target': 'new',
         }
-
-        self.create_project_tasks(project)
-
-        self.project_name = False
 
     def create_project_tasks(self, project):
         current_task_type = None
