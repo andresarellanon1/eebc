@@ -20,6 +20,8 @@ class ProjectVersion(models.Model):
 
     project_plan_lines = fields.One2many('project.project', 'version_id', string='Planeación')
     project_picking_lines = fields.One2many('project.project', 'version_id', string='Stock')
+    picking_name = fields.Char()
+
 
     @api.model
     def create_version(self, project, user):
