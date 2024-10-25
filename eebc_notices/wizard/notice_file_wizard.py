@@ -118,7 +118,7 @@ class NoticeFileWizard(models.TransientModel):
                 'resource': notice_data[7],  # ID del producto
                 'quantity': notice_data[0],
                 'description': notice_data[3],
-                'supplier': notice_data[1],
+                'supplier':  self._context['proveedor_id'],
                 'notice': notice_data[5],
             })
 
