@@ -30,7 +30,7 @@ class ProjectPlanPickingLine(models.Model):
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
     product_id = fields.Many2one('product.product', string="Product", required=True)
     quantity = fields.Float(string="Quantity", required=True)
-    location_id = fields.Many2one('stock.location', string="Location", required=True)
+    location_id = fields.Many2one('stock.location', string="Location")
     picking_name = fields.Char(string="Picking Name")
     project_plan_id = fields.Many2one('project.plan', string="Project plan")
     
