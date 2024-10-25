@@ -94,7 +94,7 @@ class ProjectProject(models.Model):
     def _final_cost(self):
         for record in self:
             record.costo_total_final = 0 
-            for product in record.project_id.product_ids:
+            for product in record.product_ids:
                 total = (product.supplier_cost * product.quantity)
                 impuestos = ((total) * record.taxes_id.amount)/100
                 origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
