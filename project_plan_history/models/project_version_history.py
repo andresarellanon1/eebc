@@ -18,8 +18,8 @@ class ProjectVersion(models.Model):
 
     # project_ids = fields.One2many('project.project', 'version_id', string='Historial')
 
-    project_plan_lines = fields.One2many('project.plan.line', 'version_id', string='Planeación')
-    project_picking_lines = fields.One2many('project.picking.lines', 'version_id', string='Stock')
+    project_plan_lines = fields.One2many('project.plan.line', 'project_id', string='Planeación')
+    project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string='Stock')
     
     @api.model
     def create_version(self, project, user):
