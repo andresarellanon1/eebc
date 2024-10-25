@@ -93,13 +93,10 @@ class ProductProduct(models.Model):
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
-                    record.display_costo_total_final = f"{record.project_id.costo_total_final:.2f} USD"
                 elif origin_currency == 'USD' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} MXN"
-                    record.display_costo_total_final = f"{record.project_id.costo_total_final:.2f} MXN"
                 else:
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
-                    record.display_costo_total_final = f"{record.project_id.costo_total_final:.2f} {origin_currency}"
 
 
     @api.onchange('quantity','product_id')
