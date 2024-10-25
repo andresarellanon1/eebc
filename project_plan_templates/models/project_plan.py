@@ -38,7 +38,7 @@ class ProjectPlan(models.Model):
             'description': line.description,
             'use_project_task': line.use_project_task,
             'planned_date_begin': line.planned_date_begin,
-            'planne_date_end': line.planne_date_end,
+            'planned_date_end': line.planned_date_end,
             'partner_id': [(6, 0 , line.partner_id.ids)],
             'stage_id': line.stage_id,
         }) for line in self.project_plan_lines]
