@@ -92,7 +92,7 @@ class ProjectProject(models.Model):
             record.product_ids._onchange_activities_tmpl_id()
             record.product_ids._compute_total_cost()
 
-    @api.depends('taxes_id', 'currency_id', 'exchange_rate')
+    @api.onchange('taxes_id', 'currency_id', 'exchange_rate')
     def _final_cost(self):
         _logger.warning("Se ejucta funcion final_cost")
         for record in self:

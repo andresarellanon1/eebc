@@ -78,8 +78,7 @@ class ProductProduct(models.Model):
                     record.supplier_cost = monto
                     record.display_supplier_cost = f"{record.supplier_cost:.2f} {origin_currency}"
 
-            
-    @api.depends('quantity','product_id')
+    @api.onchange('quantity','product_id')
     def _compute_total_cost(self):
         _logger.warning("Se ejucta funcion compute total cost")
         self._onchange_activities_tmpl_id()
