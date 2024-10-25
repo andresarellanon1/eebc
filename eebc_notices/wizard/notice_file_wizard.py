@@ -77,7 +77,8 @@ class NoticeFileWizard(models.TransientModel):
                     self._context['location_id'], 
                     self._context['location_dest_id'], 
                     self._context['origin'], 
-                    self._context['type']
+                    self._context['type'],
+                    self._context['proveedor_id']
                     )
 
         _logger.warning('VALORES DE NOTICE DATA:  %s', notice_data)
@@ -118,7 +119,7 @@ class NoticeFileWizard(models.TransientModel):
                 'resource': notice_data[7],  # ID del producto
                 'quantity': notice_data[0],
                 'description': notice_data[3],
-                'supplier':  self._context['proveedor_id'],
+                'supplier': notice_data[12],
                 'notice': notice_data[5],
             })
 
