@@ -50,10 +50,7 @@ class StockMove(models.Model):
         # Obtener el nombre del proveedor
         proveedor_name = self.picking_id.partner_id.name if self.picking_id.partner_id else "Proveedor no definido"
 
-        # Obtener los IDs de las facturas
-        invoice_ids = order.invoice_ids.ids if order.invoice_ids else []
-        _logger.warning('invoice IDs: %s', invoice_ids)
-
+  
         # Obtener el ID del proveedor
         proveedor_id = self.picking_id.partner_id.id if self.picking_id.partner_id else False
         _logger.warning('Proveedor ID: %s', proveedor_id)
@@ -84,7 +81,6 @@ class StockMove(models.Model):
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
-                'invoices_ids': invoice_ids
             }
         }
         
