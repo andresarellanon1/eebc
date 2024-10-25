@@ -87,6 +87,5 @@ class ProjectProject(models.Model):
     @api.onchange('currency_id', 'exchange_rate', 'taxes_id')
     def _product_currency(self):
         for record in self:
-            _logger.warning('Funcion de product product')
             record.product_ids._onchange_activities_tmpl_id()
             record.product_ids._compute_total_cost()
