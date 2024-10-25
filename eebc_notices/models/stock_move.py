@@ -33,6 +33,9 @@ class StockMove(models.Model):
         _logger.warning('Producto name: %s', self.product_id.name)
         _logger.warning('Cantidad: %s', self.product_uom_qty)
         _logger.warning('type: %s', self.picking_id.picking_type_code)
+        
+        _logger.warning('Descripcion: %s', self.description_picking)
+        
 
         _logger.warning('documento origen: %s', self.origin)
 
@@ -47,6 +50,17 @@ class StockMove(models.Model):
         # Obtener el nombre del proveedor
         proveedor_name = self.picking_id.partner_id.name if self.picking_id.partner_id else "Proveedor no definido"
 
+  
+        # Obtener el ID del proveedor
+        proveedor_id = self.picking_id.partner_id.id if self.picking_id.partner_id else False
+        _logger.warning('Proveedor ID: %s', proveedor_id)
+
+        # Obtener el ID de la orden de compra
+        purchase_order_id = order.id if order else False
+        _logger.warning('Purchase Order ID: %s', purchase_order_id)
+       
+        # Obtener la descripción del producto en la línea del picking
+        product_description = self.description_picking if self.description_picking else "Sin descripción"
         return {
             'type': 'ir.actions.act_window',
             'name': 'Wizard File Upload',
@@ -58,13 +72,15 @@ class StockMove(models.Model):
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
                 'proveedor': proveedor_name,  # Pasar el nombre del proveedor
+                'proveedor_id': proveedor_id,
                 'type': self.picking_id.picking_type_code,
                 'location_id': self.picking_id.location_id.id,
                 'location_dest_id': self.picking_id.location_dest_id.id,
                 'origin': self.picking_id.origin,
+                'purchase_id': purchase_order_id,
                 'date_aprovee': order.date_approve,
-                'product_description': self.product_id.description,
-                'invoices': invoice_names  # Pasar los nombres de las facturas
+                'product_description':product_description,
+                'invoices': invoice_names , # Pasar los nombres de las facturas
             }
         }
         

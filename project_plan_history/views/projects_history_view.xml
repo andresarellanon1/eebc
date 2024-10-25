@@ -32,12 +32,15 @@
                         <notebook>
                             <page string="Changes">
                                 <group>
-                                    <tree>
-                                        <field name="project_name" string="Nombre del proyecto"/>
-                                        <field name="motive" string="Motivo del cambio"/>
-                                        <field name="version_date" string="Fecha de modificacion"/>
-                                        <field name="modified_by" string="Modificado por"/>
-                                    </tree>
+                                    <field name="project_ids">
+                                        <tree>
+                                            <field name="name" string="Nombre"/>
+                                            <!-- <field name="project_name" string="Nombre del proyecto"/>
+                                            <field name="motive" string="Motivo del cambio"/>
+                                            <field name="version_date" string="Fecha de modificacion"/>
+                                            <field name="modified_by" string="Modificado por"/> -->
+                                        </tree>
+                                    </field>
                                 </group>
                             </page>
                         </notebook>

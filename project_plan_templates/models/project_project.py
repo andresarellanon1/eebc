@@ -11,28 +11,27 @@ class ProjectProject(models.Model):
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Stock picking")
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
 
-    @api.onchange('project_plan_id', 'project_picking_ids')
+    @api.onchange('project_plan_id')
     def plan_lines(self):
         for project in self:
             project.project_picking_lines = [(5, 0, 0)]
-            
+
             if project.project_plan_id:
                 project.project_plan_lines = [(6, 0, project.project_plan_id.project_plan_lines.ids)]
                 project.project_plan_description = project.project_plan_id.description
-
-            for picking in project.project_picking_ids:
-                separator = self.env['project.picking.lines'].create({
-                    'project_id': project.id,
-                    'picking_id': picking.id,
-                    'product_id': False,
-                    'quantity': 0,
-                    'location_id': False,
-                })
-                project.project_picking_lines = [(4, separator.id)]
-
-                for line in picking.project_picking_lines:
-                    project.project_picking_lines = [(4, line.id)]
-
-            if not project.project_plan_id:
+                project.project_picking_ids = [(6, 0, project.project_plan_id.project_plan_pickings.ids)]
+            else:
                 project.project_plan_lines = [(5, 0, 0)]
                 project.project_plan_description = False
+                project_plan_pickings = [(5, 0, 0)]
+
+    @api.onchange('project_picking_ids')
+    def update_picking_lines(self):
+        for project in self:
+            project.project_picking_lines = [(5, 0, 0)]
+
+            lines = self.env['project.picking.lines']
+            for picking in project.project_picking_ids:
+                lines |= picking.project_picking_lines
+            
+            project.project_picking_lines = [(6, 0, lines.ids)]

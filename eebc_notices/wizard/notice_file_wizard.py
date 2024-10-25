@@ -13,10 +13,8 @@ import logging
 _logger = logging.getLogger(__name__)
 
 # TODO: 
-#  Dejar de buscar en todas las hojas del excel - LISTO!!
-#  Crear ventanas emergentes para validacion en caso de que la cantidad del excel sea mayor a la de la orden de compra, es decir que la cantidad de orden de compra debe ser menor o igual al del excel  -  LISTO!!
+# Falta agregar los campos recurso, serie y fecha
 # Agregar a la vista del wizard la cantidad de la linea de la orden de compra y la cantidad que esta en el excel del respectivo producto al cual se le desea crear aviso. - LISTO (?)
-# No permitir de momento que se registren nuevos productos con el mismo numero de folio en caso de haber sido registrado previamente. (colocar ventana emergente que mencione el error)- LISTO!!
 
 class NoticeFileWizard(models.TransientModel):
     """
@@ -26,10 +24,6 @@ class NoticeFileWizard(models.TransientModel):
 
     _name = "notice.file.wizard"
     _description = "Wizard to recover data from xlsx file"
-
-    file_xlsx = fields.Binary(string="Archivo" )
-    file_name = fields.Char(string="Nombre del archivo")  # Campo para almacenar el nombre del archivo
-
     
     quantity = fields.Float(string="Cantidad", readonly=True,)
     message = fields.Text(string="Mensaje de Error", readonly=True)  # Campo para el mensaje de error
@@ -37,13 +31,13 @@ class NoticeFileWizard(models.TransientModel):
     folio = fields.Char(string='Folio')
     description = fields.Text(string='Descripción de producto', readonly=True)
   # Cambiar el campo Many2one por Char para almacenar el ID o el nombre de la factura
-    account_move_invoice_ids = fields.Char(string="Facturas")
+    account_move_invoice_ids = fields.Char(string="Facturas", readonly=True)
 
     # Cambiar One2many a Char para almacenar IDs o nombres de proveedores
-    res_partner_supplier_id = fields.Char(string="Proveedor")
+    res_partner_supplier_id = fields.Char(string="Proveedor", readonly=True)
 
     # Cambiar One2many a Char para almacenar IDs o referencias de órdenes de compra
-    purchases_order_id = fields.Char(string="Orden de compra")
+    purchases_order_id = fields.Char(string="Orden de compra", readonly=True)
     
     
     @api.model
@@ -57,8 +51,8 @@ class NoticeFileWizard(models.TransientModel):
             res['res_partner_supplier_id'] = self._context['proveedor']
         if 'origin' in self._context:
             res['purchases_order_id'] = self._context['origin']
-        if 'description' in self._context:
-            res['product_description'] = self._context['description']
+        if 'product_description' in self._context:
+            res['description'] = self._context['product_description']
         if 'invoices' in self._context:
             res['account_move_invoice_ids'] = self._context['invoices']
         if 'default_message' in self._context:
@@ -67,217 +61,87 @@ class NoticeFileWizard(models.TransientModel):
         return res
 
         	
-    def action_data_analysis(self):
-        _logger.warning('producto: %s', self._context['product_id'])
-      
+     
 
-        id_producto = self._context['product_id']
-        supplier = self._context['proveedor']
-        origin = self._context['origin']
-        type_picking = self._context['type']
-        location_id = self._context['location_id']
-        location_dest_id = self._context['location_dest_id']
-        
-        if not self.file_xlsx:
-            raise ValueError("Por favor, sube un archivo.")
-        
-        if not self.file_name:
-            raise ValueError("El archivo no tiene un nombre válido.")
-
-        # Decodificar el archivo binario (base64) a contenido binario
-        file_content = base64.b64decode(self.file_xlsx)
-
-        # Crear un objeto BytesIO a partir del contenido decodificado
-        file_stream = io.BytesIO(file_content)
-
-        # Verificar la extensión del archivo usando file_name
-        if self.file_name.endswith('.csv'):
-            raise ValueError("Este método solo procesa archivos XLSX. Por favor, sube un archivo Excel.")
-        elif self.file_name.endswith('.xlsx'):
-            # Leer solo la primera hoja del archivo Excel
-            df = pd.read_excel(file_stream, sheet_name=0)  # Carga solo la primera hoja como DataFrame
-        else:
-            raise ValueError("Formato de archivo no soportado. Solo se permiten archivos Excel.")
-
-        notice_data = []
-
-        _logger.info(f"Procesando la primera hoja del archivo Excel.")
-
-        # Verificar si la columna 'Recurso' existe en la primera hoja
-        if 'Recurso' not in df.columns:
-            _logger.warning("La columna 'Recurso' no existe en la primera hoja.")
-            return {'type': 'ir.actions.act_window_close'}
-
-
-        if 'Folio ' not in df.columns:
-            _logger.warning("La columna 'Folio' no existe en la primera hoja.")
-
-        # Buscar el valor del producto en la columna 'Recurso'
-        matching_rows = df[df['Recurso'] == id_producto]
-
-        if not matching_rows.empty:
-            _logger.info(f"Se encontraron filas que coinciden con el producto {id_producto}:")
-            _logger.info(matching_rows)
-            
-            
-           
-
-            # Extraer la información que necesitamos de las filas coincidentes
-            for index, row in matching_rows.iterrows():
-                archivo_quantity = row.get('Cantidad', 0)
-                archivo_folio = int(row.get('Folio ', 0))
-
-                _logger.info('valor de folio: %s',archivo_folio)
-
-
-
-                notice_data.append({
-                    'resource': row.get('Recurso', 0),  # notices.notices
-                    'quantity': row.get('Cantidad', 0),  # notices.notices
-                    'description': row.get('Descripción', 0),  # notices.notices
-                    'supplier': supplier,  # notices.notices
-                    'notice': int(row.get('Aviso', 0)),  # notices.notices
-                    'folio': int(row.get('Folio ', 0)), # notices.notices
-                    'location_id': location_id,  # notices.history
-                    'location_dest': location_dest_id,  # notices.history
-                    'picking_code': type_picking,  # notices.history
-                    'origin': origin,  # notices.history
-                })
-
-
-                if archivo_quantity != self.quantity:
-                    return {
-                        'type': 'ir.actions.act_window',
-                        'name': 'Wizard Quantity Error',
-                        'res_model': 'notice.file.wizard',
-                        'view_mode': 'form',
-                        'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
-                        'target': 'new',
-                        'name': 'Cantidad incorrecta',
-                        'context': {
-                            'default_message': f"La cantidad en el archivo ({archivo_quantity}) no coincide con la cantidad esperada ({self.quantity}).",
-                        }
-                    }
-               
-                   
-        else:
-            _logger.info(f"No se encontraron coincidencias para el producto {id_producto} en la primera hoja.")
-
-        # Llamar a _create_notice si se encontraron datos
-        if notice_data:
-           return self._create_notice(notice_data)
-
-        return {'type': 'ir.actions.act_window_close'}
-
-    def _create_notice(self, notice_data):
+    def create_notice(self):
         """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
-        for data in notice_data:
-            _logger.info(f"Creando aviso para el producto {data['resource']} con cantidad {data['quantity']}")
-            its_created = self.env['notices.notices'].search([('notice','=', data['notice'])])
-            _logger.warning('VALOR DE ITS CREATED : %s', its_created)
-            valor_test =  data['folio']
+        
+        notice_data = (self.quantity,                            
+                    self.res_partner_supplier_id,
+                    self.purchases_order_id, 
+                    self.description,
+                    self.folio,
+                    self.notice, 
+                    self.account_move_invoice_ids, 
+                    self._context['product_id'], 
+                    self._context['location_id'], 
+                    self._context['location_dest_id'], 
+                    self._context['origin'], 
+                    self._context['type'],
+                    self._context['proveedor_id']
+                    )
 
-            if its_created:
-                _logger.warning('1')
-                _logger.warning('VALOR DE ITS CREATED folio : %s', its_created.folio)
+        _logger.warning('VALORES DE NOTICE DATA:  %s', notice_data)
 
-                _logger.warning('VALOR DE data folio : %s', valor_test)
+        # Revisa si el aviso ya existe
+        its_created = self.env['notices.notices'].search([('notice', '=', self.notice)])
+        _logger.warning('VALOR DE ITS CREATED : %s', its_created)
+        valor_test = self.folio
 
-                for i in its_created.history_ids:
-                    _logger.warning('valor de registro : %s', i)
-
-                    _logger.warning('valor de registro folio: %s', i.folio)
-
-                history_match = its_created.history_ids.filtered(lambda h: int(h.folio) == valor_test)
-                _logger.warning('valor de history match: %s', history_match)
-
-                if history_match:
-                     _logger.warning('2')
-
-                     return {
-                        'type': 'ir.actions.act_window',
-                        'res_model': 'notice.file.wizard',
-                        'view_mode': 'form',
-                        'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
-                        'target': 'new',
-                        'context': {
-                            'default_message': f"El folio del archivo ({valor_test}) ya existe en el folio ({its_created}).",
-                        }
-                        
+        if its_created:
+            history_match = its_created.history_ids.filtered(lambda h: int(h.folio) == valor_test)
+            if history_match:
+                return {
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'notice.file.wizard',
+                    'view_mode': 'form',
+                    'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
+                    'target': 'new',
+                    'context': {
+                        'default_message': f"El folio del archivo ({valor_test}) ya existe en el folio ({its_created}).",
                     }
-                else:
-                    _logger.warning('3')
-                    _logger.warning('No se encontró ningún registro en history_ids con folio: %s', valor_test)
-                    its_created.write({
-                    'history_ids': [(0, 0, {
-                        'location_dest': data['location_dest'],  # Añade los campos necesarios para history
-                        'location_id': data['location_id'],
-                        'quantity': data['quantity'],
-                        'folio': data['folio'],
-                        'picking_code': data['picking_code'],
-                        })]
-                    })
-
-                    _logger.info('Historial actualizado correctamente para el aviso.')
+                }
             else:
-                _logger.warning('4')
-
-                # Crear el nuevo registro en el modelo 'notices.notices'
-                notice = self.env['notices.notices'].create({
-                    'resource': data['resource'],  # ID del producto
-                    'quantity': data['quantity'],  # Cantidad extraída del archivo
-                    'description': data['description'],
-                    'supplier': data['supplier'],
-                    'notice': data['notice'],
-                    
-                    
+                # Actualizar el historial si no coincide
+                its_created.write({
+                    'history_ids': [(0, 0, {
+                        'location_dest': notice_data[9],  # Utiliza notice_data directamente
+                        'location_id': notice_data[8],
+                        'quantity': notice_data[0],
+                        'folio': notice_data[4],
+                        'picking_code': notice_data[11],
+                        'origin':self._context['origin']
+                    })]
                 })
-
-                self.env['notices.history'].create({
-                    'location_id': data['location_id'], 
-                    'location_dest': data['location_dest'], 
-                    'quantity': data['quantity'],  # Cantidad extraída del archivo
-                    'picking_code': data['picking_code'],
-                    'notice_id':notice.id,
-                    'folio':data['folio'],
-                    
-                    
-                    
-                })
-
-
-
-        _logger.info(f"{len(notice_data)} avisos creados correctamente.")
-
-        
-        
-    def _create_history_notice(self, notice_history_data):
-        """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
-        for data in notice_history_data:
-            _logger.info(f"Creando aviso para el producto {data['product_id']} con cantidad {data['quantity']}")
-            
-            # Crear el nuevo registro en el modelo 'notices.notices'
-            self.env['notices.history'].create({
-                'resource': data['product_id'],  # ID del producto
-                'quantity': data['quantity'],  # Cantidad extraída del archivo
-                'description': data['description'],
-                'file_name': data['file_name'],
+                _logger.info('Historial actualizado correctamente para el aviso.')
+        else:
+            # Crear un nuevo registro en 'notices.notices'
+            notice = self.env['notices.notices'].create({
+                'resource': notice_data[7],  # ID del producto
+                'quantity': notice_data[0],
+                'folio': notice_data[4],
+                'description': notice_data[3],
+                'supplier': notice_data[12],
+                'notice': notice_data[5],
             })
 
-        _logger.info(f"{len(notice_history_data)} avisos creados correctamente.")
+            # Crear el historial correspondiente
+            self.env['notices.history'].create({
+                'location_id': notice_data[8], 
+                'location_dest': notice_data[9], 
+                'quantity': notice_data[0],
+                'picking_code': notice_data[11],
+                'notice_id': notice.id,
+                'folio': notice_data[4],
+                'origin': self._context['origin']
+            })
+
+        _logger.info("Aviso creado correctamente.")
+
         
         
-
-
-
-        # Ya conseguimos la informacion del excel 
-        # Ahora debemos de crear un metodo para que cree una entra
-        # _logger.warning('Entramos a action_data_analysis')
-        # _logger.warning(f"Nombre del archivo: {self.file_xlsx}")
-        # _logger.warning(f"Nombre del wizard: {self.name}")
-        # _logger.warning(f"Cantidad: {self.quantity}")
-
-
+ 
+        
 
 
 

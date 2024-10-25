@@ -24,8 +24,10 @@
                                 <field name="display_total_cost"/>
                                 <field name="name" column_invisible="true"/>
                             </tree>
-                                <field name="display_total_final_cost"/>
                         </field>
+                    </group>
+                    <group>
+                        <field name="display_costo_total_final"/>
                     </group>
                 </page>
             </xpath>
