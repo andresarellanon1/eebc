@@ -33,6 +33,6 @@ class ProjectVersion(models.Model):
             'project_name': project.name,
             'description': project.description,
             'date_start': project.date_start,
-            'project_plan_lines': project.project_plan_lines
-            'project_picking_lines': project.project_picking_lines
+            'project_plan_lines': project.project_plan_lines,
+            'project_picking_lines': project.project_picking_lines,
         })
