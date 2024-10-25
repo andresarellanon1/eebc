@@ -18,7 +18,7 @@ class ProjectVersion(models.Model):
 
     # project_ids = fields.One2many('project.project', 'version_id', string='Historial')
 
-    project_plan_lines = fields.One2many('project.project', 'version_id', string='Planeación')
+    project_plan_lines = fields.One2many('project.project', 'project_id', string='Planeación')
     project_picking_lines = fields.One2many('project.project', 'version_id', string='Stock')
 
     @api.model
@@ -35,7 +35,4 @@ class ProjectVersion(models.Model):
             'project_plan_lines': [(0, 0, {
                 'name': line.name,
             }) for line in project.project_plan_lines],
-            'project_picking_lines': [(0, 0, {
-                'product_id': line.picking_name,
-            }) for line in project.project_picking_lines],
         })
