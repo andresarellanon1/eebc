@@ -81,6 +81,7 @@ class NoticeFileWizard(models.TransientModel):
                        )
         
 
+
         _logger.warning('VALORES DE NOTICE DATA:  %s', notice_data)
         
         for data in notice_data:
@@ -135,7 +136,7 @@ class NoticeFileWizard(models.TransientModel):
 
                 # Crear el nuevo registro en el modelo 'notices.notices'
                 notice = self.env['notices.notices'].create({
-                    'resource': data[7],  # ID del producto
+                    'resource': int(data[7]),  # ID del producto
                     'quantity': data[0],  # Cantidad extraída del archivo
                     'description': data[3],
                     'supplier': data[1],
