@@ -94,16 +94,20 @@ class ProductProduct(models.Model):
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
-                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
+                    record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
                 elif origin_currency == 'USD' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} MXN"
-                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
+                    record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
                 else:
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
-                    #record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
+                    record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
             
             _logger.warning(f"Costo total, {record.project_id.costo_total_final}")
 
+
+    @api.onchange('quantity','product_id')
+    def _compute_final_cost(self):
+        self.project_id._product_currency()
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
