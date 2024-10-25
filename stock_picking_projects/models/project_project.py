@@ -20,7 +20,7 @@ class ProjectProject(models.Model):
     publication_date = fields.Date(string="Publication Date")
     site_supervisor_id = fields.Many2one('res.users', string="Site Supervisor")
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
-    costo_total_final = fields.Float(string="Costo final")
+    costo_total_final = fields.Float(string="Costo final" compute="_final_cost", store=True)
     display_costo_total_final = fields.Char(string="Costo Final")
     
     product_ids = fields.One2many(
