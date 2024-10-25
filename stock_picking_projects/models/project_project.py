@@ -100,7 +100,7 @@ class ProjectProject(models.Model):
             for product in record.product_ids:
                 total = (product.supplier_cost * product.quantity)
                 impuestos = ((total) * record.taxes_id.amount)/100
-                origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
+                origin_currency = product.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
                 
                 _logger.warning(f"La divisa original es: {origin_currency}")
                 if product.supplier_cost > 0:
