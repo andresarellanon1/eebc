@@ -107,7 +107,7 @@ class ProjectProject(models.Model):
                 if origin_currency == 'USD' or origin_currency == 'MXN':
                     if origin_currency == 'MXN' and product.cambio == True :
                         record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
-                         _logger.warning(f"Display en dolares: {record.display_costo_total_final}")
+                        _logger.warning(f"Display en dolares: {record.display_costo_total_final}")
                     elif origin_currency == 'USD' and record.cambio == True :
                         record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
                         _logger.warning(f"Display en pesos: {record.display_costo_total_final}")
