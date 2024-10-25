@@ -44,7 +44,7 @@ class ProjectPlan(models.Model):
         }) for line in self.project_plan_lines]
 
         picking_lines_vals = [(0, 0, {
-            'name': line.name,
+            'product_id': line.product_id,
             'quantity': line.quantity,
         }) for line in self.picking_lines]
         
