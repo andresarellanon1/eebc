@@ -20,8 +20,7 @@ class ProjectVersion(models.Model):
 
     project_plan_lines = fields.One2many('project.plan.line', 'version_id', string='Planeación')
     project_picking_lines = fields.One2many('project.picking.lines', 'version_id', string='Stock')
-
-
+    
     @api.model
     def create_version(self, project, user):
         # Guardamos los datos del proyecto
@@ -33,6 +32,10 @@ class ProjectVersion(models.Model):
             'project_name': project.name,
             'description': project.description,
             'date_start': project.date_start,
-            'project_plan_lines': project.project_plan_lines,
-            'project_picking_lines': project.project_picking_lines,
+            'project_plan_lines': [(0, 0, {
+                'name': line.name,
+            }) for line in project.project_plan_lines],
+            'project_picking_lines': [(0, 0, {
+                'picking_name': line.picking_name,
+            }) for line in project.project_picking_lines],
         })
