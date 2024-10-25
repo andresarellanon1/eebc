@@ -88,7 +88,6 @@ class ProductProduct(models.Model):
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
-            record.project_id.costo_total_final =  record.project_id.costo_total_final + record.total_cost
         
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' and record.cambio == True :
