@@ -101,14 +101,19 @@ class ProjectProject(models.Model):
 
                 product.total_cost = total + impuestos
                 record.costo_total_final =  record.costo_total_final + product.total_cost
-            
+
+                _logger.warning(f"Costo total final: {record.costo_total_final}")
+
                 if origin_currency == 'USD' or origin_currency == 'MXN':
                     if origin_currency == 'MXN' and product.cambio == True :
                         record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
+                         _logger.warning(f"Display en dolares: {record.display_costo_total_final}")
                     elif origin_currency == 'USD' and record.cambio == True :
                         record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
+                        _logger.warning(f"Display en pesos: {record.display_costo_total_final}")
                     else:
                         record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
+                        _logger.warning(f"Display por defecto: {record.display_costo_total_final}")
 
             
             
