@@ -99,13 +99,11 @@ class ProjectProject(models.Model):
                 impuestos = ((total) * record.taxes_id.amount)/100
                 origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
 
-                record.costo_total_final = 0 
-
                 if product.supplier_cost > 0:
-                    product.total_cost = total + impuestos
-                    _logger.warning(f"Costo total: {product.total_cost}")
-                    _logger.warning(f"El valor de costo total final anterior: { record.costo_total_final}")
-                    record.costo_total_final =  record.costo_total_final + product.total_cost
+                    costo_total = total + impuestos
+                    _logger.warning(f"Costo total: {costo_total}")
+                    _logger.warning(f"El valor de costo total final anterior: {record.costo_total_final}")
+                    record.costo_total_final =  record.costo_total_final + costo_total
 
                     _logger.warning(f"Costo total final: {record.costo_total_final}")
 
