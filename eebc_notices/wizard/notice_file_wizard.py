@@ -66,18 +66,22 @@ class NoticeFileWizard(models.TransientModel):
     def create_notice(self):
         """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
         
-        notice_data = (self.quantity, 
+        notice_data = (self.quantity,                           
                        self.res_partner_supplier_id,
                        self.purchases_order_id, 
-                       self.description, 
+                       self.description,
+                       self.folio,
+                       self.notice, 
                        self.account_move_invoice_ids, 
                        self._context['product_id'], 
                        self._context['location_id'], 
                        self._context['location_dest_id'], 
-                       self._context['origin'])
+                       self._context['origin'], 
+                       self._context['type']
+                       )
         
         
-        for data in self:
+        for data in notice_data:
             its_created = self.env['notices.notices'].search([('notice','=', self.notice)])
             _logger.warning('VALOR DE ITS CREATED : %s', its_created)
             valor_test =  self.folio
@@ -115,11 +119,11 @@ class NoticeFileWizard(models.TransientModel):
                     _logger.warning('No se encontró ningún registro en history_ids con folio: %s', valor_test)
                     its_created.write({
                     'history_ids': [(0, 0, {
-                        'location_dest': data['location_dest'],  # Añade los campos necesarios para history
-                        'location_id': data['location_id'],
-                        'quantity': data['quantity'],
-                        'folio': data['folio'],
-                        'picking_code': data['picking_code'],
+                        'location_dest': data[9],  # Añade los campos necesarios para history
+                        'location_id': data[8],
+                        'quantity': data[0],
+                        'folio': data[4],
+                        'picking_code': data[11],
                         })]
                     })
 
@@ -129,22 +133,22 @@ class NoticeFileWizard(models.TransientModel):
 
                 # Crear el nuevo registro en el modelo 'notices.notices'
                 notice = self.env['notices.notices'].create({
-                    'resource': data['resource'],  # ID del producto
-                    'quantity': data['quantity'],  # Cantidad extraída del archivo
-                    'description': data['description'],
-                    'supplier': data['supplier'],
-                    'notice': data['notice'],
+                    'resource': data[7],  # ID del producto
+                    'quantity': data[0],  # Cantidad extraída del archivo
+                    'description': data[3],
+                    'supplier': data[1],
+                    'notice': data[5],
                     
                     
                 })
 
                 self.env['notices.history'].create({
-                    'location_id': data['location_id'], 
-                    'location_dest': data['location_dest'], 
-                    'quantity': data['quantity'],  # Cantidad extraída del archivo
-                    'picking_code': data['picking_code'],
+                    'location_id': data[8], 
+                    'location_dest': data[9], 
+                    'quantity': data[0],  # Cantidad extraída del archivo
+                    'picking_code': data[11],
                     'notice_id':notice.id,
-                    'folio':data['folio'],
+                    'folio':data[4],
                     
                     
                     
@@ -156,21 +160,7 @@ class NoticeFileWizard(models.TransientModel):
 
         
         
-    def _create_history_notice(self, notice_history_data):
-        """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
-        for data in notice_history_data:
-            _logger.info(f"Creando aviso para el producto {data['product_id']} con cantidad {data['quantity']}")
-            
-            # Crear el nuevo registro en el modelo 'notices.notices'
-            self.env['notices.history'].create({
-                'resource': data['product_id'],  # ID del producto
-                'quantity': data['quantity'],  # Cantidad extraída del archivo
-                'description': data['description'],
-                'file_name': data['file_name'],
-            })
-
-        _logger.info(f"{len(notice_history_data)} avisos creados correctamente.")
-        
+ 
         
 
 
