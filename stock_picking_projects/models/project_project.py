@@ -93,30 +93,33 @@ class ProjectProject(models.Model):
 
     def _final_cost(self):
         for record in self:
-            record.costo_total_final = 0 
-            for product in record.product_ids:
-                total = (product.supplier_cost * product.quantity)
-                impuestos = ((total) * record.taxes_id.amount)/100
-                origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
+            record.product_ids._onchange_activities_tmpl_id()
+            #record.product_ids._compute_total_cost()
+        # for record in self:
+        #     record.costo_total_final = 0 
+        #     for product in record.product_ids:
+        #         total = (product.supplier_cost * product.quantity)
+        #         impuestos = ((total) * record.taxes_id.amount)/100
+        #         origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
 
-                if product.supplier_cost > 0:
-                    costo_total = total + impuestos
-                    _logger.warning(f"Costo total: {costo_total}")
-                    _logger.warning(f"El valor de costo total final anterior: {record.costo_total_final}")
-                    record.costo_total_final =  record.costo_total_final + costo_total
+        #         if product.supplier_cost > 0:
+        #             costo_total = total + impuestos
+        #             _logger.warning(f"Costo total: {costo_total}")
+        #             _logger.warning(f"El valor de costo total final anterior: {record.costo_total_final}")
+        #             record.costo_total_final =  record.costo_total_final + costo_total
 
-                    _logger.warning(f"Costo total final: {record.costo_total_final}")
+        #             _logger.warning(f"Costo total final: {record.costo_total_final}")
 
-                    if origin_currency == 'USD' or origin_currency == 'MXN':
-                        if origin_currency == 'MXN' and product.cambio == True :
-                            record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
-                            _logger.warning(f"Display en dolares: {record.display_costo_total_final}")
-                        elif origin_currency == 'USD' and record.cambio == True :
-                            record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
-                            _logger.warning(f"Display en pesos: {record.display_costo_total_final}")
-                        else:
-                            record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
-                            _logger.warning(f"Display por defecto: {record.display_costo_total_final}")
+        #             if origin_currency == 'USD' or origin_currency == 'MXN':
+        #                 if origin_currency == 'MXN' and product.cambio == True :
+        #                     record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
+        #                     _logger.warning(f"Display en dolares: {record.display_costo_total_final}")
+        #                 elif origin_currency == 'USD' and record.cambio == True :
+        #                     record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
+        #                     _logger.warning(f"Display en pesos: {record.display_costo_total_final}")
+        #                 else:
+        #                     record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
+        #                     _logger.warning(f"Display por defecto: {record.display_costo_total_final}")
 
             
             
