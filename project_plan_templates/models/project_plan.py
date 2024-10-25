@@ -10,7 +10,6 @@ class ProjectPlan(models.Model):
     description = fields.Html(string="Description")
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
     project_id = fields.Many2one('project.project', string="Project")
-    version_id = fields.Many2one('project.version', string="History")
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
 
     picking_lines = fields.One2many(
@@ -32,12 +31,31 @@ class ProjectPlan(models.Model):
     def action_create_project(self):
         if not self.project_name:
             raise ValidationError("Project name is required to create a project.")
+
+        project_plan_lines_vals = [(0, 0, {
+            'name': line.name,
+            'chapter': line.chapter,
+            'description': line.description,
+            'use_project_task': line.use_project_task,
+            'planned_date_begin': line.planned_date_begin,
+            'planne_date_end': line.planne_date_end,
+            'partner_id': [(6, 0 , line.partner_id.ids)],
+            'stage_id': line.stage_id,
+        }) for line in self.project_plan_lines]
+
+        picking_lines_vals = [(0, 0, {
+            'name': line.name,
+            'quantity': line.quantity,
+        }) for line in self.picking_lines]
         
         project_vals = {
             'name': self.project_name,
             'project_plan_id': self.id,
             'description': self.description,
-            'project_picking_ids': [(6, 0, self.project_plan_pickings.ids)],  # Optimización en el Many2many
+            'project_picking_ids': [(6, 0, self.project_plan_pickings.ids)],
+            'project_plan_lines': project_plan_lines_vals,
+            'project_picking_lines': picking_lines_vals,
+
         }
         project = self.env['project.project'].create(project_vals)
 
