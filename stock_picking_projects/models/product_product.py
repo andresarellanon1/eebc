@@ -118,6 +118,7 @@ class ProductProduct(models.Model):
                             project.display_costo_total_final = f"{project.costo_total_final:.2f} MXN"
                         else:
                             project.display_costo_total_final = f"{project.costo_total_final:.2f} {origin_currency}"
+                            _logger.warning(f'Se le esta dando valor a display costo: {project.display_costo_total_final}')
 
 
     def pesos_a_dolares(self, monto, tipo_cambio):
