@@ -100,8 +100,6 @@ class ProductProduct(models.Model):
                 else:
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
                     record.display_costo_total_final = f"{record.project_id.costo_total_final:.2f} {origin_currency}"
-            
-            _logger.warning(f"Costo total, {record.project_id.costo_total_final}")
 
 
     @api.onchange('quantity','product_id')
