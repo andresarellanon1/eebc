@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+from odoo.exceptions import ValidationError
 
 class ProjectPlan(models.Model):
     _name = 'project.plan'
@@ -26,3 +27,23 @@ class ProjectPlan(models.Model):
             for picking in record.project_plan_pickings:
                 lines |= picking.project_picking_lines
             record.picking_lines = lines
+
+    def action_create_project(self):
+        if not self.project_name:
+            raise ValidationError("Project name is required to create a project.")
+        
+        project_vals = {
+            'name': self.project_name,
+            'project_plan_id': self.id,
+            'description': self.description,
+            'project_picking_ids': [(6, 0, self.project_plan_pickings.ids)],  # Optimización en el Many2many
+        }
+        project = self.env['project.project'].create(project_vals)
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
