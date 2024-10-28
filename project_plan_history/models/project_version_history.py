@@ -32,8 +32,10 @@ class ProjectVersion(models.Model):
             'project_name': project.name,
             'description': project.description,
             'date_start': project.date_start,
+            'project_plan_lines': [(6, 0, project.project_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, project.project_picking_lines.ids)],
         })
         
         # Asignar las líneas de planificación y picking al registro creado
-        version.project_plan_lines = [(6, 0, project.project_plan_lines.ids)]
-        version.project_picking_lines = [(6, 0, project.project_picking_lines.ids)]
+        # version.project_plan_lines = [(6, 0, project.project_plan_lines.ids)]
+        # version.project_picking_lines = [(6, 0, project.project_picking_lines.ids)]
