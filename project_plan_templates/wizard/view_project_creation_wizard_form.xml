@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Confirm Project Creation">
                     <group>
-                        <field name="project_name" readonly="1"/>
+                        <field name="project_name"/>
                     </group>
                     <footer>
                         <button name="action_confirm_create_project" string="Create Project" type="object" class="btn-primary"/>
