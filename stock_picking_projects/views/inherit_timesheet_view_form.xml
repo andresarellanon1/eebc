@@ -30,7 +30,7 @@
                     <separator string="Costo total" colspan="4" style="margin-top: 10px; border-top: 1px solid #000;"/>
 
                     <group col="2" align="left" style="margin-top: 10px;">
-                        <field name="display_costo_total_final" readonly="1"/>
+                        <field name="costo_total_final" readonly="1"/>
                     </group>
 
                 </page>
