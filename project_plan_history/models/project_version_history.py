@@ -43,5 +43,5 @@ class ProjectVersion(models.Model):
                 record.project_name = ', '.join(record.project_id.project_plan_lines.mapped('name'))
             else:
                 record.project_name = ''
-            name = record.project_id.project_plan_lines.name
+            name = ', '.join(record.project_id.project_plan_lines.mapped('name'))
             _logger.warning(f'El nombre es: {name}')
