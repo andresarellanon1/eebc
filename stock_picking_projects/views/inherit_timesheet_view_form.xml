@@ -20,15 +20,21 @@
                                 <field name="product_id"/>
                                 <field name="quantity"/>
                                 <field name="reserved_qty"/>
-                                <field name="display_supplier_cost"/>
-                                <field name="display_total_cost"/>
+                                <field name="display_supplier_cost" readonly="1"/>
+                                <field name="display_total_cost" readonly="1"/>
                                 <field name="name" column_invisible="true"/>
                             </tree>
                         </field>
                     </group>
-                    <group>
-                        <field name="display_costo_total_final"/>
+
+                    <separator string="Costo total" colspan="4" style="margin-top: 10px; border-top: 1px solid #000;"/>
+
+                    <group col="2" align="left" style="margin-top: 10px;">
+                        <field name="costo_total_final" readonly="1"/>
+                        <field name="costo_prueba"/>
+                        <field name="costo_prueba_dos"/>
                     </group>
+
                 </page>
             </xpath>
             <xpath expr="//group//field[@name='date']" position="after">

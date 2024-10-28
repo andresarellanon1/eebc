@@ -5,9 +5,44 @@ class ProjectCreation(models.TransientModel):
     _description = 'Wizard to confirm project creation'
 
     project_plan_id = fields.Many2one('project.plan', string="Project Plan", required=True)
-    project_name = fields.Char(related='project_plan_id.project_name', string="Project Name", readonly=True)
+    project_name = fields.Char(string="Project Name")
+    user_id = fields.Many2one('res.users', string="Project manager")
+    description = fields.Html(string="Description")
+    project_plan_lines = fields.Many2many(
+        'project.plan.line', 
+        string="Project Plan Lines"
+    )
+    
+    project_plan_pickings = fields.Many2many(
+        'project.plan.pickings', 
+        string="Picking Templates"
+    )
+
+    picking_lines = fields.Many2many(
+        'project.picking.lines',
+        string="Picking Lines",
+        compute='_compute_picking_lines',
+        store=False
+    )
+
+    @api.onchange('project_plan_id')
+    def _onchange_project_plan_id(self):
+        if self.project_plan_id:
+            self.project_name = self.project_plan_id.project_name
+            self.project_plan_lines = self.project_plan_id.project_plan_lines
+            self.project_plan_pickings = self.project_plan_id.project_plan_pickings
+            self.picking_lines = self.project_plan_id.picking_lines
+            self.description = self.project_plan_id.description
+
+    @api.onchange('project_plan_pickings')
+    def _compute_picking_lines(self):
+        for record in self:
+            lines = self.env['project.picking.lines']
+            for picking in record.project_plan_pickings:
+                lines |= picking.project_picking_lines
+            record.picking_lines = lines
 
     def action_confirm_create_project(self):
         self.ensure_one()
-        self.project_plan_id.action_create_project()
-        return {'type': 'ir.actions.act_window_close'}
+        
+        return self.project_plan_id.action_create_project()

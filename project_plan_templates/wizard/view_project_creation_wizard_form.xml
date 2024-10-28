@@ -6,13 +6,59 @@
             <field name="model">project.creation.wizard</field>
             <field name="arch" type="xml">
                 <form string="Confirm Project Creation">
-                    <group>
-                        <field name="project_name" readonly="1"/>
-                    </group>
-                    <footer>
-                        <button name="action_confirm_create_project" string="Create Project" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
-                    </footer>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="project_name" />
+                            </group>
+                            <notebook>
+                                <page name="description" string="Description">
+                                    <field name="description" />
+                                </page>
+                                <page name="planning" string="Planning">
+                                    <group>
+                                        <field name="project_plan_id"/>
+                                    </group>
+                                    <group name="planning_lines">
+                                        <field name="project_plan_lines">
+                                            <tree editable="editable_bottom">
+                                                <field name="name" />
+                                                <field name="chapter" />
+                                                <field name="description" />
+                                                <field name="use_project_task" />
+                                                <field name="planned_date_begin" widget="daterange" />
+                                                <field name="planned_date_end" widget="daterange" />
+                                                <field name="partner_id" widget="many2many_avatar_user" />
+                                                <field name="stage_id" />
+                                                <button name="action_preview_task" type="object"
+                                                    class="oe_highlight" string="Preview task" />
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </page>
+                                <page name="Stock" string="Stock">
+                                    <group name="stock_container">
+                                        <field name="project_plan_pickings" widget="many2many_tags" />
+                                    </group>
+                                    <group name="stock_lines">
+                                        <field name="picking_lines">
+                                            <tree editable="editable_bottom">
+                                                <field name="product_id" />
+                                                <field name="quantity" />
+                                                <field name="location_id" />
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+    
+                        <footer>
+                            <button name="action_confirm_create_project" string="Create Project"
+                                type="object" class="btn-primary" />
+                            <button string="Cancel" class="btn-secondary" special="cancel" />
+                        </footer>
+                    </sheet>
                 </form>
             </field>
         </record>
