@@ -24,7 +24,7 @@ class ProjectVersion(models.Model):
     @api.model
     def create_version(self, project, user):
         # Guardamos los datos del proyecto
-        version = self.create({
+        self.create({
             'modified_by': user.name,
             'project_id': project.id,
             'version_date': fields.Datetime.now(),
