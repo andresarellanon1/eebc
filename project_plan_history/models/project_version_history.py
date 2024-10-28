@@ -35,13 +35,10 @@ class ProjectVersion(models.Model):
             'description': project.description,
             'date_start': project.date_start,
         })
-
-    @api.onchange('project_id')
-    def compute_lines(self):
         for record in self:
-            if record.project_id and record.project_id.project_plan_lines:
-                record.project_name = ', '.join(record.project_id.project_plan_lines.mapped('name'))
-            else:
-                record.project_name = ''
-            name = ', '.join(record.project_id.project_plan_lines.mapped('name'))
-            _logger.warning(f'El nombre es: {name}')
+            record.project_plan_lines = record.project_id.project_plan_lines
+
+    # @api.onchange('project_id')
+    # def compute_lines(self):
+    #     for record in self:
+    #         record.project_plan_lines = record.project_id.project_plan_lines
