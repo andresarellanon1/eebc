@@ -32,7 +32,7 @@
                         <notebook>
                             <page string="Changes">
                                 <group>
-                                    <field name="project_id" widget="One2many_list">
+                                    <field name="project_id.project_plan_lines" widget="One2many_list">
                                         <tree>
                                             <field name="name" string="Nombre"/>
                                             <!-- <field name="project_name" string="Nombre del proyecto"/>
