@@ -122,9 +122,9 @@ class ProductProduct(models.Model):
                             _logger.warning(f'Se le esta dando valor a display costo: {project.display_costo_total_final}')
 
     @api.onchange('quantity','product_id')
-    def _compute_final_cost(self):
+    def funcion_prueba(self):
         for record in self:
-            project_id.cambiar = True
+            record.project_id.cambiar = True
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
