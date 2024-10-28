@@ -87,10 +87,11 @@ class ProjectProject(models.Model):
                 raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
 
     @api.onchange('currency_id', 'exchange_rate', 'taxes_id')
-    def _product_currency(self):
+    def _product_currency(self, cambio):
         for record in self:
             record.product_ids._onchange_activities_tmpl_id()
             record.product_ids._compute_total_cost()
+            cambiar = cambio
 
     @api.onchange('taxes_id', 'currency_id', 'exchange_rate')
     def _final_cost(self):
