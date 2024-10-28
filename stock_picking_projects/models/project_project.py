@@ -112,6 +112,11 @@ class ProjectProject(models.Model):
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
+    @api.onchange('product_id.quantity')
+    def prueba(self):
+        _logger.warning('Entro a la funcion prueba')
+    
+
             
             
             
