@@ -124,8 +124,8 @@ class ProjectProject(models.Model):
 
     def _modificar_campos(self, costouno, costodos):
         for record in self:
-            _logger.warning(f'El nuevo valor de costo uno: {record.costouno}')
-            _logger.warning(f'El nuevo valor de costo dos: {record.costodos}')
+            _logger.warning(f'El nuevo valor de costo uno: {costouno}')
+            _logger.warning(f'El nuevo valor de costo dos: {costodos}')
             record.costo_prueba = costouno 
             record.costo_prueba_dos = costodos       
             
