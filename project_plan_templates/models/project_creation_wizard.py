@@ -21,8 +21,7 @@ class ProjectCreation(models.TransientModel):
     picking_lines = fields.Many2many(
         'project.picking.lines',
         string="Picking Lines",
-        compute='_compute_picking_lines',
-        store=False
+        compute='_compute_picking_lines'
     )
 
     @api.onchange('project_plan_id')
@@ -70,6 +69,8 @@ class ProjectCreation(models.TransientModel):
 
         project = self.env['project.project'].create(project_vals)
         self.create_project_tasks(project)
+
+        self.project_plan_id.project_name = False
 
         return {
             'type': 'ir.actions.act_window',
