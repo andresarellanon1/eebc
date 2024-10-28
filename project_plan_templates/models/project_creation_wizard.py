@@ -10,7 +10,7 @@ class ProjectCreation(models.TransientModel):
     description = fields.Html(string="Description")
     project_plan_lines = fields.One2many(
         'project.plan.line', 
-        'project_plan_id', 
+        'project_plan_wizard_id', 
         string="Project Plan Lines"
     )
     project_plan_pickings = fields.Many2many(
@@ -19,8 +19,10 @@ class ProjectCreation(models.TransientModel):
     )
     picking_lines = fields.One2many(
         'project.picking.lines',
-        'project_plan_id',
-        string="Picking Lines"
+        'project_plan_wizard_id',
+        string="Picking Lines",
+        compute='_compute_picking_lines',
+        store=False
     )
 
     @api.onchange('project_plan_id')
@@ -30,6 +32,14 @@ class ProjectCreation(models.TransientModel):
             self.project_plan_lines = self.project_plan_id.project_plan_lines
             self.project_plan_pickings = self.project_plan_id.project_plan_pickings
             self.picking_lines = self.project_plan_id.picking_lines
+
+    @api.onchange('project_plan_pickings')
+    def _compute_picking_lines(self):
+        for record in self:
+            lines = self.env['project.picking.lines']
+            for picking in record.project_plan_pickings:
+                lines |= picking.project_picking_lines
+            record.picking_lines = lines
 
     def action_confirm_create_project(self):
         self.ensure_one()
