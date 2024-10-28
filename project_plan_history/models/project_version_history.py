@@ -35,10 +35,10 @@ class ProjectVersion(models.Model):
             'description': project.description,
             'date_start': project.date_start,
         })
-        _compute_lines()
+        compute_lines()
 
     @api.depends('project_id')
-    def _compute_lines(self):
+    def compute_lines(self):
         for record in self:
             record.project_name = record.project_id.project_plan_lines.name
             name = record.project_id.project_plan_lines.name
