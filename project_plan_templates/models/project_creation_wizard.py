@@ -51,6 +51,7 @@ class ProjectCreation(models.TransientModel):
             'use_project_task': line.use_project_task,
             'planned_date_begin': line.planned_date_begin,
             'planned_date_end': line.planned_date_end,
+            'task_timesheet_id': line.task_timesheet_id,
             'partner_id': [(6, 0 , line.partner_id.ids)],
             'stage_id': line.stage_id,
         }) for line in self.project_plan_lines]
