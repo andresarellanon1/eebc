@@ -15,7 +15,8 @@
         "security/ir.model.access.csv",
         "views/inherit_timesheet_view_form.xml",
         "views/inherit_task_view_form.xml",
-        "views/plan_picking_template_view.xml"
+        "views/plan_picking_template_view.xml",
+        "wizard/view_project_creation_wizard_form.xml"
     ],
     "license": "LGPL-3",
     'installable': True,

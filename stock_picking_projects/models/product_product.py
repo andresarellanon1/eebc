@@ -30,7 +30,6 @@ class ProductProduct(models.Model):
 
     @api.onchange('product_id','currency')
     def _onchange_activities_tmpl_id(self):
-        _logger.warning("Se ejucta funcion onche activities")
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
@@ -78,12 +77,10 @@ class ProductProduct(models.Model):
                     record.supplier_cost = monto
                     record.display_supplier_cost = f"{record.supplier_cost:.2f} {origin_currency}"
 
-            
-    @api.depends('quantity','product_id')
-    def _compute_total_cost(self):
-        _logger.warning("Se ejucta funcion compute total cost")
-        self._onchange_activities_tmpl_id()
 
+    @api.onchange('quantity','product_id')
+    def _compute_total_cost(self):
+        self._onchange_activities_tmpl_id()
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.project_id.taxes_id.amount)/100
@@ -102,9 +99,28 @@ class ProductProduct(models.Model):
 
     @api.onchange('quantity','product_id')
     def _compute_final_cost(self):
-        _logger.warning("Se ejucta funcion compute final cost")
-        self.project_id._final_cost()
         self.project_id._product_currency()
+        self.project_id._final_cost()
+        for record in self:
+            record.project_id.costo_total_final = 0 
+            for project in record.project_id:
+                total = (record.supplier_cost * record.quantity)
+                impuestos = ((total) * project.taxes_id.amount)/100
+                origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
+                
+                if record.supplier_cost > 0:
+                    costo_total = total + impuestos
+                    project.costo_total_final =  project.costo_total_final + costo_total
+
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        if origin_currency == 'MXN' and record.cambio == True :
+                            project.display_costo_total_final = f"{project.costo_total_final:.2f} USD"
+                        elif origin_currency == 'USD' and record.cambio == True :
+                            project.display_costo_total_final = f"{project.costo_total_final:.2f} MXN"
+                        else:
+                            project.display_costo_total_final = f"{project.costo_total_final:.2f} {origin_currency}"
+                            _logger.warning(f'Se le esta dando valor a display costo: {project.display_costo_total_final}')
+
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio

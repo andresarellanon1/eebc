@@ -6,7 +6,6 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
     
     project_plan_id = fields.Many2one('project.plan', string="Project template")
-    project_plan_description = fields.Char(string="Project description")
     project_plan_lines = fields.One2many('project.plan.line', 'origin_project_id', string="Project plan lines")
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Stock picking")
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
@@ -18,11 +17,11 @@ class ProjectProject(models.Model):
 
             if project.project_plan_id:
                 project.project_plan_lines = [(6, 0, project.project_plan_id.project_plan_lines.ids)]
-                project.project_plan_description = project.project_plan_id.description
+                project.description = project.project_plan_id.description
                 project.project_picking_ids = [(6, 0, project.project_plan_id.project_plan_pickings.ids)]
             else:
                 project.project_plan_lines = [(5, 0, 0)]
-                project.project_plan_description = False
+                project.description = False
                 project_plan_pickings = [(5, 0, 0)]
 
     @api.onchange('project_picking_ids')
