@@ -35,10 +35,10 @@
                                     </page>
                                     <page name="Stock" string="Stock">
                                         <group name="stock_container">
-                                            <field name="project_picking_ids" widget="many2many_tags"/>
+                                            <field name="project_plan_pickings" widget="many2many_tags"/>
                                         </group>
                                         <group name="stock_lines">
-                                            <field name="project_picking_lines">
+                                            <field name="picking_lines">
                                                 <tree editable="editable_bottom">
                                                     <field name="product_id"/>
                                                     <field name="quantity"/>
