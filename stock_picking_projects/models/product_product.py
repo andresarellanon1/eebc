@@ -121,6 +121,9 @@ class ProductProduct(models.Model):
                             project.display_costo_total_final = f"{project.costo_total_final:.2f} {origin_currency}"
                             _logger.warning(f'Se le esta dando valor a display costo: {project.display_costo_total_final}')
 
+    @api.onchange('quantity','product_id')
+    def _compute_final_cost(self):
+        project_id.cambiar = True
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
