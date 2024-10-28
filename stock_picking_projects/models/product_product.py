@@ -125,7 +125,7 @@ class ProductProduct(models.Model):
     def funcion_prueba(self):
         for record in self:
             _logger.warning(f'Se activo onchange')
-           self.project_id._modificar_campos(record.quantity, 100)
+            self.project_id._modificar_campos(record.quantity, 100)
 
 
     def pesos_a_dolares(self, monto, tipo_cambio):
