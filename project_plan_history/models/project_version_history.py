@@ -2,6 +2,10 @@ from odoo import api, fields, models
 import json
 from odoo.exceptions import ValidationError
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 class ProjectVersion(models.Model):
     _name = 'project.version'
     _description = 'Project Version History'
@@ -31,3 +35,10 @@ class ProjectVersion(models.Model):
             'description': project.description,
             'date_start': project.date_start,
         })
+
+    @api.depends('project_id')
+    def _compute_lines(self):
+        for record in self:
+            record.project_name = record.project_id.project_plan_lines.name
+            name = record.project_id.project_plan_lines.name
+            _logger.warning(f'El nombre es: {name}')
