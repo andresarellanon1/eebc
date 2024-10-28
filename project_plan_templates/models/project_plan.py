@@ -37,8 +37,7 @@ class ProjectPlan(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_project_plan_id': self.id,
-                'project_name': self.project_name,
+                'project_plan_id': self.id
             }
         }
 
