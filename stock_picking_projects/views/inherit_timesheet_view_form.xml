@@ -31,8 +31,8 @@
 
                     <group col="2" align="left" style="margin-top: 10px;">
                         <field name="costo_total_final" readonly="1"/>
-                        <field name="costo_prueba" invisible=True/>
-                        <field name="costo_prueba_dos" invisible=True/>
+                        <field name="costo_prueba" invisible="1"/>
+                        <field name="costo_prueba_dos" invisible="1"/>
                     </group>
 
                 </page>
