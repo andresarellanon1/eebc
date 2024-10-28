@@ -11,6 +11,7 @@ class ProjectVersion(models.Model):
     _description = 'Project Version History'
 
     project_id = fields.Many2one('project.project', string='Project')
+    metodo = fields.Boolean(string="Metodo", compute="_compute_lines")
     
     version_date = fields.Date(string='Version date')
     modified_by = fields.Char(string='Modified by')
@@ -35,11 +36,7 @@ class ProjectVersion(models.Model):
             'date_start': project.date_start,
         })
 
-        self.project_plan_lines = project.project_plan_lines.ids
-        self.project_picking_lines = project.project_picking_lines.ids
-
-    # @api.depends('motive')
-    # def _compute_lines(self):
-    #     for record in self:
-    #         record.project_plan_lines = record.project_id.project_plan_lines
-    #         record.project_picking_lines = record.project_id.project_picking_lines
+    def _compute_lines(self):
+        for record in self:
+            record.project_plan_lines = record.project_id.project_plan_lines
+            record.project_picking_lines = record.project_id.project_picking_lines
