@@ -34,14 +34,12 @@ class ProjectVersion(models.Model):
             'date_start': project.date_start,
         })
 
-        # Asignar las líneas de planificación y picking al registro creado
-        if project.project_plan_lines:
-            version.write({
-                'project_plan_lines': [(6, 0, project.project_plan_lines.ids)]
-            })
-        if project.project_picking_lines:
-            version.write({
-                'project_picking_lines': [(6, 0, project.project_picking_lines.ids)]
-            })
+        # Clonar las líneas de planificación
+        for line in project.project_plan_lines:
+            line.copy({'version_id': version.id})  # Asegúrate de que 'version_id' esté definido en el modelo de línea
+
+        # Clonar las líneas de picking
+        for line in project.project_picking_lines:
+            line.copy({'version_id': version.id})  # Asegúrate de que 'version_id' esté definido en el modelo de línea
 
         return version
