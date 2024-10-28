@@ -21,7 +21,7 @@ class ProjectProject(models.Model):
     site_supervisor_id = fields.Many2one('res.users', string="Site Supervisor")
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
     costo_total_final = fields.Float(string="Costo final", compute="_prueba_total_cost", store=True)
-    display_costo_total_final = fields.Char(string="Costo Final")
+    display_costo_total_final = fields.Char(string="Costo total")
     cambiar = fields.Boolean(string="Cambio", default=False)
     
     product_ids = fields.One2many(
