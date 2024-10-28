@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="reason" />
+                        <field name="motive" />
                     </group>
                     <footer>
                         <button string="Confirm" type="object" name="confirm" class="btn-primary" />
