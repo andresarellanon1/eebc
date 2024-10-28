@@ -13,6 +13,12 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <record id="plan_timesheet_templates_action" model="ir.actions.act_window">
+            <field name="name">Plantillas de hojas de horas</field>
+            <field name="res_model">task.timesheet</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
         <record id="menu_project_config" model="ir.ui.menu">
             <field name="name">Plantillas</field>
             <field name="parent_id" ref="project.menu_main_pm" />
@@ -31,6 +37,14 @@
             id="project_picking_option"
             name="Plantillas de operaciones de inventario"
             action="plan_picking_templates_action"
+            parent="menu_project_config"
+            sequence="20"
+        />
+
+        <menuitem 
+            id="timesheet_option"
+            name="Plantillas de hojas de horas"
+            action="plan_timesheet_templates_action"
             parent="menu_project_config"
             sequence="20"
         />
