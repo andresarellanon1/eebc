@@ -12,9 +12,6 @@
                                 <group>
                                     <field name="project_name"/>
                                 </group>
-                                <group>
-                                    <field name="user_id"/>
-                                </group>
                                 <notebook>
                                     <page name="description" string="Description">
                                         <field name="description"/>
