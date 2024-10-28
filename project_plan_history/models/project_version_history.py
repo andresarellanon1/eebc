@@ -24,7 +24,7 @@ class ProjectVersion(models.Model):
     @api.model
     def create_version(self, project, user):
         # Guardamos los datos del proyecto
-        self.create({
+        version = self.create({
             'modified_by': user.name,
             'project_id': project.id,
             'version_date': fields.Datetime.now(),
@@ -34,6 +34,6 @@ class ProjectVersion(models.Model):
             'date_start': project.date_start,
         })
         
-        for record in self:
-            record.project_plan_lines = record.project_id.project_plan_lines.ids
-            record.project_picking_lines = record.project_id.project_picking_lines.ids
+        # Asignar las líneas de planificación y picking al registro creado
+        version.project_plan_lines = [(6, 0, project.project_plan_lines.ids)]
+        version.project_picking_lines = [(6, 0, project.project_picking_lines.ids)]
