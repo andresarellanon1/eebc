@@ -20,7 +20,9 @@ class ProjectProject(models.Model):
     publication_date = fields.Date(string="Publication Date")
     site_supervisor_id = fields.Many2one('res.users', string="Site Supervisor")
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
-    costo_total_final = fields.Float(string="Costo final")
+    costo_total_final = fields.Float(string="Costo final", compute="_final_cost", store=True)
+    display_costo_total_final = fields.Char(string="Costo Final")
+    cambiar = fields.Boolean(string="Cambio", default=False, compute="prueba")
     
     product_ids = fields.One2many(
         'product.product', 
@@ -89,3 +91,35 @@ class ProjectProject(models.Model):
         for record in self:
             record.product_ids._onchange_activities_tmpl_id()
             record.product_ids._compute_total_cost()
+
+    @api.onchange('taxes_id', 'currency_id', 'exchange_rate')
+    def _final_cost(self):
+        for record in self:
+            record.costo_total_final = 0 
+            for product in record.product_ids:
+                total = (product.supplier_cost * product.quantity)
+                impuestos = ((total) * record.taxes_id.amount)/100
+                origin_currency = product.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
+                
+                if product.supplier_cost > 0:
+                    costo_total = total + impuestos
+                    record.costo_total_final =  record.costo_total_final + costo_total
+
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        if origin_currency == 'MXN' and product.cambio == True :
+                            record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
+                        elif origin_currency == 'USD' and product.cambio == True :
+                            record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
+                        else:
+                            record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
+
+    @api.depends('cambiar')
+    def prueba(self):
+        _logger.warning('Entro a la funcion prueba')
+        cambiar = False
+    
+
+            
+            
+            
+            

@@ -9,7 +9,6 @@
                 <page name="Planeacion" string="Planeación">
                     <group name="planning_container">
                         <field name="project_plan_id"/>
-                        <field name="project_plan_description"/>
                     </group>
                     <group name="planning_lines">
                         <field name="project_plan_lines">
