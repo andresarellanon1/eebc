@@ -34,7 +34,6 @@ class ProjectPlan(models.Model):
             'name': 'Create Project',
             'view_mode': 'form',
             'res_model': 'project.creation.wizard',
-            'view_id': False,
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
