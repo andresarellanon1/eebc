@@ -28,62 +28,46 @@ class ProjectPlan(models.Model):
                 lines |= picking.project_picking_lines
             record.picking_lines = lines
 
-    @api.model_create_single
-    def create(self, vals):
-        """ Override create method to ensure that a project is created when the record is saved. """
-        record = super(ProjectPlan, self).create(vals)
-        if not record.project_name:
-            raise ValidationError("Project name is required to create a project.")
-        
-        record.action_create_project()
-        return record
-
-    def action_open_create_project_wizard(self):
-        self.ensure_one()
-        return {
-            'name': 'Create Project',
-            'view_mode': 'form',
-            'res_model': 'project.creation.wizard',
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': {
-                'default_project_plan_id': self.id,
-                'project_name': self.project_name,
-            }
-        }
-
     def action_create_project(self):
-        project_plan_lines_vals = [(0, 0, {
-            'name': line.name,
-            'chapter': line.chapter,
-            'description': line.description,
-            'use_project_task': line.use_project_task,
-            'planned_date_begin': line.planned_date_begin,
-            'planned_date_end': line.planned_date_end,
-            'partner_id': [(6, 0 , line.partner_id.ids)],
-            'stage_id': line.stage_id,
-        }) for line in self.project_plan_lines]
+        if self.project_name:
+            project_plan_lines_vals = [(0, 0, {
+                'name': line.name,
+                'chapter': line.chapter,
+                'description': line.description,
+                'use_project_task': line.use_project_task,
+                'planned_date_begin': line.planned_date_begin,
+                'planned_date_end': line.planned_date_end,
+                'partner_id': [(6, 0 , line.partner_id.ids)],
+                'stage_id': line.stage_id,
+            }) for line in self.project_plan_lines]
 
-        picking_lines_vals = [(0, 0, {
-            'product_id': line.product_id.id,
-            'quantity': line.quantity,
-        }) for line in self.picking_lines]
+            picking_lines_vals = [(0, 0, {
+                'product_id': line.product_id.id,
+                'quantity': line.quantity,
+            }) for line in self.picking_lines]
         
-        project_vals = {
-            'name': self.project_name,
-            'project_plan_id': self.id,
-            'description': self.description,
-            'project_picking_ids': [(6, 0, self.project_plan_pickings.ids)],
-            'project_plan_lines': project_plan_lines_vals,
-            'project_picking_lines': picking_lines_vals,
-        }
+            project_vals = {
+                'name': self.project_name,
+                'project_plan_id': self.id,
+                'description': self.description,
+                'project_picking_ids': [(6, 0, self.project_plan_pickings.ids)],
+                'project_plan_lines': project_plan_lines_vals,
+                'project_picking_lines': picking_lines_vals,
+            }
 
-        project = self.env['project.project'].create(project_vals)
+            project = self.env['project.project'].create(project_vals)
 
-        self.create_project_tasks(project)
-        self.project_name = False
-        return project
+            self.create_project_tasks(project)
+            self.project_name = False
+
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.project',
+                'res_id': project.id,
+                'view_mode': 'form',
+                'target': 'new',
+            }
+            return project
 
     def create_project_tasks(self, project):
         current_task_type = None
