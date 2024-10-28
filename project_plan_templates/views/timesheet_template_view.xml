@@ -30,7 +30,7 @@
                                 <field name="task_time_lines">
                                     <tree editable="editable_bottom">
                                         <field name="description"/>
-                                        <field name="estimated_time"/>
+                                        <field name="estimated_time" widget="timesheet_uom"/>
                                     </tree>
                                 </field>
                             </page>
