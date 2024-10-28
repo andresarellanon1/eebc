@@ -10,7 +10,7 @@ class ProjectCreation(models.TransientModel):
     description = fields.Html(string="Description")
     project_plan_lines = fields.One2many(
         'project.plan.line', 
-        'project_plan_wizard_id', 
+        'project_plan_id', 
         string="Project Plan Lines"
     )
     project_plan_pickings = fields.Many2many(
@@ -19,7 +19,7 @@ class ProjectCreation(models.TransientModel):
     )
     picking_lines = fields.One2many(
         'project.picking.lines',
-        'project_plan_wizard_id',
+        'project_plan_id',
         string="Picking Lines",
         compute='_compute_picking_lines',
         store=False
