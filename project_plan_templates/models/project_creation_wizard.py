@@ -91,7 +91,7 @@ class ProjectCreation(models.TransientModel):
                 current_task_type = self.get_or_create_task_type('Extras', project)
 
             timesheet_lines = self.env['task.time.lines'].search([
-                ('task_id', '=', line.task_timesheet_id.id)
+                ('task_timesheet_id', '=', line.task_timesheet_id.id)
             ])
 
             self.env['project.task'].create({
