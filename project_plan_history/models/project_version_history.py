@@ -33,8 +33,8 @@ class ProjectVersion(models.Model):
             'project_name': project.name,
             'description': project.description,
             'date_start': project.date_start,
-            'project_plan_lines': record.project_id.project_plan_lines,
-            'project_picking_lines': record.project_id.project_picking_lines,
+            'project_plan_lines': project_id.project_plan_lines.ids,
+            'project_picking_lines': project_id.project_picking_lines.ids,
         })
 
     # @api.depends('motive')
