@@ -26,9 +26,13 @@
                             </tree>
                         </field>
                     </group>
-                    <group>
-                        <field name="display_costo_total_final"/>
+
+                    <separator string="Total Cost" colspan="4" style="margin-top: 10px; border-top: 1px solid #000;"/>
+
+                    <group col="2" align="left" style="margin-top: 10px;">
+                        <field name="display_costo_total_final" string="Costo Total Final" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     </group>
+                    
                 </page>
             </xpath>
             <xpath expr="//group//field[@name='date']" position="after">
