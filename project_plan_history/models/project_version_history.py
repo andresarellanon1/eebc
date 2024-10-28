@@ -34,12 +34,10 @@ class ProjectVersion(models.Model):
             'date_start': project.date_start,
         })
 
-        # Clonar las líneas de planificación
-        for line in project.project_plan_lines:
-            line.copy({'version_id': version.id})  # Asegúrate de que 'version_id' esté definido en el modelo de línea
+        # for line in project.project_plan_lines:
+        #     line.copy({'version_id': version.id})
 
-        # Clonar las líneas de picking
-        for line in project.project_picking_lines:
-            line.copy({'version_id': version.id})  # Asegúrate de que 'version_id' esté definido en el modelo de línea
+        # for line in project.project_picking_lines:
+        #     line.copy({'version_id': version.id})
 
-        return version
+        # return version
