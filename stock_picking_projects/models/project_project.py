@@ -103,7 +103,7 @@ class ProjectProject(models.Model):
                 if product.supplier_cost > 0:
                     costo_total = total + impuestos
                     record.costo_total_final =  record.costo_total_final + costo_total
-
+                    _logger.warning(f'El valor de costo total final es de: {record.costo_total_final}')
                     if origin_currency == 'USD' or origin_currency == 'MXN':
                         if origin_currency == 'MXN' and product.cambio == True :
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
@@ -112,7 +112,7 @@ class ProjectProject(models.Model):
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
-    @api.depends('product_ids.quantity')
+    @api.depends('product_ids.quantity', 'product_ids.product_id')
     def _total_final_cost(self):
         for record in self:
             record.costo_total_final = 0 
@@ -124,7 +124,7 @@ class ProjectProject(models.Model):
                 if product.supplier_cost > 0:
                     costo_total = total + impuestos
                     record.costo_total_final =  record.costo_total_final + costo_total
-
+                    _logger.warning(f'El valor de costo total final es de: {record.costo_total_final}')
                     if origin_currency == 'USD' or origin_currency == 'MXN':
                         if origin_currency == 'MXN' and product.cambio == True :
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
