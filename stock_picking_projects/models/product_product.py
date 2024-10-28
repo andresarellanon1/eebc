@@ -123,7 +123,8 @@ class ProductProduct(models.Model):
 
     @api.onchange('quantity','product_id')
     def _compute_final_cost(self):
-        project_id.cambiar = True
+        for record in self:
+            project_id.cambiar = True
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio

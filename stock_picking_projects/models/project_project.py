@@ -116,6 +116,7 @@ class ProjectProject(models.Model):
     @api.onchange('cambiar')
     def prueba(self):
         _logger.warning('Entro a la funcion prueba')
+        cambiar = False
     
 
             
