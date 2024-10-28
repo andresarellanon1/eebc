@@ -35,10 +35,8 @@ class ProjectVersion(models.Model):
             'description': project.description,
             'date_start': project.date_start,
         })
+
+    @api.onchange('motive')
+    def compute_lines(self):
         for record in self:
             record.project_plan_lines = record.project_id.project_plan_lines
-
-    # @api.onchange('project_id')
-    # def compute_lines(self):
-    #     for record in self:
-    #         record.project_plan_lines = record.project_id.project_plan_lines
