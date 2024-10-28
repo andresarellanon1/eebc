@@ -23,6 +23,8 @@ class ProjectProject(models.Model):
     costo_total_final = fields.Float(string="Costo final", compute="_prueba_total_cost", store=True)
     display_costo_total_final = fields.Char(string="Costo total")
     cambiar = fields.Boolean(string="Cambio", default=False)
+    costo_prueba = fields.Float()
+    costo_prueba_dos = fields.Float()
     
     product_ids = fields.One2many(
         'product.product', 
@@ -114,13 +116,15 @@ class ProjectProject(models.Model):
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
-    @api.onchange('cambiar')
+    @api.depends('costo_prueba', 'costo_prueba_dos')
     def _prueba_total_cost(self):
-        _logger.warning('Entro a la funcion prueba')
-        cambiar = False
-    
+        for record in self:
+            record.costo_total_final = record.costo_prueba * record.costo_prueba_dos
 
-            
+    def _modificar_campos(self, costouno, costodos):
+        for record in self:
+            record.costo_prueba = costouno 
+            record.costo_prueba_dos = costodos       
             
             
             

@@ -12,7 +12,7 @@ class ProductProduct(models.Model):
     currency = fields.Char(string="Currency")
     cambio = fields.Boolean(string="Cambio", default=False)
     display_supplier_cost = fields.Char(string="Costo")
-    display_total_cost = fields.Char(string="total producto")
+    display_total_cost = fields.Char(string="Total producto")
     
     project_id = fields.Many2one(
         'project.project', 
@@ -124,8 +124,8 @@ class ProductProduct(models.Model):
     @api.onchange('quantity','product_id')
     def funcion_prueba(self):
         for record in self:
-            record.project_id.cambiar = True
-            _logger.warning('Entro a la funcion product product')
+           self.project_id._modificar_campos(record.quantity, 100)
+
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
