@@ -112,7 +112,7 @@ class ProjectProject(models.Model):
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
-    @api.depends('product_ids.quantity')
+    @api.depends('product_ids.quantity', 'product_ids.product_id')
     def _total_final_cost(self):
         for record in self:
             record.costo_total_final = 0 
