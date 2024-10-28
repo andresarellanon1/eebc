@@ -114,7 +114,7 @@ class ProjectProject(models.Model):
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
-    @api.depends('costo_prueba', 'costo_prueba_dos')
+    @api.depends('product_ids.quantity')
     def _prueba_total_cost(self):
         for record in self:
             _logger.warning(f'El nuevo valor de costo prueba: {record.costo_prueba}')
