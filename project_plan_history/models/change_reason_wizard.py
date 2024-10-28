@@ -4,7 +4,7 @@ class ChangeReasonWizard(models.TransientModel):
     _name = 'change.reason.wizard'
     _description = 'Change Reason Wizard'
 
-    motive = fields.Text(string='Motivo', required=True)
+    motive = fields.Text(string='Motivo')
 
     def confirm(self):
         project_id = self.env.context.get('active_id')
