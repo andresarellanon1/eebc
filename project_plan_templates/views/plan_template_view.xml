@@ -38,6 +38,7 @@
                                         <field name="chapter"/>
                                         <field name="name"/>
                                         <field name="description"/>
+                                        <field name="timesheet_ids"/>
                                         <field name="stage_id"/>
                                     </tree>
                                 </field>

@@ -12,7 +12,7 @@ class ProductProduct(models.Model):
     currency = fields.Char(string="Currency")
     cambio = fields.Boolean(string="Cambio", default=False)
     display_supplier_cost = fields.Char(string="Costo")
-    display_total_cost = fields.Char(string="Costo Total")
+    display_total_cost = fields.Char(string="Total producto")
     
     project_id = fields.Many2one(
         'project.project', 
@@ -99,7 +99,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('quantity','product_id')
     def _compute_final_cost(self):
-        self.project_id._product_currency(True)
+        self.project_id._product_currency()
         self.project_id._final_cost()
         for record in self:
             record.project_id.costo_total_final = 0 
@@ -120,12 +120,6 @@ class ProductProduct(models.Model):
                         else:
                             project.display_costo_total_final = f"{project.costo_total_final:.2f} {origin_currency}"
                             _logger.warning(f'Se le esta dando valor a display costo: {project.display_costo_total_final}')
-
-    @api.onchange('quantity','product_id')
-    def funcion_prueba(self):
-        for record in self:
-            record.project_id.cambiar = True
-            _logger.warning('Entro a la funcion product product')
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio

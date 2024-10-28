@@ -5,9 +5,106 @@ class ProjectCreation(models.TransientModel):
     _description = 'Wizard to confirm project creation'
 
     project_plan_id = fields.Many2one('project.plan', string="Project Plan", required=True)
-    project_name = fields.Char(related='project_plan_id.project_name', string="Project Name")
+    project_name = fields.Char(string="Project Name")
+    user_id = fields.Many2one('res.users', string="Project manager")
+    description = fields.Html(string="Description")
+    project_plan_lines = fields.Many2many(
+        'project.plan.line', 
+        string="Project Plan Lines"
+    )
+    
+    project_plan_pickings = fields.Many2many(
+        'project.plan.pickings', 
+        string="Picking Templates"
+    )
+
+    picking_lines = fields.Many2many(
+        'project.picking.lines',
+        string="Picking Lines",
+        compute='_compute_picking_lines'
+    )
+
+    @api.onchange('project_plan_id')
+    def _onchange_project_plan_id(self):
+        if self.project_plan_id:
+            self.project_name = self.project_plan_id.project_name
+            self.project_plan_lines = self.project_plan_id.project_plan_lines
+            self.project_plan_pickings = self.project_plan_id.project_plan_pickings
+            self.picking_lines = self.project_plan_id.picking_lines
+            self.description = self.project_plan_id.description
+
+    @api.onchange('project_plan_pickings')
+    def _compute_picking_lines(self):
+        for record in self:
+            lines = self.env['project.picking.lines']
+            for picking in record.project_plan_pickings:
+                lines |= picking.project_picking_lines
+            record.picking_lines = lines
 
     def action_confirm_create_project(self):
         self.ensure_one()
-        self.project_plan_id.action_create_project()
-        return {'type': 'ir.actions.act_window_close'}
+
+        project_plan_lines_vals = [(0, 0, {
+            'name': line.name,
+            'chapter': line.chapter,
+            'description': line.description,
+            'use_project_task': line.use_project_task,
+            'planned_date_begin': line.planned_date_begin,
+            'planned_date_end': line.planned_date_end,
+            'partner_id': [(6, 0 , line.partner_id.ids)],
+            'stage_id': line.stage_id,
+        }) for line in self.project_plan_lines]
+
+        picking_lines_vals = [(0, 0, {
+            'product_id': line.product_id.id,
+            'quantity': line.quantity,
+        }) for line in self.picking_lines]
+        
+        project_vals = {
+            'name': self.project_name,
+            'description': self.description,
+            'project_plan_lines': project_plan_lines_vals,
+            'project_picking_lines': picking_lines_vals,
+        }
+
+        project = self.env['project.project'].create(project_vals)
+        self.create_project_tasks(project)
+
+        self.project_plan_id.project_name = False
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def create_project_tasks(self, project):
+        current_task_type = None
+        for line in self.project_plan_lines:
+            if line.stage_id:
+                   current_task_type = self.get_or_create_task_type(line.stage_id, project)
+                
+            if not line.stage_id:
+                current_task_type = self.get_or_create_task_type('Extras', project)
+
+            self.env['project.task'].create({
+                'name': line.name,
+                'project_id': project.id,
+                'stage_id': current_task_type.id,
+            })
+
+    def get_or_create_task_type(self, stage_id, project):
+        task_type = self.env['project.task.type'].search([
+            ('name', '=', stage_id),
+            ('project_ids', 'in', project.id)
+        ], limit=1)
+
+        if not task_type:
+            task_type = self.env['project.task.type'].create({
+                'name': stage_id,
+                'project_ids': [(4, project.id)],
+            })
+            
+        return task_type
