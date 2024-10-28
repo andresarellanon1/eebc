@@ -39,6 +39,9 @@ class ProjectVersion(models.Model):
     @api.onchange('project_id')
     def compute_lines(self):
         for record in self:
-            record.project_name = record.project_id.project_plan_lines.name
+            if record.project_id and record.project_id.project_plan_lines:
+                record.project_name = ', '.join(record.project_id.project_plan_lines.mapped('name'))
+            else:
+                record.project_name = ''
             name = record.project_id.project_plan_lines.name
             _logger.warning(f'El nombre es: {name}')
