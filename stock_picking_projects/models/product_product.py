@@ -124,8 +124,7 @@ class ProductProduct(models.Model):
     @api.onchange('quantity','product_id')
     def funcion_prueba(self):
         for record in self:
-            _logger.warning(f'Se activo onchange')
-            self.project_id._modificar_campos(record.quantity, 100)
+            record.project_id.costo_total_final = 100 * record.quantity
 
 
     def pesos_a_dolares(self, monto, tipo_cambio):
