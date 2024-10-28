@@ -33,5 +33,4 @@ class ProjectPlanPickingLine(models.Model):
     location_id = fields.Many2one('stock.location', string="Location")
     picking_name = fields.Char(string="Picking Name")
     project_plan_id = fields.Many2one('project.plan', string="Project plan")
-    project_plan_wizard_id = fields.Many2one('project.creation.wizard', string="Project plan")
     
