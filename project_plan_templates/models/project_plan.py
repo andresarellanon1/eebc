@@ -16,8 +16,7 @@ class ProjectPlan(models.Model):
         'project.picking.lines',
         'project_plan_id',
         string="Picking Lines",
-        compute='_compute_picking_lines',
-        store=False
+        compute='_compute_picking_lines'
     )
 
     @api.onchange('project_plan_pickings')
@@ -40,67 +39,3 @@ class ProjectPlan(models.Model):
                 'default_project_plan_id': self.id
             }
         }
-
-    def action_create_project(self):
-        project_plan_lines_vals = [(0, 0, {
-            'name': line.name,
-            'chapter': line.chapter,
-            'description': line.description,
-            'use_project_task': line.use_project_task,
-            'planned_date_begin': line.planned_date_begin,
-            'planned_date_end': line.planned_date_end,
-            'partner_id': [(6, 0 , line.partner_id.ids)],
-            'stage_id': line.stage_id,
-        }) for line in self.project_plan_lines]
-
-        picking_lines_vals = [(0, 0, {
-            'product_id': line.product_id.id,
-            'quantity': line.quantity,
-        }) for line in self.picking_lines]
-        
-        project_vals = {
-            'name': self.project_name,
-            'description': self.description,
-            'project_plan_lines': project_plan_lines_vals,
-            'project_picking_lines': picking_lines_vals,
-        }
-
-        project = self.env['project.project'].create(project_vals)
-        self.create_project_tasks(project)
-
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'project.project',
-            'res_id': project.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
-
-    def create_project_tasks(self, project):
-        current_task_type = None
-        for line in self.project_plan_lines:
-            if line.stage_id:
-                current_task_type = self.get_or_create_task_type(line.stage_id, project)
-            
-            if not line.stage_id:
-                current_task_type = self.get_or_create_task_type('Extras', project)
-
-            self.env['project.task'].create({
-                'name': line.name,
-                'project_id': project.id,
-                'stage_id': current_task_type.id,
-            })
-
-    def get_or_create_task_type(self, stage_id, project):
-        task_type = self.env['project.task.type'].search([
-            ('name', '=', stage_id),
-            ('project_ids', 'in', project.id)
-        ], limit=1)
-
-        if not task_type:
-            task_type = self.env['project.task.type'].create({
-                'name': stage_id,
-                'project_ids': [(4, project.id)],
-            })
-        
-        return task_type
