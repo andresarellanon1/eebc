@@ -4,6 +4,7 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     version_id = fields.Many2one('project.version', string="History")
+    change_motive = fields.Text(string='Change Reason')
 
     child_ids = fields.One2many(
         'project.project',
@@ -19,10 +20,24 @@ class ProjectProject(models.Model):
 
     @api.model
     def write(self, vals):
-        # Se guarda el estado actual antes de modificar
-        project_version = self.env['project.version']
-        for project in self:
-            project_version.create_version(project, self.env.user)
+         # Guardamos los valores en el contexto para poder usarlos más tarde
+        self.env.context['vals'] = vals
+        
+        # Llama al wizard antes de guardar
+        if vals:
+            context = dict(self.env.context)
+            context['active_id'] = self.id
+            wizard = self.env['change.reason.wizard'].create({})
+            return {
+                'name': 'Change Reason',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'change.reason.wizard',
+                'type': 'ir.actions.act_window',
+                'context': context,
+                'target': 'new',  # Abrir en popup
+                'res_id': wizard.id,
+            }
 
         # Se modifica
         return super(ProjectProject, self).write(vals)
