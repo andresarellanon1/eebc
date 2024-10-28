@@ -12,7 +12,7 @@ class ProductProduct(models.Model):
     currency = fields.Char(string="Currency")
     cambio = fields.Boolean(string="Cambio", default=False)
     display_supplier_cost = fields.Char(string="Costo")
-    display_total_cost = fields.Char(string="Costo Total")
+    display_total_cost = fields.Char(string="total producto")
     
     project_id = fields.Many2one(
         'project.project', 
