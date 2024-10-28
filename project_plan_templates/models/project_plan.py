@@ -49,6 +49,7 @@ class ProjectPlan(models.Model):
             'target': 'new',
             'context': {
                 'default_project_plan_id': self.id,
+                'project_name': self.project_name,
             }
         }
 
