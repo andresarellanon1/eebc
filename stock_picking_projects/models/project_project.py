@@ -120,7 +120,7 @@ class ProjectProject(models.Model):
                 total = (product.supplier_cost * product.quantity)
                 impuestos = ((total) * record.taxes_id.amount)/100
                 origin_currency = product.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
-                
+                _logger.warning('Entro al depends')
                 if product.supplier_cost > 0:
                     costo_total = total + impuestos
                     record.costo_total_final =  record.costo_total_final + costo_total
@@ -128,10 +128,13 @@ class ProjectProject(models.Model):
                     if origin_currency == 'USD' or origin_currency == 'MXN':
                         if origin_currency == 'MXN' and product.cambio == True :
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
+                            _logger.warning(f'Valor de costo total: {display_costo_total_final}')
                         elif origin_currency == 'USD' and product.cambio == True :
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
+                            _logger.warning(f'Valor de costo total: {display_costo_total_final}')
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
+                            _logger.warning(f'Valor de costo total: {display_costo_total_final}')
             
             
             
