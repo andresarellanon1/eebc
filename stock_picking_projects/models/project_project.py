@@ -20,7 +20,7 @@ class ProjectProject(models.Model):
     publication_date = fields.Date(string="Publication Date")
     site_supervisor_id = fields.Many2one('res.users', string="Site Supervisor")
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
-    costo_total_final = fields.Float(string="Costo final", compute="_prueba_total_cost", store=True)
+    costo_total_final = fields.Float(string="Costo final", compute="_total_final_cost", store=True)
     display_costo_total_final = fields.Char(string="Costo total")
 
     product_ids = fields.One2many(
@@ -113,7 +113,7 @@ class ProjectProject(models.Model):
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
     @api.depends('product_ids.quantity')
-    def _final_cost(self):
+    def _total_final_cost(self):
         for record in self:
             record.costo_total_final = 0 
             for product in record.product_ids:
