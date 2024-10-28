@@ -33,10 +33,12 @@ class ProjectVersion(models.Model):
             'project_name': project.name,
             'description': project.description,
             'date_start': project.date_start,
+            'project_plan_lines': record.project_id.project_plan_lines,
+            'project_picking_lines': record.project_id.project_picking_lines,
         })
 
-    @api.depends('motive')
-    def compute_lines(self):
-        for record in self:
-            record.project_plan_lines = record.project_id.project_plan_lines
-            record.project_picking_lines = record.project_id.project_picking_lines
+    # @api.depends('motive')
+    # def _compute_lines(self):
+    #     for record in self:
+    #         record.project_plan_lines = record.project_id.project_plan_lines
+    #         record.project_picking_lines = record.project_id.project_picking_lines
