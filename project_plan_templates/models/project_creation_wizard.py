@@ -79,31 +79,31 @@ class ProjectCreation(models.TransientModel):
             'target': 'current',
         }
 
-        def create_project_tasks(self, project):
-            current_task_type = None
-            for line in self.project_plan_lines:
-                if line.stage_id:
-                    current_task_type = self.get_or_create_task_type(line.stage_id, project)
+    def create_project_tasks(self, project):
+        current_task_type = None
+        for line in self.project_plan_lines:
+            if line.stage_id:
+                   current_task_type = self.get_or_create_task_type(line.stage_id, project)
                 
-                if not line.stage_id:
-                    current_task_type = self.get_or_create_task_type('Extras', project)
+            if not line.stage_id:
+                current_task_type = self.get_or_create_task_type('Extras', project)
 
-                self.env['project.task'].create({
-                    'name': line.name,
-                    'project_id': project.id,
-                    'stage_id': current_task_type.id,
-                })
+            self.env['project.task'].create({
+                'name': line.name,
+                'project_id': project.id,
+                'stage_id': current_task_type.id,
+            })
 
-        def get_or_create_task_type(self, stage_id, project):
-            task_type = self.env['project.task.type'].search([
-                ('name', '=', stage_id),
-                ('project_ids', 'in', project.id)
-            ], limit=1)
+    def get_or_create_task_type(self, stage_id, project):
+        task_type = self.env['project.task.type'].search([
+            ('name', '=', stage_id),
+            ('project_ids', 'in', project.id)
+        ], limit=1)
 
-            if not task_type:
-                task_type = self.env['project.task.type'].create({
-                    'name': stage_id,
-                    'project_ids': [(4, project.id)],
-                })
+        if not task_type:
+            task_type = self.env['project.task.type'].create({
+                'name': stage_id,
+                'project_ids': [(4, project.id)],
+            })
             
-            return task_type
+        return task_type
