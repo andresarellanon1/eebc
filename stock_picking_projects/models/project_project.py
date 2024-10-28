@@ -22,9 +22,7 @@ class ProjectProject(models.Model):
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
     costo_total_final = fields.Float(string="Costo final", compute="_prueba_total_cost", store=True)
     display_costo_total_final = fields.Char(string="Costo total")
-    costo_prueba = fields.Float()
-    costo_prueba_dos = fields.Float()
-    
+
     product_ids = fields.One2many(
         'product.product', 
         'project_id', 
@@ -115,19 +113,25 @@ class ProjectProject(models.Model):
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
     @api.depends('product_ids.quantity')
-    def _prueba_total_cost(self):
+    def _final_cost(self):
         for record in self:
-            _logger.warning(f'El nuevo valor de costo prueba: {record.costo_prueba}')
-            _logger.warning(f'El nuevo valor de costo prueba dos: {record.costo_prueba_dos}')
-            record.costo_total_final = record.costo_prueba * record.costo_prueba_dos
-            _logger.warning(f'El nuevo valor de costo_total_final: {record.costo_total_final}')
+            record.costo_total_final = 0 
+            for product in record.product_ids:
+                total = (product.supplier_cost * product.quantity)
+                impuestos = ((total) * record.taxes_id.amount)/100
+                origin_currency = product.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
+                
+                if product.supplier_cost > 0:
+                    costo_total = total + impuestos
+                    record.costo_total_final =  record.costo_total_final + costo_total
 
-    def _modificar_campos(self, costouno, costodos):
-        for record in self:
-            _logger.warning(f'El nuevo valor de costo uno: {costouno}')
-            _logger.warning(f'El nuevo valor de costo dos: {costodos}')
-            record.costo_prueba = costouno 
-            record.costo_prueba_dos = costodos       
+                    if origin_currency == 'USD' or origin_currency == 'MXN':
+                        if origin_currency == 'MXN' and product.cambio == True :
+                            record.display_costo_total_final = f"{record.costo_total_final:.2f} USD"
+                        elif origin_currency == 'USD' and product.cambio == True :
+                            record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
+                        else:
+                            record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
             
             
             
