@@ -22,7 +22,7 @@ class ProjectProject(models.Model):
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
     costo_total_final = fields.Float(string="Costo final", compute="_final_cost", store=True)
     display_costo_total_final = fields.Char(string="Costo Final")
-    cambiar = fields.Boolean(string="Cambio", default=False)
+    cambiar = fields.Boolean(string="Cambio", default=False, compute="prueba")
     
     product_ids = fields.One2many(
         'product.product', 
@@ -113,7 +113,7 @@ class ProjectProject(models.Model):
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
-    @api.onchange('cambiar')
+    @api.depends('cambiar')
     def prueba(self):
         _logger.warning('Entro a la funcion prueba')
         cambiar = False

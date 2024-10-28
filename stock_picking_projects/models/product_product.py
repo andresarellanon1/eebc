@@ -125,6 +125,7 @@ class ProductProduct(models.Model):
     def funcion_prueba(self):
         for record in self:
             record.project_id.cambiar = True
+            _logger.warning('Entro a la funcion product product')
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio
