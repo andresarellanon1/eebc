@@ -21,7 +21,7 @@ class ProjectVersion(models.Model):
     date_start = fields.Date(string='Start date')
 
     project_plan_lines = fields.One2many('project.plan.line', 'version_id', string='Planeación')
-    # project_picking_lines = fields.One2many('project.project', 'version_id', string='Stock')
+    project_picking_lines = fields.One2many('project.project', 'version_id', string='Stock')
     project_ids = fields.One2many('project.project', 'version_id', string='Historial')
     @api.model
     def create_version(self, project, user):
@@ -36,7 +36,8 @@ class ProjectVersion(models.Model):
             'date_start': project.date_start,
         })
 
-    @api.onchange('motive')
+    @api.depends('project_id')
     def compute_lines(self):
         for record in self:
             record.project_plan_lines = record.project_id.project_plan_lines
+            record.project_picking_lines = record.project_id.project_picking_lines
