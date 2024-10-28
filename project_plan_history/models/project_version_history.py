@@ -27,6 +27,7 @@ class ProjectVersion(models.Model):
         self.create({
             'modified_by': user.name,
             'project_id': project.id,
+            'motive': project.change_motive,
             'version_date': fields.Datetime.now(),
             # Datos del proyecto que se van a guardar
             'project_name': project.name,
