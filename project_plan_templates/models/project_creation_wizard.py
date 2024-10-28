@@ -93,6 +93,7 @@ class ProjectCreation(models.TransientModel):
                 'name': line.name,
                 'project_id': project.id,
                 'stage_id': current_task_type.id,
+                'user_ids': line.partner_id.ids
             })
 
     def get_or_create_task_type(self, stage_id, project):
