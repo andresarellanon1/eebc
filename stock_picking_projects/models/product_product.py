@@ -99,7 +99,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('quantity','product_id')
     def _compute_final_cost(self):
-        self.project_id._product_currency(True)
+        self.project_id._product_currency()
         self.project_id._final_cost()
         for record in self:
             record.project_id.costo_total_final = 0 
@@ -124,6 +124,7 @@ class ProductProduct(models.Model):
     @api.onchange('quantity','product_id')
     def funcion_prueba(self):
         for record in self:
+            _logger.warning(f'Se activo onchange')
            self.project_id._modificar_campos(record.quantity, 100)
 
 
