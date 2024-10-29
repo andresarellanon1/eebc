@@ -1,3 +1,4 @@
+# File: project_plan_history/models/project_version_history.py
 from odoo import api, fields, models
 
 class ProjectVersion(models.Model):
@@ -30,13 +31,13 @@ class ProjectVersion(models.Model):
         for line in project.project_plan_lines:
             new_line = self.env['project.plan.line'].create({
                 'version_id': version.id,
-                'name': line.name,
-                'chapter': line.chapter,
-                'use_project_task': line.use_project_task,
-                'planned_date_begin': line.planned_date_begin,
-                'planned_date_end': line.planned_date_end,
-                'partner_id': line.partner_id.id,
-                'stage_id': line.stage_id.id,
+                'name': getattr(line, 'name', ''),
+                'chapter': getattr(line, 'chapter', ''),
+                'use_project_task': getattr(line, 'use_project_task', ''),
+                'planned_date_begin': getattr(line, 'planned_date_begin', False),
+                'planned_date_end': getattr(line, 'planned_date_end', False),
+                'partner_id': getattr(line.partner_id, 'id', False),
+                'stage_id': getattr(line.stage_id, 'id', False),
             })
             plan_line_ids.append(new_line.id)
 
@@ -44,8 +45,8 @@ class ProjectVersion(models.Model):
         for line in project.project_picking_lines:
             new_line = self.env['project.picking.lines'].create({
                 'version_id': version.id,
-                'quantity': line.quantity,
-                'location_id': line.location_id.id,
+                'quantity': getattr(line, 'quantity', 0),
+                'location_id': getattr(line.location_id, 'id', False),
             })
             picking_line_ids.append(new_line.id)
 
