@@ -26,7 +26,11 @@
                                 <field name="project_name" class="w-100" required="1"/>
                             </h1>
                             <group>
-                                <field name="motive" required="1"/>
+                                <field name="motive" readonly="1"/>
+                                <field name="version_date" readonly="1"/>
+                                <field name="modified_by" readonly="1"/>
+                                <field name="date_start" readonly="1"/>
+                                <field name="description" readonly="1"/>
                             </group>
                         </div>
                         <notebook>
