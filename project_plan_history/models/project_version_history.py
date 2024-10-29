@@ -34,13 +34,19 @@ class ProjectVersion(models.Model):
             'date_start': project.date_start,
         })
 
-        # Forzar el guardado de la transacción en la base de datos
-        self.env.cr.commit()
-
+        # Copiar las líneas one2many con el ID de la versión creada
+        plan_lines = []
         for line in project.project_plan_lines:
-            line.copy({'version_id': version.id})
+            plan_lines.append((0, 0, line.copy_data({'version_id': version.id})[0]))
 
+        picking_lines = []
         for line in project.project_picking_lines:
-            line.copy({'version_id': version.id})
+            picking_lines.append((0, 0, line.copy_data({'version_id': version.id})[0]))
+
+        # Realizar un write para actualizar el registro de la versión con las líneas one2many
+        version.write({
+            'project_plan_lines': plan_lines,
+            'project_picking_lines': picking_lines,
+        })
 
         return version
