@@ -43,7 +43,6 @@
                                             <field name="use_project_task" string="Motivo del cambio"/>
                                             <field name="planned_date_begin" string="Fecha de inicio"/>
                                             <field name="planned_date_end" string="Fecha de finalización"/>
-                                            <field name="partner_id" string="Usuario asignado"/>
                                             <field name="stage_id"/>
                                         </tree>
                                     </field>
