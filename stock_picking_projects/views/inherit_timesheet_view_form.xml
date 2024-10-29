@@ -12,9 +12,6 @@
                 <field name="subcontractor_id" widget="many2one_avatar_user"/>
                 <field name="taxes_id" widget="many2many_tags"/>
             </xpath>
-            <xpath expr="//group//field[@name='currency_id']" position="replace">
-                <field name="custom_currency_id" readonly="0"/>
-            </xpath>
             <xpath expr="//notebook" position="inside">
                 <page name="Products" string="Productos">
                     <group name="used_materials">
@@ -41,9 +38,11 @@
             <xpath expr="//group//field[@name='date']" position="after">
                 <field name="bid_code"/>
             </xpath>
+            <xpath expr="//group//field[@name='currency_id']" position="replace">
+                <field name="custom_currency_id" readonly="0"/>
+            </xpath>
             <xpath expr="//group//field[@name='user_id']" position="after">
                 <field name="default_picking_type_id"/>
-                <field name="currency_id" readonly="0"/>
                 <field name="exchange_rate"/>
                 <field name="creation_date"/>
                 <field name="submission_date"/>
