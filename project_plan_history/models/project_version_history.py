@@ -1,4 +1,3 @@
-# File: project_plan_history/models/project_version_history.py
 from odoo import api, fields, models
 
 class ProjectVersion(models.Model):
@@ -29,6 +28,7 @@ class ProjectVersion(models.Model):
 
         plan_line_ids = []
         for line in project.project_plan_lines:
+            partner_id = line.partner_id.id if line.partner_id else False
             new_line = self.env['project.plan.line'].create({
                 'version_id': version.id,
                 'name': getattr(line, 'name', ''),
@@ -36,7 +36,7 @@ class ProjectVersion(models.Model):
                 'use_project_task': getattr(line, 'use_project_task', ''),
                 'planned_date_begin': getattr(line, 'planned_date_begin', False),
                 'planned_date_end': getattr(line, 'planned_date_end', False),
-                'partner_id': getattr(line.partner_id, 'id', False),
+                'partner_id': partner_id,
                 'stage_id': getattr(line.stage_id, 'id', False),
             })
             plan_line_ids.append(new_line.id)
