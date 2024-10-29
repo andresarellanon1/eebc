@@ -39,7 +39,7 @@ class ProjectCreation(models.TransientModel):
             lines = self.env['project.picking.lines']
             for picking in record.project_plan_pickings:
                 lines |= picking.project_picking_lines
-            record.picking_lines = lines
+            record.picking_lines = lines.filtered('product_id')
 
     def action_confirm_create_project(self):
         self.ensure_one()
