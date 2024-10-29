@@ -23,7 +23,6 @@ class ProjectVersion(models.Model):
 
     @api.model
     def create_version(self, project, user):
-        # Guardamos los datos del proyecto
         version = self.create({
             'modified_by': user.name,
             'project_id': project.id,
@@ -35,10 +34,14 @@ class ProjectVersion(models.Model):
             'date_start': project.date_start,
         })
 
+        self.flush(['id'])
+
         for line in project.project_plan_lines:
-            line.copy({'version_id': version.id})  
+            line.copy({'version_id': version.id})
 
         for line in project.project_picking_lines:
             line.copy({'version_id': version.id})
+
+        version.invalidate_cache()
 
         return version
