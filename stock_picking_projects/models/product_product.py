@@ -35,7 +35,7 @@ class ProductProduct(models.Model):
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
             tipo_cambio = record.project_id.exchange_rate
-            project_currency = record.project_id.currency_id.name
+            project_currency = record.project_id.custom_currency_id.name
 
             if record.currency == False:
                 record.currency == project_currency
