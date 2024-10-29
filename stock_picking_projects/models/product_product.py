@@ -28,7 +28,7 @@ class ProductProduct(models.Model):
         copied = True
     )
 
-    @api.onchange('product_id','currency')
+    @api.onchange('product_id')
     def _onchange_activities_tmpl_id(self):
         for record in self:
             record.name = record.product_id.name
@@ -38,7 +38,7 @@ class ProductProduct(models.Model):
             project_currency = record.project_id.custom_currency_id.name
 
             if record.currency == False:
-                record.currency == project_currency
+                record.currency = project_currency
 
             if project_currency == 'USD' and record.project_id.exchange_rate > 0:
                 if origin_currency == 'MXN' or record.cambio == True :

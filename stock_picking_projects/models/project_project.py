@@ -22,7 +22,6 @@ class ProjectProject(models.Model):
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
     costo_total_final = fields.Float(string="Costo final", compute="_final_cost", store=True,)
     display_costo_total_final = fields.Char(string="Costo total", compute="_total_final_cost", store=True,)
-    custom_currency_id = fields.Many2one('res.currency', string="Divisa")
     custom_currency_id = fields.Many2one('res.currency', string='Divisa')
 
     product_ids = fields.One2many(
