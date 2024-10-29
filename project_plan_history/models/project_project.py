@@ -36,6 +36,7 @@ class ProjectProject(models.Model):
                'type': 'ir.actions.act_window',
                'context': new_context,
                'target': 'new',  # Abrir en popup
+               'res_id': wizard.id,
             }
 
         # Se modifica
