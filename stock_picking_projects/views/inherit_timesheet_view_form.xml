@@ -38,6 +38,9 @@
             <xpath expr="//group//field[@name='date']" position="after">
                 <field name="bid_code"/>
             </xpath>
+            <xpath expr="//group//field[@name='currency_id']" position="replace">
+                <field name="custom_currency_id" readonly="0"/>
+            </xpath>
             <xpath expr="//group//field[@name='user_id']" position="after">
                 <field name="default_picking_type_id"/>
                 <field name="currency_id" readonly="0"/>
