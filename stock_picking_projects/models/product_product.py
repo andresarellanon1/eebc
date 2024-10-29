@@ -28,17 +28,17 @@ class ProductProduct(models.Model):
         copied = True
     )
 
-    @api.onchange('product_id','currency')
+    @api.onchange('product_id')
     def _onchange_activities_tmpl_id(self):
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
             tipo_cambio = record.project_id.exchange_rate
-            project_currency = record.project_id.currency_id.name
+            project_currency = record.project_id.custom_currency_id.name
 
             if record.currency == False:
-                record.currency == project_currency
+                record.currency = project_currency
 
             if project_currency == 'USD' and record.project_id.exchange_rate > 0:
                 if origin_currency == 'MXN' or record.cambio == True :
@@ -87,7 +87,9 @@ class ProductProduct(models.Model):
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
-        
+            _logger.warning(f'El currency del forms es: {record.project_id.custom_currency_id.name}')
+            _logger.warning(f'El origin currency es: {origin_currency}')
+            _logger.warning(f'El record cambio es: {record.cambio}')
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
@@ -101,32 +103,6 @@ class ProductProduct(models.Model):
     def _compute_final_cost(self):
         self.project_id._product_currency()
         self.project_id._final_cost()
-        for record in self:
-            record.project_id.costo_total_final = 0 
-            for project in record.project_id:
-                total = (record.supplier_cost * record.quantity)
-                impuestos = ((total) * project.taxes_id.amount)/100
-                origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
-                
-                if record.supplier_cost > 0:
-                    costo_total = total + impuestos
-                    project.costo_total_final =  project.costo_total_final + costo_total
-
-                    if origin_currency == 'USD' or origin_currency == 'MXN':
-                        if origin_currency == 'MXN' and record.cambio == True :
-                            project.display_costo_total_final = f"{project.costo_total_final:.2f} USD"
-                        elif origin_currency == 'USD' and record.cambio == True :
-                            project.display_costo_total_final = f"{project.costo_total_final:.2f} MXN"
-                        else:
-                            project.display_costo_total_final = f"{project.costo_total_final:.2f} {origin_currency}"
-                            _logger.warning(f'Se le esta dando valor a display costo: {project.display_costo_total_final}')
-
-    @api.onchange('quantity','product_id')
-    def funcion_prueba(self):
-        for record in self:
-            _logger.warning(f'Se activo onchange')
-            self.project_id._modificar_campos(record.quantity, 100)
-
 
     def pesos_a_dolares(self, monto, tipo_cambio):
         return monto / tipo_cambio

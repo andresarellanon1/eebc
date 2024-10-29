@@ -26,7 +26,11 @@
                                 <field name="project_name" class="w-100" required="1"/>
                             </h1>
                             <group>
-                                <field name="motive" required="1"/>
+                                <field name="motive" readonly="1"/>
+                                <field name="version_date" readonly="1"/>
+                                <field name="modified_by" readonly="1"/>
+                                <field name="date_start" readonly="1"/>
+                                <field name="description" readonly="1"/>
                             </group>
                         </div>
                         <notebook>
@@ -39,7 +43,6 @@
                                             <field name="use_project_task" string="Motivo del cambio"/>
                                             <field name="planned_date_begin" string="Fecha de inicio"/>
                                             <field name="planned_date_end" string="Fecha de finalización"/>
-                                            <field name="partner_id" string="Usuario asignado"/>
                                             <field name="stage_id"/>
                                         </tree>
                                     </field>
@@ -49,7 +52,6 @@
                                 <group>
                                     <field name="project_picking_lines" widget="One2many_list">
                                         <tree>
-                                            <field name="product_id"/>
                                             <field name="quantity"/>
                                             <field name="location_id"/>
                                         </tree>
