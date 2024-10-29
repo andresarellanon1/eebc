@@ -87,7 +87,7 @@ class ProductProduct(models.Model):
             origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
-            _logger.warning(f'El currency del forms es: {record.custom_currency_id}')
+            _logger.warning(f'El currency del forms es: {record.product_id.custom_currency_id}')
             _logger.warning(f'El origin currency es: {origin_currency}')
             _logger.warning(f'El record cambio es: {record.cambio}')
             if origin_currency == 'USD' or origin_currency == 'MXN':
