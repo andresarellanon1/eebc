@@ -90,17 +90,20 @@ class ProjectCreation(models.TransientModel):
             if not line.stage_id:
                 current_task_type = self.get_or_create_task_type('Extras', project)
 
-            timesheet_lines = self.env['task.time.lines'].search([
-                ('task_timesheet_id', '=', line.task_timesheet_id.id)
-            ])
+            if line.use_project_task:
+                timesheet_lines = self.env['task.time.lines'].search([
+                    ('task_timesheet_id', '=', line.task_timesheet_id.id)
+                ])
 
-            self.env['project.task'].create({
-                'name': line.name,
-                'project_id': project.id,
-                'stage_id': current_task_type.id,
-                'user_ids': line.partner_id.ids,
-                'timesheet_ids': [(6, 0, timesheet_lines.ids)],
-            })
+                self.env['project.task'].create({
+                    'name': line.name,
+                    'project_id': project.id,
+                    'stage_id': current_task_type.id,
+                    'user_ids': line.partner_id.ids,
+                    'timesheet_ids': [(6, 0, timesheet_lines.ids)],
+                })
+
+            
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
