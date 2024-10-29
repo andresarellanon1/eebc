@@ -10,5 +10,5 @@ class ChangeReasonWizard(models.TransientModel):
         project_id = self.env.context.get('active_id')
         if project_id:
             project = self.env['project.project'].browse(project_id)
-            project.change_motive = self.motive  # Guardar el motivo en el registro
+            project.change_motive = self.motive  # Guardar el motivo en el registro 
         return {'type': 'ir.actions.act_window_close'}
