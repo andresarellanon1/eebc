@@ -34,6 +34,9 @@ class ProjectVersion(models.Model):
             'date_start': project.date_start,
         })
 
+        # Forzar el guardado de la transacción en la base de datos
+        self.env.cr.commit()
+
         for line in project.project_plan_lines:
             line.copy({'version_id': version.id})
 
