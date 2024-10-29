@@ -38,6 +38,7 @@
                                         <field name="chapter"/>
                                         <field name="name"/>
                                         <field name="description"/>
+                                        <field name="task_timesheet_id" options="{'create': True}"/>
                                         <field name="stage_id"/>
                                     </tree>
                                 </field>
