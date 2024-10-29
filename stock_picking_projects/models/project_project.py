@@ -22,8 +22,8 @@ class ProjectProject(models.Model):
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
     costo_total_final = fields.Float(string="Costo final", compute="_final_cost", store=True,)
     display_costo_total_final = fields.Char(string="Costo total", compute="_total_final_cost", store=True,)
-    currency_id = fields.Many2one('res.currency', string="Divisa")
-    custom_currency_id = fields.Many2one('res.currency', string='Divisa personalizada')
+    custom_currency_id = fields.Many2one('res.currency', string="Divisa")
+    custom_currency_id = fields.Many2one('res.currency', string='Divisa')
 
     product_ids = fields.One2many(
         'product.product', 
@@ -75,30 +75,30 @@ class ProjectProject(models.Model):
         for record in self:
             record.pickin_ids = record.task_id.stock_ids()
 
-    @api.constrains('currency_id', 'exchange_rate')
+    @api.constrains('custom_currency_id', 'exchange_rate')
     def _check_exchange_rate(self):
         for record in self:
-            if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
+            if record.custom_currency_id and record.custom_currency_id.name == 'USD' and not record.exchange_rate:
                 raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")     
 
-    @api.constrains('currency_id', 'exchange_rate')
+    @api.constrains('custom_currency_id', 'exchange_rate')
     def _check_exchange_rate(self):
         for record in self:
-            if record.currency_id and record.currency_id.name == 'USD' and not record.exchange_rate:
+            if record.custom_currency_id and record.custom_currency_id.name == 'USD' and not record.exchange_rate:
                 raise ValidationError("El campo 'Tipo de cambio' es obligatorio cuando la moneda es USD.")
 
-    @api.onchange('currency_id', 'exchange_rate', 'taxes_id')
+    @api.onchange('custom_currency_id', 'exchange_rate', 'taxes_id')
     def _product_currency(self):
         for record in self:
             record.product_ids._onchange_activities_tmpl_id()
             record.product_ids._compute_total_cost()
 
-    @api.onchange('currency_id')
+    @api.onchange('custom_currency_id')
     def _cambio_divisa(self):
         for record in self:
-            _logger.warning(f'El valor de la divisa cambio a: {record.currency_id}')
+            _logger.warning(f'El valor de la divisa cambio a: {record.custom_currency_id}')
 
-    @api.onchange('taxes_id', 'currency_id', 'exchange_rate')
+    @api.onchange('taxes_id', 'custom_currency_id', 'exchange_rate')
     def _final_cost(self):
         for record in self:
             record.costo_total_final = 0 
