@@ -40,7 +40,6 @@
                                         <tree>
                                             <field name="name" string="Nombre"/>
                                             <field name="chapter"/>
-                                            <field name="use_project_task" string="Motivo del cambio"/>
                                             <field name="planned_date_begin" string="Fecha de inicio"/>
                                             <field name="planned_date_end" string="Fecha de finalización"/>
                                             <field name="stage_id"/>
