@@ -41,6 +41,8 @@ class Notices(models.Model):
         comodel_name='notices.history',
         inverse_name='notice_id',
     )
+
+ 
     
     
     @api.depends('history_ids.quantity')
