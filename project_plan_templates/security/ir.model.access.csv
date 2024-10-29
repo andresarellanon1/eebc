@@ -6,3 +6,4 @@ eebc.access_project_picking_lines,project_picking_lines,project_plan_templates.m
 eebc.access_project_creation_wizard,project_creation_wizard,project_plan_templates.model_project_creation_wizard,,1,1,1,1
 eebc.access_task_timesheet,task_timesheet,project_plan_templates.model_task_timesheet,,1,1,1,1
 eebc.access_task_time_lines,task_time_lines,project_plan_templates.model_task_time_lines,,1,1,1,1
+eebc.access_account_analytic_line,account_analytic_line,project_plan_templates.model_account_analytic_line,,1,1,1,1
