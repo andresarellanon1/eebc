@@ -4,6 +4,7 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     version_id = fields.Many2one('project.version', string="History")
+    change_motive = fields.Text(string='Motivo')
 
     child_ids = fields.One2many(
         'project.project',
