@@ -36,7 +36,6 @@ class ProjectVersion(models.Model):
                 'use_project_task': getattr(line, 'use_project_task', ''),
                 'planned_date_begin': getattr(line, 'planned_date_begin', False),
                 'planned_date_end': getattr(line, 'planned_date_end', False),
-                'partner_id': partner_id,
                 'stage_id': getattr(line.stage_id, 'id', False),
             })
             plan_line_ids.append(new_line.id)
