@@ -95,7 +95,7 @@ class ProjectCreation(models.TransientModel):
                 ])
 
                 timesheet_data = [(0, 0, {
-                    'description': ts_line.description,
+                    'name': ts_line.description,
                     'estimated_time': ts_line.estimated_time,
                 }) for ts_line in timesheet_lines]
 
