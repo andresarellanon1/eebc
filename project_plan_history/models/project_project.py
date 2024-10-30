@@ -1,13 +1,9 @@
 from odoo import fields, models, api
-import logging
-
-_logger = logging.getLogger(__name__)
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     version_id = fields.Many2one('project.version', string="History")
-    change_motive = fields.Text(string='Motivo')
 
     child_ids = fields.One2many(
         'project.project',
@@ -23,30 +19,12 @@ class ProjectProject(models.Model):
 
     @api.model
     def write(self, vals):
-        # Se guarda el estado actual antes de modificar
+        result = super(ProjectProject, self).write(vals)
         project_version = self.env['project.version']
         for project in self:
             project_version.create_version(project, self.env.user)
 
-        # Crear un nuevo contexto en lugar de modificar el existente
-        new_context = dict(self.env.context)
-        new_context['vals'] = vals  # Almacenar los valores en el nuevo contexto
-        
-        # Llama al wizard antes de guardar
-        if vals:
-            _logger.warning('Entró al IF')
-            new_context['active_id'] = self.id
-            wizard = self.env['change.reason.wizard'].create({})
-            return {
-                'name': 'Change Reason',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'change.reason.wizard',
-                'type': 'ir.actions.act_window',
-                'context': new_context,
-                'target': 'new',  # Abrir en popup
-                'res_id': wizard.id,
-            }
+        return result
 
     # @api.model
     # def write(self, vals):
@@ -58,13 +36,31 @@ class ProjectProject(models.Model):
     #     # Llamar al wizard
     #     return {
     #         'type': 'ir.actions.act_window',
-    #         'res_model': 'change.reason.wizard',
+    #         'res_model': 'project.wizard',
     #         'view_mode': 'form',
     #         'target': 'new',
     #         'context': {
-    #             '': 'Valor inicial de Field 1',
+    #             'default_field1': 'Valor inicial de Field 1',
+    #             'default_field2': 10,
     #         },
     #     }
 
 
-    
+    #  # Crear un nuevo contexto en lugar de modificar el existente
+    #     new_context = dict(self.env.context)
+    #     new_context['vals'] = vals  # Almacenar los valores en el nuevo contexto
+        
+    #     # Llama al wizard antes de guardar
+    #     if vals:
+    #         new_context['active_id'] = self.id
+    #         wizard = self.env['change.reason.wizard'].create({})
+    #         return {
+    #             'name': 'Change Reason',
+    #             'view_type': 'form',
+    #             'view_mode': 'form',
+    #             'res_model': 'change.reason.wizard',
+    #             'type': 'ir.actions.act_window',
+    #             'context': new_context,
+    #             'target': 'new',  # Abrir en popup
+    #             'res_id': wizard.id,
+    #         }
