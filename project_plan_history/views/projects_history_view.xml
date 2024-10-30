@@ -13,6 +13,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="project_history_view_form" model="ir.ui.view">
             <field name="name">project.version.action.form</field>
             <field name="model">project.version</field>
@@ -22,7 +23,7 @@
                         <div class="oe_title">
                             <label for="project_name"/>
                             <h1>
-                                <field name="project_name" class="w-100" required="1"/>
+                                <field name="project_name" class="w-100" required="1" readonly="1"/>
                             </h1>
                             <group>
                                 <field name="motive" readonly="1"/>
@@ -36,12 +37,12 @@
                             <page string="Planeación">
                                 <group>
                                     <field name="project_plan_lines" widget="One2many_list" options="{'no_create': True, 'no_edit': True}">
-                                        <tree>
+                                        <tree editable="false">
                                             <field name="name" string="Nombre" readonly="1"/>
                                             <field name="chapter" readonly="1"/>
                                             <field name="planned_date_begin" string="Fecha de inicio" readonly="1"/>
-                                            <field name="planned_date_end" string="Fecha de finalización" readonly="1"/>
-                                            <field name="stage_id" readonly="1"/>
+                                            <field name="planned_date_end" string="Fecha de finalización" />
+                                            <field name="stage_id"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -49,10 +50,10 @@
                             <page string="Inventario">
                                 <group>
                                     <field name="project_picking_lines" widget="One2many_list" options="{'no_create': True, 'no_edit': True}">
-                                        <tree>
-                                            <field name="product_id" readonly="1"/>
-                                            <field name="quantity" readonly="1"/>
-                                            <field name="location_id" readonly="1"/>
+                                        <tree editable="false">
+                                            <field name="product_id"/>
+                                            <field name="quantity"/>
+                                            <field name="location_id"/>
                                         </tree>
                                     </field>
                                 </group>
