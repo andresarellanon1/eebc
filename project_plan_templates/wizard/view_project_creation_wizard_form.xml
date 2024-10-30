@@ -38,7 +38,7 @@
                                 </page>
                                 <page name="Stock" string="Stock">
                                     <group name="stock_container">
-                                        <field name="project_plan_pickings" widget="many2many_tags" />
+                                        <field name="project_plan_pickings" widget="many2many_tags" options="{'create': True}" />
                                     </group>
                                     <div>
                                         <field name="picking_lines">
