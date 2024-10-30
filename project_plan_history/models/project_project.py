@@ -8,6 +8,7 @@ class ProjectProject(models.Model):
 
     version_id = fields.Many2one('project.version', string="History")
     change_reason = fields.Text(string="Motivo")
+    cambio = fields.Boolean(default=False)
 
     child_ids = fields.One2many(
         'project.project',
@@ -33,7 +34,13 @@ class ProjectProject(models.Model):
 
     def abrir_wizard(self):
         _logger.warning('Entró al metodo del wizard')
-        wizard = self.env['ir.actions.act_window']._for_xml_id("project_plan_history.view_change_reason_wizard")
+        cambio = True
+
+    @api.onchange('cambio')
+    def metodo2(self):
+        _logger.warning('Entró al metodo del CAMBIO')
+
+    
 
         return wizard
         # self.ensure_one()
