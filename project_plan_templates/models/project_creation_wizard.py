@@ -52,15 +52,15 @@ class ProjectCreation(models.TransientModel):
             'planned_date_begin': line.planned_date_begin,
             'planned_date_end': line.planned_date_end,
             'task_timesheet_id': line.task_timesheet_id.id,
-            'partner_id': [(6, 0 , line.partner_id.ids)],
+            'partner_id': [(6, 0, line.partner_id.ids)],
             'stage_id': line.stage_id,
-        }) for line in self.project_plan_lines]
+        }) for line in self.project_plan_lines if line.use_project_task]
 
         picking_lines_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'quantity': line.quantity,
         }) for line in self.picking_lines]
-        
+
         project_vals = {
             'name': self.project_name,
             'description': self.description,
@@ -89,23 +89,23 @@ class ProjectCreation(models.TransientModel):
             else:
                 current_task_type = self.get_or_create_task_type('Extras', project)
 
-            if line.use_project_task:
-                timesheet_lines = self.env['task.time.lines'].search([
-                    ('task_timesheet_id', '=', line.task_timesheet_id.id)
-                ])
+            
+            timesheet_lines = self.env['task.time.lines'].search([
+                ('task_timesheet_id', '=', line.task_timesheet_id.id)
+            ])
 
-                timesheet_data = [(0, 0, {
-                    'name': ts_line.description,
-                    'estimated_time': ts_line.estimated_time,
-                }) for ts_line in timesheet_lines]
+            timesheet_data = [(0, 0, {
+                'name': ts_line.description,
+                'estimated_time': ts_line.estimated_time,
+            }) for ts_line in timesheet_lines]
 
-                self.env['project.task'].create({
-                    'name': line.name,
-                    'project_id': project.id,
-                    'stage_id': current_task_type.id,
-                    'user_ids': line.partner_id.ids,
-                    'timesheet_ids': timesheet_data,
-                })
+            self.env['project.task'].create({
+                'name': line.name,
+                'project_id': project.id,
+                'stage_id': current_task_type.id,
+                'user_ids': line.partner_id.ids,
+                'timesheet_ids': timesheet_data,
+            })
 
             
 
