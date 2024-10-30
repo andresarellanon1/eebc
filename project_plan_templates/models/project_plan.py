@@ -6,7 +6,7 @@ class ProjectPlan(models.Model):
     _description = 'Templates for project plans'
 
     name = fields.Char(string="Name", required=True)
-    project_name = fields.Char(string="Project name")
+    project_name = fields.Char(string="Project name", required=True)
     description = fields.Html(string="Description")
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
     project_id = fields.Many2one('project.project', string="Project")
