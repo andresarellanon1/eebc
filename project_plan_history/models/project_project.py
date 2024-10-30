@@ -7,6 +7,7 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     version_id = fields.Many2one('project.version', string="History")
+    change_reason = fields.Text(string="Motivo")
 
     child_ids = fields.One2many(
         'project.project',
@@ -32,7 +33,18 @@ class ProjectProject(models.Model):
 
     def abrir_wizard(self):
         _logger.warning('Entró al metodo del wizard')
-        wizard = self.env['ir.actions.act_window']._for_xml_id("Historial_de_planeacion_de_proyectos.wizard_history_action")
+        # Llamar al wizard
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Ingrese el motivo del cambio',
+            'res_model': 'change.reason.wizard',
+            'target': 'new',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'context': {
+                'motive': 'change_reason'
+            },
+        }
 
         return wizard
         # self.ensure_one()
@@ -59,8 +71,7 @@ class ProjectProject(models.Model):
     #         'view_mode': 'form',
     #         'target': 'new',
     #         'context': {
-    #             'default_field1': 'Valor inicial de Field 1',
-    #             'default_field2': 10,
+    #             'motive': 'change_reason'
     #         },
     #     }
 
