@@ -4,7 +4,7 @@ class ProjectCreation(models.TransientModel):
     _name = 'project.creation.wizard'
     _description = 'Wizard to confirm project creation'
 
-    project_plan_id = fields.Many2one('project.plan', string="Project Plan", required=True)
+    project_plan_id = fields.Many2one('project.plan', string="Project Plan", required=True, readonly="True")
     project_name = fields.Char(string="Project Name")
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
@@ -21,7 +21,8 @@ class ProjectCreation(models.TransientModel):
     picking_lines = fields.Many2many(
         'project.picking.lines',
         string="Picking Lines",
-        compute='_compute_picking_lines'
+        compute='_compute_picking_lines',
+        readonly="False"
     )
 
     @api.onchange('project_plan_id')
