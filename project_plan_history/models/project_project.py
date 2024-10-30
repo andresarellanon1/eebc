@@ -24,7 +24,7 @@ class ProjectProject(models.Model):
         for project in self:
             project_version.create_version(project, self.env.user)
         
-        abrir_wizard()
+        self.abrir_wizard()
 
         return result
 
