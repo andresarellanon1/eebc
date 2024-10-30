@@ -10,7 +10,9 @@
         <record id="wizard_history_action" model="ir.actions.act_window">
             <field name="name">Wizard</field>
             <field name="res_model">change.reason.wizard</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="change.reason.wizard"/>
+            <field name="target">new</field>
         </record>
 
         <record id="menu_project_history" model="ir.ui.menu">

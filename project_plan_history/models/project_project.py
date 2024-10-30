@@ -32,12 +32,12 @@ class ProjectProject(models.Model):
 
     def abrir_wizard(self):
         _logger.warning('Entró al metodo del wizard')
+        self.ensure_one()
         return {
             'name': 'Mi Wizard',
-            'type': 'ir.actions.act_window',
-            'res_model': 'change.reason.wizard',
             'view_mode': 'form',
-            'view_type': 'form',
+            'res_model': 'change.reason.wizard',
+            'type': 'ir.actions.act_window',
             'target': 'new',  # Esto abre el wizard en un modal
         }
 
