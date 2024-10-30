@@ -21,7 +21,6 @@ class ProjectCreation(models.TransientModel):
     picking_lines = fields.Many2many(
         'project.picking.lines',
         string="Picking Lines",
-        compute='_compute_picking_lines',
         readonly="False"
     )
 
@@ -35,7 +34,7 @@ class ProjectCreation(models.TransientModel):
             self.description = self.project_plan_id.description
 
     @api.onchange('project_plan_pickings')
-    def _compute_picking_lines(self):
+    def onchange_picking_lines(self):
         for record in self:
             lines = self.env['project.picking.lines']
             for picking in record.project_plan_pickings:
