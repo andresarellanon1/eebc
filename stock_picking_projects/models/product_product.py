@@ -18,12 +18,14 @@ class ProductProduct(models.Model):
         'project.project', 
         string='Proyecto',
         store = True,
+        copied = True
     )
 
     product_id = fields.Many2one(
         'product.product', 
         string='Producto',
         store = True,
+        copied = True
     )
 
     @api.onchange('product_id')

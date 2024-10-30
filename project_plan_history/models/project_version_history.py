@@ -27,14 +27,14 @@ class ProjectVersion(models.Model):
         version = self.create({
             'modified_by': user.name,
             'project_id': project.id,
-            # 'motive': project.change_motive,
+            'motive': project.change_motive,
             'version_date': fields.Datetime.now(),
             # Datos del proyecto que se van a guardar
             'project_name': project.name,
             'description': project.description,
             'date_start': project.date_start,
             'project_plan_lines': [(6, 0, project.project_plan_lines.ids)],
-            # 'project_picking_lines': [(6, 0, project.project_picking_lines.ids)],
+            'project_picking_lines': [(6, 0, project.project_picking_lines.ids)],
         })
         
         # Asignar las líneas de planificación y picking al registro creado
