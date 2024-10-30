@@ -11,8 +11,6 @@
             <field name="name">Wizard</field>
             <field name="res_model">change.reason.wizard</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_change_reason_wizard"/>
-            <field name="target">new</field>
         </record>
 
         <record id="menu_project_history" model="ir.ui.menu">
