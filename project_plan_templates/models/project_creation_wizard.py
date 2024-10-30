@@ -20,8 +20,7 @@ class ProjectCreation(models.TransientModel):
 
     picking_lines = fields.Many2many(
         'project.picking.lines',
-        string="Picking Lines",
-        readonly="False"
+        string="Picking Lines"
     )
 
     @api.onchange('project_plan_id')
