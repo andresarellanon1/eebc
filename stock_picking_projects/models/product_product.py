@@ -17,14 +17,12 @@ class ProductProduct(models.Model):
     project_id = fields.Many2one(
         'project.project', 
         string='Proyecto',
-        store = True,
         copied = True
     )
 
     product_id = fields.Many2one(
         'product.product', 
         string='Producto',
-        store = True,
         copied = True
     )
 
