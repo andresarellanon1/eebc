@@ -33,18 +33,7 @@ class ProjectProject(models.Model):
 
     def abrir_wizard(self):
         _logger.warning('Entró al metodo del wizard')
-        # Llamar al wizard
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Ingrese el motivo del cambio',
-            'res_model': 'change.reason.wizard',
-            'target': 'new',
-            'view_mode': 'form',
-            'view_type': 'form',
-            'context': {
-                'motive': 'change_reason'
-            },
-        }
+        wizard = self.env['ir.actions.act_window']._for_xml_id("project_plan_history.view_change_reason_wizard")
 
         return wizard
         # self.ensure_one()
