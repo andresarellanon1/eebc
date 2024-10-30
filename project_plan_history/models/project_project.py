@@ -38,6 +38,7 @@ class ProjectProject(models.Model):
             'view_mode': 'form',
             'res_model': 'change.reason.wizard',
             'type': 'ir.actions.act_window',
+            'view_id': 'view_change_reason_wizard',
             'target': 'new',  # Esto abre el wizard en un modal
         }
 
