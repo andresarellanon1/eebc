@@ -19,13 +19,12 @@ class ProjectProject(models.Model):
 
     @api.model
     def write(self, vals):
-        # Se guarda el estado actual antes de modificar
+        result = super(ProjectProject, self).write(vals)
         project_version = self.env['project.version']
         for project in self:
             project_version.create_version(project, self.env.user)
 
-        # Se modifica
-        return super(ProjectProject, self).write(vals)
+        return result
 
     # @api.model
     # def write(self, vals):
