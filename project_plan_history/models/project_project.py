@@ -26,15 +26,15 @@ class ProjectProject(models.Model):
         
         return result
 
-    def abrir_wizard(self):
-        return {
-            'name': 'Mi Wizard',
-            'type': 'ir.actions.act_window',
-            'res_model': 'change.reason.wizard',
-            'view_mode': 'form',
-            'view_type': 'form',
-            'target': 'new',  # Esto abre el wizard en un modal
-        }
+    # def abrir_wizard(self):
+    #     return {
+    #         'name': 'Mi Wizard',
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'change.reason.wizard',
+    #         'view_mode': 'form',
+    #         'view_type': 'form',
+    #         'target': 'new',  # Esto abre el wizard en un modal
+    #     }
 
     # @api.model
     # def write(self, vals):
