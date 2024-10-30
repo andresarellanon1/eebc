@@ -1,4 +1,7 @@
 from odoo import fields, models, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
@@ -19,16 +22,43 @@ class ProjectProject(models.Model):
 
     @api.model
     def write(self, vals):
-        # Se guarda el estado actual antes de modificar
+        self.abrir_wizard()
+        
         project_version = self.env['project.version']
         for project in self:
             project_version.create_version(project, self.env.user)
-
-        # Se modifica
+        
         return super(ProjectProject, self).write(vals)
 
-    # @api.depends('project_plan_id','project_plan_description','project_plan_lines')
-    # def _onchange_plan_template():
+    def abrir_wizard(self):
+        _logger.warning('Entró al metodo del wizard')
+        return {
+            'name': 'Mi Wizard',
+            'type': 'ir.actions.act_window',
+            'res_model': 'change.reason.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',  # Esto abre el wizard en un modal
+        }
+
+    # @api.model
+    # def write(self, vals):
+    #     # Crear una versión del proyecto antes de modificarlo
+    #     project_version = self.env['project.version']
+    #     for project in self:
+    #         project_version.create_version(project, self.env.user)
+    
+    #     # Llamar al wizard
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'project.wizard',
+    #         'view_mode': 'form',
+    #         'target': 'new',
+    #         'context': {
+    #             'default_field1': 'Valor inicial de Field 1',
+    #             'default_field2': 10,
+    #         },
+    #     }
 
 
     #  # Crear un nuevo contexto en lugar de modificar el existente
