@@ -13,7 +13,6 @@
                 </tree>
             </field>
         </record>
-
         <record id="project_history_view_form" model="ir.ui.view">
             <field name="name">project.version.action.form</field>
             <field name="model">project.version</field>
@@ -23,37 +22,37 @@
                         <div class="oe_title">
                             <label for="project_name"/>
                             <h1>
-                                <field name="project_name" class="w-100" required="1" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="project_name" class="w-100" required="1"/>
                             </h1>
                             <group>
-                                <field name="motive" readonly="1" options="{'no_create': True}"/>
-                                <field name="version_date" readonly="1" options="{'no_create': True}"/>
-                                <field name="modified_by" readonly="1" options="{'no_create': True}"/>
-                                <field name="date_start" readonly="1" options="{'no_create': True}"/>
-                                <field name="description" readonly="1" options="{'no_create': True}"/>
+                                <field name="motive" readonly="1"/>
+                                <field name="version_date" readonly="1"/>
+                                <field name="modified_by" readonly="1"/>
+                                <field name="date_start" readonly="1"/>
+                                <field name="description" readonly="1"/>
                             </group>
                         </div>
                         <notebook>
                             <page string="Planeación">
                                 <group>
-                                    <field name="project_plan_lines" widget="One2many_list">
+                                    <field name="project_plan_lines" widget="One2many_list" options="{'no_create': True, 'no_edit': True}">
                                         <tree>
-                                            <field name="name" string="Nombre" options="{'no_create': True}"/>
-                                            <field name="chapter" options="{'no_create': True}"/>
-                                            <field name="planned_date_begin" string="Fecha de inicio" options="{'no_create': True}"/>
-                                            <field name="planned_date_end" string="Fecha de finalización" options="{'no_create': True}"/>
-                                            <field name="stage_id" options="{'no_create': True}"/>
+                                            <field name="name" string="Nombre" options="{'no_create': True, 'no_edit': True}"/>
+                                            <field name="chapter" options="{'no_create': True, 'no_edit': True}"/>
+                                            <field name="planned_date_begin" string="Fecha de inicio" options="{'no_create': True, 'no_edit': True}"/>
+                                            <field name="planned_date_end" string="Fecha de finalización" options="{'no_create': True, 'no_edit': True}"/>
+                                            <field name="stage_id" options="{'no_create': True, 'no_edit': True}"/>
                                         </tree>
                                     </field>
                                 </group>
                             </page>
                             <page string="Inventario">
                                 <group>
-                                    <field name="project_picking_lines" widget="One2many_list">
+                                    <field name="project_picking_lines" widget="One2many_list" options="{'no_create': True, 'no_edit': True}">
                                         <tree>
-                                            <field name="product_id" options="{'no_create': True}"/>
-                                            <field name="quantity" options="{'no_create': True}"/>
-                                            <field name="location_id" options="{'no_create': True}"/>
+                                            <field name="product_id" options="{'no_create': True, 'no_edit': True}"/>
+                                            <field name="quantity" options="{'no_create': True, 'no_edit': True}"/>
+                                            <field name="location_id" options="{'no_create': True, 'no_edit': True}"/>
                                         </tree>
                                     </field>
                                 </group>
