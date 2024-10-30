@@ -1,4 +1,7 @@
 from odoo import fields, models, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
@@ -31,6 +34,7 @@ class ProjectProject(models.Model):
         
         # Llama al wizard antes de guardar
         if vals:
+            _logger.warning('Entró al IF')
             new_context['active_id'] = self.id
             wizard = self.env['change.reason.wizard'].create({})
             return {
