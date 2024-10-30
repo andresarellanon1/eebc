@@ -32,15 +32,18 @@ class ProjectProject(models.Model):
 
     def abrir_wizard(self):
         _logger.warning('Entró al metodo del wizard')
-        self.ensure_one()
-        return {
-            'name': 'Mi Wizard',
-            'view_mode': 'form',
-            'res_model': 'change.reason.wizard',
-            'type': 'ir.actions.act_window',
-            'view_id': 'view_change_reason_wizard',
-            'target': 'new',  # Esto abre el wizard en un modal
-        }
+        wizard = self.env['ir.actions.act_window']._for_xml_id("project_plan_history.view_change_reason_wizard")
+
+        return wizard
+        # self.ensure_one()
+        # return {
+        #     'name': 'Mi Wizard',
+        #     'view_mode': 'form',
+        #     'res_model': 'change.reason.wizard',
+        #     'type': 'ir.actions.act_window',
+        #     'view_id': 'view_change_reason_wizard',
+        #     'target': 'new',  # Esto abre el wizard en un modal
+        # }
 
     # @api.model
     # def write(self, vals):
