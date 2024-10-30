@@ -1,4 +1,10 @@
 from odoo import api, fields, models
+import json
+from odoo.exceptions import ValidationError
+
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ProjectVersion(models.Model):
     _name = 'project.version'
@@ -17,41 +23,20 @@ class ProjectVersion(models.Model):
 
     @api.model
     def create_version(self, project, user):
+        # Guardamos los datos del proyecto
         version = self.create({
             'modified_by': user.name,
             'project_id': project.id,
+            # 'motive': project.change_motive,
             'version_date': fields.Datetime.now(),
+            # Datos del proyecto que se van a guardar
             'project_name': project.name,
             'description': project.description,
             'date_start': project.date_start,
+            'project_plan_lines': [(6, 0, project.project_plan_lines.ids)],
+            # 'project_picking_lines': [(6, 0, project.project_picking_lines.ids)],
         })
-
-        plan_line_ids = []
-        for line in project.project_plan_lines:
-            partner_id = line.partner_id.id if line.partner_id else False
-            new_line = self.env['project.plan.line'].create({
-                'version_id': version.id,
-                'name': getattr(line, 'name', ''),
-                'chapter': getattr(line, 'chapter', ''),
-                'use_project_task': getattr(line, 'use_project_task', ''),
-                'planned_date_begin': getattr(line, 'planned_date_begin', False),
-                'planned_date_end': getattr(line, 'planned_date_end', False),
-                'stage_id': getattr(line.stage_id, 'id', False),
-            })
-            plan_line_ids.append(new_line.id)
-
-        picking_line_ids = []
-        for line in project.project_picking_lines:
-            new_line = self.env['project.picking.lines'].create({
-                'version_id': version.id,
-                'quantity': getattr(line, 'quantity', 0),
-                'location_id': getattr(line.location_id, 'id', False),
-            })
-            picking_line_ids.append(new_line.id)
-
-        version.write({
-            'project_plan_lines': [(6, 0, plan_line_ids)],
-            'project_picking_lines': [(6, 0, picking_line_ids)],
-        })
-
-        return version
+        
+        # Asignar las líneas de planificación y picking al registro creado
+        # version.project_plan_lines = [(6, 0, project.project_plan_lines.ids)]
+        # version.project_picking_lines = [(6, 0, project.project_picking_lines.ids)]

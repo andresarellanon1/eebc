@@ -27,8 +27,24 @@ class ProjectProject(models.Model):
         # Se modifica
         return super(ProjectProject, self).write(vals)
 
-    # @api.depends('project_plan_id','project_plan_description','project_plan_lines')
-    # def _onchange_plan_template():
+    # @api.model
+    # def write(self, vals):
+    #     # Crear una versión del proyecto antes de modificarlo
+    #     project_version = self.env['project.version']
+    #     for project in self:
+    #         project_version.create_version(project, self.env.user)
+    
+    #     # Llamar al wizard
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'project.wizard',
+    #         'view_mode': 'form',
+    #         'target': 'new',
+    #         'context': {
+    #             'default_field1': 'Valor inicial de Field 1',
+    #             'default_field2': 10,
+    #         },
+    #     }
 
 
     #  # Crear un nuevo contexto en lugar de modificar el existente
