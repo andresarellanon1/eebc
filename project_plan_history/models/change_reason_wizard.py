@@ -10,11 +10,7 @@ class ChangeReasonWizard(models.TransientModel):
         project_id = self.env.context.get('active_id')
         if project_id:
             project = self.env['project.project'].browse(project_id)
-            project.change_motive = self.reason  # Guardar el motivo en el registro
-            
-            # Crear la versión solo después de confirmar
-            project_version = self.env['project.version']
-            project_version.create_version(project, self.env.user)
+            project.change_motive = self.motive  # Guardar el motivo en el registro
 
             # Ahora se realizan los cambios
             return project.write(self.env.context.get('vals', {}))
