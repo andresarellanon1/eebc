@@ -22,13 +22,12 @@ class ProjectProject(models.Model):
 
     @api.model
     def write(self, vals):
+        self.abrir_wizard()
         result = super(ProjectProject, self).write(vals)
         project_version = self.env['project.version']
         for project in self:
             project_version.create_version(project, self.env.user)
 
-        self.abrir_wizard()
-        
         return result
 
     def abrir_wizard(self):
