@@ -1,6 +1,7 @@
 from odoo import fields, models, api
 
-class AccountAnalytics(models.Model):
+class AccountAnalyticLine(models.Model):
+
     _inherit = 'account.analytic.line'
 
-    project_plan_line = Many2one('project.plan.line', string="Project plan line")
+    estimated_time = fields.Float(string="Estimated hours")

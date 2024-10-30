@@ -39,7 +39,7 @@ class ProjectCreation(models.TransientModel):
             lines = self.env['project.picking.lines']
             for picking in record.project_plan_pickings:
                 lines |= picking.project_picking_lines
-            record.picking_lines = lines
+            record.picking_lines = lines.filtered('product_id')
 
     def action_confirm_create_project(self):
         self.ensure_one()
@@ -51,6 +51,7 @@ class ProjectCreation(models.TransientModel):
             'use_project_task': line.use_project_task,
             'planned_date_begin': line.planned_date_begin,
             'planned_date_end': line.planned_date_end,
+            'task_timesheet_id': line.task_timesheet_id.id,
             'partner_id': [(6, 0 , line.partner_id.ids)],
             'stage_id': line.stage_id,
         }) for line in self.project_plan_lines]
@@ -89,11 +90,20 @@ class ProjectCreation(models.TransientModel):
             if not line.stage_id:
                 current_task_type = self.get_or_create_task_type('Extras', project)
 
-            self.env['project.task'].create({
-                'name': line.name,
-                'project_id': project.id,
-                'stage_id': current_task_type.id,
-            })
+            if line.use_project_task:
+                timesheet_lines = self.env['task.time.lines'].search([
+                    ('task_timesheet_id', '=', line.task_timesheet_id.id)
+                ])
+
+                self.env['project.task'].create({
+                    'name': line.name,
+                    'project_id': project.id,
+                    'stage_id': current_task_type.id,
+                    'user_ids': line.partner_id.ids,
+                    'timesheet_ids': [(6, 0, timesheet_lines.ids)],
+                })
+
+            
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([

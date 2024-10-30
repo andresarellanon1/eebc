@@ -23,8 +23,8 @@ class ProjectLines(models.Model):
     planned_date_end = fields.Datetime(default=fields.Date.context_today, string="End date")
     origin_project_id = fields.Many2one('project.project', string="Project")
     partner_id = fields.Many2many('res.users', string="Assigned user")
-    timesheet_ids = fields.One2many('account.analytic.line', 'project_plan_line', string="Timesheets")
-
+    task_timesheet_id = fields.Many2one('task.timesheet', string="Timesheet")
+    
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
 
