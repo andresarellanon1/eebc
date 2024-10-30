@@ -96,7 +96,7 @@ class ProjectCreation(models.TransientModel):
 
                 timesheet_data = [(0, 0, {
                     'description': ts_line.description,
-                    'estimated_hours': ts_line.estimated_hours,
+                    'estimated_time': ts_line.estimated_time,
                 }) for ts_line in timesheet_lines]
 
                 self.env['project.task'].create({
