@@ -19,37 +19,36 @@
                                     <group>
                                         <field name="project_plan_id"/>
                                     </group>
-                                    <group name="planning_lines">
-                                        <field name="project_plan_lines">
-                                            <tree editable="editable_bottom">
-                                                <field name="name" />
-                                                <field name="chapter" />
-                                                <field name="description" />
-                                                <field name="use_project_task" />
-                                                <field name="planned_date_begin" widget="daterange" />
-                                                <field name="planned_date_end" widget="daterange" />
-                                                <field name="partner_id" widget="many2many_avatar_user" />
+                                    <div style="100%">
+                                        <field name="project_plan_lines" nolabel="1">
+                                            <tree editable="editable_bottom" style="width: 100%;">
+                                                <field name="name"/>
+                                                <field name="chapter"/>
+                                                <field name="description"/>
+                                                <field name="use_project_task"/>
+                                                <field name="planned_date_begin" widget="daterange"/>
+                                                <field name="planned_date_end" widget="daterange"/>
+                                                <field name="partner_id" widget="many2many_avatar_user"/>
                                                 <field name="task_timesheet_id" options="{'create': True}"/>
-                                                <field name="stage_id" />
-                                                <button name="action_preview_task" type="object"
-                                                    class="oe_highlight" string="Preview task" />
+                                                <field name="stage_id"/>
+                                                <button name="action_preview_task" type="object" class="oe_highlight" string="Preview task"/>
                                             </tree>
                                         </field>
-                                    </group>
+                                    </div>
                                 </page>
                                 <page name="Stock" string="Stock">
                                     <group name="stock_container">
                                         <field name="project_plan_pickings" widget="many2many_tags" />
                                     </group>
-                                    <group name="stock_lines">
+                                    <div>
                                         <field name="picking_lines">
-                                            <tree editable="editable_bottom">
+                                            <tree editable="editable_bottom" style="width: 100%;">
                                                 <field name="product_id" />
                                                 <field name="quantity" />
                                                 <field name="location_id" />
                                             </tree>
                                         </field>
-                                    </group>
+                                    </div>
                                 </page>
                             </notebook>
                         </group>
