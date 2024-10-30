@@ -32,7 +32,7 @@ class ProjectProject(models.Model):
 
     def abrir_wizard(self):
         _logger.warning('Entró al metodo del wizard')
-        wizard = self.env['ir.actions.act_window']._for_xml_id("project_history_motive_wizard.view_change_reason_wizard")
+        wizard = self.env['ir.actions.act_window']._for_xml_id("Historial_de_planeacion_de_proyectos.wizard_history_action")
 
         return wizard
         # self.ensure_one()
