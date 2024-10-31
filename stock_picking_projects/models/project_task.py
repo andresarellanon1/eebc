@@ -17,7 +17,7 @@ class ProjectTask(models.Model):
                     ('project_id', '=', task.project_id.id)
                 ])
                 
-                task.stock_ids = stock_moves.filtered(lambda m: m.origin == task.name)
+                task.stock_ids = stock_moves
             else:
                 task.stock_ids = False
 
@@ -26,9 +26,6 @@ class ProjectTask(models.Model):
             'origin': self.name,
             'picking_type_id': self.project_id.default_picking_type_id.id,
             'task_id': self.id,
-            'move_lines': [(0, 0, {
-                'product_id': move.product_id.id,
-            }) for move in self.stock_ids]
         }
         inventory = self.env['stock.picking'].create(inventory_vals)
         return {
