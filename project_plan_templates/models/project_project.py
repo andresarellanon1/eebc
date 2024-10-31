@@ -16,8 +16,8 @@ class ProjectProject(models.Model):
                 project.env['project.task'].create({
                     'name': line.name,
                     'project_id': project.id,
-                    'user_id': line.user_id.id,
                     'planned_date_begin': line.planned_date_begin,
                     'date_deadline': line.date_deadline,
                     'description': line.description,
+                    'user_ids': [(6, 0, [user.id for user in line.partner_id])],
                 })
