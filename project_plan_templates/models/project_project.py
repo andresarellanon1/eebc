@@ -20,5 +20,4 @@ class ProjectProject(models.Model):
                     'planned_date_begin': line.planned_date_begin,
                     'date_deadline': line.date_deadline,
                     'description': line.description,
-                    'user_ids': [(6, 0, [user.id for user in line.partner_id])],
                 })
