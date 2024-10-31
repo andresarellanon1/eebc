@@ -17,7 +17,6 @@
         "views/inherit_task_view_form.xml",
         "views/plan_picking_template_view.xml",
         "wizard/view_project_creation_wizard_form.xml",
-        "wizard/project_task_create_wizard_view.xml",
         "views/timesheet_template_view.xml",
         "views/inherit_project_task_form_inherited2.xml",
     ],
