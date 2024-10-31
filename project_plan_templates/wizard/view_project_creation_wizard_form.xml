@@ -16,9 +16,9 @@
                                     <field name="description" />
                                 </page>
                                 <page name="planning" string="Planning">
-                                    <group>
+                                    <!-- <group>
                                         <field name="project_plan_id"/>
-                                    </group>
+                                    </group> -->
                                     <div style="100%">
                                         <field name="project_plan_lines" nolabel="1">
                                             <tree editable="editable_bottom" style="width: 100%;">
