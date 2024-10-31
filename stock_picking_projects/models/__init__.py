@@ -5,4 +5,3 @@ from . import account_analytic_line
 from . import product_product
 from . import activity_template
 from . import line_activities
-from . import stock_move
