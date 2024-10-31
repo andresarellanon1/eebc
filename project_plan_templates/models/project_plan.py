@@ -15,12 +15,11 @@ class ProjectPlan(models.Model):
     picking_lines = fields.One2many(
         'project.picking.lines',
         'project_plan_id',
-        string="Picking Lines",
-        compute='_compute_picking_lines'
+        string="Picking Lines"
     )
 
     @api.onchange('project_plan_pickings')
-    def _compute_picking_lines(self):
+    def onchange_picking_lines(self):
         for record in self:
             lines = self.env['project.picking.lines']
             for picking in record.project_plan_pickings:

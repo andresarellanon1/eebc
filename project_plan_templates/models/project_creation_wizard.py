@@ -4,7 +4,7 @@ class ProjectCreation(models.TransientModel):
     _name = 'project.creation.wizard'
     _description = 'Wizard to confirm project creation'
 
-    project_plan_id = fields.Many2one('project.plan', string="Project Plan", required=True)
+    project_plan_id = fields.Many2one('project.plan', string="Project Plan", required=True, readonly="True")
     project_name = fields.Char(string="Project Name")
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
@@ -20,8 +20,7 @@ class ProjectCreation(models.TransientModel):
 
     picking_lines = fields.Many2many(
         'project.picking.lines',
-        string="Picking Lines",
-        compute='_compute_picking_lines'
+        string="Picking Lines"
     )
 
     @api.onchange('project_plan_id')
@@ -34,7 +33,7 @@ class ProjectCreation(models.TransientModel):
             self.description = self.project_plan_id.description
 
     @api.onchange('project_plan_pickings')
-    def _compute_picking_lines(self):
+    def onchange_picking_lines(self):
         for record in self:
             lines = self.env['project.picking.lines']
             for picking in record.project_plan_pickings:
@@ -52,15 +51,15 @@ class ProjectCreation(models.TransientModel):
             'planned_date_begin': line.planned_date_begin,
             'planned_date_end': line.planned_date_end,
             'task_timesheet_id': line.task_timesheet_id.id,
-            'partner_id': [(6, 0 , line.partner_id.ids)],
+            'partner_id': [(6, 0, line.partner_id.ids)],
             'stage_id': line.stage_id,
-        }) for line in self.project_plan_lines]
+        }) for line in self.project_plan_lines if line.use_project_task]
 
         picking_lines_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'quantity': line.quantity,
         }) for line in self.picking_lines]
-        
+
         project_vals = {
             'name': self.project_name,
             'description': self.description,
