@@ -5,6 +5,9 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
         <field name="arch" type="xml">
+            <header>
+                <button name="action_create_task" type="object" string="Crear Nueva Tarea" class="btn-primary" />
+            </header>
             <xpath expr="//tree//field[@name='unit_amount']" position="before">
                 <field name="estimated_time" widget="timesheet_uom"/>
             </xpath>
