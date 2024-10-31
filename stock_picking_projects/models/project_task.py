@@ -28,10 +28,6 @@ class ProjectTask(models.Model):
             'task_id': self.id,
             'move_lines': [(0, 0, {
                 'product_id': move.product_id.id,
-                'product_packaging_id': move.product_packaging_id.id,
-                'product_uom_qty': move.product_qty,
-                'product_uom': move.product_uom.id,
-                'picking_type_codigo': move.picking_type_codigo.id,
             }) for move in self.stock_ids]
         }
         inventory = self.env['stock.picking'].create(inventory_vals)
