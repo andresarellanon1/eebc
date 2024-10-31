@@ -34,4 +34,5 @@ class ProjectPlanPickingLine(models.Model):
     picking_name = fields.Char(string="Picking Name")
     project_plan_id = fields.Many2one('project.plan', string="Project plan")
     reservado = fields.Float(string='Reservado')
+    stock_move_id = fields.Many2one('stock.move', 'product_ids', string='Project Stock')
     
