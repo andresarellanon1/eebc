@@ -1,9 +1,14 @@
 from odoo import fields, models, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     version_id = fields.Many2one('project.version', string="History")
+    change_reason = fields.Text(string="Motivo")
+    cambio = fields.Boolean(default=False)
 
     child_ids = fields.One2many(
         'project.project',
@@ -19,22 +24,34 @@ class ProjectProject(models.Model):
 
     @api.model
     def write(self, vals):
-        result = super(ProjectProject, self).write(vals)
+        self.abrir_wizard()
+        
         project_version = self.env['project.version']
         for project in self:
             project_version.create_version(project, self.env.user)
         
-        return result
+        return super(ProjectProject, self).write(vals)
 
-    # def abrir_wizard(self):
-    #     return {
-    #         'name': 'Mi Wizard',
-    #         'type': 'ir.actions.act_window',
-    #         'res_model': 'change.reason.wizard',
-    #         'view_mode': 'form',
-    #         'view_type': 'form',
-    #         'target': 'new',  # Esto abre el wizard en un modal
-    #     }
+    def abrir_wizard(self):
+        _logger.warning('Entró al metodo del wizard')
+        cambio = True
+
+    @api.onchange('cambio')
+    def metodo2(self):
+        _logger.warning('Entró al metodo del CAMBIO')
+
+    
+
+        return wizard
+        # self.ensure_one()
+        # return {
+        #     'name': 'Mi Wizard',
+        #     'view_mode': 'form',
+        #     'res_model': 'change.reason.wizard',
+        #     'type': 'ir.actions.act_window',
+        #     'view_id': 'view_change_reason_wizard',
+        #     'target': 'new',  # Esto abre el wizard en un modal
+        # }
 
     # @api.model
     # def write(self, vals):
@@ -50,8 +67,7 @@ class ProjectProject(models.Model):
     #         'view_mode': 'form',
     #         'target': 'new',
     #         'context': {
-    #             'default_field1': 'Valor inicial de Field 1',
-    #             'default_field2': 10,
+    #             'motive': 'change_reason'
     #         },
     #     }
 
