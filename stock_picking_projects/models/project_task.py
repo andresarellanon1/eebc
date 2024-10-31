@@ -17,7 +17,7 @@ class ProjectTask(models.Model):
                     ('project_id', '=', task.project_id.id)
                 ])
                 
-                task.stock_ids = stock_moves
+                task.stock_ids = stock_moves.filtered(lambda m: m.origin == task.name)
             else:
                 task.stock_ids = False
 
