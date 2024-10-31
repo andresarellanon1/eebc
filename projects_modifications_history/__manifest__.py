@@ -13,6 +13,7 @@
         "security/ir.model.access.csv",
         "views/menus.xml",
         "views/project_version_history_view.xml",
+        "wizard/view_version_creation_wizard_form.xml"
     ],
     "license": "LGPL-3",
     'installable': True,
