@@ -6,8 +6,6 @@ logger = logging.getLogger(__name__)
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    task_id = fields.Many2one('project.task', string="Task", help="Task associated with this stock move.")
-
     def _action_confirm(self, merge=True, merge_into=False):
         moves = super(StockMove, self)._action_confirm()
 
