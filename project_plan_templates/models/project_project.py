@@ -13,27 +13,11 @@ class ProjectProject(models.Model):
     def action_create_task(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Nueva Tarea',
+            'name': 'Crear Nueva Tarea',
             'view_mode': 'form',
-            'res_model': 'project.task',
-            'target': 'new',
+            'res_model': 'project.task.create.wizard',
+            'target': 'new',  # Abre la vista en un pop-up
             'context': {
-                'default_project_id': self.id,
-                'create_from_project': True
+                'default_project_id': self.id,  # Asigna el proyecto actual en el wizard
             }
         }
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('create_from_project'):
-                task_name = vals.get('name')
-                project_id = vals.get('project_id')
-
-                if self.env['project.task'].search_count([
-                    ('name', '=', task_name),
-                    ('project_id', '=', project_id)
-                ]):
-                    raise ValidationError("Esa tarea ya existe en este proyecto")
-
-        return super().create(vals_list)
