@@ -1,7 +1,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
-Class ProjectVersionHistory(models.Model):
+class ProjectVersionHistory(models.Model):
 
     _name = 'project.version.history'
     _description = 'Project Version History'
