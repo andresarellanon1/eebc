@@ -11,6 +11,8 @@
                ],
     'data': [
         "security/ir.model.access.csv",
+        "views/menus.xml",
+        "views/project_version_history_view.xml",
     ],
     "license": "LGPL-3",
     'installable': True,

@@ -30,3 +30,14 @@ class ProjecVersionLines(models.Model):
         'project.picking.lines',
         string="Last version picking lines"
     )
+
+    version_number = fields.Char(
+        string='Version Number',
+        compute='_compute_version_number',
+        store=True
+    )
+
+    @api.depends('id')
+    def _compute_version_number(self):
+        for record in self:
+            record.version_number = f"V{record.id}" if record.id else "V0"
