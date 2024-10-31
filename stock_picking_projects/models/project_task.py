@@ -32,7 +32,7 @@ class ProjectTask(models.Model):
                 'product_uom_qty': move.product_qty,
                 'product_uom': move.product_uom.id,
                 'picking_type_codigo': move.picking_type_codigo.id,
-            }) for move in self.stock_ids if move.product_qty > 0]
+            }) for move in self.stock_ids]
         }
         inventory = self.env['stock.picking'].create(inventory_vals)
         return {
