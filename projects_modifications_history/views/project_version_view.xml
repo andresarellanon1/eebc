@@ -11,7 +11,7 @@
                     <field name="modification_motive"/>
                     <field name="modification_date"/>
                     <field name="id" invisible="1"/>
-                    <button name="%(project_version_action)d" string="Open" type="action"/>
+                    <button name="%(project_version_action)d" string="Open" type="action" context="{'default_project_id': id}"/>
                 </tree>
             </field>
         </record>
