@@ -19,6 +19,7 @@
         "wizard/view_project_creation_wizard_form.xml",
         "views/timesheet_template_view.xml",
         "views/inherit_project_task_form_inherited2.xml",
+        "views/plan_project_stock_tree_view.xml"
     ],
     "license": "LGPL-3",
     'installable': True,
