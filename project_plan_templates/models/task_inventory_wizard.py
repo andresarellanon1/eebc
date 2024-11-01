@@ -25,4 +25,4 @@ class ProjectCreation(models.TransientModel):
             record.location_dest_id = record.stock_picking_id.location_dest_id
             record.scheduled_date = record.stock_picking_id.scheduled_date
             record.origin = record.stock_picking_id.origin
-            record.task_id =record.stock_picking_id.task_id
+            record.task_id = record.stock_picking_id.task_id
