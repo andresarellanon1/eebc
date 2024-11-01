@@ -38,6 +38,7 @@
                             <tree editable="editable_bottom">
                                 <field name="product_id"/>
                                 <field name="quantity"/>
+                                <field name="reservado"/>
                                 <field name="location_id"/>
                             </tree>
                         </field>
