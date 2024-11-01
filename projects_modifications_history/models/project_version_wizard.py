@@ -21,7 +21,6 @@ class ProjectVersionWizard(models.TransientModel):
 
     project_id = fields.Many2one('project.project', string='Project', required=True)
 
-    @api.multi
     def action_confirm_version_history(self):
         self.ensure_one()
 
