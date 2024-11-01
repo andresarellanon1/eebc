@@ -5,7 +5,7 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@string='Share Editable']" position="after">
+            <xpath expr="//header/button[2]" position="after">
                 <button name="action_save_version" type="object" class="oe_highlight" string="Save project"/>
             </xpath>
         </field>
