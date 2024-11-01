@@ -11,7 +11,6 @@
                     <field name="modification_motive"/>
                     <field name="modification_date"/>
                     <field name="id" invisible="1"/>
-                    <button name="%(project_version_action)d" string="Open" type="action" context="{'default_project_id': id}"/>
                 </tree>
             </field>
         </record>
@@ -40,8 +39,8 @@
                                 <field name="modification_motive"/>
                             </page>
                             <page name="tasks" string="Tasks changes">
-                                <h1 attrs="{'invisible': [('has_previous_version', '=', False)]}">Tasks before modification</h1>
-                                <div attrs="{'invisible': [('has_previous_version', '=', False)]}">
+                                <h1>Tasks before modification</h1>
+                                <div>
                                     <field name="previous_version_plan_lines" nolabel="1">
                                         <tree style="width: 100%">
                                             <field name="name"/>
@@ -72,8 +71,8 @@
                                 </div>
                             </page>
                             <page name="stock" string="Stock changes">
-                                <h1 attrs="{'invisible': [('has_previous_version', '=', False)]}">Stock before changes</h1>
-                                <div attrs="{'invisible': [('has_previous_version', '=', False)]}">
+                                <h1>Stock before changes</h1>
+                                <div>
                                     <field name="previous_version_picking_lines" nolabel="1">
                                         <tree style="width: 100%">
                                             <field name="product_id" />
