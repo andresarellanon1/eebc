@@ -3,8 +3,7 @@ from odoo import fields, models, api
 class ProjectTask(models.Model):
    
     _inherit = 'project.task'
-
-
+    
     def action_open_task_inventory_wizard(self):
         self.ensure_one()
         return {

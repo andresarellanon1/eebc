@@ -21,6 +21,7 @@
         "views/inherit_project_task_form_inherited2.xml",
         "views/plan_project_stock_tree_view.xml",
         "wizard/view_task_inventory_wizard.xml",
+        "inherit_project_task_inventory_view_form.xml",
     ],
     "license": "LGPL-3",
     'installable': True,
