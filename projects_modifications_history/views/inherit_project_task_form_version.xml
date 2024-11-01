@@ -8,6 +8,7 @@
             <xpath expr="//header/button[2]" position="after">
                 <button name="action_save_version" type="object" class="oe_highlight" string="Save project"/>
             </xpath>
+            
         </field>
     </record>
 </odoo>
