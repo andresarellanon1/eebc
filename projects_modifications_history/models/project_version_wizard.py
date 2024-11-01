@@ -8,7 +8,7 @@ class ProjectVersionWizard(models.TransientModel):
 
     modification_date = fields.Datetime(string='Modification date')
     modification_motive = fields.Html(string='Motive of adjustment')
-    modified_by = fields.Many2one('res.users', string='Modified by')
+    modified_by = fields.Many2one('res.users', string='Modified by', required=True)
     
     project_plan_lines = fields.Many2many(
         'project.plan.line',
@@ -39,6 +39,8 @@ class ProjectVersionWizard(models.TransientModel):
             })
         else:
             history = existing_history
+
+        project.create_project_tasks(self)
 
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
