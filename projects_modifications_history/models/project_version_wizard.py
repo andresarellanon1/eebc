@@ -52,7 +52,6 @@ class ProjectVersionWizard(models.TransientModel):
         for line in self.project_plan_lines:
             self.env['project.version.lines'].create({
                 'project_version_history_id': history.id,
-                'project_plan_line_id': line.id,
                 'modification_date': self.modification_date,
                 'modified_by': self.modified_by.id,
                 'modification_motive': self.modification_motive,
@@ -61,7 +60,6 @@ class ProjectVersionWizard(models.TransientModel):
         for line in self.project_picking_lines:
             self.env['project.version.lines'].create({
                 'project_version_history_id': history.id,
-                'project_picking_line_id': line.id,
                 'modification_date': self.modification_date,
                 'modified_by': self.modified_by.id,
                 'modification_motive': self.modification_motive,
