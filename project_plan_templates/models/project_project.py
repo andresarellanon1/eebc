@@ -1,8 +1,5 @@
 from odoo import fields, api, models
 from odoo.exceptions import ValidationError
-import logging
-
-_logger = logging.getLogger(__name__)
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
@@ -13,7 +10,7 @@ class ProjectProject(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
 
     ### Crea tareas de proyecto a partir de las líneas del plan de proyecto.
-    # Valida si la tarea ya existe y notifica al usuario si es así.
+    # Valida si la tarea ya existe.
     def create_project_tasks(self):
         for project in self:  
             for line in project.project_plan_lines:
@@ -26,10 +23,7 @@ class ProjectProject(models.Model):
                         ('project_id', '=', project.id)
                     ], limit=1)
 
-                    if existing_task:
-                        # Notificar al usuario que la tarea ya existe 
-                        project.message_post(body=f'Tarea ya existe: {line.name} en el proyecto {project.name}', subtype_id=self.env.ref('mail.mt_note').id)
-                    else:
+                    if not existing_task:
                         timesheet_lines = self.env['task.time.lines'].search([
                             ('task_timesheet_id', '=', line.task_timesheet_id.id)
                         ])
