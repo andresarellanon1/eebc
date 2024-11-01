@@ -55,7 +55,7 @@ class ProjecVersionLines(models.Model):
     @api.depends('project_id')
     def _compute_previous_version_lines(self):
         for record in self:
-            record.project_name = record.project_id.project_name
+            record.project_name = record.project_id.name
 
             previous_version = self.search([
                 ('project_id', '=', record.project_id.id),
