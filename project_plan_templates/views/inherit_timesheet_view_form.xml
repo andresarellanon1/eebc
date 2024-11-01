@@ -5,6 +5,9 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
+            <header>
+                <button name="action_create_tasks" type="object" string="Generar tareas" class="btn-primary"/>
+            </header>
             <xpath expr="//notebook" position="inside">
                 <page name="Planeacion" string="Planeación">
                     <group name="planning_container">
@@ -20,7 +23,8 @@
                                 <field name="planned_date_end" widget="daterange"/>
                                 <field name="partner_id" widget="many2many_avatar_user"/>
                                 <field name="stage_id"/>
-                                <button name="action_preview_task" type="object" class="oe_highlight" string="Preview task"/>
+                                <button name="action_preview_task" type="object" class="oe_highlight"
+                                        string="Preview task"/>
                             </tree>
                         </field>
                     </div>
