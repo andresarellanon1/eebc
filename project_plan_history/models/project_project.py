@@ -7,6 +7,8 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     version_id = fields.Many2one('project.version', string="History")
+    change_reason = fields.Text(string="Motivo")
+    cambio = fields.Boolean(default=False)
 
     child_ids = fields.One2many(
         'project.project',
@@ -32,14 +34,24 @@ class ProjectProject(models.Model):
 
     def abrir_wizard(self):
         _logger.warning('Entró al metodo del wizard')
-        self.ensure_one()
-        return {
-            'name': 'Mi Wizard',
-            'view_mode': 'form',
-            'res_model': 'change.reason.wizard',
-            'type': 'ir.actions.act_window',
-            'target': 'new',  # Esto abre el wizard en un modal
-        }
+        cambio = True
+
+    @api.onchange('cambio')
+    def metodo2(self):
+        _logger.warning('Entró al metodo del CAMBIO')
+
+    
+
+        return wizard
+        # self.ensure_one()
+        # return {
+        #     'name': 'Mi Wizard',
+        #     'view_mode': 'form',
+        #     'res_model': 'change.reason.wizard',
+        #     'type': 'ir.actions.act_window',
+        #     'view_id': 'view_change_reason_wizard',
+        #     'target': 'new',  # Esto abre el wizard en un modal
+        # }
 
     # @api.model
     # def write(self, vals):
@@ -55,8 +67,7 @@ class ProjectProject(models.Model):
     #         'view_mode': 'form',
     #         'target': 'new',
     #         'context': {
-    #             'default_field1': 'Valor inicial de Field 1',
-    #             'default_field2': 10,
+    #             'motive': 'change_reason'
     #         },
     #     }
 

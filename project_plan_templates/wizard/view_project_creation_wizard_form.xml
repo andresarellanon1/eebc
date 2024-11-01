@@ -17,7 +17,7 @@
                                 </page>
                                 <page name="planning" string="Planning">
                                     <group>
-                                        <field name="project_plan_id"/>
+                                        <field name="project_plan_id" invisible="1"/>
                                     </group>
                                     <div style="100%">
                                         <field name="project_plan_lines" nolabel="1">
