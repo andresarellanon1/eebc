@@ -41,7 +41,38 @@ class ProjecVersionLines(models.Model):
         store=True
     )
 
+    has_previous_version = fields.Boolean(
+        string="Has Previous Version",
+        compute='_compute_previous_version_lines',
+        store=True
+    )
+
     @api.depends('modification_date')
     def _compute_version_number(self):
         for record in self:
             record.version_number = f"V{record.id}" if record.id else "V0"
+
+    @api.onchange('project_id')
+    def _onchange_project_name(self):
+        self.project_name = self.project_id.project_name
+
+    @api.depends('project_id')
+    def _compute_previous_version_lines(self):
+        for record in self:
+            previous_version = self.search([
+                ('project_id', '=', record.project_id.id),
+                ('id', '<', record.id)
+            ], order="id desc", limit=1)
+
+            if previous_version:
+                record.previous_version_plan_lines = previous_version.project_plan_lines
+                record.previous_version_picking_lines = previous_version.project_picking_lines
+                
+                record.project_plan_lines = record.project_plan_lines | previous_version.project_plan_lines
+                record.project_picking_lines = record.project_picking_lines | previous_version.project_picking_lines
+                
+                record.has_previous_version = True
+            else:
+                record.previous_version_plan_lines = [(5, 0, 0)]
+                record.previous_version_picking_lines = [(5, 0, 0)]
+                record.has_previous_version = False
