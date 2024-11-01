@@ -7,7 +7,7 @@ class ProjectVersionWizard(models.TransientModel):
     _description = 'Wizard for project version history'
 
     modification_date = fields.Datetime(string='Modification date')
-    modification_motive = fields.Html(string='Motive of adjustment', required=True)
+    modification_motive = fields.Html(string='Motive of adjustment')
     modified_by = fields.Many2one('res.users', string='Modified by')
     
     project_plan_lines = fields.Many2many(
