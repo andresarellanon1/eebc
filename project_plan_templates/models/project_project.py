@@ -47,9 +47,10 @@ class ProjectProject(models.Model):
                             'stage_id': current_task_type.id,
                             'timesheet_ids': timesheet_data,
                         })
+        
         #Mandar aviso si habia repetidas
         if existing_task:
-            raise ValidationError("Las tareas repetidas no fueron creadas.")
+            raise UserWarning("Las tareas repetidas no fueron creadas.")
 
 
     ### Busca o crea un tipo de tarea por nombre y proyecto.
