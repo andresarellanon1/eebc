@@ -12,27 +12,17 @@ class ProjectProject(models.Model):
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Stock picking")
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
 
-    def create_project_tasks(self, project):
-        for line in self.project_plan_lines:
-            current_task_type = self.get_or_create_task_type(line.stage_id or 'Extras', project)
+    def action_create_tasks(self):
+        for project in self:
+            for line in project.project_plan_lines:
 
-            if line.use_project_task:
-                timesheet_lines = self.env['task.time.lines'].search([
-                    ('task_timesheet_id', '=', line.task_timesheet_id.id)
-                ])
-
-                timesheet_data = [(0, 0, {
-                    'name': ts_line.description,
-                    'estimated_time': ts_line.estimated_time,
-                }) for ts_line in timesheet_lines]
-
-                self.env['project.task'].create({
+                project.env['project.task'].create({
                     'name': line.name,
                     'project_id': project.id,
                     'description': line.description,
-                    'planned_date_begin': line.planned_date_begin,
-                    'date_deadline': line.planned_date_end,
+                    'planned_date_begin': line.planned_date_begin, 
+                    'date_deadline': line.planned_date_end, 
                     'user_ids': [(6, 0, line.partner_id.ids)],
-                    'stage_id': current_task_type.id,
-                    'timesheet_ids': timesheet_data,
                 })
+
+
