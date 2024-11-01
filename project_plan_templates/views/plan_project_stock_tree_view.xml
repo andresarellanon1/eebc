@@ -6,7 +6,7 @@
             <field name="model">project.picking.lines</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="picking_name"/>
+                    <field name="product_id"/>
                     <field name="quantity"/>
                 </tree>
             </field>
