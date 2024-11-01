@@ -10,6 +10,7 @@ class ProjectProject(models.Model):
                 'modified_by': self.env.user.id,
                 'project_plan_lines': [(6, 0, [line.id for line in record.project_plan_lines])],
                 'project_picking_lines': [(6, 0, [line.id for line in record.project_picking_lines])],
+                'project_id': record.id,
             })
 
             return {
@@ -17,6 +18,7 @@ class ProjectProject(models.Model):
                 'view_mode': 'form',
                 'res_model': 'project.version.wizard',
                 'type': 'ir.actions.act_window',
+                'res_id': wizard.id,
                 'target': 'new',
                 'context': {
                     'default_project_id': record.id
