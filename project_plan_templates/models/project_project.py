@@ -23,26 +23,30 @@ class ProjectProject(models.Model):
                         ('project_id', '=', project.id)
                     ], limit=1)
 
-                    if not existing_task:
-                        timesheet_lines = self.env['task.time.lines'].search([
-                            ('task_timesheet_id', '=', line.task_timesheet_id.id)
-                        ])
+                    if existing_task:
+                        # Lanzar un UserError para notificar al usuario
+                        raise UserError(f'Tarea ya existe: {line.name} en el proyecto {project.name}.')
+                    
+                    # Crear la nueva tarea si no existe
+                    timesheet_lines = self.env['task.time.lines'].search([
+                        ('task_timesheet_id', '=', line.task_timesheet_id.id)
+                    ])
 
-                        timesheet_data = [(0, 0, {
-                            'name': ts_line.description,
-                            'estimated_time': ts_line.estimated_time,
-                        }) for ts_line in timesheet_lines]
+                    timesheet_data = [(0, 0, {
+                        'name': ts_line.description,
+                        'estimated_time': ts_line.estimated_time,
+                    }) for ts_line in timesheet_lines]
 
-                        self.env['project.task'].create({
-                            'name': line.name,
-                            'project_id': project.id,
-                            'description': line.description,
-                            'planned_date_begin': line.planned_date_begin,
-                            'date_deadline': line.planned_date_end,
-                            'user_ids': [(6, 0, line.partner_id.ids)],
-                            'stage_id': current_task_type.id,
-                            'timesheet_ids': timesheet_data,
-                        })
+                    self.env['project.task'].create({
+                        'name': line.name,
+                        'project_id': project.id,
+                        'description': line.description,
+                        'planned_date_begin': line.planned_date_begin,
+                        'date_deadline': line.planned_date_end,
+                        'user_ids': [(6, 0, line.partner_id.ids)],
+                        'stage_id': current_task_type.id,
+                        'timesheet_ids': timesheet_data,
+                    })
 
     ### Busca o crea un tipo de tarea por nombre y proyecto.
     # Args: stage_id: Nombre del tipo de tarea; project: Proyecto relacionado.
