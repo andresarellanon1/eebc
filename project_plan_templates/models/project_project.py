@@ -15,7 +15,10 @@ class ProjectProject(models.Model):
     def action_create_tasks(self):
         for project in self:
             for line in project.project_plan_lines:
-                stage = project.env['project.task.type'].search([('id', '=', line.stage_id)], limit=1)
+                _logger.warning('Contenido de line: %s', line.read())
+                
+                stage = project.env['project.task.type'].search([('name', '=', line.stage_id)], limit=1)
+                stage_id = stage.id if stage else False
 
                 project.env['project.task'].create({
                     'name': line.name,
@@ -26,10 +29,11 @@ class ProjectProject(models.Model):
                     'unit_price': line.unit_price,
                     'amount_total': line.amount_total,
                     'use_project_task': line.use_project_task,
-                    'stage_id': stage.id if stage else False,
+                    'stage_id': stage_id,
                     'planned_date_begin': line.planned_date_begin,
                     'planned_date_end': line.planned_date_end,
                     'origin_project_id': line.origin_project_id,
                     'partner_id': line.partner_id,
                     'task_timesheet_id': line.task_timesheet_id,
                 })
+
