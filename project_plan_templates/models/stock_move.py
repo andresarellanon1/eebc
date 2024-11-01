@@ -15,7 +15,7 @@ class StockMove(models.Model):
         # Aquí puedes obtener el contexto necesario para determinar el dominio.
         if self.picking_id and self.picking_id.task_id and self.picking_id.task_id.project_id:
             # Obtener los IDs de los productos de project_picking_lines
-            product_ids = self.picking_id.task_id.project_id.project_picking_lines.mapped('product_id.id')
+            product_ids = self.picking_id.task_id.project_id.project_picking_ids.mapped('product_id.id')
             return [('id', 'in', product_ids)]
         return []
 
