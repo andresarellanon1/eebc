@@ -26,10 +26,7 @@ class ProjectProject(models.Model):
                         ('project_id', '=', project.id)
                     ], limit=1)
 
-                    if existing_task:
-                        # Notificar al usuario que la tarea ya existe 
-                        project.message_post(body=f'Tarea ya existe: {line.name} en el proyecto {project.name}', subtype_id=self.env.ref('mail.mt_note').id)
-                    else:
+                    if not existing_task:
                         timesheet_lines = self.env['task.time.lines'].search([
                             ('task_timesheet_id', '=', line.task_timesheet_id.id)
                         ])
