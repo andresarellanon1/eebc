@@ -1,6 +1,8 @@
 from odoo import fields, api, models
 from odoo.exceptions import ValidationError
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
@@ -13,6 +15,7 @@ class ProjectProject(models.Model):
     def action_create_tasks(self):
         for project in self:
             for line in project.project_plan_lines:
+                _logger.warning(f"{line}")
                 project.env['project.task'].create({
                     'name': line.name,
                     'project_id': project.id,
