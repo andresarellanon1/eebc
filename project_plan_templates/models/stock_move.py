@@ -1,22 +1,20 @@
 from odoo import fields, models, api
 
-class StockMove(models.Model):
+class ProjectTask(models.Model):
    
-    _inherit = 'stock.move'
+    _inherit = 'project.task'
 
-    product_id = fields.Many2one(
-        'product.product',
-        string='Producto',
-        domain=lambda self: self._get_product_domain()
-    )
-
-    @api.model
-    def _get_product_domain(self):
-        # Aquí puedes obtener el contexto necesario para determinar el dominio.
-        if self.picking_id and self.picking_id.task_id and self.picking_id.task_id.project_id:
-            # Obtener los IDs de los productos de project_picking_lines
-            self.product_id = self.picking_id.task_id.project_id.project_picking_lines.mapped('product_id')
-            return [('id', 'in', product_id)]
-        return []
+    def action_open_create_project_wizard(self):
+        self.ensure_one()
+        return {
+            'name': 'Create inventory',
+            'view_mode': 'form',
+            'res_model': 'task.inventory.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_stock_picking_id': self.stock_ids.id
+            }
+        }
 
     # stock.move (picking_id) - stock.picking (task_id) - project.task (project_id) - project.project (project_picking_lines) project.project (project_picking_ids)
