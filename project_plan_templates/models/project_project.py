@@ -19,16 +19,16 @@ class ProjectProject(models.Model):
             for line in project.project_plan_lines:
                 current_task_type = self.get_or_create_task_type(line.stage_id or 'Extras', project)
 
-                # Verificar si la tarea ya existe
                 if line.use_project_task:
+                    # Verificar si la tarea ya existe
                     existing_task = self.env['project.task'].search([
                         ('name', '=', line.name),
                         ('project_id', '=', project.id)
                     ], limit=1)
 
-                    # Notificar al usuario que la tarea ya existe
                     if existing_task:
-                        self.env.user.notify_info(f'Tarea ya existe: {line.name} en el proyecto {project.name}')
+                        # Notificar al usuario que la tarea ya existe 
+                        project.message_post(body=f'Tarea ya existe: {line.name} en el proyecto {project.name}', subtype_id=self.env.ref('mail.mt_note').id)
                     else:
                         timesheet_lines = self.env['task.time.lines'].search([
                             ('task_timesheet_id', '=', line.task_timesheet_id.id)
@@ -49,8 +49,6 @@ class ProjectProject(models.Model):
                             'stage_id': current_task_type.id,
                             'timesheet_ids': timesheet_data,
                         })
-
-
 
     ### Busca o crea un tipo de tarea por nombre y proyecto.
     # Args: stage_id: Nombre del tipo de tarea; project: Proyecto relacionado.
