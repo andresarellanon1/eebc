@@ -15,7 +15,7 @@ class ProjectTask(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_stock_picking_id': self.id.stock_ids
+                'default_stock_picking_id': self.id
             }
         }
 
