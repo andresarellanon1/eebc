@@ -1,5 +1,5 @@
 from odoo import fields, api, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
