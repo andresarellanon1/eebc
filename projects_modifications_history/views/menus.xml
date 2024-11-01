@@ -11,8 +11,6 @@
             <field name="name">Versiones del proyecto</field>
             <field name="res_model">project.version.lines</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="projects_modifications_history.project_version_view_form"/>
-            <field name="target">current</field>
         </record>
 
         <record id="menu_version_history" model="ir.ui.menu">

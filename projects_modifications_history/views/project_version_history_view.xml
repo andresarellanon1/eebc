@@ -26,11 +26,13 @@
                             <page name="versions" string="Versions">
                                 <div>
                                     <field name="project_versions_lines" nolabel="1">
-                                        <tree style="width: 100%;">
+                                        <tree style="width: 100%;" edit="false" create="false" delete="false">
                                             <field name="version_number"/>
                                             <field name="modified_by"/>
                                             <field name="modification_motive"/>
                                             <field name="modification_date"/>
+                                            <field name="action" invisible="1" context="{'form_view_ref': 'project_version_view_form'}" />
+                                            <button name="%(project_version_action)d" string="Open" type="action"/>
                                         </tree>
                                     </field>
                                 </div>
