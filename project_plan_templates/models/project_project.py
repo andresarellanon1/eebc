@@ -50,7 +50,7 @@ class ProjectProject(models.Model):
         
         #Mandar aviso si habia repetidas
         if existing_task:
-            raise UserWarning("Las tareas repetidas no fueron creadas.")
+            self.env.user.notify_info(f'Las tareas ya existentes no fueron creadas.')
 
 
     ### Busca o crea un tipo de tarea por nombre y proyecto.
