@@ -8,8 +8,11 @@
                 <form string="Project version">
                     <sheet>
                         <group>
-                            <field name="modified_by"/>
-                            <field name="modification_date"/>
+                            <group>
+                                <field name="modified_by" readonly="1"/>
+                                <field name="modification_date" readonly="1"/>
+                            </group>
+                            
                             <notebook>
                                 <page name="motive" string="Modification motive">
                                     <field name="modification_motive"/>
@@ -46,7 +49,7 @@
                         </group>
 
                         <footer>
-                            <button name="action_confirm_version_history" string="Create Project"
+                            <button name="action_confirm_version_history" string="Save Project"
                                 type="object" class="btn-primary" />
                             <button string="Cancel" class="btn-secondary" special="cancel" />
                         </footer>

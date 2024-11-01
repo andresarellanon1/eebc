@@ -9,7 +9,13 @@ class ProjectVersionWizard(models.TransientModel):
     modification_date = fields.Datetime(string='Modification date')
     modification_motive = fields.Html(string='Motive of adjustment')
     modified_by = fields.Many2one('res.users', string='Modified by')
+    project_plan_id = fields.Many2one('project.plan', string="Project Plan", required=True, readonly="True")
     
+    project_plan_pickings = fields.Many2many(
+        'project.plan.pickings', 
+        string="Picking Templates"
+    )
+
     project_plan_lines = fields.Many2many(
         'project.plan.line',
         string='Planeación'
