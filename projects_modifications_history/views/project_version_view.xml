@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="project_version_view_form.xml" model="ir.ui.view">
+            <field name="name">project.version.form</field>
+            <field name="model">project.version.lines</field>
+            <field name="arch" type="xml">
+                <form string="Project version">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="project_name"/>
+                            <h1><field name="project_name" class="w-100"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="version_number"/>
+                                <field name="modified_by"/>
+                            </group>
+                            <group>
+                                <field name="modification_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="motive" string="Modification motive">
+                                <field name="modification_motive"/>
+                            </page>
+                            <page name="tasks" string="Tasks changes">
+                                <h1 attrs="{'invisible': [('has_previous_version', '=', False)]}">Tasks before modification</h1>
+                                <div attrs="{'invisible': [('has_previous_version', '=', False)]}">
+                                    <field name="previous_version_plan_lines" nolabel="1">
+                                        <tree style="width: 100%">
+                                            <field name="name"/>
+                                                <field name="chapter"/>
+                                                <field name="description"/>
+                                                <field name="planned_date_begin" widget="daterange"/>
+                                                <field name="planned_date_end" widget="daterange"/>
+                                                <field name="partner_id" widget="many2many_avatar_user"/>
+                                                <field name="task_timesheet_id" options="{'create': True}"/>
+                                                <field name="stage_id"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                                <h1>Tasks after modification</h1>
+                                <div>
+                                    <field name="project_plan_lines" nolabel="1">
+                                        <tree style="width: 100%">
+                                            <field name="name"/>
+                                                <field name="chapter"/>
+                                                <field name="description"/>
+                                                <field name="planned_date_begin" widget="daterange"/>
+                                                <field name="planned_date_end" widget="daterange"/>
+                                                <field name="partner_id" widget="many2many_avatar_user"/>
+                                                <field name="task_timesheet_id" options="{'create': True}"/>
+                                                <field name="stage_id"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </page>
+                            <page name="stock" string="Stock changes">
+                                <h1 attrs="{'invisible': [('has_previous_version', '=', False)]}">Stock before changes</h1>
+                                <div attrs="{'invisible': [('has_previous_version', '=', False)]}">
+                                    <field name="previous_version_picking_lines" nolabel="1">
+                                        <tree style="width: 100%">
+                                            <field name="product_id" />
+                                            <field name="quantity" />
+                                            <field name="location_id" />
+                                        </tree>
+                                    </field>
+                                </div>
+                                <h1>Stock after changes</h1>
+                                <div>
+                                    <field name="project_picking_lines" nolabel="1">
+                                        <tree style="width: 100%">
+                                            <field name="product_id" />
+                                            <field name="quantity" />
+                                            <field name="location_id" />
+                                        </tree>
+                                    </field>
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
