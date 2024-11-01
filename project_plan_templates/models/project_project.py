@@ -16,7 +16,20 @@ class ProjectProject(models.Model):
         for project in self:
             for line in project.project_plan_lines:
                 _logger.warning('Contenido de line: %s', line.read())
+                
                 project.env['project.task'].create({
-                    'name': line.name,
-                    'project_id': project.id,
-                })
+                'name': line.name,
+                'project_id': project.id,
+                'chapter': line.chapter,
+                'description': line.description,
+                'product_uom': line.product_uom,
+                'unit_price': line.unit_price,
+                'amount_total': line.amount_total,
+                'use_project_task': line.use_project_task,
+                'stage_id': line.stage_id,
+                'planned_date_begin': line.planned_date_begin,
+                'planned_date_end': line.planned_date_end,
+                'origin_project_id': line.origin_project_id,
+                'partner_id': line.partner_id,
+                'task_timesheet_id': line.task_timesheet_id,
+            })
