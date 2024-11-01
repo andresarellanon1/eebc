@@ -1,5 +1,6 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 class ProjectVersionWizard(models.TransientModel):
 
@@ -41,6 +42,9 @@ class ProjectVersionWizard(models.TransientModel):
             history = existing_history
 
         project.create_project_tasks()
+
+        if not self.modification_motive:
+            raise UserError(f'Hace falta agregar el motivo de la modificacion.')
 
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
