@@ -13,6 +13,6 @@ class ProjectProject(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_project_id': record.id
+                'default_project_id': self.id
             }
         }
