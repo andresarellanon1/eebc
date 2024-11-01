@@ -52,13 +52,11 @@ class ProjecVersionLines(models.Model):
         for record in self:
             record.version_number = f"V{record.id}" if record.id else "V0"
 
-    @api.onchange('project_id')
-    def _onchange_project_name(self):
-        self.project_name = self.project_id.project_name
-
     @api.depends('project_id')
     def _compute_previous_version_lines(self):
         for record in self:
+            record.project_name = record.project_id.project_name
+
             previous_version = self.search([
                 ('project_id', '=', record.project_id.id),
                 ('id', '<', record.id)
