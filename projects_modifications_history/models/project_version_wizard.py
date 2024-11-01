@@ -30,9 +30,6 @@ class ProjectVersionWizard(models.TransientModel):
     def action_confirm_version_history(self):
         self.ensure_one()
 
-        def action_confirm_version_history(self):
-        self.ensure_one()
-
         history = self.env['project.version.history'].create({
             'project_id': self.project_id.id,
             'modified_by': self.modified_by.id,
