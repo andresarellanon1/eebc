@@ -37,7 +37,7 @@ class ProjecVersionLines(models.Model):
         store=True
     )
 
-    @api.depends('id')
+    @api.depends('modification_date')
     def _compute_version_number(self):
         for record in self:
             record.version_number = f"V{record.id}" if record.id else "V0"
