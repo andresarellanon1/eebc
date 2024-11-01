@@ -1,8 +1,5 @@
 from odoo import fields, api, models
 from odoo.exceptions import ValidationError
-import logging
-
-_logger = logging.getLogger(__name__)
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
