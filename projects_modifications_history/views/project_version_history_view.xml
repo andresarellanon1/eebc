@@ -31,8 +31,6 @@
                                             <field name="modified_by"/>
                                             <field name="modification_motive"/>
                                             <field name="modification_date"/>
-                                            <field name="action" invisible="1" context="{'form_view_ref': 'project_version_view_form'}" />
-                                            <button name="%(project_version_action)d" string="Open" type="action"/>
                                         </tree>
                                     </field>
                                 </div>
