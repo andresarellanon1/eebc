@@ -10,7 +10,7 @@
                 'stock','project'
                ],
     'data': [
-        # "views/inherit_project_task_view_form.xml",
+        "views/inherit_project_task_view_form.xml",
         "views/view_project_project_kanban.xml",
         "views/inherit_project_view_form.xml",
         "views/inherit_pickin_form_view.xml",
