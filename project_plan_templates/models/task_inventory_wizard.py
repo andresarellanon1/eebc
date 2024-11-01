@@ -11,7 +11,7 @@ class ProjectCreation(models.TransientModel):
     picking_type_id = fields.Char(string='Tipo de operación')
     location_id = fields.Char(string='Ubicación de origen')
     location_dest_id = fields.Char(string='Ubicación de destino')
-    scheduled_date = fields.datetime(string='Fecha programada')
+    scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen')
     task_id = fields.Char(string='Tarea de origen')
 
