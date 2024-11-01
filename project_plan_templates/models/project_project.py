@@ -13,7 +13,7 @@ class ProjectProject(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
 
     ### Crea tareas de proyecto a partir de las líneas del plan de proyecto.
-    # Valida si la tarea ya existe y envía un aviso si es así.
+    # Valida si la tarea ya existe y notifica al usuario si es así.
     def create_project_tasks(self):
         for project in self:  
             for line in project.project_plan_lines:
@@ -26,8 +26,10 @@ class ProjectProject(models.Model):
                         ('project_id', '=', project.id)
                     ], limit=1)
 
-                    # Crear las que no existen
-                    if not existing_task:
+                    # Notificar al usuario que la tarea ya existe
+                    if existing_task:
+                        self.env.user.notify_info(f'Tarea ya existe: {line.name} en el proyecto {project.name}')
+                    else:
                         timesheet_lines = self.env['task.time.lines'].search([
                             ('task_timesheet_id', '=', line.task_timesheet_id.id)
                         ])
@@ -47,10 +49,7 @@ class ProjectProject(models.Model):
                             'stage_id': current_task_type.id,
                             'timesheet_ids': timesheet_data,
                         })
-        
-        #Mandar aviso si habia repetidas
-        if existing_task:
-            self.env.user.notify_info(f'Las tareas ya existentes no fueron creadas.')
+
 
 
     ### Busca o crea un tipo de tarea por nombre y proyecto.
