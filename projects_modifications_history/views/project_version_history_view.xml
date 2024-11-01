@@ -31,7 +31,7 @@
                                             <field name="modified_by"/>
                                             <field name="modification_motive"/>
                                             <field name="modification_date"/>
-                                            <button name="%(project_version_action)d" string="Open" type="action" context="{'default_project_id': id}"/>
+                                            <button name="%(project_version_action)d" string="Open" type="action" context="{'default_id': id}"/>
                                         </tree>
                                     </field>
                                 </div>
