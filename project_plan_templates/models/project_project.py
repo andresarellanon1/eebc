@@ -22,7 +22,7 @@ class ProjectProject(models.Model):
                     'description': line.description,
                     'planned_date_begin': line.planned_date_begin, 
                     'date_deadline': line.planned_date_end, 
-                    'user_ids': [(6, 0, line.user_ids.ids)],
+                    'user_ids': [(6, 0, line.partner_id.ids)],
                 })
 
 
