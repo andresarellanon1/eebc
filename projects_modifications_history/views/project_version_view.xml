@@ -23,15 +23,15 @@
                     <sheet>
                         <div class="oe_title">
                             <label for="project_name"/>
-                            <h1><field name="project_name" class="w-100"/></h1>
+                            <h1><field name="project_name" class="w-100" readonly="1"/></h1>
                         </div>
                         <group>
                             <group>
-                                <field name="version_number"/>
-                                <field name="modified_by"/>
+                                <field name="version_number" readonly="1"/>
+                                <field name="modified_by" readonly="1"/>
                             </group>
                             <group>
-                                <field name="modification_date"/>
+                                <field name="modification_date" readonly="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -41,7 +41,7 @@
                             <page name="tasks" string="Tasks changes">
                                 <h1>Tasks before modification</h1>
                                 <div>
-                                    <field name="previous_version_plan_lines" nolabel="1">
+                                    <field name="previous_version_plan_lines" nolabel="1" readonly="1">
                                         <tree style="width: 100%">
                                             <field name="name"/>
                                                 <field name="chapter"/>
@@ -56,7 +56,7 @@
                                 </div>
                                 <h1>Tasks after modification</h1>
                                 <div>
-                                    <field name="project_plan_lines" nolabel="1">
+                                    <field name="project_plan_lines" nolabel="1" readonly="1">
                                         <tree style="width: 100%">
                                             <field name="name"/>
                                                 <field name="chapter"/>
@@ -73,7 +73,7 @@
                             <page name="stock" string="Stock changes">
                                 <h1>Stock before changes</h1>
                                 <div>
-                                    <field name="previous_version_picking_lines" nolabel="1">
+                                    <field name="previous_version_picking_lines" nolabel="1" readonly="1">
                                         <tree style="width: 100%">
                                             <field name="product_id" />
                                             <field name="quantity" />
@@ -83,7 +83,7 @@
                                 </div>
                                 <h1>Stock after changes</h1>
                                 <div>
-                                    <field name="project_picking_lines" nolabel="1">
+                                    <field name="project_picking_lines" nolabel="1" readonly="1">
                                         <tree style="width: 100%">
                                             <field name="product_id" />
                                             <field name="quantity" />
