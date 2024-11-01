@@ -20,7 +20,7 @@
         "views/timesheet_template_view.xml",
         "views/inherit_project_task_form_inherited2.xml",
         "views/plan_project_stock_tree_view.xml",
-        "views/view_task_inventory_wizard.xml",
+        "wizard/view_task_inventory_wizard.xml",
     ],
     "license": "LGPL-3",
     'installable': True,
