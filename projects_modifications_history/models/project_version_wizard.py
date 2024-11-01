@@ -41,10 +41,10 @@ class ProjectVersionWizard(models.TransientModel):
         else:
             history = existing_history
 
-        project.create_project_tasks()
-
         if not self.modification_motive:
             raise UserError(f'Hace falta agregar el motivo de la modificacion.')
+
+        project.create_project_tasks()
 
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
