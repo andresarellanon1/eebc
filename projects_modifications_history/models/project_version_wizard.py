@@ -30,41 +30,30 @@ class ProjectVersionWizard(models.TransientModel):
     def action_confirm_version_history(self):
         self.ensure_one()
 
-        project = self.env['project.project'].browse(self.project_id.id)
-        project.write({
+        def action_confirm_version_history(self):
+        self.ensure_one()
 
+        history = self.env['project.version.history'].create({
+            'project_id': self.project_id.id,
+            'modified_by': self.modified_by.id,
+            'modification_motive': self.modification_motive,
+            'project_name': self.project_id.name,
         })
 
-        existing_history = self.env['project.version.history'].search([
-            ('project_id', '=', self.project_id.id)
-        ], limit=1)
+        self.env['project.version.lines'].create({
+            'project_version_history_id': history.id,
+            'modification_date': self.modification_date,
+            'modified_by': self.modified_by.id,
+            'modification_motive': self.modification_motive,
+            'project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, self.project_picking_lines.ids)],
+        })
 
-        if not existing_history:
-            history = self.env['project.version.history'].create({
-                'project_id': self.project_id.id,
-                'modified_by': self.modified_by.id,
-                'modification_motive': self.modification_motive,
-                'project_name': self.project_id.name,
-            })
-        else:
-            history = existing_history
+        self.project_id.write({
+            
+        })
 
-        for line in self.project_plan_lines:
-            self.env['project.version.lines'].create({
-                'project_version_history_id': history.id,
-                'modification_date': self.modification_date,
-                'modified_by': self.modified_by.id,
-                'modification_motive': self.modification_motive,
-            })
-
-        for line in self.project_picking_lines:
-            self.env['project.version.lines'].create({
-                'project_version_history_id': history.id,
-                'modification_date': self.modification_date,
-                'modified_by': self.modified_by.id,
-                'modification_motive': self.modification_motive,
-            })
-
+        
         return {
             'type': 'ir.actions.act_window_close'
         }
