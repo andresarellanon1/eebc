@@ -22,7 +22,6 @@ class ProjectProject(models.Model):
                     'description': line.description,
                     'planned_date_begin': line.planned_date_begin,
                     'planned_date_end': line.planned_date_end,
-                    'origin_project_id': line.origin_project_id,
                     'partner_id': line.partner_id,
                 })
 
