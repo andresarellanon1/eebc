@@ -14,21 +14,25 @@ class ProjecVersionLines(models.Model):
 
     project_plan_lines = fields.Many2many(
         'project.plan.line',
-        string='Planeación'
+        string='Planeación',
+        relation='project_version_lines_project_plan_line_rel'
     )
     project_picking_lines = fields.Many2many(
         'project.picking.lines',
-        string='Stock'
+        string='Stock',
+        relation='project_version_lines_picking_lines_rel'
     )
 
     previous_version_plan_lines = fields.Many2many(
         'project.plan.line',
-        string="Last version plan lines"
+        string="Last version plan lines",
+        relation='project_version_lines_previous_plan_line_rel'
     )
 
     previous_version_picking_lines = fields.Many2many(
         'project.picking.lines',
-        string="Last version picking lines"
+        string="Last version picking lines",
+        relation='project_version_lines_previous_picking_lines_rel'
     )
 
     version_number = fields.Char(
