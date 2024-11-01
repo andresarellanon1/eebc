@@ -15,7 +15,7 @@ class ProjectProject(models.Model):
     def action_create_tasks(self):
         for project in self:
             for line in project.project_plan_lines:
-                _logger.warning(f"{line}")
+                _logger.warning('Contenido de line: %s', line.read())
                 project.env['project.task'].create({
                     'name': line.name,
                     'project_id': project.id,
