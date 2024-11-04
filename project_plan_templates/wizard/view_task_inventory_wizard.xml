@@ -8,7 +8,7 @@
                 <form string="Create inventory">
                     <sheet>
                         <div class="oe_title">
-                            <h1><field name="origin" placeholder="e.g. PO0032"/></h1>
+                            <h1><field name="origin" placeholder="e.g. PO0032" class="w-100" required="1"/></h1>
                         </div>
                         <group>
                             <group>
