@@ -10,7 +10,7 @@ class ProjectProject(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
 
     ### Crea tareas de proyecto a partir de las líneas del plan de proyecto.
-    # Valida si la tarea ya existe.
+    # Valida si la tarea ya existe, si existe alguna, cancela el proceso y notifica al usuario.
     def create_project_tasks(self):
         for project in self:  
             for line in project.project_plan_lines:
