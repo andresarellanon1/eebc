@@ -5,9 +5,9 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
-            <header>
-                <button string="View Modifications History" type="object" name="action_view_modifications_history" class="btn-primary"/>
-            </header>
+            <xpath expr="//field[@name='taxes_id']" position="after">
+                <field name="version_history_ids" />
+            </xpath>
         </field>
     </record>
 </odoo>

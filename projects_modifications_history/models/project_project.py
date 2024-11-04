@@ -6,25 +6,12 @@ class ProjectProject(models.Model):
 
     # NO SE USA PERO ME DA ERROR SI LO QUITO
     redirect_view_id = fields.Many2one('ir.ui.view', string='Redirect View', default=lambda self: self.env.ref('your_module.your_view_id'))
-
-    def action_view_modifications_history(self):
-        self.ensure_one()
-
-        history_record = self.env['project.version.history'].search([
-            ('project_id', '=', self.id)
-        ], limit=1)
-
-        if history_record:
-            return {
-                'type': 'ir.actions.act_window',
-                'name': 'Project Modifications History',
-                'res_model': 'project.version.history',
-                'view_mode': 'form',
-                'res_id': history_record.id,  # Esto asegura que se abra el registro existente
-                'context': {'default_project_id': self.id},
-            }
-        else:
-            raise UserError("No hay registros de cambios.")
+    version_history_ids = fields.One2many(
+        'project.version.history', 
+        'project_id', 
+        string='Historial de modificaciones',
+        readonly=True,
+    )
 
     def action_save_version(self):
         self.ensure_one()
