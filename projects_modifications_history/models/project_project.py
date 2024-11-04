@@ -4,7 +4,7 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     def action_view_modifications_history(self):
-        self.ensure_one()
+        self.ensure_one() 
 
         return {
             'type': 'ir.actions.act_window',
