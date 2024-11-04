@@ -22,6 +22,8 @@ class ProjectCreation(models.TransientModel):
     @api.model
     def _compute_fields(self):        
         for record in self:
+            record.stock_picking_id = record.project_task_id.stock_ids.task_id
+            
             record.partner_id = record.stock_picking_id.name
             record.picking_type_id = record.stock_picking_id.picking_type_id
             record.location_id = record.stock_picking_id.location_id
