@@ -15,13 +15,14 @@ class ProjectTask(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_stock_picking_id': self.id
+                'default_stock_picking_ids': [(6, 0, self.stock_ids.ids)],
+                'default_modified_by': self.env.user.id,
             }
         }
 
-    # stock.move (picking_id) - stock.picking (task_id) - project.task (project_id) - project.project (project_picking_lines) project.project (project_picking_ids)
+# stock.move (picking_id) - stock.picking (task_id) - project.task (project_id) - project.project (project_picking_lines) project.project (project_picking_ids)
 
-     # def action_create_inventory(self):
+    # def action_create_inventory(self):
     #     inventory_vals = {
     #         'origin': self.name,
     #         'picking_type_id': self.project_id.default_picking_type_id.id,
