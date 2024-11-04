@@ -29,7 +29,7 @@ class ProductProduct(models.Model):
     )
 
     @api.onchange('product_id')
-    def _onchange_activities_tmpl_id(self):
+    def _onchange_product(self):
         for record in self:
             record.name = record.product_id.name
             monto = record.product_id.product_tmpl_id.last_supplier_last_price
@@ -80,7 +80,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('quantity','product_id')
     def _compute_total_cost(self):
-        self._onchange_activities_tmpl_id()
+        self._onchange_product()
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.project_id.taxes_id.amount)/100

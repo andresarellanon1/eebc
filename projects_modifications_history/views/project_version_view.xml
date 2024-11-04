@@ -10,7 +10,7 @@
                     <field name="modified_by"/>
                     <field name="modification_motive"/>
                     <field name="modification_date"/>
-                    <field name="id" invisible="1"/>
+                    <!-- <field name="id" invisible="1"/> -->
                 </tree>
             </field>
         </record>

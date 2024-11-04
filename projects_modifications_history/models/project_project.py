@@ -1,7 +1,17 @@
 from odoo import models, api, fields
+from odoo.exceptions import UserError
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
+
+    redirect_view_id = fields.Many2one('ir.ui.view', string='Redirect View', default=lambda self: self.env.ref('your_module.your_view_id'))
+
+    version_history_ids = fields.One2many(
+        'project.version.history', 
+        'project_id', 
+        string='Historial de modificaciones',
+        readonly=True,
+    )
 
     def action_save_version(self):
         self.ensure_one()
