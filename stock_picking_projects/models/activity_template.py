@@ -13,10 +13,10 @@ class ActivityTemplate(models.Model):
         string='Actividad',
         )
 
-    line_activities_ids = fields.One2many(
-        'line.activities',  # Referencia al modelo
-        'activity_template',     # Campo Many2one
-        string='Actividades'
-        )
+    # line_activities_ids = fields.One2many(
+    #     'line.activities',  # Referencia al modelo
+    #     'activity_template',     # Campo Many2one
+    #     string='Actividades'
+    #     )
 
     
