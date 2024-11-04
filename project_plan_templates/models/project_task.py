@@ -15,7 +15,8 @@ class ProjectTask(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_stock_picking_ids': [(6, 0, self.stock_ids.ids)]
+                'default_stock_picking_ids': [(6, 0, self.stock_ids.ids)],
+                'default_modified_by': self.env.user.id,
             }
         }
 
