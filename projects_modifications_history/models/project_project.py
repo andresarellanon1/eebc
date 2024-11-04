@@ -3,6 +3,9 @@ from odoo import models, api, fields
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
+    # NO SE USA PERO ME DA ERROR SI LO QUITO
+    redirect_view_id = fields.Char()
+
     def action_view_modifications_history(self):
         self.ensure_one() 
 
