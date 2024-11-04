@@ -13,7 +13,7 @@ class ProjectProject(models.Model):
         readonly=True,
     )
 
-    def action_view_modifications_history():
+    def action_view_modifications_history(self):
         "empty"
 
     def action_save_version(self):
