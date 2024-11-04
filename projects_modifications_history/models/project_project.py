@@ -13,6 +13,9 @@ class ProjectProject(models.Model):
         readonly=True,
     )
 
+    def action_view_modifications_history():
+        "empty"
+
     def action_save_version(self):
         self.ensure_one()
 
