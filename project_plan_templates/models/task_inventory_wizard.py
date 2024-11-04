@@ -4,7 +4,10 @@ class ProjectCreation(models.TransientModel):
     _name = 'task.inventory.wizard'
     _description = 'Wizard to confirm project creation'
 
+    
+    project_task_id = fields.Many2one('project.task', string="Project Task")
     stock_picking_id = fields.Many2one('stock.picking', string="Stock picking")
+    
     # stock_move_id = fields.Many2many('stock.move', string="Stock move")
 
     partner_id = fields.Char(string='Contacto')
