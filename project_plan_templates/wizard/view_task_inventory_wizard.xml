@@ -11,17 +11,18 @@
                             <h1><field name="origin" placeholder="e.g. PO0032"/></h1>
                         </div>
                         <group>
-                            <field name="partner_id"/>
-                            <field name="location_id" />
-                            <field name="location_dest_id"/>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="location_id" />
+                                <field name="location_dest_id"/>
+                            </group>
+                            <group>
+                                <label for="scheduled_date"/>
+                                <div class="o_row">
+                                    <field name="scheduled_date"/>
+                                </div>
+                            </group>
                         </group>
-                        <group>
-                            <label for="scheduled_date"/>
-                            <div class="o_row">
-                                <field name="scheduled_date"/>
-                            </div>
-                        </group>
-
                         <notebook>
                             <page string="Operations" name="operations">
 
