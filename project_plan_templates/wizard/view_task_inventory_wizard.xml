@@ -13,18 +13,16 @@
                                 <label for="partner_id" string="Receive From" style="font-weight:bold;" />
                                 <label for="partner_id" string="Contact" style="font-weight:bold;" />
                             </div>
-                            <field name="partner_id" nolabel="1" readonly="state in ['cancel', 'done']"/>
-                            <field name="location_id" />
-                            <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/>
+                            <field name="partner_id" nolabel="1"/>
                             <field name="location_id" />
                             <field name="location_dest_id"/>
                         </group>
                         <group>
                             <label for="scheduled_date"/>
                             <div class="o_row">
-                                <field name="scheduled_date" readonly="state in ['cancel', 'done']" required="id" decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now" decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date" decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
+                                <field name="scheduled_date"/>
                             </div>
-                            <field name="origin" placeholder="e.g. PO0032" readonly="state in ['cancel', 'done']"/>
+                            <field name="origin" placeholder="e.g. PO0032"/>
                         </group>
 
                         <notebook>
