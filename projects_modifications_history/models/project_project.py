@@ -1,4 +1,5 @@
 from odoo import models, api, fields
+from odoo.exceptions import UserError
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
@@ -7,16 +8,23 @@ class ProjectProject(models.Model):
     redirect_view_id = fields.Many2one('ir.ui.view', string='Redirect View', default=lambda self: self.env.ref('your_module.your_view_id'))
 
     def action_view_modifications_history(self):
-        self.ensure_one() 
+        self.ensure_one()
 
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Project Modifications History',
-            'res_model': 'project.version.history',
-            'view_mode': 'form',
-            'domain': [('project_id', '=', self.id)],
-            'context': {'default_project_id': self.id},
-        }
+        history_record = self.env['project.version.history'].search([
+            ('project_id', '=', self.id)
+        ], limit=1)
+
+        if history_record:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Project Modifications History',
+                'res_model': 'project.version.history',
+                'view_mode': 'form',
+                'res_id': history_record.id,  # Esto asegura que se abra el registro existente
+                'context': {'default_project_id': self.id},
+            }
+        else:
+            raise UserError("No hay registros de cambios.")
 
     def action_save_version(self):
         self.ensure_one()
