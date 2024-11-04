@@ -5,7 +5,7 @@ class ProjectCreation(models.TransientModel):
     _description = 'Wizard to confirm project creation'
 
     project_plan_id = fields.Many2one('project.plan', string="Project Plan", required=True, readonly="True")
-    project_name = fields.Char(string="Project Name")
+    project_name = fields.Char(string="Project Name", required=True)
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
     project_plan_lines = fields.Many2many(
