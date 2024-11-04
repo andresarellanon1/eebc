@@ -3,6 +3,8 @@ from odoo import models, api, fields
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
+    redirect_view_id = fields.Many2one('ir.ui.view', string='Redirect View', default=lambda self: self.env.ref('projects_modifications_history.project_version_history_view_form'))
+
     def action_save_version(self):
         self.ensure_one()
 
