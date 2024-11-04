@@ -14,21 +14,25 @@ class ProjecVersionLines(models.Model):
 
     project_plan_lines = fields.Many2many(
         'project.plan.line',
-        string='Planeación'
+        string='Planeación',
+        relation='project_version_lines_project_plan_line_rel'
     )
     project_picking_lines = fields.Many2many(
         'project.picking.lines',
-        string='Stock'
+        string='Stock',
+        relation='project_version_lines_picking_lines_rel'
     )
 
     previous_version_plan_lines = fields.Many2many(
         'project.plan.line',
-        string="Last version plan lines"
+        string="Last version plan lines",
+        relation='project_version_lines_previous_plan_line_rel'
     )
 
     previous_version_picking_lines = fields.Many2many(
         'project.picking.lines',
-        string="Last version picking lines"
+        string="Last version picking lines",
+        relation='project_version_lines_previous_picking_lines_rel'
     )
 
     version_number = fields.Char(
@@ -37,7 +41,36 @@ class ProjecVersionLines(models.Model):
         store=True
     )
 
-    @api.depends('id')
+    has_previous_version = fields.Boolean(
+        string="Has Previous Version",
+        compute='_compute_previous_version_lines',
+        store=True
+    )
+
+    @api.depends('modification_date')
     def _compute_version_number(self):
         for record in self:
             record.version_number = f"V{record.id}" if record.id else "V0"
+
+    @api.depends('project_id')
+    def _compute_previous_version_lines(self):
+        for record in self:
+            record.project_name = record.project_id.name
+
+            previous_version = self.search([
+                ('project_id', '=', record.project_id.id),
+                ('id', '<', record.id)
+            ], order="id desc", limit=1)
+
+            if previous_version:
+                record.previous_version_plan_lines = previous_version.project_plan_lines
+                record.previous_version_picking_lines = previous_version.project_picking_lines
+                
+                record.project_plan_lines = record.project_plan_lines | previous_version.project_plan_lines
+                record.project_picking_lines = record.project_picking_lines | previous_version.project_picking_lines
+                
+                record.has_previous_version = True
+            else:
+                record.previous_version_plan_lines = [(5, 0, 0)]
+                record.previous_version_picking_lines = [(5, 0, 0)]
+                record.has_previous_version = False
