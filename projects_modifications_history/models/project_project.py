@@ -13,6 +13,18 @@ class ProjectProject(models.Model):
         readonly=True,
     )
 
+    # This action opens a wizard to generate a new version entry in the project's change history.
+    # The wizard allows users to review the project plan lines (tasks to be created or added)
+    # and the products included in the project's inventory. Additionally, it records the reason
+    # for the changes as the most crucial information.
+    # The context provides default values for the wizard, including:
+    # - 'default_project_id': the current project's ID
+    # - 'default_project_plan_id': the ID of the project plan
+    # - 'default_project_plan_lines': the IDs of the project plan lines (tasks)
+    # - 'default_project_picking_lines': the IDs of the project's inventory products
+    # - 'default_modified_by': the current user making the modifications
+    # - 'default_modification_date': the date and time of the modification
+
     def action_save_version(self):
         self.ensure_one()
 

@@ -47,10 +47,28 @@ class ProjecVersionLines(models.Model):
         store=True
     )
 
+    # This method generates a version number for the project's change history.
+    # The version number is computed based on the record's ID, prefixed with "V".
+    # If the record has an ID, the version number is set as "V<record.id>";
+    # otherwise, it defaults to "V0".
+
     @api.depends('modification_date')
     def _compute_version_number(self):
         for record in self:
             record.version_number = f"V{record.id}" if record.id else "V0"
+
+    # This method retrieves the task lines and inventory lines from the version
+    # immediately preceding the selected version, allowing for comparison between
+    # the selected version and the previous one.
+    # It sets the project name based on the related project and searches for the most recent
+    # version with a lower ID within the same project.
+    # If a previous version is found:
+    # - It assigns the previous version's task and inventory lines to the respective fields.
+    # - It combines the selected version's lines with those from the previous version.
+    # - It marks that there is a previous version available.
+    # If no previous version is found:
+    # - It clears the previous version’s task and inventory lines.
+    # - It marks that there is no previous version.
 
     @api.depends('project_id')
     def _compute_previous_version_lines(self):
