@@ -10,13 +10,14 @@ class ProjectCreation(models.TransientModel):
     
     # stock_move_id = fields.Many2many('stock.move', string="Stock move")
 
-    partner_id = fields.Char(string='Contacto')
+    partner_id = fields.Many2one('res.users',  string='Contacto')
     picking_type_id = fields.Char(string='Tipo de operación')
     location_id = fields.Char(string='Ubicación de origen')
     location_dest_id = fields.Char(string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen')
     task_id = fields.Char(string='Tarea de origen')
+    modified_by = fields.Many2one('res.users', string='Contacto')
 
 
     @api.onchange('stock_picking_ids')

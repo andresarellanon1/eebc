@@ -28,7 +28,7 @@
 
                             </page>
                             <page string="Additional Info" name="extra">
-
+                                <field name="modified_by"/>
                             </page>
                             <page string="Note" name="note">
 
