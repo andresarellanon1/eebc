@@ -19,8 +19,8 @@ class ProjectCreation(models.TransientModel):
     task_id = fields.Char(string='Tarea de origen')
 
 
-    @api.model
-    def _compute_fields(self):        
+     @api.onchange('stock_picking_ids')
+    def _compute_fields(self):
         for record in self:
             record.partner_id = record.stock_picking_ids.name
             record.picking_type_id = record.stock_picking_ids.picking_type_id
