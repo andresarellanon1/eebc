@@ -17,7 +17,7 @@
         "views/inherit_timesheet_line_tree.xml",
         "views/inherit_project_task_form_inherited.xml",
         "security/ir.model.access.csv",
-        "views/activity_templates_view.xml"
+        #"views/activity_templates_view.xml"
     ],
     "license": "LGPL-3",
     'installable': True,
