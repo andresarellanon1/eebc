@@ -26,7 +26,7 @@
                             <page name="versions" string="Versions">
                                 <div>
                                     <field name="project_versions_lines" nolabel="1">
-                                        <tree style="width: 100%;">
+                                        <tree style="width: 100%;" edit="false" create="false" delete="false">
                                             <field name="version_number"/>
                                             <field name="modified_by"/>
                                             <field name="modification_motive"/>

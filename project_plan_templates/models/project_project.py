@@ -1,8 +1,5 @@
 from odoo import fields, api, models
-from odoo.exceptions import ValidationError
-import logging
-
-_logger = logging.getLogger(__name__)
+from odoo.exceptions import UserError
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
@@ -13,7 +10,7 @@ class ProjectProject(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
 
     ### Crea tareas de proyecto a partir de las líneas del plan de proyecto.
-    # Valida si la tarea ya existe y notifica al usuario si es así.
+    # Valida si la tarea ya existe.
     def create_project_tasks(self):
         for project in self:  
             for line in project.project_plan_lines:
@@ -26,29 +23,30 @@ class ProjectProject(models.Model):
                         ('project_id', '=', project.id)
                     ], limit=1)
 
-                    if existing_task:
-                        # Notificar al usuario que la tarea ya existe 
-                        project.message_post(body=f'Tarea ya existe: {line.name} en el proyecto {project.name}', subtype_id=self.env.ref('mail.mt_note').id)
-                    else:
-                        timesheet_lines = self.env['task.time.lines'].search([
-                            ('task_timesheet_id', '=', line.task_timesheet_id.id)
-                        ])
+                    #if existing_task:
+                        # Lanzar un UserError para notificar al usuario
+                    #    raise UserError(f'Tarea ya existe: {line.name} en el proyecto {project.name}.')
+                    
+                    # Crear la nueva tarea si no existe
+                    timesheet_lines = self.env['task.time.lines'].search([
+                        ('task_timesheet_id', '=', line.task_timesheet_id.id)
+                    ])
 
-                        timesheet_data = [(0, 0, {
-                            'name': ts_line.description,
-                            'estimated_time': ts_line.estimated_time,
-                        }) for ts_line in timesheet_lines]
+                    timesheet_data = [(0, 0, {
+                        'name': ts_line.description,
+                        'estimated_time': ts_line.estimated_time,
+                    }) for ts_line in timesheet_lines]
 
-                        self.env['project.task'].create({
-                            'name': line.name,
-                            'project_id': project.id,
-                            'description': line.description,
-                            'planned_date_begin': line.planned_date_begin,
-                            'date_deadline': line.planned_date_end,
-                            'user_ids': [(6, 0, line.partner_id.ids)],
-                            'stage_id': current_task_type.id,
-                            'timesheet_ids': timesheet_data,
-                        })
+                    self.env['project.task'].create({
+                        'name': line.name,
+                        'project_id': project.id,
+                        'description': line.description,
+                        'planned_date_begin': line.planned_date_begin,
+                        'date_deadline': line.planned_date_end,
+                        'user_ids': [(6, 0, line.partner_id.ids)],
+                        'stage_id': current_task_type.id,
+                        'timesheet_ids': timesheet_data,
+                    })
 
     ### Busca o crea un tipo de tarea por nombre y proyecto.
     # Args: stage_id: Nombre del tipo de tarea; project: Proyecto relacionado.
