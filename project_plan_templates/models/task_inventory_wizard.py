@@ -22,10 +22,10 @@ class ProjectCreation(models.TransientModel):
     @api.model
     def _compute_fields(self):        
         for record in self:
-            record.partner_id = record.stock_picking_id.name
-            record.picking_type_id = record.stock_picking_id.picking_type_id
-            record.location_id = record.stock_picking_id.location_id
-            record.location_dest_id = record.stock_picking_id.location_dest_id
-            record.scheduled_date = record.stock_picking_id.scheduled_date
-            record.origin = record.stock_picking_id.origin
-            record.task_id = record.stock_picking_id.task_id
+            record.partner_id = record.stock_picking_ids.name
+            record.picking_type_id = record.stock_picking_ids.picking_type_id
+            record.location_id = record.stock_picking_ids.location_id
+            record.location_dest_id = record.stock_picking_ids.location_dest_id
+            record.scheduled_date = record.stock_picking_ids.scheduled_date
+            record.origin = record.stock_picking_ids.origin
+            record.task_id = record.stock_picking_ids.task_id
