@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='taxes_id']" position="after">
-                <button string="View Modifications History" type="object" name="action_view_modifications_history" class="btn-primary o_field_widget o_input" style="border: 1px solid #ccc; border-radius: 4px; padding: 6px 12px; background-color: white; color: #000;"/>
+                <field name="version_history_ids" />
             </xpath>
         </field>
     </record>
