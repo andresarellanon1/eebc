@@ -4,7 +4,7 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     # NO SE USA PERO ME DA ERROR SI LO QUITO
-    redirect_view_id = fields.Char()
+    redirect_view_id = fields.Many2one('ir.ui.view', string='Redirect View', default=lambda self: self.env.ref('your_module.your_view_id'))
 
     def action_view_modifications_history(self):
         self.ensure_one() 
