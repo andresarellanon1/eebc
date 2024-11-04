@@ -30,17 +30,6 @@ class ProjectProject(models.Model):
         string='Products'
     )
 
-    # activities_tmpl_id = fields.Many2one(
-    #     'activity.template',  # Referencia al modelo
-    #     string='Plantilla de actividades'
-    # )
-
-    # line_activities_ids = fields.One2many(
-    #     'line.activities',  # Referencia al modelo
-    #     'project_id',
-    #     string='Lineas de actividades'
-    # )
-
     taxes_id = fields.Many2many(
         'account.tax',  
         string='Impuestos del cliente',
@@ -63,11 +52,6 @@ class ProjectProject(models.Model):
                     datetime(year, month, day)
                 except ValueError:
                     raise ValidationError("La fecha debe ser válida en el formato DDMMYY.")
-    
-    # @api.onchange('activities_tmpl_id')
-    # def _onchange_activities_tmpl_id(self):
-    #     for record in self:
-    #         record.line_activities_ids = record.activities_tmpl_id.line_activities_ids
 
     @api.depends('task_id.stock_ids')
     def _compute_pickin_ids(self):
