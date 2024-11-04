@@ -24,6 +24,12 @@ class ProjectLines(models.Model):
     origin_project_id = fields.Many2one('project.project', string="Project")
     partner_id = fields.Many2many('res.users', string="Assigned user")
     task_timesheet_id = fields.Many2one('task.timesheet', string="Timesheet")
+
+    # This action allows the user to preview how the task will look for a specific line.
+    # It creates a temporary task using the details of the current line, such as the name, 
+    # assigned users, description, planned start date, and deadline. 
+    # The preview opens in a form view as a modal dialog, showing the task details 
+    # without permanently saving the task in the project.
     
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
