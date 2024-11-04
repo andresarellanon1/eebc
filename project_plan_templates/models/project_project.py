@@ -23,9 +23,9 @@ class ProjectProject(models.Model):
                         ('project_id', '=', project.id)
                     ], limit=1)
 
-                    if existing_task:
+                    #if existing_task:
                         # Lanzar un UserError para notificar al usuario
-                        raise UserError(f'Tarea ya existe: {line.name} en el proyecto {project.name}.')
+                    #    raise UserError(f'Tarea ya existe: {line.name} en el proyecto {project.name}.')
                     
                     # Crear la nueva tarea si no existe
                     timesheet_lines = self.env['task.time.lines'].search([
