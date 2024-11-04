@@ -6,7 +6,7 @@ class ProjectCreation(models.TransientModel):
 
     
     project_task_id = fields.Many2one('project.task', string="Project Task")
-    stock_picking_id = fields.Many2one('stock.picking', string="Stock picking")
+    stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
     
     # stock_move_id = fields.Many2many('stock.move', string="Stock move")
 
@@ -22,8 +22,8 @@ class ProjectCreation(models.TransientModel):
     @api.model
     def _compute_fields(self):        
         for record in self:
-            record.stock_picking_id = record.project_task_id.stock_ids.task_id
-            
+            record.stock_picking_id = record.project_task_id.stock_ids
+
             record.partner_id = record.stock_picking_id.name
             record.picking_type_id = record.stock_picking_id.picking_type_id
             record.location_id = record.stock_picking_id.location_id
