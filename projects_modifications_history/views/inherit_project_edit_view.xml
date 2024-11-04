@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='taxes_id']" position="after">
-                <field name="redirect_view_id" string="Historial de cambios"/>
+                <field name="version_history_ids" />
             </xpath>
         </field>
     </record>
