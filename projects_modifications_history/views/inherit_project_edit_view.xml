@@ -6,7 +6,9 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='taxes_id']" position="after">
-                <field name="version_history_ids" />
+                <group>
+                    <field name="version_history_link" widget="many2one" options="{'no_create': True}"/>
+                </group>
             </xpath>
         </field>
     </record>
