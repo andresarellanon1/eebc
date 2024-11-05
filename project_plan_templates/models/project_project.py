@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
-    version_history_id = fields.Char(string="Version history")
+    version_history_id = fields.Integer(string="Version history")
 
     project_plan_id = fields.Many2one('project.plan', string="Project template", readonly="True")
     project_plan_lines = fields.One2many('project.plan.line', 'origin_project_id', string="Project plan lines")
