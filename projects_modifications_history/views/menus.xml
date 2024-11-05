@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="project_version_history_action" model="ir.actions.act_window">
+            <field name="name">Historial de versiones de proyectos</field>
+            <field name="res_model">project.version.history</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="project_version_action" model="ir.actions.act_window">
+            <field name="name">Versiones del proyecto</field>
+            <field name="res_model">project.version.history</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="menu_version_history" model="ir.ui.menu">
+            <field name="name">Historial</field>
+            <field name="parent_id" ref="project.menu_main_pm" />
+            <field name="sequence" eval="20" />
+        </record>
+
+        <menuitem
+            id="project_versions"
+            name="Versiones de proyectos"
+            action="project_version_history_action"
+            parent="menu_version_history"
+            sequence="20"
+        />
+    </data>
+</odoo>
