@@ -16,7 +16,7 @@ class ProjectCreation(models.TransientModel):
     location_id = fields.Many2one('stock.picking', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.picking', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
-    origin = fields.Many2one('stock.picking', string='Documento origen')
+    origin = fields.Char(string='Documento origen')
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     modified_by = fields.Many2one('res.users', string='Contacto')
 
