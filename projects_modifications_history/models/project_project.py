@@ -1,4 +1,4 @@
-from odoo import fields, models, api
+from odoo import models, api, fields
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
