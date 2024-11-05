@@ -32,7 +32,7 @@
                                         <field name="quantity"/>
                                         <field name="product_uom"/>
                                     </tree>
-                                </field> -->
+                                </field>  -->
                             </page>
                             <page string="Additional Info" name="extra">
                                 <field name="modified_by"/>
@@ -41,14 +41,14 @@
 
                             </page>
                         </notebook>
-                        <!-- <field name="partner_id"/>
+                        <field name="partner_id"/>
                         <field name="picking_type_id"/>
                         <field name="location_id"/>
                         <field name="location_dest_id"/>
                         <field name="scheduled_date"/>
                         <field name="origin"/>
-                        <field name="task_id"/> -->
-                    </sheet>
+                        <field name="task_id"/> 
+                    </sheet> 
                 </form>
             </field>
         </record>
