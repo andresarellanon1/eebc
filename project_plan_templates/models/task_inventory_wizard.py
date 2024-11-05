@@ -12,12 +12,14 @@ class ProjectCreation(models.TransientModel):
     
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
     
+    stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
+
     # stock_move_id = fields.Many2many('stock.move', string="Stock move" )
 
     partner_id = fields.Many2one('res.users',  string='Contacto')
-    picking_type_id = fields.Many2one('stock.picking', string='Tipo de operación')
-    location_id = fields.Many2one('stock.picking', string='Ubicación de origen')
-    location_dest_id = fields.Many2one('stock.picking', string='Ubicación de destino')
+    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación')
+    location_id = fields.Many2one('stock.location', string='Ubicación de origen')
+    location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen')
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
@@ -27,7 +29,7 @@ class ProjectCreation(models.TransientModel):
 
 
     
-    stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
+    
     @api.onchange('stock_picking_ids')
     def _compute_fields(self):
         for record in self:
