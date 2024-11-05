@@ -31,8 +31,8 @@
                                         <field name="product_uom_qty"/>
                                         <field name="quantity"/>
                                         <field name="product_uom"/>
-                                        <field name="company_id"/>
-                                        <field name="product_uom_category_id"/>
+                                        <field name="company_id" column_invisible="True"/>
+                                        <field name="product_uom_category_id" column_invisible="True"/>
                                     </tree>
                                 </field> 
                             </page>
