@@ -11,7 +11,7 @@ class ProjectCreation(models.TransientModel):
     project_task_id = fields.Many2one('project.task', string="Project Task")
     
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
-    
+
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
 
     # stock_move_id = fields.Many2many('stock.move', string="Stock move" )
@@ -34,8 +34,4 @@ class ProjectCreation(models.TransientModel):
     def _compute_fields(self):
         for record in self:
             _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
-            picking = record.stock_picking_ids[:1]
-            record.picking_type_id = picking.picking_type_id
-            record.location_id = picking.location_id
-            record.location_dest_id = picking.location_dest_id
-            record.task_id = picking.task_id
+            record.task_id = project_task_id.id
