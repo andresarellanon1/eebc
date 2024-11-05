@@ -1,4 +1,7 @@
 from odoo import models, fields, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ProjectCreation(models.TransientModel):
     _name = 'task.inventory.wizard'
@@ -6,7 +9,7 @@ class ProjectCreation(models.TransientModel):
 
     
     project_task_id = fields.Many2one('project.task', string="Project Task")
-    stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
+    
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
     
     # stock_move_id = fields.Many2many('stock.move', string="Stock move")
@@ -19,14 +22,14 @@ class ProjectCreation(models.TransientModel):
     origin = fields.Char(string='Documento origen')
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     modified_by = fields.Many2one('res.users', string='Contacto')
-
+    
+    stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
     @api.onchange('stock_picking_ids')
     def _compute_fields(self):
         for record in self:
-            record.partner_id = record.stock_picking_ids.name
-            record.picking_type_id = record.stock_picking_ids.picking_type_id
-            record.location_id = record.stock_picking_ids.location_id
-            record.location_dest_id = record.stock_picking_ids.location_dest_id
-            record.scheduled_date = record.stock_picking_ids.scheduled_date
-            record.origin = record.stock_picking_ids.origin
-            record.task_id = record.stock_picking_ids.task_id
+            _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
+            picking = record.stock_picking_ids[:1]
+            record.picking_type_id = picking.picking_type_id
+            record.location_id = picking.location_id
+            record.location_dest_id = picking.location_dest_id
+            record.task_id = picking.task_id
