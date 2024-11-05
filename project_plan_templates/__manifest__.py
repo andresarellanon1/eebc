@@ -7,7 +7,7 @@
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [
-                'project'
+                'project','eebc_notices'
                ],
     'data': [
         "views/project_menu.xml",
