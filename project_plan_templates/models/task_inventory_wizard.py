@@ -19,6 +19,7 @@ class ProjectCreation(models.TransientModel):
     origin = fields.Char(string='Documento origen')
     task_id = fields.Char(string='Tarea de origen')
     modified_by = fields.Many2one('res.users', string='Contacto')
+    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
 
 
 
