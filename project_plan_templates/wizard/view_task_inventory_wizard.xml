@@ -34,6 +34,7 @@
                                         <field name="product_uom" string="Unidad"/>
                                         <field name="company_id" column_invisible="True"/>
                                         <field name="product_uom_category_id" column_invisible="True"/>
+                                        <field name="picking_type_codigo"/>
                                     </tree>
                                 </field> 
                             </page>
