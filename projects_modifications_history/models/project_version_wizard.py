@@ -2,6 +2,7 @@ from odoo import fields, models, api
 from odoo.exceptions import UserError
 
 class ProjectVersionWizard(models.TransientModel):
+
     _name = 'project.version.wizard'
     _description = 'Wizard for project version history'
 
@@ -40,7 +41,7 @@ class ProjectVersionWizard(models.TransientModel):
             history = existing_history
 
         if not self.modification_motive:
-            raise UserError('Hace falta agregar el motivo de la modificacion.')
+            raise UserError(f'Hace falta agregar el motivo de la modificacion.')
 
         project.create_project_tasks()
 
@@ -51,6 +52,10 @@ class ProjectVersionWizard(models.TransientModel):
             'modification_motive': self.modification_motive,
             'project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
             'project_picking_lines': [(6, 0, self.project_picking_lines.ids)],
+        })
+
+        project.write({
+
         })
 
         return {
