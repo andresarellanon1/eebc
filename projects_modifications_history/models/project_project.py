@@ -3,6 +3,13 @@ from odoo import models, api, fields
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
+    version_history_ids = fields.One2many(
+        'project.version.history',
+        'project_id',
+        string='Historial de modificaciones',
+        readonly=True,
+    )
+
     version_history_id = fields.Many2one(
         'project.version.history',
         string='Version History',
