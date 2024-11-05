@@ -6,6 +6,7 @@ class ProjectVersionHistory(models.Model):
     _name = 'project.version.history'
     _description = 'Project Version History'
 
+    name = fields.Char(string='Historial de Modificación', default="Modificación sin título")
     project_id = fields.Many2one('project.project', string='Project')
     modified_by = fields.Many2one('res.users', string='Modified by')
     modification_motive = fields.Html(string='Motive of adjustment')
