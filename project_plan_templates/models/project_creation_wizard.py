@@ -5,7 +5,7 @@ class ProjectCreation(models.TransientModel):
     _description = 'Wizard to confirm project creation'
 
     project_plan_id = fields.Many2one('project.plan', string="Project Plan", required=True, readonly="True")
-    project_name = fields.Char(string="Project Name")
+    project_name = fields.Char(string="Project Name", required=True)
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
     project_plan_lines = fields.Many2many(
@@ -23,14 +23,11 @@ class ProjectCreation(models.TransientModel):
         string="Picking Lines"
     )
 
-    @api.onchange('project_plan_id')
-    def _onchange_project_plan_id(self):
-        if self.project_plan_id:
-            self.project_name = self.project_plan_id.project_name
-            self.project_plan_lines = self.project_plan_id.project_plan_lines
-            self.project_plan_pickings = self.project_plan_id.project_plan_pickings
-            self.picking_lines = self.project_plan_id.picking_lines
-            self.description = self.project_plan_id.description
+    # This method allows the user to select multiple inventory templates 
+    # and combines all their products into a single list. 
+    # When the 'project_plan_pickings' field is modified, 
+    # it aggregates the 'project_picking_lines' from each selected picking 
+    # and assigns the combined list to 'picking_lines' in the current record.
 
     @api.onchange('project_plan_pickings')
     def onchange_picking_lines(self):
@@ -39,6 +36,12 @@ class ProjectCreation(models.TransientModel):
             for picking in record.project_plan_pickings:
                 lines |= picking.project_picking_lines
             record.picking_lines = lines.filtered('product_id')
+
+    # The `action_confirm_create_project` method creates a complete project based on the template.
+    # It prepares the data for project tasks and inventory items by filtering lines with 
+    # 'use_project_task' enabled and gathers the necessary details for each line.
+    # It then creates the project with tasks, timesheets, and inventory items,
+    # and opens the new project in a form view.
 
     def action_confirm_create_project(self):
         self.ensure_one()
@@ -80,6 +83,11 @@ class ProjectCreation(models.TransientModel):
             'target': 'current',
         }
 
+    # The `create_project_tasks` method generates tasks for the project using only 
+    # the filtered lines with 'use_project_task' enabled. It fetches associated 
+    # timesheets and organizes tasks into stages based on `stage_id`. If a line 
+    # doesn’t have a `stage_id`, it assigns the task to a default "Extras" stage.
+
     def create_project_tasks(self, project):
         current_task_type = None
         for line in self.project_plan_lines:
@@ -106,7 +114,10 @@ class ProjectCreation(models.TransientModel):
                     'timesheet_ids': timesheet_data,
                 })
 
-            
+    # The `get_or_create_task_type` method retrieves or creates a task stage 
+    # (task type) based on the `stage_id` provided. If the stage doesn't exist,
+    # it creates a new one and links it to the project. If the stage already exists, 
+    # it simply assigns the task to this existing stage.
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
