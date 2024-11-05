@@ -11,5 +11,4 @@ class StockMove(models.Model):
 
     product_uom = fields.Many2one(
         'uom.uom', string="Unidad", "UoM", required=True, domain="[('category_id', '=', product_uom_category_id)]",
-        compute="_compute_product_uom", store=True, readonly=False, precompute=True,
-    )
+        compute="_compute_product_uom", store=True, readonly=False, precompute=True)
