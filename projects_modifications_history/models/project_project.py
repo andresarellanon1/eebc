@@ -34,7 +34,7 @@ class ProjectProject(models.Model):
             'target': 'new',
             'context': {
                 'default_project_id': self.id,
-                'default_project_plan_id': self.project_plan_id,
+                'default_project_plan_id': self.project_plan_id.id,
                 'default_project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
                 'default_project_picking_lines': [(6, 0, self.project_picking_lines.ids)],
                 'default_modified_by': self.env.user.id,
