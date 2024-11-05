@@ -1,22 +1,21 @@
-from odoo import fields, models, api
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 from odoo.exceptions import UserError
 
-class ProjectVersionWizard(models.TransientModel):
 
+class ProjectVersionWizard(models.TransientModel):
     _name = 'project.version.wizard'
     _description = 'Wizard for project version history'
 
     modification_date = fields.Datetime(string='Modification date')
     modification_motive = fields.Html(string='Motive of adjustment')
     modified_by = fields.Many2one('res.users', string='Modified by', required=True)
-    
+
     project_plan_lines = fields.Many2many(
         'project.plan.line',
         string='Planeación'
     )
     project_picking_lines = fields.Many2many(
-        'project.picking.lines',
+        'project.picking.line',
         string='Stock'
     )
 
@@ -53,10 +52,6 @@ class ProjectVersionWizard(models.TransientModel):
             'modification_motive': self.modification_motive,
             'project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
             'project_picking_lines': [(6, 0, self.project_picking_lines.ids)],
-        })
-
-        project.write({
-
         })
 
         return {
