@@ -3,6 +3,7 @@ from odoo import models, api, fields
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
+
     version_history_ids = fields.One2many(
         'project.version.history',
         'project_id',
@@ -15,18 +16,6 @@ class ProjectProject(models.Model):
         string='Version History',
         compute='_compute_version_history_id',
         store=True
-    )
-
-    project_plan_lines = fields.One2many(
-        'project.plan.line',
-        'project_id',
-        string='Planeación'
-    )
-
-    project_picking_lines = fields.One2many(
-        'project.picking.line',
-        'project_id',
-        string='Stock'
     )
 
     @api.depends('version_history_ids')
@@ -46,6 +35,7 @@ class ProjectProject(models.Model):
             'target': 'new',
             'context': {
                 'default_project_id': self.id,
+                'default_project_plan_id': self.project_plan_id.id,
                 'default_project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
                 'default_project_picking_lines': [(6, 0, self.project_picking_lines.ids)],
                 'default_modified_by': self.env.user.id,
