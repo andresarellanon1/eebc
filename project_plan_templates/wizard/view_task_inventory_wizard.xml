@@ -59,7 +59,7 @@
                                 </group>
 
                                 <!-- Separador de Guía de Entrega -->
-                                <separator string="Guía de entrega" colspan="4" style="margin-top: 10px; border-top: 1px solid #000;"/>
+                                <separator string="Guía de entrega" colspan="4"/>
 
                                 <group>
                                     <group>
