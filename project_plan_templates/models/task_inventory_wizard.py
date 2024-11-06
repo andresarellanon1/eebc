@@ -67,7 +67,7 @@ class ProjectCreation(models.TransientModel):
                 'scheduled_date': line.scheduled_date,
                 'origin': line.origin,
                 'task_id': line.task_id.id,
-                'modified_by': line.modified_by,
+                'modified_by': line.modified_by.id,
                 'product_packaging_id': line.product_packaging_id.id,
                 
                 'carrier_id': line.carrier_id.id,
