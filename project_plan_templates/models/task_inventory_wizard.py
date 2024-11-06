@@ -91,7 +91,7 @@ class ProjectCreation(models.TransientModel):
                 'product_packaging_id': line.product_packaging_id.id,
             }) for line in self.stock_move_ids]
 
-            stock_picking = self.env['stock.picking'].create(stock_picking_vals)
+            stock_picking = self.env['stock.picking'].create(stock_picking_ids_vals)
 
             return {
                 'type': 'ir.actions.act_window',
