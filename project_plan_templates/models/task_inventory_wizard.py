@@ -66,7 +66,7 @@ class ProjectCreation(models.TransientModel):
                 'product_uom_qty':line.product_uom_qty,
                 'quantity':line.quantity,
                 'product_uom':line.product_uom,
-                'product_type_codigo':line.product_type_codigo,
+                'pricking_type_codigo':line.picking_type_codigo,
 
             }) for line in self.stock_move_ids]
 
