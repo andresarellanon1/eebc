@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 import logging
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -67,7 +68,7 @@ class ProjectCreation(models.TransientModel):
             ('company_id', '=', line.company_id.id)])
             if existing_picking:
                 raise exceptions.ValidationError("La referencia debe ser única por empresa.")
-                
+
         stock_picking_ids_vals = [{
         'name': line.name,
         'partner_id': line.partner_id.id,
