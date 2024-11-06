@@ -27,7 +27,7 @@ class ProjectCreation(models.TransientModel):
     user_id = fields.Many2one('res.users', string='Contacto')
     
     
-    # product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
+    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     
     # Sección de Información adicional
 
@@ -70,7 +70,7 @@ class ProjectCreation(models.TransientModel):
                 'origin': line.origin,
                 'task_id': line.task_id.id,
                 'user_id': line.user_id.id,
-                'product_packaging_id': line.product_packaging_id.id,
+                # 'product_packaging_id': line.product_packaging_id.id,
                 
                 'carrier_id': line.carrier_id.id,
                 'carrier_tracking_ref': line.carrier_tracking_ref,
@@ -87,9 +87,9 @@ class ProjectCreation(models.TransientModel):
                 'long_dest': line.long_dest,
             }) for line in self.stock_picking_ids]
 
-            # stock_move_ids_vals = [(0, 0, {
-            #     'product_packaging_id': line.product_packaging_id.id,
-            # }) for line in self.stock_move_ids]
+            stock_move_ids_vals = [(0, 0, {
+                'product_packaging_id': line.product_packaging_id.id,
+            }) for line in self.stock_move_ids]
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'stock.picking',
