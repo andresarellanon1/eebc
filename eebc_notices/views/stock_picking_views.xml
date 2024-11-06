@@ -23,7 +23,7 @@
                         type="object" 
                         string="Subir archivo" 
                         icon="fa-area-chart"
-                        invisible="['|',('has_type_picking_notice_approve', '=', True), ('has_aviso_in_attributes', '=', True)]"/>
+                        invisible="['|', '|', ('has_type_picking_notice_approve', '=', False), ('has_aviso_in_attributes', '=', False), '&', ('has_type_picking_notice_approve', '=', False), ('has_aviso_in_attributes', '=', False)]"/>
             </xpath>
         </field>
     </record>
