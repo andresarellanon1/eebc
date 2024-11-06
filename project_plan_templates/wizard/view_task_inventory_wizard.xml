@@ -39,46 +39,45 @@
                                 </field> 
                             </page>
                             <page string="Additional Info" name="extra">
-                                <!-- Información de envío -->
                                 <group>
-                                    <separator string="Información de envío" colspan="3"/>
                                     <group>
-                                        <field name="carrier_id"/>
-                                        <field name="carrier_tracking_ref"/>
-                                        <field name="weight" readonly="1"/>
-                                        <field name="shipping_weight" readonly="1"/>
+                                        <separator string="Información de envío" colspan="5"/>
+                                        <group>
+                                            <field name="carrier_id"/>
+                                            <field name="carrier_tracking_ref"/>
+                                            <field name="weight" readonly="1"/>
+                                            <field name="shipping_weight" readonly="1"/>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <separator string="Otra información" colspan="5"/>
+                                        <group>
+                                            <field name="group_id" readonly="1"/>
+                                            <field name="company_id" readonly="1"/>
+                                        </group>
                                     </group>
                                 </group>
 
-                                <!-- Otra información -->
+                                <!-- Separador de Guía de Entrega -->
+                                <separator string="Guía de entrega" colspan="5"/>
+
                                 <group>
-                                    <separator string="Otra información" colspan="3"/>
                                     <group>
-                                        <field name="group_id" readonly="1"/>
-                                        <field name="company_id" readonly="1"/>
+                                        <separator string="Transportar"/>
+                                        <group>
+                                            <field name="transport_type"/>
+                                            <field name="custom_document_identification"/>
+                                        </group>
                                     </group>
-                                </group>
 
-                                <!-- Separador de Guía de entrega -->
-                                <separator string="Guía de entrega"/>
-
-                                <!-- Transportar -->
-                                <group>
-                                    <separator string="Transportar" colspan="3"/>
                                     <group>
-                                        <field name="transport_type"/>
-                                        <field name="custom_document_identification"/>
-                                    </group>
-                                </group>
-
-                                <!-- Distancia -->
-                                <group>
-                                    <separator string="Distancia" colspan="3"/>
-                                    <group>
-                                        <field name="lat_origin"/>
-                                        <field name="long_origin"/>
-                                        <field name="lat_dest"/>
-                                        <field name="long_dest"/>
+                                        <separator string="Distancia"/>
+                                        <group>
+                                            <field name="lat_origin"/>
+                                            <field name="long_origin"/>
+                                            <field name="lat_dest"/>
+                                            <field name="long_dest"/>
+                                        </group>
                                     </group>
                                 </group>
                             </page>
