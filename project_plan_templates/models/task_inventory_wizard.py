@@ -16,7 +16,8 @@ class ProjectCreation(models.TransientModel):
 
     # stock_move_id = fields.Many2many('stock.move', string="Stock move" )
 
-    partner_id = fields.Many2one('res.users',  string='Contacto')
+    name = fields.Char(string='Referencia')
+    partner_id = fields.Many2one('res.partner',  string='Contacto')
     picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación')
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
@@ -25,7 +26,6 @@ class ProjectCreation(models.TransientModel):
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     modified_by = fields.Many2one('res.users', string='Contacto')
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
-
     
     # Sección de Información adicional
 
@@ -54,3 +54,41 @@ class ProjectCreation(models.TransientModel):
         for record in self:
             _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
             record.task_id = project_task_id.id
+
+
+    def action_confirm_create_inventory(self):
+            self.ensure_one()
+            stock_picking_ids_vals = [(0, 0, {
+                'name': line.name,
+                'partner_id': line.partner_id.id,
+                'picking_type_id': line.picking_type_id.id,
+                'location_id': line.location_id.id,
+                'location_dest_id': line.location_dest_id.id,
+                'scheduled_date': line.scheduled_date,
+                'origin': line.origin,
+                'task_id': line.task_id.id,
+                'modified_by': line.modified_by,
+                'product_packaging_id': line.product_packaging_id.id,
+                
+                'carrier_id': line.carrier_id.id,
+                'carrier_tracking_ref': line.carrier_tracking_ref,
+
+                'weight': line.weight,
+                'shipping_weight': line.shipping_weight,
+                'group_id': line.group_id.id,
+                'company_id': line.company_id.id,
+                'transport_type': line.transport_type,
+                'custom_document_identification': line.custom_document_identification,
+                'lat_origin': line.lat_origin,
+                'long_origin': line.long_origin,
+                'lat_dest': line.lat_dest,
+                'long_dest': line.long_dest,
+            }) for line in self.stock_picking_ids if line.use_project_task]
+
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'stock.picking',
+                'res_id': stock_picking_ids.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
