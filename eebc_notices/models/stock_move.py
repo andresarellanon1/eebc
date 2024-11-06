@@ -16,28 +16,17 @@ class StockMove(models.Model):
         string="Tiene 'aviso' en atributos",
         compute='_compute_has_aviso_in_attributes'
     )
-
-    has_type_picking_notice_approve = fields.Boolean(
-        string="Puede el tipo de operación crear aviso",
-        compute='_compute_has_aviso_in_attributes'
-    )
     picking_type_codigo = fields.Selection(
         related='picking_type_id.code',
-        readonly=True
-    )
+        readonly=True)
 
-    @api.depends('product_id.attribute_line_ids', 'purchase_line_id.purchase_id.picking_type_id.code')
+    @api.depends('product_id.attribute_line_ids')
     def _compute_has_aviso_in_attributes(self):
         for move in self:
-            
-            has_aviso = any(
+            move.has_aviso_in_attributes = any(
                 'aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')
             )
-            
-            is_incoming = move.purchase_line_id.purchase_id.picking_type_id.code == 'incoming'
-            
-            move.has_aviso_in_attributes = has_aviso
-            move.has_type_picking_notice_approve = is_incoming and has_aviso
+    
     
     def call_wizard(self):
 
