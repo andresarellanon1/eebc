@@ -32,6 +32,7 @@ class ProjectProject(models.Model):
         _logger.info("Valor de project_plan_id: %s", self.project_plan_id)
         _logger.info("Valor de project_plan_lines: %s", self.project_plan_lines)
         _logger.info("Valor de project_picking_lines: %s", self.project_picking_lines)
+        _logger.info("Valor de project_id: %s", self.id)
 
         return {
             'name': 'Project Version History',
