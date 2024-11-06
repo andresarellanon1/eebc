@@ -40,35 +40,46 @@
                             </page>
                             <page string="Additional Info" name="extra">
                                 <group>
-                                    <separator string="Información de envió"/>
                                     <group>
-                                        <field name="carrier_id"/>
-                                        <field name="carrier_tracking_ref"/>
-                                        <field name="weight"/>
-                                        <field name="shipping_weight"/>
+                                        <separator string="Información de envío" colspan="4"/>
+                                        <group>
+                                            <field name="carrier_id"/>
+                                            <field name="carrier_tracking_ref"/>
+                                            <field name="weight"/>
+                                            <field name="shipping_weight"/>
+                                        </group>
                                     </group>
-                                    <separator string="Otra información"/>
                                     <group>
-                                        <field name="group_id"/>
-                                        <field name="company_id"/>
-                                    </group>
-                                </group>                               
-                                <separator string="Guía de entrega" colspan="4" style="margin-top: 10px; border-top: 1px solid #000;"/>
-                                <group>
-                                    <separator string="Transportar"/>
-                                    <group>
-                                        <field name="transport_type"/>
-                                        <field name="custom_document_identification"/>
-                                    </group>
-                                    <separator string="Distancia"/>
-                                    <group>
-                                        <field name="lat_origin"/>
-                                        <field name="long_origin"/>
-                                        <field name="lat_dest"/>
-                                        <field name="long_dest"/>
+                                        <separator string="Otra información" colspan="4"/>
+                                        <group>
+                                            <field name="group_id"/>
+                                            <field name="company_id"/>
+                                        </group>
                                     </group>
                                 </group>
-                                
+
+                                <!-- Separador de Guía de Entrega -->
+                                <separator string="Guía de entrega" colspan="4" style="margin-top: 10px; border-top: 1px solid #000;"/>
+
+                                <group>
+                                    <group>
+                                        <separator string="Transportar"/>
+                                        <group>
+                                            <field name="transport_type"/>
+                                            <field name="custom_document_identification"/>
+                                        </group>
+                                    </group>
+
+                                    <group>
+                                        <separator string="Distancia"/>
+                                        <group>
+                                            <field name="lat_origin"/>
+                                            <field name="long_origin"/>
+                                            <field name="lat_dest"/>
+                                            <field name="long_dest"/>
+                                        </group>
+                                    </group>
+                                </group>
                             </page>
                             <page string="Note" name="note">
 
