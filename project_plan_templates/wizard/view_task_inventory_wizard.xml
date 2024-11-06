@@ -39,7 +39,31 @@
                                 </field> 
                             </page>
                             <page string="Additional Info" name="extra">
-                                <field name="modified_by"/>
+                                <separator string="Información de envió" colspan="4">
+                                <group>
+                                    <field name="carrier_id"/>
+                                    <field name="carrier_tracking_ref"/>
+                                    <field name="weight"/>
+                                    <field name="shipping_weight"/>
+                                </group>
+                                <separator string="Otra información" colspan="4">
+                                <group>
+                                    <field name="group_id"/>
+                                    <field name="company_id"/>
+                                </group>
+                                <separator string="Guía de entrega" colspan="4" style="margin-top: 10px; border-top: 1px solid #000;"/>
+                                <separator string="Transportar" colspan="4">
+                                <group>
+                                    <field name="transport_type"/>
+                                    <field name="custom_document_identification"/>
+                                </group>
+                                <separator string="Distancia" colspan="4">
+                                <group>
+                                    <field name="lat_origin"/>
+                                    <field name="long_origin"/>
+                                    <field name="lat_dest"/>
+                                    <field name="long_dest"/>
+                                </group>
                             </page>
                             <page string="Note" name="note">
 
