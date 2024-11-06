@@ -31,7 +31,7 @@ class StockMove(models.Model):
             # Verifica si el producto tiene el atributo 'aviso' y si el tipo de picking está relacionado con la orden de compra
             move.has_aviso_in_attributes = (
                 any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')) 
-                and move.purchase_line_id.purchase_id.picking_type_id.code == 'incoming'
+                and move.purchase_line_id.order_id.purchase_id.picking_type_id.code == 'incoming'
             )
 
     
