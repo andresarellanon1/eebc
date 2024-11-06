@@ -19,8 +19,8 @@
                                 </page>
                                 <page name="tasks" string="Tasks">
                                     <div style="width: 100%;">
-                                        <field name="project_plan_lines" nolabel="1" readonly="1">
-                                            <tree style="width: 100%;">
+                                        <field name="project_plan_lines" nolabel="1" readonly="1" style="pointer-events:none">
+                                            <tree style="width: 100%;" editable="bottom">
                                                 <field name="name" readonly="1"/>
                                                 <field name="chapter" readonly="1"/>
                                                 <field name="description" readonly="1"/>
