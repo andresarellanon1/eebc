@@ -42,18 +42,19 @@
                                                 <field name="quantity" readonly="1" />
                                                 <field name="location_id" readonly="1" />
                                             </tree>
-                                        </div>
-                                    </page>
-                                </notebook>
-                            </group>
+                                        </field>
+                                    </div>
+                                </page>
+                            </notebook>
+                        </group>
 
-                            <footer>
-                                <button name="action_confirm_version_history" string="Save Project" type="object" class="btn-primary" />
-                                <button string="Cancel" class="btn-secondary" special="cancel" />
-                            </footer>
-                        </sheet>
-                    </form>
-                </field>
-            </record>
-        </data>
-    </odoo>
+                        <footer>
+                            <button name="action_confirm_version_history" string="Save Project" type="object" class="btn-primary" />
+                            <button string="Cancel" class="btn-secondary" special="cancel" />
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
