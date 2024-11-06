@@ -47,10 +47,15 @@ class ProjecVersionLines(models.Model):
         store=True
     )
 
-    @api.depends('modification_date')
+    @api.depends('modification_date', 'project_id')
     def _compute_version_number(self):
         for record in self:
-            record.version_number = f"V{record.id}" if record.id else "V0"
+            if record.project_id:
+                versions = self.env['project.version.lines'].search([('project_id', '=', record.project_id.id)], order='modification_date')
+                record.version_number = f"V{versions.ids.index(record.id) + 1}" if record.id else "V0"
+            else:
+                record.version_number = "V0"
+
 
     @api.depends('project_id')
     def _compute_previous_version_lines(self):
