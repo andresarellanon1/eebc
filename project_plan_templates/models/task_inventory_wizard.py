@@ -24,7 +24,9 @@ class ProjectCreation(models.TransientModel):
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen')
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
-    modified_by = fields.Many2one('res.users', string='Contacto')
+    user_id = fields.Many2one('res.users', string='Contacto')
+    
+    
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     
     # Sección de Información adicional
@@ -67,8 +69,8 @@ class ProjectCreation(models.TransientModel):
                 'scheduled_date': line.scheduled_date,
                 'origin': line.origin,
                 'task_id': line.task_id.id,
-                'modified_by': line.modified_by,
-                'product_packaging_id': line.product_packaging_id.id,
+                'user_id': line.user_id.id,
+                # 'product_packaging_id': line.product_packaging_id.id,
                 
                 'carrier_id': line.carrier_id.id,
                 'carrier_tracking_ref': line.carrier_tracking_ref,
@@ -83,8 +85,11 @@ class ProjectCreation(models.TransientModel):
                 'long_origin': line.long_origin,
                 'lat_dest': line.lat_dest,
                 'long_dest': line.long_dest,
-            }) for line in self.stock_picking_ids if line.use_project_task]
+            }) for line in self.stock_picking_ids]
 
+            stock_move_ids_vals = [(0, 0, {
+                'product_packaging_id': line.product_packaging_id.id,
+            }) for line in self.stock_move_ids]
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'stock.picking',
