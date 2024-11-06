@@ -83,7 +83,7 @@ class ProjectCreation(models.TransientModel):
                 'long_origin': line.long_origin,
                 'lat_dest': line.lat_dest,
                 'long_dest': line.long_dest,
-            }) for line in self.stock_picking_ids if line.use_project_task]
+            }) for line in self.stock_picking_ids]
 
             return {
                 'type': 'ir.actions.act_window',
