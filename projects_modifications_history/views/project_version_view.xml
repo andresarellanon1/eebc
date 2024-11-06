@@ -5,7 +5,7 @@
             <field name="name">project.version.tree</field>
             <field name="model">project.version.lines</field>
             <field name="arch" type="xml">
-                <tree string="Versions" edit="false" create="false" delete="false" >
+                <tree string="Versions" edit="false" create="false" delete="false">
                     <field name="version_number"/>
                     <field name="modified_by"/>
                     <field name="modification_motive"/>
@@ -23,7 +23,9 @@
                     <sheet>
                         <div class="oe_title">
                             <label for="project_name"/>
-                            <h1><field name="project_name" class="w-100" readonly="1"/></h1>
+                            <h1>
+                                <field name="project_name" class="w-100" readonly="1"/>
+                            </h1>
                         </div>
                         <group>
                             <group>
@@ -41,7 +43,7 @@
                             <page name="tasks" string="Tasks changes">
                                 <h1>Tasks before modification</h1>
                                 <div>
-                                    <field name="previous_version_plan_lines" nolabel="1" readonly="1" style="pointer-events:none">
+                                    <field name="previous_version_plan_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not previous_version_plan_lines">
                                         <tree style="width: 100%" editable="bottom">
                                             <field name="name" readonly="1"/>
                                             <field name="chapter" readonly="1"/>
@@ -53,10 +55,11 @@
                                             <field name="stage_id" readonly="1"/>
                                         </tree>
                                     </field>
+                                    <p invisible="previous_version_plan_lines"> There is no previous plan lines before modifications </p>
                                 </div>
                                 <h1>Tasks after modification</h1>
                                 <div>
-                                    <field name="project_plan_lines" nolabel="1" readonly="1" style="pointer-events:none">
+                                    <field name="project_plan_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not project_plan_lines">
                                         <tree style="width: 100%" editable="bottom">
                                             <field name="name" readonly="1"/>
                                             <field name="chapter" readonly="1"/>
@@ -68,28 +71,34 @@
                                             <field name="stage_id" readonly="1"/>
                                         </tree>
                                     </field>
+                                    <p invisible="project_plan_lines"> There is no previous plan lines before modifications </p>
+
                                 </div>
                             </page>
                             <page name="stock" string="Stock changes">
                                 <h1>Stock before changes</h1>
                                 <div>
-                                    <field name="previous_version_picking_lines" nolabel="1" readonly="1" style="pointer-events:none">
+                                    <field name="previous_version_picking_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not previous_version_picking_lines">
                                         <tree style="width: 100%" editable="bottom">
                                             <field name="product_id" readonly="1"/>
                                             <field name="quantity" readonly="1"/>
                                             <field name="location_id" readonly="1"/>
                                         </tree>
                                     </field>
+                                    <p invisible="previous_version_picking_lines"> There is no previous plan lines before modifications </p>
+
                                 </div>
                                 <h1>Stock after changes</h1>
                                 <div>
-                                    <field name="project_picking_lines" nolabel="1" readonly="1" style="pointer-events:none">
+                                    <field name="project_picking_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not project_picking_lines">
                                         <tree style="width: 100%" editable="bottom">
                                             <field name="product_id" readonly="1"/>
                                             <field name="quantity" readonly="1"/>
                                             <field name="location_id" readonly="1"/>
                                         </tree>
                                     </field>
+                                    <p invisible="project_picking_lines"> There is no previous plan lines before modifications </p>
+
                                 </div>
                             </page>
                         </notebook>
