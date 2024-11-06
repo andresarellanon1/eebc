@@ -1,5 +1,4 @@
 from odoo import fields, models, api
-from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
 
 class ProjectVersionWizard(models.TransientModel):
@@ -10,7 +9,7 @@ class ProjectVersionWizard(models.TransientModel):
     modification_date = fields.Datetime(string='Modification date')
     modification_motive = fields.Html(string='Motive of adjustment')
     modified_by = fields.Many2one('res.users', string='Modified by', required=True)
-    
+
     project_plan_lines = fields.Many2many(
         'project.plan.line',
         string='Planeación'
