@@ -41,7 +41,7 @@
                             <page string="Additional Info" name="extra">
                                 <!-- Información de envío -->
                                 <group>
-                                    <separator string="Información de envío" colspan="4"/>
+                                    <separator string="Información de envío" colspan="3"/>
                                     <group>
                                         <field name="carrier_id"/>
                                         <field name="carrier_tracking_ref"/>
@@ -52,7 +52,7 @@
 
                                 <!-- Otra información -->
                                 <group>
-                                    <separator string="Otra información" colspan="4"/>
+                                    <separator string="Otra información" colspan="3"/>
                                     <group>
                                         <field name="group_id" readonly="1"/>
                                         <field name="company_id" readonly="1"/>
@@ -60,11 +60,11 @@
                                 </group>
 
                                 <!-- Separador de Guía de entrega -->
-                                <separator string="Guía de entrega" colspan="4" style="margin-top: 10px; border-top: 1px solid #000;"/>
+                                <separator string="Guía de entrega"/>
 
                                 <!-- Transportar -->
                                 <group>
-                                    <separator string="Transportar"/>
+                                    <separator string="Transportar" colspan="3"/>
                                     <group>
                                         <field name="transport_type"/>
                                         <field name="custom_document_identification"/>
@@ -73,7 +73,7 @@
 
                                 <!-- Distancia -->
                                 <group>
-                                    <separator string="Distancia"/>
+                                    <separator string="Distancia" colspan="3"/>
                                     <group>
                                         <field name="lat_origin"/>
                                         <field name="long_origin"/>
