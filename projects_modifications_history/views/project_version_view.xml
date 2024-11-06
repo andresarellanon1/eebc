@@ -76,8 +76,10 @@
 
                                     </div>
                                 </div>
-                                <div invisible="previous_version_plan_lines and project_plan_lines">
-                                    <p>No plan lines has been modified</p>
+                                <div invisible="previous_version_plan_lines">
+                                    <div invisible="project_plan_lines">
+                                        <p>No plan lines has been modified</p>
+                                    </div>
                                 </div>
                             </page>
                             <page name="stock" string="Stock changes">
@@ -107,8 +109,10 @@
 
                                     </div>
                                 </div>
-                                <div invisible="(previous_version_picking_lines and project_picking_lines)">
-                                    <p>No stock lines has been modified</p>
+                                <div invisible="previous_version_picking_lines">
+                                    <div invisible="project_picking_lines">
+                                        <p>No stock lines has been modified</p>
+                                    </div>
                                 </div>
                             </page>
                         </notebook>
