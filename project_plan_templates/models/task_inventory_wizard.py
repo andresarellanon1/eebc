@@ -90,10 +90,13 @@ class ProjectCreation(models.TransientModel):
             stock_move_ids_vals = [(0, 0, {
                 'product_packaging_id': line.product_packaging_id.id,
             }) for line in self.stock_move_ids]
+
+            stock_picking = self.env['stock.picking'].create(stock_picking_vals)
+
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'stock.picking',
-                'res_id': stock_picking_ids.id,
+                'res_id': stock_picking.id,
                 'view_mode': 'form',
                 'target': 'current',
             }
