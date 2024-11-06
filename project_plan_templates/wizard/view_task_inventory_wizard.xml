@@ -13,6 +13,7 @@
                         <group>
                             <group>
                                 <field name="partner_id"/>
+                                <field name="picking_type_id"/>
                                 <field name="location_id" />
                                 <field name="location_dest_id"/>
                             </group>
@@ -20,6 +21,8 @@
                                 <label for="scheduled_date"/>
                                 <div class="o_row">
                                     <field name="scheduled_date"/>
+                                    <field name="origin"/>
+                                    <field name="task_id"/>
                                 </div>
                             </group>
                         </group>
@@ -39,19 +42,57 @@
                                 </field> 
                             </page>
                             <page string="Additional Info" name="extra">
-                                <field name="modified_by"/>
+                                <group>
+                                    <group>
+                                        <separator string="Información de envío" colspan="5"/>
+                                        <group>
+                                            <field name="carrier_id"/>
+                                            <field name="carrier_tracking_ref"/>
+                                            <field name="weight" readonly="1"/>
+                                            <field name="shipping_weight" readonly="1"/>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <separator string="Otra información" colspan="5"/>
+                                        <group>
+                                            <field name="group_id" readonly="1"/>
+                                            <field name="company_id" readonly="1"/>
+                                        </group>
+                                    </group>
+                                </group>
+
+                                <!-- Separador de Guía de Entrega -->
+                                <separator string="Guía de entrega" colspan="5"/>
+
+                                <group>
+                                    <group>
+                                        <separator string="Transportar"/>
+                                        <group>
+                                            <field name="transport_type"/>
+                                            <field name="custom_document_identification"/>
+                                        </group>
+                                    </group>
+
+                                    <group>
+                                        <separator string="Distancia"/>
+                                        <group>
+                                            <field name="lat_origin"/>
+                                            <field name="long_origin"/>
+                                            <field name="lat_dest"/>
+                                            <field name="long_dest"/>
+                                        </group>
+                                    </group>
+                                </group>
                             </page>
                             <page string="Note" name="note">
 
                             </page>
                         </notebook>
-                        <field name="partner_id"/>
-                        <field name="picking_type_id"/>
-                        <field name="location_id"/>
-                        <field name="location_dest_id"/>
-                        <field name="scheduled_date"/>
-                        <field name="origin"/>
-                        <field name="task_id"/> 
+                        <footer>
+                            <button name="action_confirm_create_inventory" string="Create Inventory"
+                                type="object" class="btn-primary" />
+                            <button string="Cancel" class="btn-secondary" special="cancel" />
+                        </footer>
                     </sheet> 
                 </form>
             </field>
