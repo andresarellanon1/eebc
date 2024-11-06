@@ -68,7 +68,8 @@ class ProjectCreation(models.TransientModel):
                 'product_uom':line.product_uom.id,
                 'picking_type_codigo':line.picking_type_codigo,
                 'location_id':line.location_id.id,
-                'location_dest_id':line.location_dest_id.id
+                'location_dest_id':line.location_dest_id.id,
+                'name':line.name,
 
             }) for line in self.stock_move_ids]
 
