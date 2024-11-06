@@ -25,6 +25,8 @@ class ProjectCreation(models.TransientModel):
     origin = fields.Char(string='Documento origen')
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     user_id = fields.Many2one('res.users', string='Contacto')
+    
+    
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     
     # Sección de Información adicional
@@ -84,6 +86,10 @@ class ProjectCreation(models.TransientModel):
                 'lat_dest': line.lat_dest,
                 'long_dest': line.long_dest,
             }) for line in self.stock_picking_ids]
+
+            stock_move_ids_vals = [(0, 0, {
+                'product_packaging_id': line.product_packaging_id.id,
+            }) for line in self.stock_move_ids]
 
             return {
                 'type': 'ir.actions.act_window',
