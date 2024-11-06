@@ -32,8 +32,7 @@ class StockMove(models.Model):
             move.has_aviso_in_attributes = (
                 any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')) 
             )
-            move.has_type_picking_notice_approve =
-                move.picking_type_id.code == 'incoming'
+            move.has_type_picking_notice_approve = move.picking_type_id.code == 'incoming'
             _logger.warning("valor de has_aviso_in_attributes %s", move.has_aviso_in_attributes)
             _logger.warning("valor de has_type_picking_notice_approve %s", move.has_type_picking_notice_approve)
 
