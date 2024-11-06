@@ -108,7 +108,7 @@
                                     </div>
                                 </div>
 
-                                <div invisible="previous_version_picking_lines and project_picking_lines">
+                                <div invisible="not previous_version_picking_lines and not project_picking_lines">
                                     <p>No stock lines has been modified</p>
                                 </div>
                             </page>
