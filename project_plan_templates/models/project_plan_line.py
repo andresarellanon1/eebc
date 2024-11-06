@@ -11,7 +11,6 @@ class ProjectLines(models.Model):
     clave = fields.Integer(string="Task id")
     description = fields.Char(string="Description")
     project_plan_id = fields.Many2one('project.plan', string="Project plan")
-    project_id = fields.Many2one('project.project', string="Project")
     product_uom = fields.Many2one('uom.uom', string="Unit of mesure")
     unit_price = fields.Float(string="Unit price")
     amount_total = fields.Float(string="Amount total")
