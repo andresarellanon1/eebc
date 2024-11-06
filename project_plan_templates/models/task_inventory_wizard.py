@@ -60,77 +60,37 @@ class ProjectCreation(models.TransientModel):
 
     def action_confirm_create_inventory(self):
             self.ensure_one()
-            stock_picking_ids_vals = [{
-            'name': line.name,
-            'partner_id': line.partner_id.id,
-            'picking_type_id': line.picking_type_id.id,
-            'location_id': line.location_id.id,
-            'location_dest_id': line.location_dest_id.id,
-            'scheduled_date': line.scheduled_date,
-            'origin': line.origin,
-            'task_id': line.task_id.id,
-            'user_id': line.user_id.id,
-            'carrier_id': line.carrier_id.id,
-            'carrier_tracking_ref': line.carrier_tracking_ref,
-            'weight': line.weight,
-            'shipping_weight': line.shipping_weight,
-            'group_id': line.group_id.id,
-            'company_id': line.company_id.id,
-            'transport_type': line.transport_type,
-            'custom_document_identification': line.custom_document_identification,
-            'lat_origin': line.lat_origin,
-            'long_origin': line.long_origin,
-            'lat_dest': line.lat_dest,
-            'long_dest': line.long_dest,
-            } for line in self.stock_picking_ids]
+            # stock_picking_ids_vals = [{
+            # 'name': line.name,
+            # 'partner_id': line.partner_id.id,
+            # 'picking_type_id': line.picking_type_id.id,
+            # 'location_id': line.location_id.id,
+            # 'location_dest_id': line.location_dest_id.id,
+            # 'scheduled_date': line.scheduled_date,
+            # 'origin': line.origin,
+            # 'task_id': line.task_id.id,
+            # 'user_id': line.user_id.id,
+            # 'carrier_id': line.carrier_id.id,
+            # 'carrier_tracking_ref': line.carrier_tracking_ref,
+            # 'weight': line.weight,
+            # 'shipping_weight': line.shipping_weight,
+            # 'group_id': line.group_id.id,
+            # 'company_id': line.company_id.id,
+            # 'transport_type': line.transport_type,
+            # 'custom_document_identification': line.custom_document_identification,
+            # 'lat_origin': line.lat_origin,
+            # 'long_origin': line.long_origin,
+            # 'lat_dest': line.lat_dest,
+            # 'long_dest': line.long_dest,
+            # } for line in self.stock_picking_ids]
     
-            # Crear registros de stock.move
-            stock_move_ids_vals = [{'product_packaging_id': line.product_packaging_id.id,} for line in self.stock_move_ids]
+            # # Crear registros de stock.move
+            # stock_move_ids_vals = [{'product_packaging_id': line.product_packaging_id.id,} for line in self.stock_move_ids]
 
-            # Crear los registros de stock.picking
-            stock_picking = self.env['stock.picking'].create(stock_picking_ids_vals)
-
-            # Retornar acción de vista
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'stock.picking',
-                'res_id': stock_picking.id,
-                'view_mode': 'form',
-                'target': 'current',
-            }
-            # stock_picking_ids_vals = [(0, 0, {
-            #     'name': line.name,
-            #     'partner_id': line.partner_id.id,
-            #     'picking_type_id': line.picking_type_id.id,
-            #     'location_id': line.location_id.id,
-            #     'location_dest_id': line.location_dest_id.id,
-            #     'scheduled_date': line.scheduled_date,
-            #     'origin': line.origin,
-            #     'task_id': line.task_id.id,
-            #     'user_id': line.user_id.id,
-            #     # 'product_packaging_id': line.product_packaging_id.id,
-                
-            #     'carrier_id': line.carrier_id.id,
-            #     'carrier_tracking_ref': line.carrier_tracking_ref,
-
-            #     'weight': line.weight,
-            #     'shipping_weight': line.shipping_weight,
-            #     'group_id': line.group_id.id,
-            #     'company_id': line.company_id.id,
-            #     'transport_type': line.transport_type,
-            #     'custom_document_identification': line.custom_document_identification,
-            #     'lat_origin': line.lat_origin,
-            #     'long_origin': line.long_origin,
-            #     'lat_dest': line.lat_dest,
-            #     'long_dest': line.long_dest,
-            # }) for line in self.stock_picking_ids]
-
-            # stock_move_ids_vals = [(0, 0, {
-            #     'product_packaging_id': line.product_packaging_id.id,
-            # }) for line in self.stock_move_ids]
-
+            # # Crear los registros de stock.picking
             # stock_picking = self.env['stock.picking'].create(stock_picking_ids_vals)
 
+            # # Retornar acción de vista
             # return {
             #     'type': 'ir.actions.act_window',
             #     'res_model': 'stock.picking',
@@ -138,3 +98,43 @@ class ProjectCreation(models.TransientModel):
             #     'view_mode': 'form',
             #     'target': 'current',
             # }
+            stock_picking_ids_vals = [(0, 0, {
+                'name': line.name,
+                'partner_id': line.partner_id.id,
+                'picking_type_id': line.picking_type_id.id,
+                'location_id': line.location_id.id,
+                'location_dest_id': line.location_dest_id.id,
+                'scheduled_date': line.scheduled_date,
+                'origin': line.origin,
+                'task_id': line.task_id.id,
+                'user_id': line.user_id.id,
+                # 'product_packaging_id': line.product_packaging_id.id,
+                
+                'carrier_id': line.carrier_id.id,
+                'carrier_tracking_ref': line.carrier_tracking_ref,
+
+                'weight': line.weight,
+                'shipping_weight': line.shipping_weight,
+                'group_id': line.group_id.id,
+                'company_id': line.company_id.id,
+                'transport_type': line.transport_type,
+                'custom_document_identification': line.custom_document_identification,
+                'lat_origin': line.lat_origin,
+                'long_origin': line.long_origin,
+                'lat_dest': line.lat_dest,
+                'long_dest': line.long_dest,
+            }) for line in self.stock_picking_ids]
+
+            stock_move_ids_vals = [(0, 0, {
+                'product_packaging_id': line.product_packaging_id.id,
+            }) for line in self.stock_move_ids]
+
+            stock_picking = self.env['stock.picking'].create(stock_picking_ids_vals)
+
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'stock.picking',
+                'res_id': stock_picking.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
