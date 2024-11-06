@@ -42,7 +42,7 @@
                             </page>
                             <page name="tasks" string="Tasks changes">
                                 <div invisible="not previous_version_plan_lines and not project_plan_lines">
-                                    <h1 style="height: 100%">Tasks before modification</h1>
+                                    <h1 style="padding-bottom: 5px">Tasks before modification</h1>
                                     <div>
                                         <field name="previous_version_plan_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not previous_version_plan_lines">
                                             <tree style="width: 100%" editable="bottom">
@@ -58,7 +58,7 @@
                                         </field>
                                         <p invisible="previous_version_plan_lines"> There is no previous plan lines before modifications </p>
                                     </div>
-                                    <h1 style="height: 100%">Tasks after modification</h1>
+                                    <h1 style="padding-bottom: 5px">Tasks after modification</h1>
                                     <div>
                                         <field name="project_plan_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not project_plan_lines">
                                             <tree style="width: 100%" editable="bottom">
@@ -84,7 +84,7 @@
                             </page>
                             <page name="stock" string="Stock changes">
                                 <div invisible="not previous_version_picking_lines and not project_picking_lines">
-                                    <h1 style="height: 100%">Stock before changes</h1>
+                                    <h1 style="padding-bottom: 5px">Stock before changes</h1>
                                     <div>
                                         <field name="previous_version_picking_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not previous_version_picking_lines">
                                             <tree style="width: 100%" editable="bottom">
@@ -96,7 +96,7 @@
                                         <p invisible="previous_version_picking_lines"> There is no previous plan lines before modifications </p>
 
                                     </div>
-                                    <h1 style="height: 100%">Stock after changes</h1>
+                                    <h1 style="padding-bottom: 5px">Stock after changes</h1>
                                     <div>
                                         <field name="project_picking_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not project_picking_lines">
                                             <tree style="width: 100%" editable="bottom">
