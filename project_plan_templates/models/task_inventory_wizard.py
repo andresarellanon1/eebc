@@ -18,11 +18,11 @@ class ProjectCreation(models.TransientModel):
 
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner',  string='Contacto')
-    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación')
+    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id', store=True)
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
-    origin = fields.Char(string='Documento origen')
+    origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     user_id = fields.Many2one('res.users', string='Contacto')
     
@@ -62,8 +62,12 @@ class ProjectCreation(models.TransientModel):
         for record in self:
             _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
             record.task_id = project_task_id.id
-            record.picking_type_id = project_task_id.project_id.default_picking_type_id.id
-            record.origin = project_task_id.name
+    
+    def _compute_picking_type_id(self):
+        record.picking_type_id = project_task_id.project_id.default_picking_type_id
+
+    def _compute_origin(self):
+        record.origin = project_task_id.name
 
 
     def action_confirm_create_inventory(self):
