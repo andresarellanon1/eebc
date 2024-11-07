@@ -41,7 +41,7 @@
                             <page string="Additional Info" name="extra">
                                 <group>
                                     <group>
-                                        <separator string="Información de envío" colspan="5"/>
+                                        <separator string="Información de envío"/>
                                         <group>
                                             <field name="carrier_id"/>
                                             <field name="carrier_tracking_ref"/>
@@ -50,7 +50,7 @@
                                         </group>
                                     </group>
                                     <group>
-                                        <separator string="Otra información" colspan="5"/>
+                                        <separator string="Otra información"/>
                                         <group>
                                             <field name="group_id" readonly="1"/>
                                             <field name="company_id" readonly="1"/>
@@ -59,7 +59,7 @@
                                 </group>
 
                                 <!-- Separador de Guía de Entrega -->
-                                <separator string="Guía de entrega" colspan="5"/>
+                                <separator string="Guía de entrega"/>
 
                                 <group>
                                     <group>
