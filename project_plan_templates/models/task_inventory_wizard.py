@@ -50,12 +50,23 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
+    allowed_product_ids = fields.Many2many('product.product', compute='_compute_allowed_product_ids', store=False)
 
-    @api.onchange('stock_picking_ids')
-    def _compute_fields(self):
+    @api.depends('project_task_id')
+    def _compute_allowed_product_ids(self):
         for record in self:
-            _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
-            record.task_id = project_task_id.id
+            if record.project_task_id:
+                project = record.project_task_id.project_id
+                record.allowed_product_ids = project.project_picking_lines.mapped('product_id')
+            else:
+                record.allowed_product_ids = self.env['product.product']
+
+    @api.onchange('project_task_id')
+    def _onchange_project_task_id(self):
+        if self.project_task_id:
+            project = self.project_task_id.project_id
+            product_ids = project.project_picking_lines.mapped('product_id.id')
+            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
 
     @api.model
     def _compute_fields(self):
