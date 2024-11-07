@@ -16,6 +16,12 @@ class StockMove(models.Model):
         string="Tiene 'aviso' en atributos",
         compute='_compute_has_aviso_in_attributes'
     )
+    has_aviso_in_attributes_fake = fields.Boolean(
+        string="Tiene 'aviso' en atributos",
+        default=False
+    )
+
+
 
     has_type_picking_notice_approve= fields.Boolean(
         string="Puede el tipo de operacion crear aviso  ",
@@ -35,6 +41,10 @@ class StockMove(models.Model):
             move.has_type_picking_notice_approve = move.picking_type_id.code == 'incoming'
             _logger.warning("valor de has_aviso_in_attributes %s", move.has_aviso_in_attributes)
             _logger.warning("valor de has_type_picking_notice_approve %s", move.has_type_picking_notice_approve)
+
+        if has_aviso_in_attributes and has_type_picking_notice_approve :
+            has_aviso_in_attributes_fake = True
+
 
     
     
