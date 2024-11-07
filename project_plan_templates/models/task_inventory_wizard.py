@@ -51,11 +51,14 @@ class ProjectCreation(models.TransientModel):
     long_dest = fields.Float(string="Longitud de destino")
 
 
-    @api.onchange('stock_picking_ids')
+    @api.model
     def _compute_fields(self):
         for record in self:
             _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
             record.task_id = project_task_id.id
+            record.picking_type_id = project_task_id.project_id.default_picking_type_id.id
+            record.origin = project_task_id.name
+
 
 
     def action_confirm_create_inventory(self):
