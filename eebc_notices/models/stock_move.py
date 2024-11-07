@@ -16,16 +16,44 @@ class StockMove(models.Model):
         string="Tiene 'aviso' en atributos",
         compute='_compute_has_aviso_in_attributes'
     )
+    has_aviso_in_attributes_fake = fields.Boolean(
+        string="Tiene 'aviso' en atributos",
+        compute="_compute_has_aviso_in_attributes"
+    )
+
+
+
+    has_type_picking_notice_approve= fields.Boolean(
+        string="Puede el tipo de operacion crear aviso  ",
+        compute='_compute_has_aviso_in_attributes'
+    )
     picking_type_codigo = fields.Selection(
         related='picking_type_id.code',
         readonly=True)
 
-    @api.depends('product_id.attribute_line_ids')
+    @api.depends('product_id.attribute_line_ids', 'picking_type_id.code')
     def _compute_has_aviso_in_attributes(self):
         for move in self:
-            move.has_aviso_in_attributes = any(
-                'aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')
+            # Verifica si el producto tiene el atributo 'aviso' y si el tipo de picking está relacionado con la orden de compra
+            move.has_aviso_in_attributes = (
+                any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')) 
             )
+            move.has_type_picking_notice_approve = move.picking_type_id.code == 'incoming'
+            _logger.warning("valor de has_aviso_in_attributes %s", move.has_aviso_in_attributes)
+            _logger.warning("valor de has_type_picking_notice_approve %s", move.has_type_picking_notice_approve)
+
+            if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True :
+                move.has_aviso_in_attributes_fake = True
+                _logger.warning("valor de has_aviso_in_attributes_fake %s", move.has_aviso_in_attributes_fake)
+            else:
+                _logger.warning("2 else")
+                
+                move.has_aviso_in_attributes_fake = False
+
+        
+        
+
+
     
     
     def call_wizard(self):

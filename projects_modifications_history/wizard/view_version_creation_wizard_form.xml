@@ -20,7 +20,7 @@
                                 <page name="tasks" string="Tasks">
                                     <div style="width: 100%;">
                                         <field name="project_plan_lines" nolabel="1" readonly="1" style="pointer-events:none">
-                                            <tree style="width: 100%;" editable="bottom">
+                                            <tree style="width: 100%;" readonly="1" editable="bottom">
                                                 <field name="name" readonly="1"/>
                                                 <field name="chapter" readonly="1"/>
                                                 <field name="description" readonly="1"/>
@@ -36,8 +36,8 @@
                                 </page>
                                 <page name="stock" string="Stock">
                                     <div>
-                                        <field name="project_picking_lines" nolabel="1" readonly="1">
-                                            <tree style="width: 100%;" readonly="1">
+                                        <field name="project_picking_lines" nolabel="1" readonly="1" style="pointer-events:none">
+                                            <tree style="width: 100%;" readonly="1" editable="bottom">
                                                 <field name="product_id" readonly="1" />
                                                 <field name="quantity" readonly="1" />
                                                 <field name="location_id" readonly="1" />
@@ -49,8 +49,7 @@
                         </group>
 
                         <footer>
-                            <button name="action_confirm_version_history" string="Save Project"
-                                type="object" class="btn-primary" />
+                            <button name="action_confirm_version_history" string="Save Project" type="object" class="btn-primary" />
                             <button string="Cancel" class="btn-secondary" special="cancel" />
                         </footer>
                     </sheet>
