@@ -18,10 +18,9 @@
                                 <field name="location_dest_id"/>
                             </group>
                             <group>
-                                <label for="scheduled_date"/>  
-                                    <field name="scheduled_date"/>
-                                    <field name="origin" string="Documento de origen"/>
-                                    <field name="task_id" string="Tarea de origen" readonly="1"/>
+                                <field name="scheduled_date"/>
+                                <field name="origin" string="Documento de origen"/>
+                                <field name="task_id" string="Tarea de origen" readonly="1"/>
                             </group>
                         </group>
                         <notebook>
