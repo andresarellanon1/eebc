@@ -62,11 +62,13 @@ class ProjectCreation(models.TransientModel):
         for record in self:
             _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
             record.task_id = project_task_id.id
-    
+
+    @api.onchange('name')
     def _compute_picking_type_id(self):
         _logger.warning(f'El valor de picking typ es: {project_task_id.project_id.default_picking_type_id}')
         record.picking_type_id = project_task_id.project_id.default_picking_type_id
 
+    @api.onchange('name')
     def _compute_origin(self):
         _logger.warning(f'El valor de origin es: {project_task_id.name}')
         record.origin = project_task_id.name
