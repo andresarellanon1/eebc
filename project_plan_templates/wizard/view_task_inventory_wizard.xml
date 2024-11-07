@@ -41,17 +41,14 @@
                             <page string="Additional Info" name="extra">
                                 <group>
                                     
-                                    
-                                    <group>
+                                    <group string="Información de envío">
                                         <field name="carrier_id"/>
                                         <field name="carrier_tracking_ref"/>
                                         <field name="weight" readonly="1"/>
                                         <field name="shipping_weight" readonly="1"/>
                                     </group>
                                 
-                                
-                                    
-                                    <group>
+                                    <group string="Otra información">
                                         <field name="group_id" readonly="1"/>
                                         <field name="company_id" readonly="1"/>
                                     </group>
@@ -63,16 +60,16 @@
 
                                 <group>
                                     <group>
-                                        <separator string="Transportar"/>
-                                        <group>
+
+                                        <group string="Transportar">
                                             <field name="transport_type"/>
                                             <field name="custom_document_identification"/>
                                         </group>
                                     </group>
 
                                     <group>
-                                        <separator string="Distancia"/>
-                                        <group>
+
+                                        <group string="Distancia">
                                             <field name="lat_origin"/>
                                             <field name="long_origin"/>
                                             <field name="lat_dest"/>
