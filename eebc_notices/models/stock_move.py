@@ -46,7 +46,7 @@ class StockMove(models.Model):
                 move.has_aviso_in_attributes_fake = True
                 _logger.warning("valor de has_aviso_in_attributes_fake %s", move.has_aviso_in_attributes_fake)
             else:
-                valor de has_aviso_in_attributes_fake = False
+                has_aviso_in_attributes_fake = False
 
         
         
