@@ -14,7 +14,7 @@ class ProjectCreation(models.TransientModel):
 
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
 
-    # stock_move_id = fields.Many2many('stock.move', string="Stock move" )
+    stock_move_id = fields.Many2many('stock.move', string="Stock move" )
 
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner',  string='Contacto')
@@ -54,7 +54,7 @@ class ProjectCreation(models.TransientModel):
     def _onchange_project_task_id(self):
         if self.project_task_id:
             project = self.project_task_id.project_id
-            product_ids = project.project_picking_ids.mapped('project_picking_lines.product_id.id')
+            product_ids = project.project_picking_lines.mapped('product_id.id')
             return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
 
     @api.model
