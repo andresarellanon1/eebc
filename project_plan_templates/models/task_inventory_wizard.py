@@ -63,32 +63,13 @@ class ProjectCreation(models.TransientModel):
             _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
             record.task_id = project_task_id.id
     
-    @api.model
-    def default_get(self, fields_list):
-        res = super(task.inventory.wizard, self).default_get(fields_list)
-        
-        # Asigna el valor de picking_type_id
-        project_task_id = res.get('project_task_id')
-        if project_task_id:
-            task = self.env['project.task'].browse(project_task_id)
-            if task.project_id.default_picking_type_id:
-                res['picking_type_id'] = task.project_id.default_picking_type_id.id
-                _logger.warning(f'El valor de picking_type_id es: {task.project_id.default_picking_type_id.id}')
-        
-        # Asigna el valor de origin
-        if 'origin' in fields_list and project_task_id:
-            res['origin'] = task.name
-            _logger.warning(f'El valor de origin es: {task.name}')
+    def _compute_picking_type_id(self):
+        _logger.warning(f'El valor de picking typ es: {project_task_id.project_id.default_picking_type_id}')
+        record.picking_type_id = project_task_id.project_id.default_picking_type_id
 
-        return res
-
-    # def _compute_picking_type_id(self):
-    #     _logger.warning(f'El valor de picking typ es: {project_task_id.project_id.default_picking_type_id}')
-    #     record.picking_type_id = project_task_id.project_id.default_picking_type_id
-
-    # def _compute_origin(self):
-    #     _logger.warning(f'El valor de origin es: {project_task_id.name}')
-    #     record.origin = project_task_id.name
+    def _compute_origin(self):
+        _logger.warning(f'El valor de origin es: {project_task_id.name}')
+        record.origin = project_task_id.name
 
 
     def action_confirm_create_inventory(self):
