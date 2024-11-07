@@ -57,6 +57,14 @@ class ProjectCreation(models.TransientModel):
             product_ids = project.project_picking_ids.mapped('project_picking_lines.product_id.id')
             return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
 
+    @api.model
+    def _compute_fields(self):
+        for record in self:
+            _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
+            record.task_id = project_task_id.id
+            record.picking_type_id = project_task_id.project_id.default_picking_type_id.id
+            record.origin = project_task_id.name
+
 
     def action_confirm_create_inventory(self):
             self.ensure_one()
