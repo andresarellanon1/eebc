@@ -45,6 +45,8 @@ class StockMove(models.Model):
             if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True :
                 move.has_aviso_in_attributes_fake = True
                 _logger.warning("valor de has_aviso_in_attributes_fake %s", move.has_aviso_in_attributes_fake)
+            else:
+                valor de has_aviso_in_attributes_fake = False
 
         
         
