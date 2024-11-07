@@ -18,7 +18,7 @@ class StockMove(models.Model):
     )
     has_aviso_in_attributes_fake = fields.Boolean(
         string="Tiene 'aviso' en atributos",
-        default=False
+        compute="_compute_has_aviso_in_attributes"
     )
 
 
@@ -42,10 +42,12 @@ class StockMove(models.Model):
             _logger.warning("valor de has_aviso_in_attributes %s", move.has_aviso_in_attributes)
             _logger.warning("valor de has_type_picking_notice_approve %s", move.has_type_picking_notice_approve)
 
+            if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True :
+                move.has_aviso_in_attributes_fake = True
+                _logger.warning("valor de has_aviso_in_attributes_fake %s", move.has_aviso_in_attributes_fake)
+
         
-        if self.has_aviso_in_attributes ==True and self.has_type_picking_notice_approve==True :
-            has_aviso_in_attributes_fake = True
-        _logger.warning("valor de has_aviso_in_attributes_fake %s", self.has_aviso_in_attributes_fake)
+        
 
 
     
