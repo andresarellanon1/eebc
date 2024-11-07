@@ -26,7 +26,7 @@ class ProjectCreation(models.TransientModel):
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     user_id = fields.Many2one('res.users', string='Contacto')
     
-
+    
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     
     # Sección de Información adicional
@@ -53,16 +53,13 @@ class ProjectCreation(models.TransientModel):
     @api.model
     def _compute_fields(self):
         for record in self:
-            _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
-            record.task_id = project_task_id.id
-    
-    def _compute_picking_type_id(self):
-        _logger.warning(f'El valor de picking typ es: {project_task_id.project_id.default_picking_type_id}')
-        record.picking_type_id = project_task_id.project_id.default_picking_type_id
+            record.task_id = record.project_task_id.id
 
+    @api.onchange('name')
     def _compute_origin(self):
-        _logger.warning(f'El valor de origin es: {project_task_id.name}')
-        record.origin = project_task_id.name
+        for record in self:
+            _logger.warning(f'El valor de origin es: {record.project_task_id.name}')
+            record.origin = record.project_task_id.name
 
 
     def action_confirm_create_inventory(self):

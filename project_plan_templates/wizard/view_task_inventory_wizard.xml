@@ -42,15 +42,14 @@
                                 <group>
                                     
                                     <group string="Información de envío">
-                                        <field name="carrier_id"/>
+                                        <field name="carrier_id" string="Transportista"/>
                                         <field name="carrier_tracking_ref"/>
                                         <field name="weight" readonly="1"/>
                                         <field name="shipping_weight" readonly="1"/>
                                     </group>
                                 
                                     <group string="Otra información">
-                                        <field name="partner_id"/>
-                                        <field name="group_id" readonly="1"/>
+                                        <field name="user_id" widget="many2one_avatar_user"/>
                                         <field name="company_id" readonly="1"/>
                                     </group>
                                     
