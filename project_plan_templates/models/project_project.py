@@ -12,7 +12,7 @@ class ProjectProject(models.Model):
     ### Crea tareas de proyecto a partir de las líneas del plan de proyecto.
     # Valida si la tarea ya existe, si existe alguna, cancela el proceso y notifica al usuario.
     def create_project_tasks(self):
-        for project in self:  
+        for project in self:
             for line in project.project_plan_lines:
                 current_task_type = self.get_or_create_task_type(line.stage_id or 'Extras', project)
 
@@ -59,5 +59,5 @@ class ProjectProject(models.Model):
                 'name': stage_id,
                 'project_ids': [(4, project.id)],
             })
-            
+
         return task_type
