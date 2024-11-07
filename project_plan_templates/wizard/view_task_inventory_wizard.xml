@@ -40,22 +40,22 @@
                             </page>
                             <page string="Additional Info" name="extra">
                                 <group>
+                                    
+                                    <separator string="Información de envío"/>
                                     <group>
-                                        <separator string="Información de envío"/>
-                                        <group>
-                                            <field name="carrier_id"/>
-                                            <field name="carrier_tracking_ref"/>
-                                            <field name="weight" readonly="1"/>
-                                            <field name="shipping_weight" readonly="1"/>
-                                        </group>
+                                        <field name="carrier_id"/>
+                                        <field name="carrier_tracking_ref"/>
+                                        <field name="weight" readonly="1"/>
+                                        <field name="shipping_weight" readonly="1"/>
                                     </group>
+                                
+                                
+                                    <separator string="Otra información"/>
                                     <group>
-                                        <separator string="Otra información"/>
-                                        <group>
-                                            <field name="group_id" readonly="1"/>
-                                            <field name="company_id" readonly="1"/>
-                                        </group>
+                                        <field name="group_id" readonly="1"/>
+                                        <field name="company_id" readonly="1"/>
                                     </group>
+                                    
                                 </group>
 
                                 <!-- Separador de Guía de Entrega -->
