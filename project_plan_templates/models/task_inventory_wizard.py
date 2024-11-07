@@ -50,12 +50,12 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    @api.onchange('project_task_id')
-    def _onchange_project_task_id(self):
-        if self.project_task_id:
-            project = self.project_task_id.project_id
-            product_ids = project.project_picking_ids.mapped('project_picking_lines.product_id.id')
-            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
+
+    @api.model
+    def _compute_fields(self):
+        for record in self:
+            _logger.warning('ENTRÓ A LOS CAMPOS COMPUTADOS')
+            record.task_id = project_task_id.id
 
 
     def action_confirm_create_inventory(self):
