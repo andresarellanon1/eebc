@@ -26,7 +26,7 @@ class ProjectCreation(models.TransientModel):
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     user_id = fields.Many2one('res.users', string='Contacto')
     
-    
+
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     
     # Sección de Información adicional
@@ -49,24 +49,6 @@ class ProjectCreation(models.TransientModel):
     long_origin = fields.Float(string="Longitud de origen")
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
-
-    allowed_product_ids = fields.Many2many('product.product', compute='_compute_allowed_product_ids', store=False)
-
-    @api.depends('project_task_id')
-    def _compute_allowed_product_ids(self):
-        for record in self:
-            if record.project_task_id:
-                project = record.project_task_id.project_id
-                record.allowed_product_ids = project.project_picking_lines.mapped('product_id')
-            else:
-                record.allowed_product_ids = self.env['product.product']
-
-    @api.onchange('project_task_id')
-    def _onchange_project_task_id(self):
-        if self.project_task_id:
-            project = self.project_task_id.project_id
-            product_ids = project.project_picking_lines.mapped('product_id.id')
-            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
 
     @api.model
     def _compute_fields(self):
