@@ -50,31 +50,7 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    allowed_product_ids = fields.Many2many('product.product', compute='_compute_allowed_product_ids', store=False)
-
-    @api.depends('project_task_id')
-    def _compute_allowed_product_ids(self):
-        for record in self:
-            if record.project_task_id:
-                project = record.project_task_id.project_id
-                record.allowed_product_ids = project.project_picking_lines.mapped('product_id')
-            else:
-                record.allowed_product_ids = self.env['product.product']
-
-    @api.onchange('project_task_id')
-    def _onchange_project_task_id(self):
-        if self.project_task_id:
-            project = self.project_task_id.project_id
-            product_ids = project.project_picking_lines.mapped('product_id.id')
-            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
-
-    @api.onchange('name')
-    def _compute_picking_type_id(self):
-        for record in self:
-            _logger.warning(f'El valor de picking typ es: {record.project_task_id.project_id.default_picking_type_id}')
-            record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
-
-    @api.onchange('name')
+    @api.model
     def _compute_fields(self):
         for record in self:
             record.task_id = record.project_task_id.id
