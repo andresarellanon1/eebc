@@ -13,6 +13,7 @@
                         <group>
                             <group>
                                 <field name="partner_id"/>
+                                <field name="picking_type_id"/>
                                 <field name="location_id" />
                                 <field name="location_dest_id"/>
                             </group>
@@ -20,6 +21,8 @@
                                 <label for="scheduled_date"/>
                                 <div class="o_row">
                                     <field name="scheduled_date"/>
+                                    <field name="origin"/>
+                                    <field name="task_id"/>
                                 </div>
                             </group>
                         </group>
@@ -85,13 +88,11 @@
 
                             </page>
                         </notebook>
-                        <field name="partner_id"/>
-                        <field name="picking_type_id"/>
-                        <field name="location_id"/>
-                        <field name="location_dest_id"/>
-                        <field name="scheduled_date"/>
-                        <field name="origin"/>
-                        <field name="task_id"/> 
+                        <footer>
+                            <button name="action_confirm_create_inventory" string="Create Inventory"
+                                type="object" class="btn-primary" />
+                            <button string="Cancel" class="btn-secondary" special="cancel" />
+                        </footer>
                     </sheet> 
                 </form>
             </field>
