@@ -9,8 +9,6 @@
                 <!-- Campo invisible para controlar la visibilidad del botón en cada producto -->
                 <field name="has_aviso_in_attributes" />
                 <field name="has_type_picking_notice_approve"/>
-                <field name="has_aviso_in_attributes_fake"/>
-
 
                 <!-- Añadimos un botón para cada producto en la línea de picking -->
               
@@ -25,7 +23,7 @@
                         type="object" 
                         string="Subir archivo" 
                         icon="fa-area-chart"
-                        invisible="[('has_aviso_in_attributes_fake', '=', False)]"/>
+                        invisible="not has_aviso_in_attributes_fake"/>
             </xpath>
         </field>
     </record>
