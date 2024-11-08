@@ -54,6 +54,7 @@ class StockMove(models.Model):
         
 
 
+
     
     
     def call_wizard(self):
