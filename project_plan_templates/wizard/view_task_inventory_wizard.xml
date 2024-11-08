@@ -28,7 +28,7 @@
                         </group>
                         <notebook>
                             <page string="Operations" name="operations">
-                                <<field name="product_ids">
+                                <field name="product_ids">
                                     <tree editable="editable_bottom">
                                         <field name="display_name" />
                                     </tree>
