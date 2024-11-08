@@ -50,18 +50,18 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    @api.onchange('model')
+    @api.onchange('name')
     def _compute_fields(self):
         for record in self:
             record.task_id = record.project_task_id.name
 
-    @api.onchange('model')
+    @api.onchange('name')
     def _compute_picking_type_id(self):
         for record in self:
             _logger.warning(f'El valor de picking typ es: {record.project_task_id.project_id.default_picking_type_id}')
             record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
 
-    @api.onchange('model')
+    @api.onchange('name')
     def _compute_origin(self):
         for record in self:
             _logger.warning(f'El valor de origin es: {record.project_task_id.name}')
