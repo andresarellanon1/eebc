@@ -11,7 +11,7 @@ class ProjectCreation(models.TransientModel):
     project_task_id = fields.Many2one('project.task', string="Project Task")
     
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
-
+    product_ids = fields.Many2many('product.product', string="Productos", domain=lambda self: self._get_product_domain())
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
 
     # stock_move_id = fields.Many2many('stock.move', string="Stock move" )
@@ -74,6 +74,21 @@ class ProjectCreation(models.TransientModel):
     def _compute_origin(self):
             _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
             self.origin = self.project_task_id.name
+
+    def _get_product_domain(self):
+        # Calculamos el dominio para filtrar solo los productos que ya están asociados a las líneas de picking del picking
+        picking_ids = self.stock_picking_ids.ids  # Obtenemos los IDs de los picking seleccionados
+        if not picking_ids:
+            return [('id', '=', False)]  # Si no hay picking seleccionado, no permitimos seleccionar productos
+
+        # Recuperamos los productos asociados a las líneas de project.picking.lines
+        products_in_picking_lines = self.env['project.picking.line'].search([
+            ('picking_id', 'in', picking_ids)
+        ]).mapped('product_id')  # Obtener los productos asociados
+
+        # El dominio es de los productos que están asociados a esas líneas de picking
+        return [('id', 'in', products_in_picking_lines.ids)]
+
 
 
     def action_confirm_create_inventory(self):
