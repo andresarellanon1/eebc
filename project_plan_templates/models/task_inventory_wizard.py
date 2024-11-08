@@ -50,20 +50,7 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    @api.onchange('project_task_id')
-    def _onchange_project_task_id(self):
-        if self.project_task_id:
-            project = self.project_task_id.project_id
-            product_ids = project.project_picking_ids.mapped('project_picking_lines.product_id.id')
-            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
-
-    @api.onchange('name')
-    def _compute_picking_type_id(self):
-        for record in self:
-            _logger.warning(f'El valor de picking typ es: {record.project_task_id.project_id.default_picking_type_id}')
-            record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
-
-    @api.onchange('name')
+    @api.model
     def _compute_fields(self):
         for record in self:
             record.task_id = record.project_task_id.id
