@@ -52,7 +52,7 @@ class ProjectCreation(models.TransientModel):
 
     @api.onchange('name')
     def _compute_task_id(self):
-        _logger.warning(f'El valor de task_id typ es: {self.self.project_task_id.stock_ids.task_id.id}')
+        _logger.warning(f'El valor de task_id typ es: {self.project_task_id.stock_ids.task_id.id}')
         self.task_id = self.project_task_id.stock_ids.task_id.id
 
     # @api.onchange('name')
