@@ -52,7 +52,7 @@ class ProjectCreation(models.TransientModel):
 
     @api.onchange('name')
     def _compute_task_id(self):
-            self.task_id = self.project_task_id.task_id
+            self.task_id = self.stock_picking_ids.task_id
 
     @api.onchange('name')
     def _compute_picking_type_id(self):
@@ -88,7 +88,7 @@ class ProjectCreation(models.TransientModel):
                 'location_dest_id': self.location_dest_id.id,
                 'scheduled_date': self.scheduled_date,
                 'origin': self.project_task_id.name,
-                'task_id': self.project_task_id.id,
+                'task_id': self.stock_picking_ids.task_id,
                 'user_id': self.user_id.id,
                 'move_ids': stock_move_ids_vals,
                 
