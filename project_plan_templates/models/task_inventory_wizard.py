@@ -18,11 +18,11 @@ class ProjectCreation(models.TransientModel):
 
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner',  string='Contacto')
-    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id', store=True, copy=True)
+    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id', store=True)
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
-    origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True, copy=True)
+    origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     user_id = fields.Many2one('res.users', string='Contacto')
     
@@ -50,18 +50,18 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    # @api.onchange('name')
-    # def _compute_fields(self):
-    #     for record in self:
-    #         record.task_id = record.project_task_id.id
+    @api.onchange('model')
+    def _compute_fields(self):
+        for record in self:
+            record.task_id = record.project_task_id.name
 
-    @api.onchange('name')
+    @api.onchange('model')
     def _compute_picking_type_id(self):
         for record in self:
             _logger.warning(f'El valor de picking typ es: {record.project_task_id.project_id.default_picking_type_id}')
             record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
 
-    @api.onchange('name')
+    @api.onchange('model')
     def _compute_origin(self):
         for record in self:
             _logger.warning(f'El valor de origin es: {record.project_task_id.name}')
