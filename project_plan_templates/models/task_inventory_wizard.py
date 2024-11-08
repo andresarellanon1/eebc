@@ -50,10 +50,10 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    @api.onchange('name')
-    def _compute_task_id(self):
-        _logger.warning(f'El valor de task_id typ es: {self.project_task_id.id}')
-        self.task_id = self.project_task_id.id - 198
+    # @api.onchange('name')
+    # def _compute_task_id(self):
+    #     _logger.warning(f'El valor de task_id typ es: {self.project_task_id.id}')
+    #     self.task_id = self.project_task_id.id 
 
     # @api.onchange('name')
     # def _compute_task_id(self):
