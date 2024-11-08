@@ -23,7 +23,7 @@ class ProjectCreation(models.TransientModel):
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
-    task_id = fields.Many2one('stock.picking', string='Tarea de origen')
+    task_id = fields.Many2one('stock.picking', string='Tarea de origen', compute='_compute_task_id', store=True)
     user_id = fields.Many2one('res.users', string='Contacto')
     
     
@@ -51,8 +51,8 @@ class ProjectCreation(models.TransientModel):
     long_dest = fields.Float(string="Longitud de destino")
 
     @api.onchange('name')
-    def _compute_fields(self):
-            self.task_id = self.project_task_id
+    def _compute_task_id(self):
+            self.task_id = self.project_task_id.name
 
     @api.onchange('name')
     def _compute_picking_type_id(self):
