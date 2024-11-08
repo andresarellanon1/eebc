@@ -56,12 +56,12 @@ class ProjectCreation(models.TransientModel):
 
     @api.onchange('name')
     def _compute_picking_type_id(self):
-            _logger.warning(f'El valor de picking typ es: {record.project_task_id.project_id.default_picking_type_id}')
+            _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
             self.picking_type_id = self.project_task_id.project_id.default_picking_type_id
 
     @api.onchange('name')
     def _compute_origin(self):
-            _logger.warning(f'El valor de origin es: {record.project_task_id.name}')
+            _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
             self.origin = self.project_task_id.name
 
 
