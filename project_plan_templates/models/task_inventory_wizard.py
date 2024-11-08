@@ -50,9 +50,9 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    # @api.onchange('name')
-    # def _compute_task_id(self):
-    #         self.task_id = 
+    @api.onchange('name')
+    def _compute_task_id(self):
+            self.task_id = self.project_task_id.stock_ids.task_id.id
 
     # @api.onchange('name')
     # def _compute_task_id(self):
@@ -96,7 +96,7 @@ class ProjectCreation(models.TransientModel):
                 'location_dest_id': self.location_dest_id.id,
                 'scheduled_date': self.scheduled_date,
                 'origin': self.project_task_id.name,
-                # 'task_id': self.stock_picking_ids.task_id,
+                'task_id': self.project_task_id.stock_ids.task_id.id,
                 'user_id': self.user_id.id,
                 'move_ids': stock_move_ids_vals,
                 
