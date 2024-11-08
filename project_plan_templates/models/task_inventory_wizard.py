@@ -18,11 +18,11 @@ class ProjectCreation(models.TransientModel):
 
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner',  string='Contacto')
-    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id', store=True)
+    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id', store=True, copy=True)
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
-    origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
+    origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True, copy=True)
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     user_id = fields.Many2one('res.users', string='Contacto')
     
