@@ -52,7 +52,7 @@ class ProjectCreation(models.TransientModel):
 
     @api.onchange('name')
     def _compute_task_id(self):
-            self.task_id = self.project_task_id.name
+            self.task_id = self.project_task_id.id
 
     @api.onchange('name')
     def _compute_picking_type_id(self):
