@@ -53,7 +53,7 @@ class ProjectCreation(models.TransientModel):
     @api.onchange('name')
     def _compute_task_id(self):
             self.task_id = self.env['project.task'].search([
-            ('id', '=', project_task_id.id),
+            ('id', '=', self.project_task_id.id),
         ])
 
     @api.onchange('name')
