@@ -22,7 +22,7 @@
                             <group>
                                 <field name="scheduled_date"/>
                                 <field name="origin" string="Documento de origen"/>
-                                <field name="task_id_char" string="Tarea de origen" attrs="{'invisible': [('task_id', '=', True)]}"/>
+                                <field name="task_id_char" string="Tarea de origen" invisible="task_id"/>
                                 <field name="task_id" string="Tarea de origen" readonly="1" invisible="not task_id"/>
                             </group>
                         </group>
