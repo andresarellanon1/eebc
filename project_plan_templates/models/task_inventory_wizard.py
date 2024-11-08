@@ -88,7 +88,7 @@ class ProjectCreation(models.TransientModel):
                 'location_dest_id': self.location_dest_id.id,
                 'scheduled_date': self.scheduled_date,
                 'origin': self.project_task_id.name,
-                'task_id': self.project_task_id.name,
+                'task_id': self.project_task_id.id,
                 'user_id': self.user_id.id,
                 'move_ids': stock_move_ids_vals,
                 
