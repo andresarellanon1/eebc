@@ -52,13 +52,12 @@ class ProjectCreation(models.TransientModel):
 
     @api.onchange('name')
     def _compute_task_id(self):
-        _logger.warning(f'El valor de task_id typ es: {record.project_task_id.stock_ids.task_id.id}')
-        self.task_id = record.project_task_id.stock_ids.task_id.id
-
-        self.task_id = self.env['project.task'].search([
-            ('id', '=', self.project_task_id.id),
-            ('stock_ids', 'in', stock_picking_ids.ids)
-        ], limit=1)
+        for record in self:
+            if record.project_task_id and record.stock_picking_ids:
+                # Get the first stock_picking from the Many2many relation
+                first_stock_picking = record.stock_picking_ids[:1]  # Grab the first one if any
+                if first_stock_picking:
+                    record.task_id = first_stock_picking.task_id.id
 
     # @api.onchange('name')
     # def _compute_task_id(self):
