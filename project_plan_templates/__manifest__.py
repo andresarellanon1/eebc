@@ -7,7 +7,7 @@
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [
-                'project','eebc_notices'
+                'project','eebc_notices', 'product'
                ],
     'data': [
         "views/project_menu.xml",
@@ -22,6 +22,7 @@
         "views/plan_project_stock_tree_view.xml",
         "wizard/view_task_inventory_wizard.xml",
         "views/inherit_project_task_inventory_view_form.xml",
+        #"views/inherit_product_template_view.xml",
     ],
     "license": "LGPL-3",
     'installable': True,

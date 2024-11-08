@@ -22,12 +22,13 @@
                             <group>
                                 <field name="scheduled_date"/>
                                 <field name="origin" string="Documento de origen"/>
-                                <field name="task_id" string="Tarea de origen" readonly="1"/>
+                                <field name="task_id_char" string="Tarea de origen" invisible="task_id"/>
+                                <field name="task_id" string="Tarea de origen" readonly="1" invisible="not task_id"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Operations" name="operations">
-                                <<field name="product_ids">
+                                <field name="product_ids">
                                     <tree editable="editable_bottom">
                                         <field name="display_name" />
                                     </tree>
