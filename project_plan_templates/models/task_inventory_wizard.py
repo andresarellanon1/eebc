@@ -108,3 +108,11 @@ class ProjectCreation(models.TransientModel):
             }
 
             stock_picking = self.env['stock.picking'].create(stock_picking_vals)
+
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'stock.picking',
+                'res_id': stock_picking.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
