@@ -21,6 +21,14 @@ class ProjectVersionWizard(models.TransientModel):
 
     project_id = fields.Many2one('project.project', string='Project', required=True)
 
+    # This action confirms and records changes in the project's version history.
+    # It first checks if a change history already exists for the project. If none is found, it creates one.
+    # Then, it validates that a modification reason is provided, raising an error if it's missing.
+    # The method calls `create_project_tasks` on the `project.project` model to generate any newly added tasks,
+    # and subsequently creates a new entry in the version history with the current modification details.
+    # Finally, it calls the `write` method on `project.project` to save the updated project changes.
+    # After completing these steps, it closes the wizard window.
+
     def action_confirm_version_history(self):
         self.ensure_one()
 

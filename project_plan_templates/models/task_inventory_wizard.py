@@ -23,7 +23,10 @@ class ProjectCreation(models.TransientModel):
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
-    task_id = fields.Many2one('stock.picking', string='Tarea de origen', compute='_compute_task_id', store=True)
+    
+    task_id = fields.Many2one('stock.picking', string='Tarea de origen')
+    task_id_char = fields.Char(string='Tarea origen', compute="_compute_task_id")
+    
     user_id = fields.Many2one('res.users', string='Contacto')
     
     
@@ -50,10 +53,9 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    # @api.onchange('name')
-    # def _compute_task_id(self):
-    #     _logger.warning(f'El valor de task_id typ es: {self.project_task_id.id}')
-    #     self.task_id = self.project_task_id.id 
+    @api.onchange('name')
+    def _compute_task_id(self):
+        self.task_id_char = self.project_task_id.name
 
     # @api.onchange('name')
     # def _compute_task_id(self):
@@ -63,15 +65,15 @@ class ProjectCreation(models.TransientModel):
     #             if task:
     #                 record.task_id = task.id
 
-    # # @api.onchange('name')
-    # # def _compute_picking_type_id(self):
-    # #         _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
-    #         self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
+    @api.onchange('name')
+    def _compute_picking_type_id(self):
+            _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
+            self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
 
-    # @api.onchange('name')
-    # def _compute_origin(self):
-    # #         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
-    # #         self.origin = self.project_task_id.name
+    @api.onchange('name')
+    def _compute_origin(self):
+            _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
+            self.origin = self.project_task_id.name
 
     # def _get_product_domain(self):
     #     # Calculamos el dominio para filtrar solo los productos que ya están asociados a las líneas de picking del picking
