@@ -50,10 +50,10 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    @api.onchange('name')
-    def _compute_fields(self):
-        for record in self:
-            record.task_id = record.project_task_id.id
+    # @api.onchange('name')
+    # def _compute_fields(self):
+    #     for record in self:
+    #         record.task_id = record.project_task_id.id
 
     @api.onchange('name')
     def _compute_picking_type_id(self):
