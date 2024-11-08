@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_project_view_form" model="ir.ui.view">
+        <field name="name">inherit.project.view.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
+                <label for="default_picking_type_id" string="Tipo de operación"/>
+                <field name="default_picking_type_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

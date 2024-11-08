@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_project_edit_view" model="ir.ui.view">
+        <field name="name">inherit.timesheet.view.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='taxes_id']" position="after">
+                <field name="version_history_id" widget="many2one" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
