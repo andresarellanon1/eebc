@@ -23,7 +23,7 @@ class ProjectCreation(models.TransientModel):
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
-    task_id = fields.Many2one('stock.picking', string='Tarea de origen')
+    task_id = fields.Many2one('stock.picking', string='Tarea de origen', compute='_compute_task_id', store=True)
     user_id = fields.Many2one('res.users', string='Contacto')
     
     
@@ -50,22 +50,28 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
+    @api.onchange('name')
+    def _compute_task_id(self):
+        _logger.warning(f'El valor de task_id typ es: {self.project_task_id.stock_ids.task_id.id}')
+        self.task_id = self.project_task_id.stock_ids.task_id.id
+
     # @api.onchange('name')
-    # def _compute_fields(self):
+    # def _compute_task_id(self):
     #     for record in self:
-    #         record.task_id = record.project_task_id.id
+    #         if record.name:
+    #             task = self.env['project.task'].search([('id', '=', record.name)], limit=1)
+    #             if task:
+    #                 record.task_id = task.id
 
     @api.onchange('name')
     def _compute_picking_type_id(self):
-        for record in self:
-            _logger.warning(f'El valor de picking typ es: {record.project_task_id.project_id.default_picking_type_id}')
-            record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
+            _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
+            self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
 
     @api.onchange('name')
     def _compute_origin(self):
-        for record in self:
-            _logger.warning(f'El valor de origin es: {record.project_task_id.name}')
-            record.origin = record.project_task_id.name
+            _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
+            self.origin = self.project_task_id.name
 
 
     def action_confirm_create_inventory(self):
@@ -86,12 +92,12 @@ class ProjectCreation(models.TransientModel):
             stock_picking_vals ={
                 'name': self.name,
                 'partner_id': self.partner_id.id,
-                'picking_type_id': self.picking_type_id.id,
+                'picking_type_id': self.project_task_id.project_id.default_picking_type_id.id,
                 'location_id': self.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'scheduled_date': self.scheduled_date,
-                'origin': self.origin,
-                'task_id': self.task_id.id,
+                'origin': self.project_task_id.name,
+                'task_id': self.project_task_id.stock_ids.task_id.id,
                 'user_id': self.user_id.id,
                 'move_ids': stock_move_ids_vals,
                 
@@ -111,3 +117,11 @@ class ProjectCreation(models.TransientModel):
             }
 
             stock_picking = self.env['stock.picking'].create(stock_picking_vals)
+
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'stock.picking',
+                'res_id': stock_picking.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
