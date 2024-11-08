@@ -52,20 +52,17 @@ class ProjectCreation(models.TransientModel):
 
     @api.onchange('name')
     def _compute_fields(self):
-        for record in self:
-            record.task_id = record.project_task_id.name
+            self.task_id = self.project_task_id.name
 
     @api.onchange('name')
     def _compute_picking_type_id(self):
-        for record in self:
             _logger.warning(f'El valor de picking typ es: {record.project_task_id.project_id.default_picking_type_id}')
-            record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
+            self.picking_type_id = self.project_task_id.project_id.default_picking_type_id
 
     @api.onchange('name')
     def _compute_origin(self):
-        for record in self:
             _logger.warning(f'El valor de origin es: {record.project_task_id.name}')
-            record.origin = record.project_task_id.name
+            self.origin = self.project_task_id.name
 
 
     def action_confirm_create_inventory(self):
