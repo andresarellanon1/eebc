@@ -57,7 +57,7 @@ class ProjectCreation(models.TransientModel):
     @api.onchange('name')
     def _compute_picking_type_id(self):
             _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
-            self.picking_type_id = self.project_task_id.project_id.default_picking_type_id
+            self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
 
     @api.onchange('name')
     def _compute_origin(self):
@@ -83,12 +83,12 @@ class ProjectCreation(models.TransientModel):
             stock_picking_vals ={
                 'name': self.name,
                 'partner_id': self.partner_id.id,
-                'picking_type_id': self.picking_type_id.id,
+                'picking_type_id': self.project_task_id.project_id.default_picking_type_id.id,
                 'location_id': self.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'scheduled_date': self.scheduled_date,
-                'origin': self.origin,
-                'task_id': self.task_id.id,
+                'origin': self.project_task_id.name,
+                'task_id': self.project_task_id.name,
                 'user_id': self.user_id.id,
                 'move_ids': stock_move_ids_vals,
                 
