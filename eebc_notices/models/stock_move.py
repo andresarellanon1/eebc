@@ -63,6 +63,8 @@ class StockMove(models.Model):
                 'location_dest_id': self.picking_id.location_dest_id.id,
                 'origin': self.picking_id.origin,
                 'lot_ids':self.lot_ids,
+                'origin_invoice_ids':self.picking_id.purchase_id.invoice_ids,
+                'sale_invoice_ids':self.picking_id.purchase_id.order_line.id,
                 'purchase_id': purchase_order_id,
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
