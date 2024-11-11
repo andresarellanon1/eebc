@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
                 if line.product_template_id.service_tracking == 'project_only':
                     products_ids.append(line.product_template_id.id)
 
-        super(SaleOrder, self).action_confirm()
+        
 
         if products_ids:
             return {
@@ -27,5 +27,4 @@ class SaleOrder(models.Model):
                 }
             }
 
-       
-
+        super(SaleOrder, self).action_confirm()
