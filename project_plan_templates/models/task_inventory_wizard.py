@@ -45,17 +45,19 @@ class TaskInventoryWizard(models.TransientModel):
         for record in self:
             record.task_id = record.project_task_id.id
 
-    @api.onchange('name')
+    @api.depends('name')
     def _compute_origin(self):
-        # Aquí podrías realizar cualquier cálculo para obtener el origen basado en el nombre
-        self.origin = self.name
+        for record in self:
+            record.origin = record.name
 
-    @api.onchange('name')
+    @api.depends('project_task_id')
     def _compute_picking_type_id(self):
-        if self.project_task_id:
-            self.picking_type_id = self.project_task_id.project_id.default_picking_type_id
+        for record in self:
+            if record.project_task_id:
+                record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
 
     def action_confirm_create_inventory(self):
+        self.ensure_one()
         # Verificar que haya productos seleccionados
         if not self.product_ids:
             raise ValueError("Debe seleccionar al menos un producto.")
@@ -68,6 +70,7 @@ class TaskInventoryWizard(models.TransientModel):
             'location_id': self.location_id.id,
             'location_dest_id': self.location_dest_id.id,
             'name': self.name,
+            'picking_type_id': self.picking_type_id.id,
             'scheduled_date': self.scheduled_date,
             'origin': self.origin,
             'carrier_id': self.carrier_id.id,
