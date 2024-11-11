@@ -14,25 +14,20 @@ class TaskInventoryWizard(models.TransientModel):
     partner_id = fields.Many2one('res.partner', string='Contacto')
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
+    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación", compute='_compute_picking_type_id', store=True)
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
-    picking_type_id = fields.Many2one(
-        'stock.picking.type', 
-        string="Tipo de operación",
-        compute='_compute_picking_type_id', 
-        store=True
-    )
     user_id = fields.Many2one('res.users', string='Usuario')
-    group_id = fields.Many2one('procurement.group', string="Grupo de aprovisionamiento")
     company_id = fields.Many2one('res.company', string="Empresa")
-
+    task_id = fields.Many2one('stock.picking', string='Tarea de origen')
+    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
 
     # Información adicional
     carrier_id = fields.Many2one('delivery.carrier')
     carrier_tracking_ref = fields.Char(string="Referencia de rastreo")
     weight = fields.Float(string="Peso")
     shipping_weight = fields.Float(string="Peso para envío")
-    
+    group_id = fields.Many2one('procurement.group', string="Grupo de aprovisionamiento")
     transport_type = fields.Selection(
         string="Tipo de transporte",
         selection=[('00', 'No usa carreteras federales'), ('01', 'Autotransporte Federal')]
@@ -42,6 +37,7 @@ class TaskInventoryWizard(models.TransientModel):
     long_origin = fields.Float(string="Longitud de origen")
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
+    custom_document_identification = fields.Char(string="Customs Document Identification")
 
     @api.onchange('name')
     def _compute_origin(self):
