@@ -9,8 +9,7 @@
                     <sheet>
                          <group>
                             <div class="oe_title">
-                                <label for="name"/>
-                                <h1></h1>
+                                <h1>Projects creation</h1>
                             </div>
                             <notebook>
                                 <page name="services" string="Services">
