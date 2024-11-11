@@ -22,7 +22,7 @@
 
                 <button name="call_wizard" 
                         type="object" 
-                        string="Subir archivo" 
+                        string="Crear aviso" 
                         icon="fa-area-chart"
                         invisible="not has_aviso_in_attributes_fake"/>
             </xpath>
