@@ -17,8 +17,14 @@ class TaskInventoryWizard(models.TransientModel):
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
-
+    picking_type_id = fields.Many2one(
+        'stock.picking.type', 
+        string="Tipo de operación",
+        compute='_compute_picking_type_id', 
+        store=True
+    )
     user_id = fields.Many2one('res.users', string='Usuario')
+
 
     # Información adicional
     carrier_id = fields.Many2one('delivery.carrier')
@@ -40,6 +46,11 @@ class TaskInventoryWizard(models.TransientModel):
     def _compute_origin(self):
         # Aquí podrías realizar cualquier cálculo para obtener el origen basado en el nombre
         self.origin = self.name
+
+    @api.onchange('name')
+    def _compute_picking_type_id(self):
+        if self.project_task_id:
+            self.picking_type_id = self.project_task_id.project_id.default_picking_type_id
 
     def action_confirm_create_inventory(self):
         # Verificar que haya productos seleccionados
