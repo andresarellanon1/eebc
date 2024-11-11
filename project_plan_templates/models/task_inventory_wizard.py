@@ -50,11 +50,11 @@ class TaskInventoryWizard(models.TransientModel):
         for record in self:
             record.origin = record.name
 
-    @api.depends('project_task_id')
-    def _compute_picking_type_id(self):
-        for record in self:
-            if record.project_task_id:
-                record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
+    # @api.depends('project_task_id')
+    # def _compute_picking_type_id(self):
+    #     for record in self:
+    #         if record.project_task_id:
+    #             record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
@@ -111,7 +111,6 @@ class TaskInventoryWizard(models.TransientModel):
 
         stock_picking = self.env['stock.picking'].create(stock_picking_vals)
 
-        self.project_task_id.project_id.project_picking_lines.reservado_update(stock_move_ids)
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'stock.picking',
