@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_configs.report_purchaseorder_inherit_custom" inherit_id="purchase.report_purchaseorder">
+            <xpath expr="//t[@t-call='purchase.report_purchaseorder_document']" position="replace">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-if="o._get_name_purchase_report() == 'purchase.report_purchaseorder_document'" t-call="purchase.report_purchaseorder_document" t-lang="lang"/>
+                <t t-elif="o._get_name_purchase_report() == 'report_configs.out_purchaseorder_template_custom'" t-call="report_configs.out_purchaseorder_template_custom" t-lang="lang" />
+            </xpath>
+        </template>
+    </data>
+</odoo>

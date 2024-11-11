@@ -1,29 +1,116 @@
 from odoo import fields, models, api
+# TODO: Pendiente validaciones de readonly en campos
+
+# campo nuevo total computada(sumatoria de la cantidad de historiales)   - lISTO!!
 
 class Notices(models.Model):
 
-    _name= 'notices.notices'
+    _name= 'notices.notices'    
 
-    resource = fields.Float()
-    order = fields.One2many(
-        string='Orden de compra origen',
-        comodel_name='purchase.order',
-        inverse_name='purchase_order_notice_id',
-    )
+    # warehouse
     
-    supplier = fields.Char( string='Proveedor')
+    product_id = fields.Many2one(
+        string='Recurso',
+        comodel_name='product.product',
+    )
+    partner_id = fields.Many2one(
+        string='Proveedor',
+        comodel_name='res.partner',
+    )
     folio = fields.Char(string='Folio')
-    create_date = fields.Date(
-        string='Fecha de creacion',
-        default=fields.Date.context_today,
-    )
-    
-    invoices = fields.One2many(
-        string='Facturas',
-        comodel_name='account.move',
-        inverse_name='account_move_notice_id',
-    )
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
-    quantity = fields.Float(string='Cantidad')
-    series = fields.Char(string='Series (s)')
+    quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
+   
+    lot_ids = fields.Many2many(
+        string='Series',
+        comodel_name='stock.lot',
+        relation='notices.lot',
+        column1='lot_id',
+        column2='notices_id',
+        compute='_compute_series'
+    )
+    origin_invoice_ids = fields.Many2many(
+        string='Facturas de compra',
+        comodel_name='account.move',
+        relation='notices.origin.moves',
+        column1='account_move_id',
+        column2='notice_id',
+        compute='_compute_origin_invoice_ids' )
+
+    sale_invoice_ids = fields.Many2many(
+        string='Facturas de venta',
+        comodel_name='account.move',
+        relation='notices.sales.moves',
+        column1='account_move_id',
+        column2='notice_id',
+        compute='_compute_sale_invoice_ids' )
+
+    history_ids = fields.One2many(
+        string='Historial de movimientos',
+        comodel_name='notices.history',
+        inverse_name='notice_id',
+    )
+
+
+    @api.depends('history_ids')
+    def _compute_series(self):
+        for notice in self:
+            # Creamos un set para evitar duplicados
+            lot_set = set()
+            
+            # Iteramos sobre cada registro en history_ids
+            for history_record in notice.history_ids:
+                # Obtenemos el stock_move_id de cada registro en history_ids
+                stock_move = history_record.stock_move_id
+                if stock_move:
+                    # Añadimos cada lote encontrado a lot_set
+                    for lot in stock_move.lot_ids:
+                        lot_set.add(lot.id)
+            
+            # Asignamos los ids de lotes únicos al campo lot_ids
+            notice.lot_ids = [(6, 0, list(lot_set))]
+
+
+    @api.depends('history_ids')
+    def _compute_origin_invoice_ids(self):
+        for notice in self:
+            # Creamos un set para evitar duplicados
+            invoice_set = set()
+            
+            # Iteramos sobre cada registro en history_ids
+            for history_record in notice.history_ids:
+                # Obtenemos el purchase_order_id de cada registro en history_ids
+                purchase_order = history_record.purchase_order_id
+                if purchase_order:
+                    # Añadimos cada factura asociada al purchase_order al conjunto
+                    for invoice in purchase_order.invoice_ids:
+                        invoice_set.add(invoice.id)
+            
+            # Asignamos los ids de facturas únicos al campo origin_invoice_ids
+            notice.origin_invoice_ids = [(6, 0, list(invoice_set))]
+
+    @api.depends('history_ids')
+    def _compute_sale_invoice_ids(self):
+        for notice in self:
+            # Creamos un set para evitar duplicados
+            invoice_set = set()
+            
+            # Iteramos sobre cada registro en history_ids
+            for history_record in notice.history_ids:
+                # Obtenemos el sale_order_id de cada registro en history_ids
+                sale_order = history_record.sale_order_id
+                if sale_order:
+                    # Añadimos cada factura asociada al sale_order al conjunto
+                    for invoice in sale_order.invoice_ids:
+                        invoice_set.add(invoice.id)
+            
+            # Asignamos los ids de facturas únicos al campo sale_invoice_ids
+            notice.sale_invoice_ids = [(6, 0, list(invoice_set))]
+
+    @api.depends('history_ids.quantity')
+    def _compute_quantity(self):
+        for record in self:
+            # Calcula la suma de las cantidades en history_ids
+            record.quantity = sum(record.history_ids.mapped('quantity'))
+

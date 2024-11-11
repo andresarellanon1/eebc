@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+eebc.project_version_history,project_version,project_plan_history.model_project_version,,1,1,1,1
+eebc.change_reason_wizard,change_reason_wizard,project_plan_history.model_change_reason_wizard,,1,1,1,1

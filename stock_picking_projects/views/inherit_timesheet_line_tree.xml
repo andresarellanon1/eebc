@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_timesheet_line_tree" model="ir.ui.view">
+        <field name="name">inherit.timesheet.line.tree</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="pickin_ids" widget="many2many_tags" options="{'no_create': True}" string="Operaciones de Inventario"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
