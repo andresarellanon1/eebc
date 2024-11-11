@@ -64,7 +64,7 @@ class TaskInventoryWizard(models.TransientModel):
 
         # Crear un solo stock.move con todos los productos
         stock_move_vals = {
-            'product_id': False,  # Este campo puede quedarse vacío si solo se trata de un único movimiento
+            # 'product_id': False,  # Este campo puede quedarse vacío si solo se trata de un único movimiento
             # 'product_uom_qty': sum(product.standard_price for product in self.product_ids),  # Cantidad total de todos los productos
             # 'location_id': self.location_id.id,
             # 'location_dest_id': self.location_dest_id.id,
