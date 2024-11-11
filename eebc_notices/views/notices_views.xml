@@ -11,14 +11,12 @@
         <field name="arch" type="xml">
          <form>
             <group>
-                <field name="resource"/>
-                <field name="supplier"/>
+                <field name="product_id"/>
+                <field name="partner_id"/>
                 <field name="folio"/>
-                <field name="create_date" widget="date"/>
                 <field name="notice"/>
                 <field name="description"/>
                 <field name="quantity" string="Cantidad"/>
-                <field name="series"/>
             </group>
             <field name="history_ids">
                 <tree string="Historial de Movimientos">
@@ -48,14 +46,12 @@
                   >
                 
                 
-                <field name="resource" widget="many2one"/>
-                <field name="supplier" widget="many2one"/>
+                <field name="product_id" widget="many2one"/>
+                <field name="partner_id" widget="many2one"/>
                 <field name="folio"/>
-                <field name="create_date" widget="date"/>
                 <field name="notice"/>
                 <field name="description"/>
                 <field name="quantity"/>
-                <field name="series" optional="hide"/>
                
             </tree>
         </field>
@@ -74,7 +70,7 @@
                 <!-- <field name="picking_ids" widget="many2many_tags"/> -->
                 <field name="location_dest" widget="many2one"/>
                 <field name="location_id" widget="many2one"/>
-                <field name="create_date" widget="date"/>
+                <field name="create_date"/>
                 <field name="quantity"/>
                
             </tree>

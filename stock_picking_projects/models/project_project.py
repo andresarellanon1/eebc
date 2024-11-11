@@ -11,7 +11,7 @@ class ProjectProject(models.Model):
 
     _inherit = 'project.project'
 
-    default_picking_type_id = fields.Many2one('stock.picking.type', string="Operation type", required=True)
+    default_picking_type_id = fields.Many2one('stock.picking.type', string="Operation type")
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
     bid_code = fields.Char(string='Licitación')
     exchange_rate = fields.Float(string="Tipo de cambio")
