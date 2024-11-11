@@ -109,10 +109,12 @@ class TaskInventoryWizard(models.TransientModel):
 
         stock_picking = self.env['stock.picking'].create(stock_picking_vals)
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'stock.picking',
-            'res_id': stock_picking.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
+            self.project_task_id.project_id.project_picking_lines.reservado_update(stock_move_ids)
+
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'stock.picking',
+                'res_id': stock_picking.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
