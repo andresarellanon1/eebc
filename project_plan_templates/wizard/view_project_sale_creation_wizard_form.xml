@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_project_sale_creation_wizard_form" model="ir.ui.view">
+            <field name="name">view.project.sale.creation.wizard.form</field>
+            <field name="model">project.sale.creation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Sale order project creation">
+                    <sheet>
+                         <group>
+                            <div class="oe_title">
+                                <label for="name"/>
+                                <h1></h1>
+                            </div>
+                            <notebook>
+                                <page name="services" string="Services">
+                                    <div style="100%">
+                                        <field name="products_ids" nolabel="1">
+                                            <tree>
+                                                <field name="name"/>
+                                                <field name="description"/>
+                                                <button name="action_create_project" type="object" class="oe_highlight" string="Create Project"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+                                </page>
+                            </notebook>
+                         </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
