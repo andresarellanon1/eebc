@@ -31,6 +31,7 @@ class NoticesHistory(models.Model):
     )
     folio = fields.Char(string='Folio')
     
+    
     # picking_ids = fields.Many2many(
     #     'stock.picking', 
     #     compute = "_compute_picking_ids",

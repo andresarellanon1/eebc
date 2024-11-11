@@ -26,6 +26,7 @@ class StockMove(models.Model):
         related='picking_type_id.code',
         readonly=True)
 
+
     @api.depends('product_id.attribute_line_ids', 'picking_type_id.code')
     def _compute_has_aviso_in_attributes(self):
         for move in self:

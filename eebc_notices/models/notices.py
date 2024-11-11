@@ -52,6 +52,7 @@ class Notices(models.Model):
         inverse_name='notice_id',
     )
 
+
     @api.depends('history_ids')
     def _compute_series(self):
         for notice in self:
