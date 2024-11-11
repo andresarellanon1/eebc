@@ -8,9 +8,8 @@ class TaskInventoryWizard(models.TransientModel):
     _description = 'Wizard to create stock move with selected products'
 
     # Relación con los productos seleccionados en vez de stock.moves
-    product_ids = fields.Many2many('product.product', string="Productos", domain=lambda self: self._get_product_domain())
+    product_ids = fields.Many2many('product.product', string="Productos")
 
-    # Campos que ya tienes para el wizard
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner', string='Contacto')
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
@@ -24,6 +23,8 @@ class TaskInventoryWizard(models.TransientModel):
         store=True
     )
     user_id = fields.Many2one('res.users', string='Usuario')
+    group_id = fields.Many2one('procurement.group', string="Grupo de aprovisionamiento")
+    company_id = fields.Many2one('res.company', string="Empresa")
 
 
     # Información adicional
