@@ -78,7 +78,7 @@ class NoticeFileWizard(models.TransientModel):
                         'picking_code': self._context['type'],
                         'origin': self._context['origin'],
                         'origin_invoice_ids':self._context['origin_invoice_ids'],
-                        'sale_invoice_ids':self._context['sale_invoice_ids'],
+                        'sale_order_id':self._context['sale_invoice_ids'],
                     })]
                 })
         else:
@@ -89,9 +89,6 @@ class NoticeFileWizard(models.TransientModel):
                 'description': self.description,
                 'partner_id': self._context['proveedor_id'],
                 'notice': self.notice,
-                'lot_ids':self._context['lot_ids'],
-                'origin_invoice_ids':self._context['origin_invoice_ids'],
-                'sale_invoice_ids':self._context['sale_invoice_ids'],
             })
             self.env['notices.history'].create({
                 'location_id': self._context['location_id'],
@@ -103,6 +100,7 @@ class NoticeFileWizard(models.TransientModel):
                 'origin': self._context['origin'],
                 'purchase_order_id':self._context['purchase_id'],
                 'sale_order_id':self._context['sale_invoice_ids'],
+                'stock_move_id':self._context['stock_move_id'],
             })
 
 

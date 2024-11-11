@@ -69,6 +69,7 @@ class StockMove(models.Model):
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
+                'stock_move_id':self.id
             }
         }
 
