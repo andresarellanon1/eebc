@@ -36,3 +36,8 @@ class ProjectPlanPickingLine(models.Model):
     reservado = fields.Float(string='Reservado')
     stock_move_id = fields.Many2one('stock.move', string='Project Stock')
     
+    def reservado_update(self, move_ids):
+        for record in self:
+            for move_id in move_ids:
+                if record.product_id == move_id.product_id:
+                    record.reservado += move.quantity
