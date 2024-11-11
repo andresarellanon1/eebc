@@ -9,6 +9,7 @@ class TaskInventoryWizard(models.TransientModel):
 
     # Relación con los productos seleccionados en vez de stock.moves
     product_ids = fields.Many2many('product.product', string="Productos")
+    project_task_id = fields.Many2one('project.task', string="Project Task")
 
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner', string='Contacto')
@@ -38,6 +39,11 @@ class TaskInventoryWizard(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
     custom_document_identification = fields.Char(string="Customs Document Identification")
+
+    @api.model
+    def _compute_fields(self):
+        for record in self:
+            record.task_id = record.project_task_id.id
 
     @api.onchange('name')
     def _compute_origin(self):
