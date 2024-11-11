@@ -25,7 +25,11 @@
                         </group>
                         <notebook>
                             <page string="Operations" name="operations">
-                                <field name="product_ids" widget="many2many_tags"/>
+                                <field name="product_ids" >
+                                    <tree >
+                                        <field name="display_name" />
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Additional Info" name="extra">
                                 <group>

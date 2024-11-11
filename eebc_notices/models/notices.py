@@ -52,18 +52,61 @@ class Notices(models.Model):
         inverse_name='notice_id',
     )
 
+
     @api.depends('history_ids')
     def _compute_series(self):
-        pass
+        for notice in self:
+            # Creamos un set para evitar duplicados
+            lot_set = set()
+            
+            # Iteramos sobre cada registro en history_ids
+            for history_record in notice.history_ids:
+                # Obtenemos el stock_move_id de cada registro en history_ids
+                stock_move = history_record.stock_move_id
+                if stock_move:
+                    # Añadimos cada lote encontrado a lot_set
+                    for lot in stock_move.lot_ids:
+                        lot_set.add(lot.id)
+            
+            # Asignamos los ids de lotes únicos al campo lot_ids
+            notice.lot_ids = [(6, 0, list(lot_set))]
 
 
     @api.depends('history_ids')
     def _compute_origin_invoice_ids(self):
-        pass
+        for notice in self:
+            # Creamos un set para evitar duplicados
+            invoice_set = set()
+            
+            # Iteramos sobre cada registro en history_ids
+            for history_record in notice.history_ids:
+                # Obtenemos el purchase_order_id de cada registro en history_ids
+                purchase_order = history_record.purchase_order_id
+                if purchase_order:
+                    # Añadimos cada factura asociada al purchase_order al conjunto
+                    for invoice in purchase_order.invoice_ids:
+                        invoice_set.add(invoice.id)
+            
+            # Asignamos los ids de facturas únicos al campo origin_invoice_ids
+            notice.origin_invoice_ids = [(6, 0, list(invoice_set))]
 
     @api.depends('history_ids')
     def _compute_sale_invoice_ids(self):
-        pass
+        for notice in self:
+            # Creamos un set para evitar duplicados
+            invoice_set = set()
+            
+            # Iteramos sobre cada registro en history_ids
+            for history_record in notice.history_ids:
+                # Obtenemos el sale_order_id de cada registro en history_ids
+                sale_order = history_record.sale_order_id
+                if sale_order:
+                    # Añadimos cada factura asociada al sale_order al conjunto
+                    for invoice in sale_order.invoice_ids:
+                        invoice_set.add(invoice.id)
+            
+            # Asignamos los ids de facturas únicos al campo sale_invoice_ids
+            notice.sale_invoice_ids = [(6, 0, list(invoice_set))]
 
     @api.depends('history_ids.quantity')
     def _compute_quantity(self):

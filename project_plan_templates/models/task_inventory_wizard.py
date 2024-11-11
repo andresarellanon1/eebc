@@ -45,17 +45,19 @@ class TaskInventoryWizard(models.TransientModel):
         for record in self:
             record.task_id = record.project_task_id.id
 
-    @api.onchange('name')
+    @api.depends('name')
     def _compute_origin(self):
-        # Aquí podrías realizar cualquier cálculo para obtener el origen basado en el nombre
-        self.origin = self.name
+        for record in self:
+            record.origin = record.name
 
-    @api.onchange('name')
-    def _compute_picking_type_id(self):
-        if self.project_task_id:
-            self.picking_type_id = self.project_task_id.project_id.default_picking_type_id
+    # @api.depends('project_task_id')
+    # def _compute_picking_type_id(self):
+    #     for record in self:
+    #         if record.project_task_id:
+    #             record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
 
     def action_confirm_create_inventory(self):
+        self.ensure_one()
         # Verificar que haya productos seleccionados
         if not self.product_ids:
             raise ValueError("Debe seleccionar al menos un producto.")
@@ -63,24 +65,22 @@ class TaskInventoryWizard(models.TransientModel):
         # Crear un solo stock.move con todos los productos
         stock_move_vals = {
             'product_id': False,  # Este campo puede quedarse vacío si solo se trata de un único movimiento
-            'product_uom_qty': sum(product.standard_price for product in self.product_ids),  # Cantidad total de todos los productos
-            'quantity_done': sum(product.standard_price for product in self.product_ids),  # Este campo es opcional
-            'location_id': self.location_id.id,
-            'location_dest_id': self.location_dest_id.id,
+            # 'product_uom_qty': sum(product.standard_price for product in self.product_ids),  # Cantidad total de todos los productos
+            # 'location_id': self.location_id.id,
+            # 'location_dest_id': self.location_dest_id.id,
             'name': self.name,
-            'picking_type_id': self.location_id.picking_type_id.id,
-            'scheduled_date': self.scheduled_date,
-            'origin': self.origin,
-            'carrier_id': self.carrier_id.id,
-            'carrier_tracking_ref': self.carrier_tracking_ref,
-            'weight': self.weight,
-            'shipping_weight': self.shipping_weight,
-            'user_id': self.user_id.id,
-            'transport_type': self.transport_type,
-            'lat_origin': self.lat_origin,
-            'long_origin': self.long_origin,
-            'lat_dest': self.lat_dest,
-            'long_dest': self.long_dest,
+            'picking_type_id': self.picking_type_id.id,
+            # 'origin': self.origin,
+            # 'carrier_id': self.carrier_id.id,
+            # 'carrier_tracking_ref': self.carrier_tracking_ref,
+            # 'weight': self.weight,
+            # 'shipping_weight': self.shipping_weight,
+            # 'user_id': self.user_id.id,
+            # 'transport_type': self.transport_type,
+            # 'lat_origin': self.lat_origin,
+            # 'long_origin': self.long_origin,
+            # 'lat_dest': self.lat_dest,
+            # 'long_dest': self.long_dest,
         }
 
         # Crear un solo Stock Move
@@ -90,26 +90,25 @@ class TaskInventoryWizard(models.TransientModel):
         stock_picking_vals = {
             'name': self.name,
             'partner_id': self.partner_id.id,
-            'location_id': self.location_id.id,
-            'location_dest_id': self.location_dest_id.id,
-            'scheduled_date': self.scheduled_date,
-            'origin': self.origin,
+            # 'location_id': self.location_id.id,
+            # 'location_dest_id': self.location_dest_id.id,
+            # # 'scheduled_date': self.scheduled_date,
+            # 'origin': self.origin,
             'move_ids': [(4, stock_move.id)],  # Enlazamos el movimiento creado al picking
-            'carrier_id': self.carrier_id.id,
-            'carrier_tracking_ref': self.carrier_tracking_ref,
-            'weight': self.weight,
-            'shipping_weight': self.shipping_weight,
-            'user_id': self.user_id.id,
-            'transport_type': self.transport_type,
-            'lat_origin': self.lat_origin,
-            'long_origin': self.long_origin,
-            'lat_dest': self.lat_dest,
-            'long_dest': self.long_dest,
+            # 'carrier_id': self.carrier_id.id,
+            # 'carrier_tracking_ref': self.carrier_tracking_ref,
+            # 'weight': self.weight,
+            # 'shipping_weight': self.shipping_weight,
+            # 'user_id': self.user_id.id,
+            # 'transport_type': self.transport_type,
+            # 'lat_origin': self.lat_origin,
+            # 'long_origin': self.long_origin,
+            # 'lat_dest': self.lat_dest,
+            # 'long_dest': self.long_dest,
         }
 
         stock_picking = self.env['stock.picking'].create(stock_picking_vals)
 
-        self.project_task_id.project_id.project_picking_lines.reservado_update(stock_move_ids)
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'stock.picking',

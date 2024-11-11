@@ -5,7 +5,23 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     def action_confirm(self):
+        self.ensure_one()
+        products_ids = []
+
         for line in self.order_line:
             if line.product_template_id.detailed_type == 'service':
                 if line.product_template_id.service_tracking == 'project_only':
-                    line.product_template_id.use_for_project = True
+                    products_ids.append(line.id)
+
+        return {
+            'name': 'Projects creation',
+            'view_mode': 'form',
+            'res_model': 'project.sale.creation.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_products_ids': [(6, 0, products_ids)]
+            }
+        }
+
+        super(SaleOrder, self).action_confirm()
