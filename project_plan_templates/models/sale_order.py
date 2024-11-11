@@ -15,14 +15,17 @@ class SaleOrder(models.Model):
 
         super(SaleOrder, self).action_confirm()
 
-        return {
-            'name': 'Projects creation',
-            'view_mode': 'form',
-            'res_model': 'project.sale.creation.wizard',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': {
-                'default_products_ids': [(6, 0, products_ids)]
+        if products_ids:
+            return {
+                'name': 'Projects creation',
+                'view_mode': 'form',
+                'res_model': 'project.sale.creation.wizard',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context': {
+                    'default_products_ids': [(6, 0, products_ids)]
+                }
             }
-        }
+
+       
 
