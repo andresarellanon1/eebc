@@ -28,7 +28,6 @@
                                 <field name="product_ids" >
                                     <tree >
                                         <field name="display_name" />
-                                        <field name="quantity" />
                                     </tree>
                                 </field>
                             </page>
