@@ -26,10 +26,9 @@
                         <notebook>
                             <page string="Operations" name="operations">
                                 <field name="product_ids" >
-                                    <tree editable="bottom">
+                                    <tree editable="editable_bottom">
                                         <field name="display_name" />
                                         <field name="quantity" />
-                                        <field name="free_qty" />
                                     </tree>
                                 </field>
                             </page>
