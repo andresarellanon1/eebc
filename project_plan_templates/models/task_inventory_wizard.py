@@ -68,7 +68,6 @@ class TaskInventoryWizard(models.TransientModel):
             'location_id': self.location_id.id,
             'location_dest_id': self.location_dest_id.id,
             'name': self.name,
-            'picking_type_id': self.picking_type_id.id,
             'scheduled_date': self.scheduled_date,
             'origin': self.origin,
             'carrier_id': self.carrier_id.id,
