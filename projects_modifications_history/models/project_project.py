@@ -10,7 +10,19 @@ class ProjectProject(models.Model):
         string='Historial de modificaciones',
         readonly=True,
     )
+    
+    version_history_id = fields.Many2one(
+        'project.version.history',
+        string='Version History',
+        compute='_compute_version_history_id',
+        store=True
+    )
 
+    @api.depends('version_history_ids')
+    def _compute_version_history_id(self):
+        for project in self:
+            version_history = self.env['project.version.history'].search([('project_id', '=', project.id)], limit=1)
+            project.version_history_id = version_history if version_history else False
     # This action opens a wizard to generate a new version entry in the project's change history.
     # The wizard allows users to review the project plan lines (tasks to be created or added)
     # and the products included in the project's inventory. Additionally, it records the reason

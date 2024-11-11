@@ -30,21 +30,13 @@ class NoticeFileWizard(models.TransientModel):
     notice = fields.Char(string='Aviso')
     folio = fields.Char(string='Folio')
     description = fields.Text(string='Descripción de producto', readonly=True)
-  # Cambiar el campo Many2one por Char para almacenar el ID o el nombre de la factura
     account_move_invoice_ids = fields.Char(string="Facturas", readonly=True)
-
-    # Cambiar One2many a Char para almacenar IDs o nombres de proveedores
     res_partner_supplier_id = fields.Char(string="Proveedor", readonly=True)
-
-    # Cambiar One2many a Char para almacenar IDs o referencias de órdenes de compra
     purchases_order_id = fields.Char(string="Orden de compra", readonly=True)
-    
     
     @api.model
     def default_get(self, fields):
         res = super(NoticeFileWizard, self).default_get(fields)
-        
-        # Establecer el valor del campo 'quantity' con el valor pasado en el contexto
         if 'cantidad' in self._context:
             res['quantity'] = self._context['cantidad']
         if 'proveedor' in self._context:
@@ -57,39 +49,14 @@ class NoticeFileWizard(models.TransientModel):
             res['account_move_invoice_ids'] = self._context['invoices']
         if 'default_message' in self._context:
             res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
-        
         return res
-
-        	
-     
 
     def create_notice(self):
         """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
-        
-        notice_data = (self.quantity,                            
-                    self.res_partner_supplier_id,
-                    self.purchases_order_id, 
-                    self.description,
-                    self.folio,
-                    self.notice, 
-                    self.account_move_invoice_ids, 
-                    self._context['product_id'], 
-                    self._context['location_id'], 
-                    self._context['location_dest_id'], 
-                    self._context['origin'], 
-                    self._context['type'],
-                    self._context['proveedor_id']
-                    )
+        notice_id = self.env['notices.notices'].search([('notice', '=', self.notice)])
 
-        _logger.warning('VALORES DE NOTICE DATA:  %s', notice_data)
-
-        # Revisa si el aviso ya existe
-        its_created = self.env['notices.notices'].search([('notice', '=', self.notice)])
-        _logger.warning('VALOR DE ITS CREATED : %s', its_created)
-        valor_test = self.folio
-
-        if its_created:
-            history_match = its_created.history_ids.filtered(lambda h: int(h.folio) == valor_test)
+        if notice_id:
+            history_match = notice_id.history_ids.filtered(lambda h: int(h.folio) == self.folio)
             if history_match:
                 return {
                     'type': 'ir.actions.act_window',
@@ -98,45 +65,45 @@ class NoticeFileWizard(models.TransientModel):
                     'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
                     'target': 'new',
                     'context': {
-                        'default_message': f"El folio del archivo ({valor_test}) ya existe en el folio ({its_created}).",
+                        'default_message': f"El folio del archivo ({self.folio}) ya existe en el folio ({notice_id}).",
                     }
                 }
             else:
-                # Actualizar el historial si no coincide
-                its_created.write({
+                notice_id.write({
                     'history_ids': [(0, 0, {
-                        'location_dest': notice_data[9],  # Utiliza notice_data directamente
-                        'location_id': notice_data[8],
-                        'quantity': notice_data[0],
-                        'folio': notice_data[4],
-                        'picking_code': notice_data[11],
-                        'origin':self._context['origin']
+                        'location_dest': self._context['location_dest_id'],
+                        'location_id': self._context['location_id'],
+                        'quantity': self.quantity,
+                        'folio': self.folio,
+                        'picking_code': self._context['type'],
+                        'origin': self._context['origin'],
+                        'origin_invoice_ids':self._context['origin_invoice_ids'],
+                        'sale_order_id':self._context['sale_invoice_ids'],
                     })]
                 })
-                _logger.info('Historial actualizado correctamente para el aviso.')
         else:
-            # Crear un nuevo registro en 'notices.notices'
             notice = self.env['notices.notices'].create({
-                'resource': notice_data[7],  # ID del producto
-                'quantity': notice_data[0],
-                'folio': notice_data[4],
-                'description': notice_data[3],
-                'supplier': notice_data[12],
-                'notice': notice_data[5],
+                'product_id': self._context['product_id'],
+                'quantity': self.quantity,
+                'folio': self.folio,
+                'description': self.description,
+                'partner_id': self._context['proveedor_id'],
+                'notice': self.notice,
             })
-
-            # Crear el historial correspondiente
             self.env['notices.history'].create({
-                'location_id': notice_data[8], 
-                'location_dest': notice_data[9], 
-                'quantity': notice_data[0],
-                'picking_code': notice_data[11],
+                'location_id': self._context['location_id'],
+                'location_dest': self._context['location_dest_id'],
+                'quantity': self.quantity,
+                'picking_code': self._context['type'],
                 'notice_id': notice.id,
-                'folio': notice_data[4],
-                'origin': self._context['origin']
+                'folio': self.folio,
+                'origin': self._context['origin'],
+                'purchase_order_id':self._context['purchase_id'],
+                'sale_order_id':self._context['sale_invoice_ids'],
+                'stock_move_id':self._context['stock_move_id'],
             })
 
-        _logger.info("Aviso creado correctamente.")
+
 
         
         

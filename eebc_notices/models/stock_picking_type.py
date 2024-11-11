@@ -7,8 +7,6 @@ _logger = logging.getLogger(__name__)
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
-
-    
     notice_approve = fields.Boolean(
         string='notice approve'
     )
