@@ -25,6 +25,12 @@
                                 </page>
                             </notebook>
                          </group>
+
+                         <footer>
+                            <button name="confirm_wizard" string="Confirm"
+                                type="object" class="btn-primary" />
+                            <button string="Cancel" class="btn-secondary" special="cancel" />
+                        </footer>
                     </sheet>
                 </form>
             </field>
