@@ -28,8 +28,8 @@ class ProductProduct(models.Model):
     def _onchange_product(self):
         for record in self:
             record.name = record.name
-            monto = record.id.product_tmpl_id.last_supplier_last_price
-            origin_currency = record.id.product_tmpl_id.last_supplier_last_order_currency_id.name
+            monto = record.product_tmpl_id.last_supplier_last_price
+            origin_currency = record.product_tmpl_id.last_supplier_last_order_currency_id.name
             tipo_cambio = record.project_id.exchange_rate
             project_currency = record.project_id.custom_currency_id.name
 
@@ -80,7 +80,7 @@ class ProductProduct(models.Model):
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.project_id.taxes_id.amount)/100
-            origin_currency = record.id.product_tmpl_id.last_supplier_last_order_currency_id.name
+            origin_currency = record.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
             _logger.warning(f'El currency del forms es: {record.project_id.custom_currency_id.name}')
