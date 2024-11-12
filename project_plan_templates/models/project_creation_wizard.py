@@ -1,5 +1,7 @@
 from odoo import models, fields, api
 
+#TODO Update comments on the code
+
 class ProjectCreation(models.TransientModel):
     _name = 'project.creation.wizard'
     _description = 'Wizard to confirm project creation'
@@ -78,12 +80,18 @@ class ProjectCreation(models.TransientModel):
         self.project_plan_id.project_name = False
 
         if self.is_sale_order:
+            products_ids = self.env.context.get('default_products_ids', [])
+            sale_order_id = self.env.context.get('default_sale_order_id', False)
+
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'project.sale.creation.wizard',
                 'view_mode': 'form',
                 'target': 'new',
-                'context': self.env.context,
+                'context': {
+                    'default_products_ids': products_ids,
+                    'default_sale_order_id': sale_order_id,
+                },
             }
         else:
             return {
