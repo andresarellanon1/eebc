@@ -16,7 +16,7 @@ class ProductTemplate(models.Model):
             'view_mode': 'form',
             'res_model': 'project.creation.wizard',
             'type': 'ir.actions.act_window',
-            'target': 'new',
+            'target': 'current',
             'context': {
                 'default_project_plan_id': project_plan,
                 'default_project_plan_lines': [(6, 0, project_plan.project_plan_lines.ids)],
