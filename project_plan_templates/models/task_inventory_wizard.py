@@ -136,10 +136,8 @@ class ProjectCreation(models.TransientModel):
 
         stock_picking = self.env['stock.picking'].create(stock_picking_vals)
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'stock.picking',
-            'res_id': stock_picking.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
+        # Asignar el picking a la tarea
+        if self.project_id:
+            self.project_task_id.stock_ids = [(4, stock_picking.id)]
+
+        return True
