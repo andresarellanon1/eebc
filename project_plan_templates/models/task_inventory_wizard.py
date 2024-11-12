@@ -47,7 +47,7 @@ class ProjectCreation(models.TransientModel):
         string="Productos de Picking del Proyecto"
     )
 
-    @api.depends('project_picking_lines')
+    @api.depends('project_task_id.project_id.project_picking_lines')
     def _compute_project_picking_product_ids(self):
         for record in self:
             record.project_picking_product_ids = record.project_picking_lines.mapped('product_ids')
