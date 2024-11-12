@@ -6,6 +6,7 @@ class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     supplier_products_ids = fields.Many2many('product.template', string='Supplier Products', compute='_compute_supplier_products', store=True)
+    product_template_id = fields.Many2one('product.template')
 
     @api.depends('order_id.partner_id')
     def _compute_supplier_products(self):
