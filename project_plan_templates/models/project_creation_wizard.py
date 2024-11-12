@@ -82,7 +82,7 @@ class ProjectCreation(models.TransientModel):
                 'type': 'ir.actions.act_window',
                 'res_model': 'project.sale.creation.wizard',
                 'view_mode': 'form',
-                'target': 'current',
+                'target': 'new',
                 'context': self.env.context,
             }
         else:
