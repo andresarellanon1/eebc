@@ -13,8 +13,6 @@ class SaleOrder(models.Model):
                 if line.product_template_id.service_tracking == 'project_only':
                     products_ids.append(line.product_template_id.id)
 
-        super(SaleOrder, self).action_confirm()
-
         if products_ids:
             return {
                 'name': 'Projects creation',
@@ -23,6 +21,9 @@ class SaleOrder(models.Model):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'context': {
-                    'default_products_ids': [(6, 0, products_ids)]
+                    'default_products_ids': [(6, 0, products_ids)],
+                    'default_sale_order_id': self.id
                 }
             }
+        else:
+            return super(SaleOrder, self).action_confirm()
