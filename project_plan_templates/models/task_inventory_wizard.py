@@ -40,18 +40,6 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    # Dominio para los productos
-    project_picking_product_ids = fields.Many2many(
-        'product.product',
-        related='project_task_id.project_id.project_picking_lines.product_ids',
-        string="Productos de Picking del Proyecto"
-    )
-
-    @api.depends('project_task_id.project_id.project_picking_lines')
-    def _compute_project_picking_product_ids(self):
-        for record in self:
-            record.project_picking_product_ids = record.project_picking_lines.mapped('product_ids')
-
     @api.onchange('name')
     def _compute_task_id(self):
         self.task_id_char = self.project_task_id.name
