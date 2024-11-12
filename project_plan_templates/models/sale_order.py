@@ -11,17 +11,19 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             if line.product_template_id.detailed_type == 'service':
                 if line.product_template_id.service_tracking == 'project_only':
-                    products_ids.append(line.id)
+                    products_ids.append(line.product_template_id.id)
 
-        return {
-            'name': 'Projects creation',
-            'view_mode': 'form',
-            'res_model': 'project.sale.creation.wizard',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': {
-                'default_products_ids': [(6, 0, products_ids)]
+        if products_ids:
+            return {
+                'name': 'Projects creation',
+                'view_mode': 'form',
+                'res_model': 'project.sale.creation.wizard',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context': {
+                    'default_products_ids': [(6, 0, products_ids)],
+                    'default_sale_order_id': self.id
+                }
             }
-        }
-
-        super(SaleOrder, self).action_confirm()
+        else:
+            return super(SaleOrder, self).action_confirm()
