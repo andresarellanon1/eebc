@@ -15,7 +15,7 @@ class TaskInventoryWizard(models.TransientModel):
     partner_id = fields.Many2one('res.partner', string='Contacto')
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
-    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación", compute='_compute_picking_type_id', store=True)
+    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación", store=True)
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
     user_id = fields.Many2one('res.users', string='Usuario')
@@ -67,16 +67,17 @@ class TaskInventoryWizard(models.TransientModel):
             'product_id': self.product_ids[0].id,  # Este campo puede quedarse vacío si solo se trata de un único movimiento
             'product_ids': [(6, 0, self.product_ids.ids)], # Relación con los productos seleccionados
             # 'product_uom_qty': sum(product.standard_price for product in self.product_ids), # Cantidad total de todos los productos
-            # 'location_id': self.location_id.id,
-            # 'location_dest_id': self.location_dest_id.id,
+            'location_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id,
             'name': self.name,
             'picking_type_id': self.picking_type_id.id,
+            'scheduled_date': self.scheduled_date,
             # 'origin': self.origin,
             # 'carrier_id': self.carrier_id.id,
             # 'carrier_tracking_ref': self.carrier_tracking_ref,
             # 'weight': self.weight,
             # 'shipping_weight': self.shipping_weight,
-            # 'user_id': self.user_id.id,
+            'partner_id': self.partner_id.id,
             # 'transport_type': self.transport_type,
             # 'lat_origin': self.lat_origin,
             # 'long_origin': self.long_origin,
@@ -91,16 +92,17 @@ class TaskInventoryWizard(models.TransientModel):
         stock_picking_vals = {
             'name': self.name,
             'partner_id': self.partner_id.id,
-            # 'location_id': self.location_id.id,
-            # 'location_dest_id': self.location_dest_id.id,
-            # # 'scheduled_date': self.scheduled_date,
+            'location_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id,
+            'scheduled_date': self.scheduled_date,
+            'picking_type_id': self.picking_type_id.id,
             # 'origin': self.origin,
             'move_ids': [(4, stock_move.id)],  # Enlazamos el movimiento creado al picking
             # 'carrier_id': self.carrier_id.id,
             # 'carrier_tracking_ref': self.carrier_tracking_ref,
             # 'weight': self.weight,
             # 'shipping_weight': self.shipping_weight,
-            # 'user_id': self.user_id.id,
+            'partner_id': self.partner_id.id,
             # 'transport_type': self.transport_type,
             # 'lat_origin': self.lat_origin,
             # 'long_origin': self.long_origin,
