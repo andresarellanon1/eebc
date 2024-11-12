@@ -9,4 +9,4 @@ class ProjectSaleWizard(models.TransientModel):
     sale_order_id = fields.Many2one('sale.order', string='Sale Order', required=True)
 
     def confirm_wizard(self):
-        return self.sale_order_id.with_context(skip_wizard=True).action_confirm()
+        self.sale_order_id.state = 'sale'
