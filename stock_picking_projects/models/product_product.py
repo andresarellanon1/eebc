@@ -27,11 +27,16 @@ class ProductProduct(models.Model):
     @api.onchange('product_variant_id')
     def _onchange_product(self):
         for record in self:
-            record.name = record.product_variant_id.name
-            monto = record.product_variant_id.last_supplier_last_price
-            origin_currency = record.product_variant_id.last_supplier_last_order_currency_id.name
+            record.name = record.product_tmpl_id.name
+            _logger.warning(f'El record cambio es: {record.name}')
+            monto = record.product_tmpl_id.last_supplier_last_price
+            _logger.warning(f'El record cambio es: {monto}')
+            origin_currency = record.product_tmpl_id.last_supplier_last_order_currency_id.name
+            _logger.warning(f'El record cambio es: {origin_currency}')
             tipo_cambio = record.project_id.exchange_rate
+            _logger.warning(f'El record cambio es: {tipo_cambio}')
             project_currency = record.project_id.custom_currency_id.name
+            _logger.warning(f'El record cambio es: {project_currency}')
 
             if record.currency == False:
                 record.currency = project_currency
