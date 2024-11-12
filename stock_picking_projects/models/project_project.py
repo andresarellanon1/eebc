@@ -90,7 +90,7 @@ class ProjectProject(models.Model):
             for product in record.product_ids:
                 total = (product.supplier_cost * product.quantity)
                 impuestos = ((total) * record.taxes_id.amount)/100
-                origin_currency = product.product_variant_id.last_supplier_last_order_currency_id.name
+                origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
                 
                 if product.supplier_cost > 0:
                     costo_total = total + impuestos
@@ -111,7 +111,7 @@ class ProjectProject(models.Model):
             for product in record.product_ids:
                 total = (product.supplier_cost * product.quantity)
                 impuestos = ((total) * record.taxes_id.amount)/100
-                origin_currency = product.product_variant_id.last_supplier_last_order_currency_id.name
+                origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
                 
                 if product.supplier_cost > 0:
                     costo_total = total + impuestos
