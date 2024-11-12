@@ -10,7 +10,7 @@ class TaskInventoryWizard(models.TransientModel):
     # Relación con los productos seleccionados en vez de stock.moves
     product_ids = fields.Many2many('product.product', string="Productos")
     project_task_id = fields.Many2one('project.task', string="Project Task")
-    project_id = fields.Many2one('project.project', string='Proyecto')
+    project_id = fields.Many2one('project.project', string='Proyecto' , related='project_task_id.project_id', store=True)
 
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner', string='Contacto')
@@ -104,7 +104,6 @@ class TaskInventoryWizard(models.TransientModel):
             # 'carrier_tracking_ref': self.carrier_tracking_ref,
             # 'weight': self.weight,
             # 'shipping_weight': self.shipping_weight,
-            'partner_id': self.partner_id.id,
             # 'transport_type': self.transport_type,
             # 'lat_origin': self.lat_origin,
             # 'long_origin': self.long_origin,
@@ -118,11 +117,3 @@ class TaskInventoryWizard(models.TransientModel):
             self.project_id.stock_picking_ids = [(4, stock_picking.id)]
 
         return True
-
-        # return {
-        #     'type': 'ir.actions.act_window',
-        #     'res_model': 'stock.picking',
-        #     'res_id': stock_picking.id,
-        #     'view_mode': 'form',
-        #     'target': 'current',
-        # }
