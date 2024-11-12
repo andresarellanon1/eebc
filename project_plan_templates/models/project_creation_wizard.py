@@ -83,7 +83,9 @@ class ProjectCreation(models.TransientModel):
                 'res_model': 'project.sale.creation.wizard',
                 'view_mode': 'form',
                 'target': 'new',
-                'context': self.env.context,
+                'context': {
+                    'default_project_plan_id': self.project_plan_id,
+                }
             }
         else:
             return {
