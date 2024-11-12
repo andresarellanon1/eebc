@@ -77,7 +77,16 @@ class ProjectCreation(models.TransientModel):
 
         self.project_plan_id.project_name = False
 
-        return {
+        if self.is_sale_order:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.sale.creation.wizard',
+                'view_mode': 'form',
+                'target': 'current',
+                'context': self.env.context,
+            }
+        else:
+            return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'project.project',
                 'res_id': project.id,
