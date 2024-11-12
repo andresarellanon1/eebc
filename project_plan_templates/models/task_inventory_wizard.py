@@ -43,7 +43,8 @@ class ProjectCreation(models.TransientModel):
     # Dominio para los productos
     project_picking_product_ids = fields.Many2many(
         'product.product',
-        related='project_task_id.project_id.project_picking_lines.product_ids',
+        compute='_compute_project_picking_product_ids',
+        store=True,  # Agrega store=True para que esté disponible en la vista
         string="Productos de Picking del Proyecto"
     )
 
