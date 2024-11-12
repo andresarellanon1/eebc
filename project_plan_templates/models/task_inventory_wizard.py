@@ -15,7 +15,7 @@ class TaskInventoryWizard(models.TransientModel):
     partner_id = fields.Many2one('res.partner', string='Contacto')
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
-    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación", compute='_compute_picking_type_id', store=True)
+    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación", store=True)
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
     user_id = fields.Many2one('res.users', string='Usuario')
