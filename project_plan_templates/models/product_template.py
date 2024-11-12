@@ -16,12 +16,13 @@ class ProductTemplate(models.Model):
             'view_mode': 'form',
             'res_model': 'project.creation.wizard',
             'type': 'ir.actions.act_window',
-            'target': 'current',
+            'target': 'new',
             'context': {
                 'default_project_plan_id': project_plan,
                 'default_project_plan_lines': [(6, 0, project_plan.project_plan_lines.ids)],
                 'default_project_plan_pickings': [(6, 0, project_plan.project_plan_pickings.ids)],
                 'deafult_picking_lines': [(6, 0, project_plan.picking_lines.ids)],
                 'default_description': project_plan.description,
+                'default_is_sale_order': True,
             }
         }
