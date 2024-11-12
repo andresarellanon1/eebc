@@ -95,6 +95,7 @@ class TaskInventoryWizard(models.TransientModel):
             'location_id': self.location_id.id,
             'location_dest_id': self.location_dest_id.id,
             'scheduled_date': self.scheduled_date,
+            'picking_type_id': self.picking_type_id.id,
             # 'origin': self.origin,
             'move_ids': [(4, stock_move.id)],  # Enlazamos el movimiento creado al picking
             # 'carrier_id': self.carrier_id.id,
