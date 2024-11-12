@@ -27,7 +27,7 @@ class ProductProduct(models.Model):
     @api.onchange('id')
     def _onchange_product(self):
         for record in self:
-            record.name = record.id.name
+            record.name = record.name
             monto = record.id.product_tmpl_id.last_supplier_last_price
             origin_currency = record.id.product_tmpl_id.last_supplier_last_order_currency_id.name
             tipo_cambio = record.project_id.exchange_rate
