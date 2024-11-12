@@ -9,4 +9,8 @@ from . import account_analytic_line
 from . import task_inventory_wizard
 from . import project_task
 from . import stock_picking
-#from . import stock_move
+from . import sale_order
+from . import product_product
+from . import project_sale_creation_wizard
+from . import product_template
+# from . import stock_move
