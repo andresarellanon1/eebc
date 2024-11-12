@@ -10,7 +10,6 @@ class TaskInventoryWizard(models.TransientModel):
     # Relación con los productos seleccionados en vez de stock.moves
     product_ids = fields.Many2many('product.product', string="Productos")
     project_task_id = fields.Many2one('project.task', string="Project Task")
-    project_id = fields.Many2one('project.project', string='Proyecto' , related='project_task_id.project_id', store=True)
 
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner', string='Contacto')
@@ -22,7 +21,7 @@ class TaskInventoryWizard(models.TransientModel):
     user_id = fields.Many2one('res.users', string='Usuario')
     company_id = fields.Many2one('res.company', string="Empresa")
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
-    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
+    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', check_company=True)
 
     # Información adicional
     carrier_id = fields.Many2one('delivery.carrier')
@@ -65,9 +64,9 @@ class TaskInventoryWizard(models.TransientModel):
 
         # Crear un solo stock.move con todos los productos
         stock_move_vals = {
+            # TODO: Solo toma en cuenta el product_id para el stock picking
             'product_id': self.product_ids[0].id,  # Este campo puede quedarse vacío si solo se trata de un único movimiento
             'product_ids': [(6, 0, self.product_ids.ids)], # Relación con los productos seleccionados
-            # 'product_uom_qty': sum(product.standard_price for product in self.product_ids), # Cantidad total de todos los productos
             'location_id': self.location_id.id,
             'location_dest_id': self.location_dest_id.id,
             'name': self.name,
