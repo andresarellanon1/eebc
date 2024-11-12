@@ -24,7 +24,7 @@ class ProductProduct(models.Model):
     )
 
 
-    @api.onchange('product_tmpl_id')
+    @api.onchange('product_variant_id')
     def _onchange_product(self):
         for record in self:
             record.name = record.product_tmpl_id.name
