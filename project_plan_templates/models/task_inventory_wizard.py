@@ -112,8 +112,9 @@ class TaskInventoryWizard(models.TransientModel):
         }
 
         stock_picking = self.env['stock.picking'].create(stock_picking_vals)
-        # Asignar el picking al proyecto
+
+        # Asignar el picking a la tarea
         if self.project_id:
-            self.project_id.pickin_ids = [(4, stock_picking.id)]
+            self.project_task_id.stock_ids = [(4, stock_picking.id)]
 
         return True
