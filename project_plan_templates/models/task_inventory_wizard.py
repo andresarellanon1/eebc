@@ -61,7 +61,7 @@ class ProjectCreation(models.TransientModel):
             'product_packaging_id': line.product_packaging_id.id,
             'product_uom_qty': line.product_uom_qty,
             'quantity': line.quantity,
-            'product_uom': line.product_uom.id,
+            'product_uom_id': line.product_uom.id,
         }) for line in self.inventory_lines]
 
         # stock_move_ids_vals = [(0, 0, {
