@@ -48,13 +48,14 @@ class StockMove(models.Model):
 
     @api.depends('product_id')
     def _compute_existing_product_in_notice(self):
-        for move in self:
-        # Filtrar manualmente los registros de 'notices.notices' que contengan el producto en 'lot_ids'
-            for notice in self.env['notices.notices'].search([]):
-                if move.product_id in notice.lot_ids:
-                    _logger.warning('hay producto en aviso')
-                    move.existing_product_in_notice = True
-                    break
+       for move in self:
+        # Buscar todos los registros en 'notices.notices' que tengan lotes relacionados con el producto
+        for notice in self.env['notices.notices'].search([]):
+            # Verificar si alguno de los lotes en 'lot_ids' pertenece al producto especificado
+            if any(lot.product_id == move.product_id for lot in notice.lot_ids):
+                _logger.warning('HAY AVISOS con este producto')
+                move.existing_product_in_notice = True
+                break
 
     def call_wizard(self):
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
