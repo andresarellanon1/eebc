@@ -11,7 +11,7 @@ class ProjectCreation(models.TransientModel):
     project_task_id = fields.Many2one('project.task', string="Project Task")
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
-    inventory_lines = fields.One2many('task.inventory.line', string="Lineas de inventario")
+    inventory_lines = fields.Many2one('task.inventory.line', string="Lineas de inventario")
 
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner', string='Contacto')
