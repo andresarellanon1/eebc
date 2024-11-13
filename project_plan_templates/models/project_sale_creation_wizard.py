@@ -41,7 +41,7 @@ class ProjectSaleWizard(models.TransientModel):
                     'default_picking_lines': [(6, 0, project_plan.picking_lines.ids)],
                     'default_description': project_plan.description,
                     'default_is_sale_order': True,
-                    'default_project_name': self.services_ids[0].name
+                    'default_project_name': self.services_ids[0].name,
                     'deafult_sale_order_id': self.sale_order_id.id
                 }
             }
