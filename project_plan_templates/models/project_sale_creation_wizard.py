@@ -26,6 +26,7 @@ class ProjectSaleWizard(models.TransientModel):
             )
 
             lines_to_remove.unlink()
+            self.sale_order_id.state = 'sale'
 
             return {
                 'name': 'Create Project',
@@ -41,6 +42,7 @@ class ProjectSaleWizard(models.TransientModel):
                     'default_description': project_plan.description,
                     'default_is_sale_order': True,
                     'default_project_name': self.services_ids[0].name
+                    'deafult_sale_order_id': self.sale_order_id.id
                 }
             }
         else:
@@ -48,4 +50,4 @@ class ProjectSaleWizard(models.TransientModel):
                         f"Only one service is allowed per sale order."
                     )
 
-        self.sale_order_id.state = 'sale'
+        
