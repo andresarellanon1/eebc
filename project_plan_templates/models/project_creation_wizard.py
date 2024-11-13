@@ -83,7 +83,7 @@ class ProjectCreation(models.TransientModel):
 
             return {
                 'type': 'ir.actions.act_window',
-                'res_model': 'sel.order',
+                'res_model': 'sale.order',
                 'view_mode': 'form',
                 'target': 'current',
             }
