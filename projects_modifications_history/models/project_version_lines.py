@@ -71,9 +71,6 @@ class ProjecVersionLines(models.Model):
                 record.previous_version_plan_lines = previous_version.project_plan_lines
                 record.previous_version_picking_lines = previous_version.project_picking_lines
                 
-                record.project_plan_lines = record.project_plan_lines | previous_version.project_plan_lines
-                record.project_picking_lines = record.project_picking_lines | previous_version.project_picking_lines
-                
                 record.has_previous_version = True
             else:
                 record.previous_version_plan_lines = [(5, 0, 0)]
