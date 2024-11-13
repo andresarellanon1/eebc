@@ -56,6 +56,7 @@ class StockMove(models.Model):
                 _logger.warning('HAY AVISOS con este producto')
                 move.existing_product_in_notice = True
                 break
+            move.existing_product_in_notice = False
 
     def call_wizard(self):
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
