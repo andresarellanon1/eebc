@@ -88,7 +88,7 @@ class ProjectCreation(models.TransientModel):
                 'res_model': 'sale.order',
                 'res_id': self.sale_order_id.id,
                 'view_mode': 'form',
-                'target': 'new',
+                'target': 'current',
             }
         else:
             return {
