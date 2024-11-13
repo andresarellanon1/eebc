@@ -72,14 +72,14 @@ class ProjecVersionLines(models.Model):
 
             if previous_version:
                 record.previous_version_plan_lines = previous_version.project_plan_lines
-                _logger.warning(f'El record cambio es: {record.name}')
+                # _logger.warning(f'El record cambio es: {record.name}')
                 record.previous_version_picking_lines = previous_version.project_picking_lines
-                _logger.warning(f'El record cambio es: {record.name}')
+                # _logger.warning(f'El record cambio es: {record.name}')
 
                 record.project_plan_lines = record.project_plan_lines | previous_version.project_plan_lines
-                _logger.warning(f'El record cambio es: {record.name}')
+                # _logger.warning(f'El record cambio es: {record.name}')
                 record.project_picking_lines = record.project_picking_lines | previous_version.project_picking_lines
-                _logger.warning(f'El record cambio es: {record.name}')
+                # _logger.warning(f'El record cambio es: {record.name}')
 
                 record.has_previous_version = True
             else:
