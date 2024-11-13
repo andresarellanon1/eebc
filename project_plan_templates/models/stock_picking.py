@@ -4,7 +4,7 @@ class StockPicking(models.Model):
 
     _inherit = 'stock.picking'
 
-    task_inventory_lines = fields.One2many('task.inventory.line')
+    task_inventory_lines = fields.One2many('task.inventory.line', 'stock_picking')
 
     task_id = fields.Many2one('project.task', string='projects')
     project_id = fields.Many2one('project.project', string='Proyecto')
