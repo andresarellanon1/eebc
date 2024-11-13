@@ -1,4 +1,4 @@
-import fields, api, models
+from odoo import fields, api, models 
 
 class TaskInventoryLine(models.TransientModel):
     _name = 'task.inventory.line'
