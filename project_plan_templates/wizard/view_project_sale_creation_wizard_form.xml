@@ -9,7 +9,8 @@
                     <sheet>
                          <group>
                             <group>
-                                <h1>Projects creation</h1>
+                                <h1>Only one project is allowed per sale order.</h1>
+                                <h2>Choose one and delete the other ones.</h2>
                             </group>
                             <notebook>
                                 <page name="services" string="Services">
@@ -17,8 +18,7 @@
                                         <field name="products_ids" nolabel="1">
                                             <tree>
                                                 <field name="name"/>
-                                                <field name="description"/>
-                                                <button name="action_create_project" type="object" class="oe_highlight" string="Create Project"/>
+                                                <field name="project_plan_id"/>
                                             </tree>
                                         </field>
                                     </div>

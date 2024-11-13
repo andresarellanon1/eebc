@@ -11,7 +11,8 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             if line.product_template_id.detailed_type == 'service':
                 if line.product_template_id.service_tracking == 'project_only':
-                    products_ids.append(line.product_template_id.id)
+                    if line.product_template_id.project_plan_id:
+                        products_ids.append(line.product_template_id.id)
 
         if products_ids:
             return {
