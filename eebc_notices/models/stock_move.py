@@ -14,6 +14,11 @@ class StockMove(models.Model):
         string="Tiene 'aviso' en atributos",
         compute='_compute_has_aviso_in_attributes'
     )
+
+    existing_product_in_notice = fields.Boolean(
+        string="Producto existente en 'aviso'",
+        compute='_compute_existing_product_in_notice'
+    )
     has_aviso_in_attributes_fake = fields.Boolean(
         string="Tiene 'aviso' en atributos",
         compute="_compute_has_aviso_in_attributes"
@@ -39,6 +44,17 @@ class StockMove(models.Model):
                 move.has_aviso_in_attributes_fake = True
             else:                
                 move.has_aviso_in_attributes_fake = False
+
+
+    @api.depends('product_id')
+    def _compute_existing_product_in_notice(self):
+        for move in self:
+
+            notice_id = self.env['notices.notices'].search([('lot_ids', 'in', move.product_id.id)])
+
+            if notice_id:
+                _logger.warning('Existe un aviso con este producto')
+                move.existing_product_in_notice = True
 
     def call_wizard(self):
         order = self.env['purchase.order'].search([('name', '=', self.origin)])

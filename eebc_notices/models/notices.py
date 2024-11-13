@@ -114,3 +114,10 @@ class Notices(models.Model):
             # Calcula la suma de las cantidades en history_ids
             record.quantity = sum(record.history_ids.mapped('quantity'))
 
+
+
+# cuando es outgoing el picking que seleccione el aviso de donde sacaremos los productos, si es que los productos ya tienen un aviso relacionado con su serie
+
+
+# cantidadesdes demandadas y cantidades que hay en el aviso validarlo al momento de darle salida a los productos vendidos en la venta y que el 
+#  historialo tenga un estado de draft y done donde hasya que no este validada no se umestre en el historial de avisos

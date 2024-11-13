@@ -109,32 +109,3 @@ class NoticeFileWizard(models.TransientModel):
             lot_ids=False
         )
 
-
-    def clean_up_references(self):
-        """Limpia referencias o datos temporales usados por el wizard."""
-        # Eliminar registros temporales creados por el wizard si es necesario
-        # Desasociar cualquier referencia que no deba mantenerse
-        # Ejemplo:
-        if self._context.get('lot_ids'):
-            self.write({'lot_ids': [(5, 0, 0)]})  # Limpiar el campo Many2many si es necesario
-
-        # Si se añadieron datos temporales a 'origin_invoice_ids' o 'sale_invoice_ids', limpiar
-        if self._context.get('origin_invoice_ids'):
-            self.write({'origin_invoice_ids': [(5, 0, 0)]})
-
-        if self._context.get('sale_invoice_ids'):
-            self.write({'sale_invoice_ids': [(5, 0, 0)]})
-
-        # Si se realizaron otras referencias temporales, puedes eliminarlas aquí para evitar bloqueos
-
-
-
-        
-        
- 
-        
-
-
-
-
-
