@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <record id="action_task_inventory_line" model="ir.ui.view">
+            <field name="name">Crear Línea de Inventario</field>z
+            <field name="res_model">task.inventory.line</field>
+            <field name="view_mode">form</field>  <!-- Solo se mostrará la vista de formulario -->
+            <field name="view_id" ref="view_task_inventory_line_form"/>
+            <field name="target">new</field> <!-- Se abrirá en una ventana emergente -->
+            <field name="context">{'default_task_id': active_id}</field> <!-- Contexto para el task_id -->
+        </record>
         <record id="view_task_inventory_wizard_form" model="ir.ui.view">
             <field name="name">task.inventory.wizard</field>
             <field name="model">task.inventory.wizard</field>
@@ -37,6 +45,9 @@
                                         <field name="product_uom" />
                                     </tree>
                                 </field>
+                                <footer>
+                                    <button name="%(action_task_inventory_line)d" string="Agregar Línea de Inventario" type="action" class="btn-primary"/>
+                                </footer>
                             </page>
                             <page string="Additional Info" name="extra">
                                 <group>
