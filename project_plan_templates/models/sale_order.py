@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
             else:
                 products_ids.append(line.product_template_id.id)
 
-        if products_ids:
+        if services_ids:
             return {
                 'name': 'Projects creation',
                 'view_mode': 'form',
