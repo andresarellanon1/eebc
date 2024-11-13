@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Reemplazo de la vista del formulario de stock.picking -->
+        <record id="view_stock_picking_form_custom" model="ir.ui.view">
+            <field name="name">stock.picking.form.custom</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <form string="Picking Customizado">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="partner_id" />
+                                <field name="picking_type_id" />
+                                <field name="scheduled_date" />
+                                <field name="state" />
+                            </group>
+                            <group>
+                                <field name="origin" />
+                                <field name="move_type" />
+                                <field name="location_id" />
+                                <field name="location_dest_id" />
+                            </group>
+                        </group>
+
+                        <!-- Vista de línea de movimiento -->
+                        <notebook>
+                            <page string="Líneas de Picking">
+                                <field name="task_inventory_lines">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="product_uom_qty"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Acción que vincula la nueva vista con el modelo -->
+        <record id="action_stock_picking_custom" model="ir.actions.act_window">
+            <field name="name">Picking Personalizado</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_stock_picking_form_custom"/>
+            <field name="target">current</field>
+        </record>
+        
+        <!-- Asignar la nueva vista como la predeterminada 
+        <record id="view_stock_picking_form" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <field name="view_id" ref="view_stock_picking_form_custom"/>
+            </field>
+        </record> -->
+
+    </data>
+</odoo>
