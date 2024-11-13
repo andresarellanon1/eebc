@@ -32,3 +32,4 @@ class SaleOrder(models.Model):
             }
         else:
             return super(SaleOrder, self).action_confirm()
+            
