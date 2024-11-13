@@ -20,8 +20,6 @@ class ProjectProject(models.Model):
     publication_date = fields.Date(string="Publication Date")
     site_supervisor_id = fields.Many2one('res.users', string="Site Supervisor")
     subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
-    # costo_total_final = fields.Float(string="Costo final", store=True,)
-    # display_costo_total_final = fields.Char(string="Costo total", store=True,)
     costo_total_final = fields.Float(string="Costo final", compute="_final_cost", store=True,)
     display_costo_total_final = fields.Char(string="Costo total", compute="_total_final_cost", store=True,)
     custom_currency_id = fields.Many2one('res.currency', string='Divisa')
@@ -90,7 +88,7 @@ class ProjectProject(models.Model):
             for product in record.product_ids:
                 total = (product.supplier_cost * product.quantity)
                 impuestos = ((total) * record.taxes_id.amount)/100
-                origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
+                origin_currency = product.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
                 
                 if product.supplier_cost > 0:
                     costo_total = total + impuestos
@@ -104,14 +102,14 @@ class ProjectProject(models.Model):
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
 
-    @api.depends('product_ids.quantity', 'product_ids.product_tmpl_id')
+    @api.depends('product_ids.quantity', 'product_ids.product_id')
     def _total_final_cost(self):
         for record in self:
             record.costo_total_final = 0 
             for product in record.product_ids:
                 total = (product.supplier_cost * product.quantity)
                 impuestos = ((total) * record.taxes_id.amount)/100
-                origin_currency = product.product_tmpl_id.last_supplier_last_order_currency_id.name
+                origin_currency = product.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
                 
                 if product.supplier_cost > 0:
                     costo_total = total + impuestos
@@ -124,7 +122,3 @@ class ProjectProject(models.Model):
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
-
-            
-            
-            
