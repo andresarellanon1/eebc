@@ -1,0 +1,6 @@
+<record id="task_inventory_line_view" model="ir.actions.act_window">
+    <field name="name">task.inventory.line.view</field>
+    <field name="res_model">task.inventory.line</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{'create': True}</field>
+</record>
