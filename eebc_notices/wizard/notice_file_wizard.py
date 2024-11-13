@@ -102,7 +102,12 @@ class NoticeFileWizard(models.TransientModel):
                 'sale_order_id':self._context['sale_invoice_ids'],
                 'stock_move_id':self._context['stock_move_id'],
             })
-        self.clean_up_references()
+        # Limpieza del contexto
+        self = self.with_context(
+            origin_invoice_ids=False,
+            sale_invoice_ids=False,
+            lot_ids=False
+        )
 
 
     def clean_up_references(self):

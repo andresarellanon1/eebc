@@ -1,4 +1,7 @@
 from odoo import fields, models, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ProjecVersionLines(models.Model):
 
@@ -69,11 +72,17 @@ class ProjecVersionLines(models.Model):
 
             if previous_version:
                 record.previous_version_plan_lines = previous_version.project_plan_lines
+                _logger.warning(f'El record cambio es: {previous_version.project_plan_lines}')
+
                 record.previous_version_picking_lines = previous_version.project_picking_lines
-                
+                _logger.warning(f'El record cambio es: {previous_version.project_picking_lines}')
+
                 record.project_plan_lines = record.project_plan_lines | previous_version.project_plan_lines
+                _logger.warning(f'El record cambio es: {record.project_plan_lines}')
+
                 record.project_picking_lines = record.project_picking_lines | previous_version.project_picking_lines
-                
+                _logger.warning(f'El record cambio es: {record.project_picking_lines}')
+
                 record.has_previous_version = True
             else:
                 record.previous_version_plan_lines = [(5, 0, 0)]
