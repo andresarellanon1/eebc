@@ -3,24 +3,26 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-class TaskInventoryWizard(models.TransientModel):
-    _name = 'task.inventory.wizard'
-    _description = 'Wizard to create stock move with selected products'
 
-    # Relación con los productos seleccionados en vez de stock.moves
-    product_ids = fields.Many2many('product.product', string="Productos")
+class ProjectCreation(models.TransientModel):
+    _name = 'task.inventory.wizard'
+    _description = 'Wizard to confirm project creation'
+
     project_task_id = fields.Many2one('project.task', string="Project Task")
+    stock_move_ids = fields.Many2many('stock.move', string="Stock move")
+    # product_ids = fields.Many2many('product.product', string="Productos")
+    stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
 
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner', string='Contacto')
+    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id', store=True)
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
-    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación", compute='_compute_picking_type_id', store=True)
     scheduled_date = fields.Datetime(string='Fecha programada')
     origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
-    user_id = fields.Many2one('res.users', string='Usuario')
-    company_id = fields.Many2one('res.company', string="Empresa")
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
+    task_id_char = fields.Char(string='Tarea origen', compute="_compute_task_id")
+    user_id = fields.Many2one('res.users', string='Contacto')
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
 
     # Información adicional
@@ -29,91 +31,71 @@ class TaskInventoryWizard(models.TransientModel):
     weight = fields.Float(string="Peso")
     shipping_weight = fields.Float(string="Peso para envío")
     group_id = fields.Many2one('procurement.group', string="Grupo de aprovisionamiento")
-    transport_type = fields.Selection(
-        string="Tipo de transporte",
-        selection=[('00', 'No usa carreteras federales'), ('01', 'Autotransporte Federal')]
-    )
+    company_id = fields.Many2one('res.company', string="Empresa")
+    transport_type = fields.Selection(string="Tipo de transporte",selection=[('00', 'No usa carreteras federales'), ('01', 'Autotransporte Federal')])
+    custom_document_identification = fields.Char(string="Customs Document Identification")
 
     lat_origin = fields.Float(string="Latitud de origen")
     long_origin = fields.Float(string="Longitud de origen")
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
-    custom_document_identification = fields.Char(string="Customs Document Identification")
 
-    @api.model
-    def _compute_fields(self):
-        for record in self:
-            record.task_id = record.project_task_id.id
+    @api.onchange('name')
+    def _compute_task_id(self):
+        self.task_id_char = self.project_task_id.name
 
-    @api.depends('name')
+    @api.onchange('name')
+    def _compute_picking_type_id(self):
+        _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
+        self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
+
+    @api.onchange('name')
     def _compute_origin(self):
-        for record in self:
-            record.origin = record.name
-
-    # @api.depends('project_task_id')
-    # def _compute_picking_type_id(self):
-    #     for record in self:
-    #         if record.project_task_id:
-    #             record.picking_type_id = record.project_task_id.project_id.default_picking_type_id
+        _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
+        self.origin = self.project_task_id.name
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
-        # Verificar que haya productos seleccionados
-        if not self.product_ids:
-            raise ValueError("Debe seleccionar al menos un producto.")
+        stock_move_ids_vals = [(0, 0, {
+            'product_id': line.product_id.id,
+            'product_packaging_id': line.product_packaging_id.id,
+            'product_uom_qty': line.product_uom_qty,
+            'quantity': line.quantity,
+            'product_uom': line.product_uom.id,
+            'picking_type_codigo': line.picking_type_codigo,
+            'location_id': line.location_id.id,
+            'location_dest_id': line.location_dest_id.id,
+            'name': line.name,
 
-        # Crear un solo stock.move con todos los productos
-        stock_move_vals = {
-            'product_id': self.product_ids[0].id,  # Este campo puede quedarse vacío si solo se trata de un único movimiento
-            'product_ids': [(6, 0, self.product_ids.ids)], # Relación con los productos seleccionados
-            # 'product_uom_qty': sum(product.standard_price for product in self.product_ids), # Cantidad total de todos los productos
-            # 'location_id': self.location_id.id,
-            # 'location_dest_id': self.location_dest_id.id,
-            'name': self.name,
-            'picking_type_id': self.picking_type_id.id,
-            # 'origin': self.origin,
-            # 'carrier_id': self.carrier_id.id,
-            # 'carrier_tracking_ref': self.carrier_tracking_ref,
-            # 'weight': self.weight,
-            # 'shipping_weight': self.shipping_weight,
-            # 'user_id': self.user_id.id,
-            # 'transport_type': self.transport_type,
-            # 'lat_origin': self.lat_origin,
-            # 'long_origin': self.long_origin,
-            # 'lat_dest': self.lat_dest,
-            # 'long_dest': self.long_dest,
-        }
+        }) for line in self.stock_move_ids]
 
-        # Crear un solo Stock Move
-        stock_move = self.env['stock.move'].create(stock_move_vals)
-
-        # Crear un picking con este stock move
         stock_picking_vals = {
             'name': self.name,
             'partner_id': self.partner_id.id,
-            # 'location_id': self.location_id.id,
-            # 'location_dest_id': self.location_dest_id.id,
-            # # 'scheduled_date': self.scheduled_date,
-            # 'origin': self.origin,
-            'move_ids': [(4, stock_move.id)],  # Enlazamos el movimiento creado al picking
-            # 'carrier_id': self.carrier_id.id,
-            # 'carrier_tracking_ref': self.carrier_tracking_ref,
-            # 'weight': self.weight,
-            # 'shipping_weight': self.shipping_weight,
-            # 'user_id': self.user_id.id,
-            # 'transport_type': self.transport_type,
-            # 'lat_origin': self.lat_origin,
-            # 'long_origin': self.long_origin,
-            # 'lat_dest': self.lat_dest,
-            # 'long_dest': self.long_dest,
+            'picking_type_id': self.project_task_id.project_id.default_picking_type_id.id,
+            'location_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id,
+            'scheduled_date': self.scheduled_date,
+            'origin': self.project_task_id.name,
+            'task_id': self.project_task_id.id,
+            'user_id': self.user_id.id,
+            'move_ids': stock_move_ids_vals,
+
+            'carrier_id': self.carrier_id.id,
+            'carrier_tracking_ref': self.carrier_tracking_ref,
+
+            'weight': self.weight,
+            'shipping_weight': self.shipping_weight,
+            'group_id': self.group_id.id,
+            'company_id': self.company_id.id,
+            'transport_type': self.transport_type,
+            'custom_document_identification': self.custom_document_identification,
+            'lat_origin': self.lat_origin,
+            'long_origin': self.long_origin,
+            'lat_dest': self.lat_dest,
+            'long_dest': self.long_dest,
         }
 
-        stock_picking = self.env['stock.picking'].create(stock_picking_vals)
+        self.env['stock.picking'].create(stock_picking_vals)
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'stock.picking',
-            'res_id': stock_picking.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
+        return True
