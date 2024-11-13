@@ -7,26 +7,25 @@
             <field name="arch" type="xml">
                 <form string="Sale order project creation">
                     <sheet>
-                         <group>
-                            <div style="width: 100%">
-                                <h1>Only one project is allowed per sale order.</h1>
-                                <h2>Choose one and delete the other ones.</h2>
-                            </div>
-                            <notebook>
-                                <page name="services" string="Services">
-                                    <div style="100%">
-                                        <field name="services_ids" nolabel="1">
-                                            <tree>
-                                                <field name="name"/>
-                                                <field name="project_plan_id"/>
-                                            </tree>
-                                        </field>
-                                    </div>
-                                </page>
-                            </notebook>
-                         </group>
+                        <div>
+                            <h1>Only one project is allowed per sale order.</h1>
+                            <h2>Choose one and delete the other ones.</h2>
+                        </div>
+                            
+                        <notebook>
+                            <page name="services" string="Services">
+                                <div style="100%">
+                                    <field name="services_ids" nolabel="1">
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="project_plan_id"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </page>
+                        </notebook>
 
-                         <footer>
+                        <footer>
                             <button name="confirm_wizard" string="Confirm"
                                 type="object" class="btn-primary" />
                             <button string="Cancel" class="btn-secondary" special="cancel" />

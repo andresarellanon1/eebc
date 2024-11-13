@@ -27,6 +27,8 @@ class ProjectCreation(models.TransientModel):
 
     is_sale_order = fields.Boolean(default=False)
 
+    sale_order_id = fields.Many2one('sale.order')
+
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
     # When the 'project_plan_pickings' field is modified, 
@@ -84,8 +86,9 @@ class ProjectCreation(models.TransientModel):
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'sale.order',
+                'res_id': self.sale_order_id.id,
                 'view_mode': 'form',
-                'target': 'current',
+                'target': 'new',
             }
         else:
             return {
