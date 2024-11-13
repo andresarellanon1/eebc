@@ -34,10 +34,9 @@
                                         <field name="product_packaging_id"/>
                                         <field name="product_uom_qty"/>
                                         <field name="quantity"/>
-                                        <field name="product_uom_id" />
+                                        <field name="product_uom" />
                                     </tree>
                                 </field>
-                                
                             </page>
                             <page string="Additional Info" name="extra">
                                 <group>
