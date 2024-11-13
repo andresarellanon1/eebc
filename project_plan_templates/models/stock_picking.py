@@ -4,6 +4,7 @@ class StockPicking(models.Model):
 
     _inherit = 'stock.picking'
 
+    task_inventory_lines = fields.One2many('task.inventory.line', string="Lineas de inventario de la tarea")
     task_id = fields.Many2one('project.task', string='projects')
     project_id = fields.Many2one('project.project', string='Proyecto')
     new_selection = fields.Selection(string='Nueva selección', copy=False,selection=[('estimacion','Estimación'),('traslado','Traslado')])
