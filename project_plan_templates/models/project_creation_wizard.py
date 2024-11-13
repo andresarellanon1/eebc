@@ -87,6 +87,7 @@ class ProjectCreation(models.TransientModel):
                 'type': 'ir.actions.act_window',
                 'res_model': 'sale.order',
                 'res_id': self.sale_order_id.id,
+                'view_type': 'form',
                 'view_mode': 'form',
                 'target': 'current',
                 'context': self.env.context
