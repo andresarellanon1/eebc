@@ -8,13 +8,25 @@ class ProjectSaleWizard(models.TransientModel):
 
     products_ids = fields.Many2many('product.template')
     sale_order_id = fields.Many2one('sale.order', string='Sale Order', required=True)
+    project_plan_id = fields.Many2one('project.plan', string="Project plan template")
+    services_ids = fields.Many2many('product.template')
 
     def confirm_wizard(self):
         self.ensure_one()
 
-        project_plan = self.project_plan_id
+        if len(self.services_ids) == 1:
+            
+            service = self.services_ids[0] 
+            project_plan = service.project_plan_id
 
-        if self.products_ids == 1:
+            allowed_product_ids = (self.products_ids + self.services_ids).mapped('id')
+
+            lines_to_remove = self.sale_order_id.order_line.filtered(
+                lambda line: line.product_id.product_tmpl_id.id not in allowed_product_ids
+            )
+
+            lines_to_remove.unlink()
+
             return {
                 'name': 'Create Project',
                 'view_mode': 'form',
@@ -28,7 +40,7 @@ class ProjectSaleWizard(models.TransientModel):
                     'default_picking_lines': [(6, 0, project_plan.picking_lines.ids)],
                     'default_description': project_plan.description,
                     'default_is_sale_order': True,
-                    'default_project_name': self.products_ids[0].name
+                    'default_project_name': self.services_ids[0].name
                 }
             }
         else:

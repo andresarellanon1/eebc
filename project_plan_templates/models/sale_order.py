@@ -6,13 +6,16 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         self.ensure_one()
+        services_ids = []
         products_ids = []
 
         for line in self.order_line:
             if line.product_template_id.detailed_type == 'service':
                 if line.product_template_id.service_tracking == 'project_only':
                     if line.product_template_id.project_plan_id:
-                        products_ids.append(line.product_template_id.id)
+                        services_ids.append(line.product_template_id.id)
+            else:
+                products_ids.append(line.product_template_id.id)
 
         if products_ids:
             return {
@@ -22,6 +25,7 @@ class SaleOrder(models.Model):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'context': {
+                    'default_services_ids': [(6, 0, services_ids)],
                     'default_products_ids': [(6, 0, products_ids)],
                     'default_sale_order_id': self.id
                 }
