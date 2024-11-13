@@ -118,6 +118,6 @@ class Notices(models.Model):
 
 # cuando es outgoing el picking que seleccione el aviso de donde sacaremos los productos, si es que los productos ya tienen un aviso relacionado con su serie
 
-
+# mostrar en la vista de stock.picking que se accede desde la orden de venta para que aparezca el boton de crear o seleccionar aviso
 # cantidadesdes demandadas y cantidades que hay en el aviso validarlo al momento de darle salida a los productos vendidos en la venta y que el 
 #  historialo tenga un estado de draft y done donde hasya que no este validada no se umestre en el historial de avisos
