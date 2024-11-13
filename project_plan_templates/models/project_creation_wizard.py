@@ -89,6 +89,7 @@ class ProjectCreation(models.TransientModel):
                 'res_id': self.sale_order_id.id,
                 'view_mode': 'form',
                 'target': 'current',
+                'context': self.env.context
             }
         else:
             return {
