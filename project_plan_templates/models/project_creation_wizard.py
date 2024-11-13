@@ -1,4 +1,6 @@
 from odoo import models, fields, api
+import logging
+logger = logging.getLogger(__name__)
 
 #TODO Update comments on the code
 
@@ -51,6 +53,8 @@ class ProjectCreation(models.TransientModel):
 
     def action_confirm_create_project(self):
         self.ensure_one()
+
+        logger.warning(f"Sale: {self.sale_order_id.id}")
 
         project_plan_lines_vals = [(0, 0, {
             'name': line.name,
