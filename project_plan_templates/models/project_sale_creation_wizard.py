@@ -6,10 +6,10 @@ class ProjectSaleWizard(models.TransientModel):
     _name = 'project.sale.creation.wizard'
     _description = 'Wizard to create projects from sale order'
 
-    products_ids = fields.Many2many('product.template')
+    products_ids = fields.Many2many('product.template', 'wizard_product_template_rel',)
     sale_order_id = fields.Many2one('sale.order', string='Sale Order', required=True)
     project_plan_id = fields.Many2one('project.plan', string="Project plan template")
-    services_ids = fields.Many2many('product.template')
+    services_ids = fields.Many2many('product.template', 'wizard_service_template_rel',)
 
     def confirm_wizard(self):
         self.ensure_one()
