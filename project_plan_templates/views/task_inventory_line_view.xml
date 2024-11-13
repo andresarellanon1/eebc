@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="action_task_inventory_line" model="ir.actions.act_window">
-        <field name="name">Asignar Productos a Inventario de Tarea</field>
-        <field name="res_model">task.inventory.line</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_task_inventory_line_tree"/>
+    <record id="action_task_inventory_wizard" model="ir.actions.act_window">
+        <field name="name">Create Inventory</field>
+        <field name="res_model">task.inventory.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_task_inventory_wizard_form"/>
         <field name="target">current</field>
     </record>
+
 </odoo>
 
 
