@@ -42,7 +42,7 @@ class ProjectSaleWizard(models.TransientModel):
                     'default_description': project_plan.description,
                     'default_is_sale_order': True,
                     'default_project_name': self.services_ids[0].name,
-                    'deafult_sale_order_id': self.sale_order_id.id
+                    'default_sale_order_id': self.sale_order_id.id
                 }
             }
         else:
