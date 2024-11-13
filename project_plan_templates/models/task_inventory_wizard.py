@@ -56,26 +56,24 @@ class ProjectCreation(models.TransientModel):
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
-        inventory_lines_vals = [(0, 0, {
-            'product_id': line.product_id.id,
-            'product_packaging_id': line.product_packaging_id.id,
-            'product_uom_qty': line.product_uom_qty,
-            'quantity': line.quantity,
-            'product_uom': line.product_uom.id,
-        }) for line in self.inventory_lines]
-
-        # stock_move_ids_vals = [(0, 0, {
+        # inventory_lines_vals = [(0, 0, {
         #     'product_id': line.product_id.id,
         #     'product_packaging_id': line.product_packaging_id.id,
         #     'product_uom_qty': line.product_uom_qty,
         #     'quantity': line.quantity,
         #     'product_uom': line.product_uom.id,
-        #     'picking_type_codigo': line.picking_type_codigo,
-        #     'location_id': line.location_id.id,
-        #     'location_dest_id': line.location_dest_id.id,
-        #     'name': line.name,
+        # }) for line in self.inventory_lines]
 
-        # }) for line in self.stock_move_ids]
+        stock_move_ids_vals = [(0, 0, {
+            'product_id': line.product_id.id,
+            'product_packaging_id': line.product_packaging_id.id,
+            'product_uom_qty': line.product_uom_qty,
+            'quantity': line.quantity,
+            'product_uom': line.product_uom.id,
+            'location_id': line.location_id.id,
+            'location_dest_id': line.location_dest_id.id,
+            'name': line.name,
+        }) for line in self.stock_move_ids]
 
         stock_picking_vals = {
             'name': self.name,
