@@ -9,7 +9,7 @@ class ProjectCreation(models.TransientModel):
     _description = 'Wizard to confirm project creation'
 
     project_task_id = fields.Many2one('project.task', string="Project Task")
-
+    inventory_lines = fields.Many2many('task.inventory.line')
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
     product_ids = fields.Many2many('product.product', string="Productos",
                                    domain=lambda self: self._get_product_domain())
@@ -65,18 +65,13 @@ class ProjectCreation(models.TransientModel):
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
-        stock_move_ids_vals = [(0, 0, {
+        inventory_lines_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'product_packaging_id': line.product_packaging_id.id,
             'product_uom_qty': line.product_uom_qty,
             'quantity': line.quantity,
             'product_uom': line.product_uom.id,
-            'picking_type_codigo': line.picking_type_codigo,
-            'location_id': line.location_id.id,
-            'location_dest_id': line.location_dest_id.id,
-            'name': line.name,
-
-        }) for line in self.stock_move_ids]
+        }) for line in self.inventory_lines]
 
         stock_picking_vals = {
             'name': self.name,
@@ -88,7 +83,7 @@ class ProjectCreation(models.TransientModel):
             'origin': self.project_task_id.name,
             'task_id': self.project_task_id.id,
             'user_id': self.user_id.id,
-            'move_ids': stock_move_ids_vals,
+            'task_inventory_lines': inventory_lines_vals,
 
             'carrier_id': self.carrier_id.id,
             'carrier_tracking_ref': self.carrier_tracking_ref,
