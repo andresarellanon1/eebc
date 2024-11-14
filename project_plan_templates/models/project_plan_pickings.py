@@ -37,7 +37,7 @@ class ProjectPlanPickingLine(models.Model):
     stock_move_id = fields.Many2one('stock.move', string='Project Stock')
     
     def reservado_update(self):
-        # for record in self:
-        #     for move_id in move_ids: # Iteramos sobre los movimientos solo una vez por cada registro.
-        #         if record.product_id == move_id.product_id:  # Verificamos si el producto coincide.
-        #             record.reservado += move_id.quantity  # Actualizamos el campo 'reservado' sumando la cantidad del stock_move
+        for record in self:
+            for move_id in move_ids: # Iteramos sobre los movimientos solo una vez por cada registro.
+                if record.product_id == move_id.product_id:  # Verificamos si el producto coincide.
+                    record.reservado += move_id.quantity  # Actualizamos el campo 'reservado' sumando la cantidad del stock_move
