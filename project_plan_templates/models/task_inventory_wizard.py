@@ -55,13 +55,16 @@ class ProjectCreation(models.TransientModel):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
 
-    @api.onchange('project_task_id')
-    def _onchange_project_task_id(self):
+    @api.onchange('stock_move_ids')
+    def _onchange_stock_move_ids(self):
         if self.project_task_id:
-            project = self.project_task_id.project_id
-            product_ids = project.project_picking_lines.mapped('product_id.id')
-            self.project_stock_products = [(6, 0, product_ids)]
-            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
+            project_picking_lines = self.env['project.picking.lines'].search([
+                ('project_id', '=', self.project_task_id.project_id.id)
+            ])
+            product_ids = project_picking_lines.mapped('product_id').ids
+            self.stock_move_ids = self.stock_move_ids.filtered(lambda move: move.product_id.id in product_ids)
+        else:
+            self.stock_move_ids = False
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
