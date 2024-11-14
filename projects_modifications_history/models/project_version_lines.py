@@ -92,7 +92,7 @@ class ProjecVersionLines(models.Model):
                     'product_id': line.product_id.id,
                     'quantity': line.quantity,
                     'reservado': line.reservado,
-                    'location_id': line.location_id  # Cambia esto a los campos relevantes
+                    'location_id': line.location_id.id  # Cambia esto a los campos relevantes
                 }) for line in previous_version.project_picking_lines]
                 record.previous_version_picking_lines = new_picking_lines
     
