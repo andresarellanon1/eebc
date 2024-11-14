@@ -71,11 +71,37 @@ class ProjecVersionLines(models.Model):
             ], order="id desc", limit=1)
 
             if previous_version:
-                record.previous_version_plan_lines = previous_version.project_plan_lines
-                _logger.warning(f'El record cambio es: {previous_version.project_plan_lines}')
-
-                record.previous_version_picking_lines = previous_version.project_picking_lines
-                _logger.warning(f'El record cambio es: {previous_version.project_picking_lines}')
+                # Duplicar registros para evitar referencias directas
+                record.previous_version_plan_lines = [(5, 0, 0)]  # Limpiar
+                record.previous_version_picking_lines = [(5, 0, 0)]  # Limpiar
+    
+                # Duplicar plan lines y picking lines de la versión anterior
+                new_plan_lines = [(0, 0, {
+                    'name': line.name,  # Copiar atributos relevantes
+                    'chapter': line.chapter,
+                    'description': line.description,
+                    'planned_date_begin': line.planned_date_begin, 
+                    'planned_date_end': line.planned_date_end, 
+                    'partner_id': line.partner_id,
+                    'task_timesheet_id': line.task_timesheet_id,
+                    'stage_id': line.stage_id, # Cambia esto a los campos relevantes
+                }) for line in previous_version.project_plan_lines]
+                record.previous_version_plan_lines = new_plan_lines
+    
+                new_picking_lines = [(0, 0, {
+                    'product_id': line.product_id,
+                    'quantity': line.quantity,
+                    'reservado': line.reservado,
+                    'location_id': line.location_id  # Cambia esto a los campos relevantes
+                }) for line in previous_version.project_picking_lines]
+                record.previous_version_picking_lines = new_picking_lines
+    
+                # if previous_version:
+                #     record.previous_version_plan_lines = previous_version.project_plan_lines
+                #     _logger.warning(f'El record cambio es: {previous_version.project_plan_lines}')
+    
+                #     record.previous_version_picking_lines = previous_version.project_picking_lines
+                #     _logger.warning(f'El record cambio es: {previous_version.project_picking_lines}')
 
                 record.project_plan_lines = record.project_plan_lines | previous_version.project_plan_lines
                 _logger.warning(f'El record cambio es: {record.project_plan_lines}')
