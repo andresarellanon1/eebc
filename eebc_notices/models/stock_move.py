@@ -39,7 +39,7 @@ class StockMove(models.Model):
             move.has_aviso_in_attributes = (
                 any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')) 
             )
-            move.has_type_picking_notice_approve = move.picking_type_id.code == 'incoming'
+            move.has_type_picking_notice_approve = move.picking_type_id.code in ['incoming','outgoing','internal']
 
             if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True:
                 _logger.warning('1')
@@ -55,9 +55,11 @@ class StockMove(models.Model):
             
             else:
                 _logger.warning('2')
-
-                move.has_aviso_in_attributes_fake = True
-                move.existing_product_in_notice = False
+                
+                if move.picking_type_id.code == 'mrp_operation':
+                    move.has_aviso_in_attributes_fake = False
+                else:
+                    move.has_aviso_in_attributes_fake = True
 
             
                
