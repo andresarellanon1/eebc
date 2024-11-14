@@ -11,6 +11,7 @@ class ProjectCreation(models.TransientModel):
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
     project_stock_products = fields.Many2many('product.product', string="Productos")
+    
 
     # Sección de información general
     name = fields.Char(string='Referencia')
@@ -66,6 +67,9 @@ class ProjectCreation(models.TransientModel):
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
+
+        project_task_id.project_id.project_picking_lines.reservado_update()
+
         stock_move_ids_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'product_packaging_id': line.product_packaging_id.id,
