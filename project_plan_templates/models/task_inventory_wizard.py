@@ -55,7 +55,7 @@ class ProjectCreation(models.TransientModel):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
 
-    @api.onchange('project_task_id')
+    @api.onchange('name')
     def _onchange_project_task_id(self):
         if self.project_task_id:
             project = self.project_task_id.project_id
