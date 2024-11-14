@@ -8,8 +8,8 @@
             <xpath expr="//form/sheet/notebook/page[@name='operations']/field[@name='move_ids_without_package']/tree" position="inside">
                 <!-- Campo invisible para controlar la visibilidad del botón en cada producto -->
                 <field name="has_aviso_in_attributes" column_invisible="1" invisible="1"/>
-                <field name="has_aviso_in_attributes_fake" column_invisible="1" invisible="1" />
-                <field name="existing_product_in_notice" column_invisible="1" invisible="1" />
+                <field name="has_aviso_in_attributes_fake" column_invisible="0" invisible="0" />
+                <field name="existing_product_in_notice" column_invisible="0" invisible="0" />
 
                 <field name="has_type_picking_notice_approve" column_invisible="1" invisible="1"/>
 
