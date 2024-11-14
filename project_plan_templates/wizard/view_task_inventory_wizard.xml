@@ -16,7 +16,7 @@
                             <group>
                                 <field name="partner_id"/>
                                 <field name="picking_type_id"/>
-                                <field name="location_id" />
+                                <field name="location_id"/>
                                 <field name="location_dest_id"/>
                             </group>
                             <group>
@@ -28,13 +28,16 @@
                         </group>
                         <notebook>
                             <page string="Operations" name="operations">
-                                <field name="inventory_lines" nolabel="1">
-                                    <tree style="width: 100%;">
+                                <field name="stock_move_ids" domain="[('product_id', 'in', project_stock_products)]">
+                                    <tree editable="editable_bottom">
                                         <field name="product_id"/>
+                                        <field name="project_stock_products" column_invisible="True"/>
                                         <field name="product_packaging_id"/>
                                         <field name="product_uom_qty"/>
                                         <field name="quantity"/>
-                                        <field name="product_uom" />
+                                        <field name="product_uom" string="Unidad"/>
+                                        <field name="company_id" column_invisible="True"/>
+                                        <field name="product_uom_category_id" column_invisible="True"/>
                                     </tree>
                                 </field>
                             </page>
@@ -78,8 +81,8 @@
                             </page>
                         </notebook>
                         <footer>
-                            <button name="action_confirm_create_inventory" string="Create Inventory" type="object" class="btn-primary" />
-                            <button string="Cancel" class="btn-secondary" special="cancel" />
+                            <button name="action_confirm_create_inventory" string="Create Inventory" type="object" class="btn-primary"/>
+                            <button string="Cancel" class="btn-secondary" special="cancel"/>
                         </footer>
                     </sheet>
                 </form>
