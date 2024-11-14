@@ -27,7 +27,7 @@
                         </group>
                         <notebook>
                             <page string="Operations" name="operations">
-                                <field name="stock_move_ids">
+                                <field name="stock_move_ids" editable="bottom" options="{'create': True}">
                                     <tree editable="bottom">
                                         <field name="product_id"/>
                                         <field name="product_packaging_id"/>
