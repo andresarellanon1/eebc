@@ -89,7 +89,7 @@ class ProjecVersionLines(models.Model):
                 record.previous_version_plan_lines = new_plan_lines
     
                 new_picking_lines = [(0, 0, {
-                    'product_id': line.product_id,
+                    'product_id': line.product_id.id,
                     'quantity': line.quantity,
                     'reservado': line.reservado,
                     'location_id': line.location_id  # Cambia esto a los campos relevantes
