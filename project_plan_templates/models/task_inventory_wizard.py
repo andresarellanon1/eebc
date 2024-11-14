@@ -54,17 +54,6 @@ class ProjectCreation(models.TransientModel):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
 
-    @staticmethod
-    def action_open_stock_move(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Crear Movimiento',
-            'view_mode': 'form',
-            'res_model': 'stock.move',
-            'target': 'current',
-            'context': {'default_type': 'create'},
-        }
-
     def action_confirm_create_inventory(self):
         self.ensure_one()
         stock_move_ids_vals = [(0, 0, {
