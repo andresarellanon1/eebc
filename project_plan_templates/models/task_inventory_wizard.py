@@ -60,6 +60,7 @@ class ProjectCreation(models.TransientModel):
         if self.project_task_id:
             project = self.project_task_id.project_id
             product_ids = project.project_picking_ids.mapped('project_picking_lines.product_id.id')
+            self.project_stock_products = [(6, 0, product_ids)]
             return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
 
     def action_confirm_create_inventory(self):
