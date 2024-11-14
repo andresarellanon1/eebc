@@ -110,6 +110,21 @@ class StockMove(models.Model):
                 'stock_move_id':self.id
             }
         }
+        
+    def call_wizard_select_notice(self):
+       
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Wizard File Upload',
+            'res_model': 'select.notice.wizard',
+            'view_mode': 'form',
+            'view_id': self.env.ref('eebc_notices.wizard_select_notice_view').id,  # Aquí se especifica el ID correcto de la vista
+            'target': 'new',
+            'context': {
+                'product_id': self.product_id.id,  # Pasar valores por defecto
+                'cantidad':  self.product_uom_qty,
+            }
+        }
 
 
 
