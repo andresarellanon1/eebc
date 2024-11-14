@@ -59,7 +59,8 @@ class ProjectCreation(models.TransientModel):
     def _onchange_project_task_id(self):
         if self.project_task_id:
             project = self.project_task_id.project_id
-            product_ids = project.project_picking_lines.mapped('product_id.id')
+            # Convertir explícitamente cada ID a tipo int para asegurar que tenemos números
+            product_ids = [int(product.id) for product in project.project_picking_lines.mapped('product_id')]
             self.project_stock_products = [(6, 0, product_ids)]
             _logger.warning(f'El valor de project_stock_products es: {self.project_stock_products}')
             return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
