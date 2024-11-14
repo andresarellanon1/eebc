@@ -59,9 +59,43 @@ class ProjecVersionLines(models.Model):
             else:
                 record.version_number = "V0"
 
-
     @api.depends('project_id')
     def _compute_previous_version_lines(self):
+        for record in self:
+            
+            # Assign the current project's name to the project_name field of the current record
+            record.project_name = record.project_id.name
+
+            # Search for the previous version of the project (if it exists) for the specific record.
+            # We search for records with the same project_id and an id smaller than the current one.
+            previous_version = self.search([
+                ('project_id', '=', record.project_id.id),  # Same project_id
+                ('id', '<', record.id)  # Search for records with smaller ids (previous versions)
+            ], order="id desc", limit=1)  # Order by id descending to get the most recent previous version
+
+            # If a previous version is found (i.e., previous_version is not None)
+            if previous_version:
+                # Assign the previous version's project plan lines to the current record's previous_version_plan_lines
+                record.previous_version_plan_lines = previous_version.project_plan_lines
+
+                # Assign the previous version's project picking lines to the current record's previous_version_picking_lines
+                record.previous_version_picking_lines = previous_version.project_picking_lines
+
+                # Mark that this record has a previous version
+                record.has_previous_version = True
+            else:
+                # If no previous version is found (no earlier project with that id exists),
+                # we assign empty values to the plan and picking lines
+                record.previous_version_plan_lines = [(5, 0, 0)]  # (5, 0, 0) is the syntax for clearing lines
+
+                # Similarly, assign empty values to the picking lines
+                record.previous_version_picking_lines = [(5, 0, 0)]
+
+                # Mark that there is no previous version
+                record.has_previous_version = False
+
+    @api.depends('project_id')
+    def _compute_previous_version_liness(self):
         for record in self:
             record.project_name = record.project_id.name
 
