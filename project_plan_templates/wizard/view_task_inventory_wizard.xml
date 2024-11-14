@@ -30,7 +30,7 @@
                                 <group>
                                     <field name="project_stock_products" invisible="1"/>
                                 </group>
-                                <field name="stock_move_ids">
+                                <field name="stock_move_ids" domain="[('product_id', 'in', project_stock_products">
                                     <tree editable="bottom">
                                         <field name="product_id" domain="[('id', 'in', parent.project_stock_products)]"/>
                                         <field name="product_packaging_id"/>
