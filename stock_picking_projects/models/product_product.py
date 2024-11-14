@@ -23,7 +23,6 @@ class ProductProduct(models.Model):
         copied = True
     )
 
-
     @api.onchange('product_tmpl_id')
     def _onchange_product(self):
         for record in self:

@@ -38,7 +38,7 @@ class ProductSupplierInfo(models.Model):
     def _check_retention(self):
         for record in self:
             retention = record.supplier_retention
-            if retention <= 0 or retention > 1:
+            if retention < 0 or retention > 1:
                 raise ValidationError(
                     "El valor de la retención debe estar dentro del rango entre el 0 y el 1."
                 )

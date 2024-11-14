@@ -3,16 +3,16 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-
 class ProjectCreation(models.TransientModel):
     _name = 'task.inventory.wizard'
     _description = 'Wizard to confirm project creation'
 
     project_task_id = fields.Many2one('project.task', string="Project Task")
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
-    # product_ids = fields.Many2many('product.product', string="Productos")
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
+    project_stock_products = fields.Many2many('product.product', string="Productos")
 
+    # Sección de información general
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner', string='Contacto')
     picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id', store=True)
@@ -25,16 +25,17 @@ class ProjectCreation(models.TransientModel):
     user_id = fields.Many2one('res.users', string='Contacto')
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
 
-    # Información adicional
+    # Sección de Información adicional
     carrier_id = fields.Many2one('delivery.carrier')
     carrier_tracking_ref = fields.Char(string="Referencia de rastreo")
     weight = fields.Float(string="Peso")
     shipping_weight = fields.Float(string="Peso para envío")
     group_id = fields.Many2one('procurement.group', string="Grupo de aprovisionamiento")
     company_id = fields.Many2one('res.company', string="Empresa")
-    transport_type = fields.Selection(string="Tipo de transporte",selection=[('00', 'No usa carreteras federales'), ('01', 'Autotransporte Federal')])
+    transport_type = fields.Selection(string="Tipo de transporte", selection=[('00', 'No usa carreteras federales'), ('01', 'Autotransporte Federal')])
     custom_document_identification = fields.Char(string="Customs Document Identification")
 
+    # Sección de localización
     lat_origin = fields.Float(string="Latitud de origen")
     long_origin = fields.Float(string="Longitud de origen")
     lat_dest = fields.Float(string="Latitud de destino")
@@ -54,6 +55,13 @@ class ProjectCreation(models.TransientModel):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
 
+    @api.onchange('project_task_id')
+    def _onchange_project_task_id(self):
+        if self.project_task_id:
+            project = self.project_task_id.project_id
+            product_ids = project.project_picking_ids.mapped('project_picking_lines.product_id.id')
+            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
+
     def action_confirm_create_inventory(self):
         self.ensure_one()
         stock_move_ids_vals = [(0, 0, {
@@ -62,11 +70,9 @@ class ProjectCreation(models.TransientModel):
             'product_uom_qty': line.product_uom_qty,
             'quantity': line.quantity,
             'product_uom': line.product_uom.id,
-            'picking_type_codigo': line.picking_type_codigo,
             'location_id': line.location_id.id,
             'location_dest_id': line.location_dest_id.id,
             'name': line.name,
-
         }) for line in self.stock_move_ids]
 
         stock_picking_vals = {
@@ -80,10 +86,8 @@ class ProjectCreation(models.TransientModel):
             'task_id': self.project_task_id.id,
             'user_id': self.user_id.id,
             'move_ids': stock_move_ids_vals,
-
             'carrier_id': self.carrier_id.id,
             'carrier_tracking_ref': self.carrier_tracking_ref,
-
             'weight': self.weight,
             'shipping_weight': self.shipping_weight,
             'group_id': self.group_id.id,
@@ -96,6 +100,12 @@ class ProjectCreation(models.TransientModel):
             'long_dest': self.long_dest,
         }
 
-        self.env['stock.picking'].create(stock_picking_vals)
+        stock_picking = self.env['stock.picking'].create(stock_picking_vals)
 
-        return True
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'res_id': stock_picking.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }

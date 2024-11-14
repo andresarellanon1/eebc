@@ -124,7 +124,3 @@ class ProjectProject(models.Model):
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} MXN"
                         else:
                             record.display_costo_total_final = f"{record.costo_total_final:.2f} {origin_currency}"
-
-            
-            
-            

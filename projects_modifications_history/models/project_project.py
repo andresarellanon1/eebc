@@ -23,6 +23,7 @@ class ProjectProject(models.Model):
         for project in self:
             version_history = self.env['project.version.history'].search([('project_id', '=', project.id)], limit=1)
             project.version_history_id = version_history if version_history else False
+            
     # This action opens a wizard to generate a new version entry in the project's change history.
     # The wizard allows users to review the project plan lines (tasks to be created or added)
     # and the products included in the project's inventory. Additionally, it records the reason
@@ -37,13 +38,6 @@ class ProjectProject(models.Model):
 
     def action_save_version(self):
         self.ensure_one()
-
-        _logger = logging.getLogger(__name__)
-
-        _logger.info("Valor de project_plan_id: %s", self.project_plan_id)
-        _logger.info("Valor de project_plan_lines: %s", self.project_plan_lines)
-        _logger.info("Valor de project_picking_lines: %s", self.project_picking_lines)
-        _logger.info("Valor de project_id: %s", self.id)
 
         return {
             'name': 'Project Version History',
