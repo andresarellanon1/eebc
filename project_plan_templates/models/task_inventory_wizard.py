@@ -55,16 +55,16 @@ class ProjectCreation(models.TransientModel):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
 
+    # TODO: Trae los product_id, pero dominio no domina
     @api.onchange('name')
     def _onchange_project_task_id(self):
         if self.project_task_id:
             project = self.project_task_id.project_id
-            # Convertir explícitamente cada ID a tipo int para asegurar que tenemos números
             product_ids = [int(product.id) for product in project.project_picking_lines.mapped('product_id')]
             _logger.warning(f'El valor de product_ids es: {product_ids}')
             self.project_stock_products = [(6, 0, product_ids)]
             _logger.warning(f'El valor de project_stock_products es: {self.project_stock_products}')
-            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
+            return {'domain': {'product_id': [('id', 'in', product_ids)]}}
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
