@@ -28,56 +28,46 @@
                         </group>
                         <notebook>
                             <page string="Operations" name="operations">
-                                <field name="project_stock_products" column_invisible="True"/>
+                                <field name="project_stock_products" invisible="1"/>
                                 <field name="stock_move_ids" domain="[('product_id', 'in', project_stock_products)]">
-                                    <tree editable="editable_bottom">
+                                    <tree editable="bottom">
                                         <field name="product_id"/>
                                         <field name="product_packaging_id"/>
                                         <field name="product_uom_qty"/>
                                         <field name="quantity"/>
                                         <field name="product_uom" string="Unidad"/>
-                                        <field name="company_id" column_invisible="True"/>
-                                        <field name="product_uom_category_id" column_invisible="True"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="product_uom_category_id" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
                             <page string="Additional Info" name="extra">
                                 <group>
-
                                     <group string="Información de envío">
                                         <field name="carrier_id" string="Transportista"/>
                                         <field name="carrier_tracking_ref"/>
                                         <field name="weight" readonly="1"/>
                                         <field name="shipping_weight" readonly="1"/>
                                     </group>
-
                                     <group string="Otra información">
                                         <field name="user_id" widget="many2one_avatar_user"/>
                                         <field name="company_id" readonly="1"/>
                                     </group>
-
                                 </group>
-
-                                <!-- Separador de Guía de Entrega -->
                                 <separator string="Guía de entrega"/>
-
                                 <group>
-
                                     <group string="Transportar">
                                         <field name="transport_type"/>
                                     </group>
-
                                     <group string="Distancia">
                                         <field name="lat_origin"/>
                                         <field name="long_origin"/>
                                         <field name="lat_dest"/>
                                         <field name="long_dest"/>
                                     </group>
-
                                 </group>
                             </page>
                             <page string="Note" name="note">
-
                             </page>
                         </notebook>
                         <footer>
