@@ -1,4 +1,6 @@
 from odoo import models, fields, api
+import logging
+logger = logging.getLogger(__name__)
 
 #TODO Update comments on the code
 
@@ -27,6 +29,8 @@ class ProjectCreation(models.TransientModel):
 
     is_sale_order = fields.Boolean(default=False)
 
+    sale_order_id = fields.Many2one('sale.order')
+
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
     # When the 'project_plan_pickings' field is modified, 
@@ -49,6 +53,8 @@ class ProjectCreation(models.TransientModel):
 
     def action_confirm_create_project(self):
         self.ensure_one()
+
+        logger.warning(f"Sale: {self.sale_order_id.id}")
 
         project_plan_lines_vals = [(0, 0, {
             'name': line.name,
@@ -80,18 +86,15 @@ class ProjectCreation(models.TransientModel):
         self.project_plan_id.project_name = False
 
         if self.is_sale_order:
-            products_ids = self.env.context.get('default_products_ids', [])
-            sale_order_id = self.env.context.get('default_sale_order_id', False)
 
             return {
                 'type': 'ir.actions.act_window',
-                'res_model': 'project.sale.creation.wizard',
+                'res_model': 'sale.order',
+                'res_id': self.sale_order_id.id,
+                'view_type': 'form',
                 'view_mode': 'form',
-                'target': 'new',
-                'context': {
-                    'default_products_ids': products_ids,
-                    'default_sale_order_id': sale_order_id,
-                },
+                'target': 'current',
+                'context': self.env.context
             }
         else:
             return {
