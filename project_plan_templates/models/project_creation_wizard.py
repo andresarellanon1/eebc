@@ -1,10 +1,14 @@
 from odoo import models, fields, api
+import logging
+logger = logging.getLogger(__name__)
+
+#TODO Update comments on the code
 
 class ProjectCreation(models.TransientModel):
     _name = 'project.creation.wizard'
     _description = 'Wizard to confirm project creation'
 
-    project_plan_id = fields.Many2one('project.plan', string="Project Plan", required=True, readonly="True")
+    project_plan_id = fields.Many2one('project.plan', string="Project Plan", readonly=True)
     project_name = fields.Char(string="Project Name", required=True)
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
@@ -22,6 +26,10 @@ class ProjectCreation(models.TransientModel):
         'project.picking.lines',
         string="Picking Lines"
     )
+
+    is_sale_order = fields.Boolean(default=False)
+
+    sale_order_id = fields.Many2one('sale.order')
 
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
@@ -45,6 +53,8 @@ class ProjectCreation(models.TransientModel):
 
     def action_confirm_create_project(self):
         self.ensure_one()
+
+        logger.warning(f"Sale: {self.sale_order_id.id}")
 
         project_plan_lines_vals = [(0, 0, {
             'name': line.name,
@@ -75,13 +85,25 @@ class ProjectCreation(models.TransientModel):
 
         self.project_plan_id.project_name = False
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'project.project',
-            'res_id': project.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
+        if self.is_sale_order:
+
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'sale.order',
+                'res_id': self.sale_order_id.id,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'target': 'current',
+                'context': self.env.context
+            }
+        else:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.project',
+                'res_id': project.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
 
     # The `create_project_tasks` method generates tasks for the project using only 
     # the filtered lines with 'use_project_task' enabled. It fetches associated 

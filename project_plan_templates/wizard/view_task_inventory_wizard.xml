@@ -21,13 +21,22 @@
                             <group>
                                 <field name="scheduled_date"/>
                                 <field name="origin" string="Documento de origen"/>
+                                <field name="task_id_char" string="Tarea de origen" invisible="task_id"/>
+                                <field name="task_id" string="Tarea de origen" readonly="1" invisible="not task_id"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Operations" name="operations">
-                                <field name="product_ids" >
-                                    <tree >
-                                        <field name="display_name" />
+                                <button name="action_open_stock_move" type="object" string="Agregar Línea" context="{'default_type': 'create'}"/>
+                                <field name="stock_move_ids" editable="bottom">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="product_packaging_id"/>
+                                        <field name="product_uom_qty"/>
+                                        <field name="quantity"/>
+                                        <field name="product_uom" string="Unidad"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="product_uom_category_id" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -61,7 +70,8 @@
                             </page>
                         </notebook>
                         <footer>
-                            <button name="action_confirm_create_inventory" string="Create Inventory" type="object" class="btn-primary"/>
+                            <button name="action_confirm_create_inventory" string="Create Inventory" type="object"
+                                    class="btn-primary"/>
                             <button string="Cancel" class="btn-secondary" special="cancel"/>
                         </footer>
                     </sheet>
