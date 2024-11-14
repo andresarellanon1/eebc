@@ -9,6 +9,8 @@
                 <!-- Campo invisible para controlar la visibilidad del botón en cada producto -->
                 <field name="has_aviso_in_attributes" column_invisible="1" invisible="1"/>
                 <field name="has_aviso_in_attributes_fake" column_invisible="1" invisible="1" />
+                <field name="existing_product_in_notice" column_invisible="1" invisible="1" />
+
                 <field name="has_type_picking_notice_approve" column_invisible="1" invisible="1"/>
 
                 <!-- Añadimos un botón para cada producto en la línea de picking -->
@@ -25,6 +27,12 @@
                         string="Crear aviso" 
                         icon="fa-area-chart"
                         invisible="not has_aviso_in_attributes_fake"/>
+
+                 <button name="call_wizard" 
+                        type="object" 
+                        string="Seleccionar aviso" 
+                        icon="fa-area-chart"
+                        invisible="not existing_product_in_notice"/>
             </xpath>
         </field>
     </record>
