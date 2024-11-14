@@ -10,6 +10,7 @@ class ProjectCreation(models.TransientModel):
     project_task_id = fields.Many2one('project.task', string="Project Task")
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
+    project_stock_products = fields.Many2many('product.product', string="Productos")
 
     # Sección de información general
     name = fields.Char(string='Referencia')
@@ -54,16 +55,16 @@ class ProjectCreation(models.TransientModel):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
 
-    @staticmethod
-    def action_open_stock_move():
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Crear Movimiento',
-            'view_mode': 'form',
-            'res_model': 'stock.move',
-            'target': 'current',
-            'context': {'default_type': 'create'},
-        }
+    @api.onchange('name')
+    def _onchange_project_task_id(self):
+        if self.project_task_id:
+            project = self.project_task_id.project_id
+            # Convertir explícitamente cada ID a tipo int para asegurar que tenemos números
+            product_ids = [int(product.id) for product in project.project_picking_lines.mapped('product_id')]
+            _logger.warning(f'El valor de product_ids es: {product_ids}')
+            self.project_stock_products = [(6, 0, product_ids)]
+            _logger.warning(f'El valor de project_stock_products es: {self.project_stock_products}')
+            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
 
     def action_confirm_create_inventory(self):
         self.ensure_one()

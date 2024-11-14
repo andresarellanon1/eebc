@@ -27,10 +27,12 @@
                         </group>
                         <notebook>
                             <page string="Operations" name="operations">
-                                <button name="action_open_stock_move" type="object" string="Agregar Línea" context="{'default_type': 'create'}"/>
-                                <field name="stock_move_ids" editable="bottom">
+                                <group>
+                                    <field name="project_stock_products" invisible="1"/>
+                                </group>
+                                <field name="stock_move_ids" domain="[('product_id', 'in', project_stock_products">
                                     <tree editable="bottom">
-                                        <field name="product_id"/>
+                                        <field name="product_id" domain="[('id', 'in', parent.project_stock_products)]"/>
                                         <field name="product_packaging_id"/>
                                         <field name="product_uom_qty"/>
                                         <field name="quantity"/>
