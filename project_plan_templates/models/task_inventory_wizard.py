@@ -10,7 +10,6 @@ class ProjectCreation(models.TransientModel):
     project_task_id = fields.Many2one('project.task', string="Project Task")
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
-    project_stock_products = fields.Many2many('product.product', string="Productos")
 
     # Sección de información general
     name = fields.Char(string='Referencia')
@@ -54,17 +53,6 @@ class ProjectCreation(models.TransientModel):
     def _compute_origin(self):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
-
-    @api.onchange('stock_move_ids')
-    def _onchange_stock_move_ids(self):
-        if self.project_task_id:
-            project_picking_lines = self.env['project.picking.lines'].search([
-                ('project_id', '=', self.project_task_id.project_id.id)
-            ])
-            product_ids = project_picking_lines.mapped('product_id').ids
-            self.stock_move_ids = self.stock_move_ids.filtered(lambda move: move.product_id.id in product_ids)
-        else:
-            self.stock_move_ids = False
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
