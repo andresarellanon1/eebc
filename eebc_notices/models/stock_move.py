@@ -40,16 +40,27 @@ class StockMove(models.Model):
                 any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')) 
             )
             move.has_type_picking_notice_approve = move.picking_type_id.code == 'incoming'
-            if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True : 
+
+            if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True:
+                _logger.warning('1')
 
                 if move.existing_product_in_notice == True:
+                    _logger.warning('1.1')
+
                     move.has_aviso_in_attributes_fake = False
-                
                 else:
+                    _logger.warning('1.2')
+
                     move.has_aviso_in_attributes_fake = True
-            else:                   
+            
+            else:
+                _logger.warning('2')
+
                 move.has_aviso_in_attributes_fake = False
 
+
+            
+               
 
     @api.depends('product_id')
     def _compute_existing_product_in_notice(self):
