@@ -40,9 +40,14 @@ class StockMove(models.Model):
                 any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')) 
             )
             move.has_type_picking_notice_approve = move.picking_type_id.code == 'incoming'
-            if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True :
-                move.has_aviso_in_attributes_fake = True
-            else:                
+            if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True : 
+
+                if move.existing_product_in_notice == True:
+                    move.has_aviso_in_attributes_fake = False
+                
+                else:
+                    move.has_aviso_in_attributes_fake = True
+            else:                   
                 move.has_aviso_in_attributes_fake = False
 
 
@@ -56,6 +61,7 @@ class StockMove(models.Model):
                 _logger.warning('HAY AVISOS con este producto')
                 move.existing_product_in_notice = True
                 break
+            _logger.warning('HAY AVISOS con este producto')
             move.existing_product_in_notice = False
 
     def call_wizard(self):
