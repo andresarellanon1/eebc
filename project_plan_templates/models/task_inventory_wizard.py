@@ -55,7 +55,7 @@ class ProjectCreation(models.TransientModel):
         self.origin = self.project_task_id.name
 
     @staticmethod
-    def action_open_stock_move():
+    def action_open_stock_move(self):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Crear Movimiento',
