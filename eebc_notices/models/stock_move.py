@@ -57,7 +57,7 @@ class StockMove(models.Model):
                 _logger.warning('2')
 
                 move.has_aviso_in_attributes_fake = True
-
+                move.existing_product_in_notice = False
 
             
                
