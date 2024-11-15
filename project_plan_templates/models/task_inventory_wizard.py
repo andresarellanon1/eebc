@@ -69,8 +69,8 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_inventory(self):
         self.ensure_one()
 
-        self.project_task_id.project_id.project_picking_lines.reservado_update(self.stock_move_ids)
-
+        self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
+        
         stock_move_ids_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'product_packaging_id': line.product_packaging_id.id,
