@@ -7,9 +7,8 @@
             <form string="Analisar archivo">
                 <group>
                    
+                    <field name="notices_id" />
             
-                    <field name="quantity" />
-
                 </group>
                
                 <footer>

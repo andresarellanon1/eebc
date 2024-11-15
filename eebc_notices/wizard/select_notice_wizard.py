@@ -15,10 +15,8 @@ class SelectNoticeWizard(models.TransientModel):
     _name = "select.notice.wizard"
     _description = "Wizard where we will select the notice to take the product"
     
-    
     quantity = fields.Float(string="Cantidad", readonly=True,)
-    
-    notices_id_id = fields.Many2one(
+    notices_id = fields.Many2one(
         string='notices_id',
         comodel_name='notices.notices',
         domain=lambda self: self._get_notice_domain()
@@ -33,9 +31,9 @@ class SelectNoticeWizard(models.TransientModel):
             
             
         return res
-    
+
     def _get_notice_domain(self):
         """Get domain to filter notices based on cantidad"""
-        return [('quantity', '>=', self.quantity)] if self.quantity else []
+        return [('quantity', '>=', 0),('stock_location_origin_id','=',self._context['location_id'])] if self.quantity else []
     
    

@@ -31,7 +31,7 @@ class StockMove(models.Model):
         related='picking_type_id.code',
         readonly=True)
 
-
+# COMPARAR CON EL ORIGEN DE PICKING CON EL ORIGEN DEL AVISO QUE ESTA COMPUTADO CON EL LOCATION_DEST DE LOS REGISTROS DE HISTORIAL 
     @api.depends('product_id.attribute_line_ids', 'picking_type_id.code')
     def _compute_has_aviso_in_attributes(self):
         for move in self:
@@ -123,6 +123,8 @@ class StockMove(models.Model):
             'context': {
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
+                'location_id': self.picking_id.location_id.id,
+
             }
         }
 
