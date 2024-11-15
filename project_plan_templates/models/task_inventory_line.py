@@ -16,3 +16,11 @@ class TaskInventoryLine(models.TransientModel):
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     name = fields.Char(string='Descripción')
     max_quantity = fields.Float(string='Cantidad máxima')
+
+    @api.onchange('task_id')
+    def _onchange_task_id(self):
+        for record in self:
+            if record.product_id: 
+                record.name = (record.name or '') + record.product_id.display_name
+                record.name = record.name + " X "
+                record.name = record.name + record.product_uom_qty

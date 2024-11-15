@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="wizard_select_notice_view" model="ir.ui.view">
+        <field name="name">Wizard Select Notice</field>
+        <field name="model">select.notice.wizard</field>
+        <field name="arch" type="xml">
+             <form string="Wizard File Upload">
+            <sheet>
+                <group>
+                    <!-- Campo de conteo de registros seleccionados -->
+                    <field name="selected_records_count" readonly="1" />
+                </group>
+                
+                <!-- Haz que la lista ocupe todo el ancho -->
+                <group colspan="4">
+                    <field name="line_ids" nolabel="1" >
+                        <tree editable="bottom">
+                            <field name="record_id" required="1" />
+                            <field name="quantity" required="1" />
+                        </tree>
+                    </field>
+                </group>
+            </sheet>
+            <footer>
+                <button string="Confirm" type="object" name="action_get_products" class="btn-primary" />
+                <button string="Cancel" class="btn-secondary" special="cancel" />
+            </footer>
+        </form>
+        </field>
+    </record>
+
+
+    
+    <!-- <record id="wizard_select_notice_error" model="ir.ui.view">
+        <field name="name">Wizard Error</field>
+        <field name="model">select.notice.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Error">
+              <group>
+                    <field name="message" readonly="1" />
+                </group>
+                <footer>
+                    <button string="Cerrar" class="btn-primary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record> -->
+
+</odoo>

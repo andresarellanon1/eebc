@@ -42,6 +42,7 @@ class ProjectPlanPickingLine(models.Model):
     stock_move_id = fields.Many2one('stock.move', string='Project Stock')
     standard_price = fields.Float(string="Price")
     subtotal = fields.Float(string="Subtotal")
+    total_cost = fields.Float(string="Total cost")
     
     def reservado_update(self, task_inventory_lines):
         for record in self:
@@ -67,5 +68,3 @@ class ProjectPlanPickingLine(models.Model):
             self.subtotal = self.standard_price * quantity
         else:
             self.subtotal = 0.00
-
-        self.project_plan_id.calculate_project_plan_cost()
