@@ -42,7 +42,7 @@ class SelectNoticeWizard(models.TransientModel):
 
     def _get_notice_domain(self):
         """Get domain to filter notices based on cantidad"""
-        return [('quantity', '>=', 0),('stock_location_origin_id','=',self._context['location_id'])] if self.quantity else []
+        return [('quantity', '>', 0),('stock_location_origin_id','=',self._context['location_id'])] if self.quantity else []
 
     def action_get_products(self):
         """
