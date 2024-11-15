@@ -63,7 +63,6 @@ class ProjectPlan(models.Model):
             }
         }
 
-    @api.onchange('project_plan_pickings')
     def calculate_project_plan_cost(self):
 
         total_cost = 0.0
