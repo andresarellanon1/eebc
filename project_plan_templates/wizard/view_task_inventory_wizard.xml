@@ -30,8 +30,8 @@
                                 <group>
                                     <field name="project_stock_products" invisible="1"/>
                                 </group>
-                                <field name="task_inventory_lines" mode="tree,form">
-                                    <tree editable="bottom">
+                                <field name="task_inventory_lines">
+                                    <tree editable="bottom" create="true" delete="true">
                                         <field name="product_id" domain="[('id', 'in', parent.project_stock_products)]"/>
                                         <field name="product_packaging_id"/>
                                         <field name="product_uom_qty"/>
