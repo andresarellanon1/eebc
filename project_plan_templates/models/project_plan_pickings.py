@@ -41,11 +41,11 @@ class ProjectPlanPickingLine(models.Model):
     reservado = fields.Float(string='Reservado')
     stock_move_id = fields.Many2one('stock.move', string='Project Stock')
     
-    def reservado_update(self, move_ids):
+    def reservado_update(self, task_inventory_lines):
         for record in self:
-            for move_id in move_ids: # Iteramos sobre los movimientos solo una vez por cada registro
+            for inventory_lines in task_inventory_lines: # Iteramos sobre los movimientos solo una vez por cada registro
                 _logger.warning(f'Se itera sobre los productos')
-                if record.product_id.id == move_id.product_id.id:  # Verificamos si el producto coincide.
-                    _logger.warning(f'Coincidio el producto: {record.product_id.name} con {move_id.product_id.name}')
-                    record.reservado += move_id.quantity  # Actualizamos el campo 'reservado' sumando la cantidad del stock_move
+                if record.product_id.id == inventory_lines.product_id.id:  # Verificamos si el producto coincide.
+                    _logger.warning(f'Coincidio el producto: {record.product_id.name} con {inventory_lines.product_id.name}')
+                    record.reservado += inventory_lines.quantity  # Actualizamos el campo 'reservado' sumando la cantidad del stock_move
                     _logger.warning(f'Se actualizo el campo reservado a: {record.reservado}')
