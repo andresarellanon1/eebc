@@ -66,7 +66,7 @@ class ProjectPlan(models.Model):
     def calculate_project_plan_cost(self):
         total_cost = 0.0
 
-        for record in self.picking_lines:
+        for record in self.project_plan_pickings:
             total_cost += record.subtotal
         
         self.plan_total_cost = total_cost
