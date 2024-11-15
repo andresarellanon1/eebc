@@ -61,23 +61,17 @@ class ProjecVersionLines(models.Model):
     @api.depends('modification_date', 'project_id')
     def _compute_version_number(self):
         for record in self:
-            # Verificamos si el registro tiene asignado un 'project_id'.
+            # Check if a project_id is set for the current record
             if record.project_id:
-                # Si el registro tiene un 'project_id', buscamos todas las versiones asociadas a ese proyecto,
-                # ordenadas por la fecha de modificación.
-                versions = self.env['project.version.lines'].search(
-                    [('project_id', '=', record.project_id.id)],  # Filtramos las versiones por 'project_id'.
-                    order='modification_date'  # Ordenamos las versiones por la fecha de modificación.
-                )
+                # Search for all project version lines associated with the current project_id
+                # The search retrieves all version lines for the project, ordered by modification_date
+                versions = self.env['project.version.lines'].search([('project_id', '=', record.project_id.id)], order='modification_date')
                 
-                # Asignamos el número de versión al registro. Si el registro tiene un ID, calculamos la posición en la lista.
-                # 'versions.ids' es una lista de los IDs de las versiones ordenadas.
-                # 'versions.ids.index(record.id)' nos da el índice del ID del registro actual en esa lista.
-                # Sumamos 1 al índice para generar el número de versión (empezando desde 1, no desde 0).
-                # Si el registro no tiene ID (lo que significa que es un registro nuevo aún no guardado), asignamos "V0".
+                # Set the version number based on the index of the current record in the found versions
+                # The version number is "V" followed by the position of the current record (index + 1)
                 record.version_number = f"V{versions.ids.index(record.id) + 1}" if record.id else "V0"
             else:
-                # Si no hay 'project_id' asociado al registro, asignamos "V0", ya que no pertenece a ningún proyecto.
+                # If no project_id is set, assign version number "V0"
                 record.version_number = "V0"
 
     @api.depends('project_id')
