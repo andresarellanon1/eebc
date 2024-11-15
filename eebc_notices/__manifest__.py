@@ -17,7 +17,8 @@
         "views/menu.xml",
         "views/stock_picking_views.xml",
         "wizard/notice_file_wizard_view.xml",
-        "wizard/select_notice_wizard_view.xml"
+        "wizard/select_notice_wizard_view.xml",
+
         
     ],
     "application": True,
