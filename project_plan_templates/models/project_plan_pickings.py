@@ -34,14 +34,14 @@ class ProjectPlanPickingLine(models.Model):
     project_id = fields.Many2one('project.project', string="Project Plan")
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
     product_id = fields.Many2one('product.product', string="Product", required=True)
-    quantity = fields.Float(string="Quantity", compute="_compute_subtotal", required=True)
+    quantity = fields.Float(string="Quantity", required=True)
     location_id = fields.Many2one('stock.location', string="Location")
     picking_name = fields.Char(string="Picking Name")
     project_plan_id = fields.Many2one('project.plan', string="Project plan")
     reservado = fields.Float(string='Reservado')
     stock_move_id = fields.Many2one('stock.move', string='Project Stock')
     standard_price = fields.Float(string="Price", compute='_compute_standard_price')
-    subtotal = fields.Float(string="Subtotal")
+    subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal")
     total_cost = fields.Float(string="Total cost")
     
     def reservado_update(self, task_inventory_lines):
