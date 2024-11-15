@@ -4,16 +4,19 @@
         <field name="name">Wizard Select Notice</field>
         <field name="model">select.notice.wizard</field>
         <field name="arch" type="xml">
-            <form string="Select Records">
+             <form string="Wizard File Upload">
             <sheet>
                 <group>
+                    <!-- Campo de conteo de registros seleccionados -->
                     <field name="selected_records_count" readonly="1" />
                 </group>
-                <group>
-                    <field name="line_ids" nolabel="1">
+                
+                <!-- Haz que la lista ocupe todo el ancho -->
+                <group colspan="4">
+                    <field name="line_ids" nolabel="1" >
                         <tree editable="bottom">
-                            <field name="record_id" />
-                            <field name="quantity" />
+                            <field name="record_id" required="1" />
+                            <field name="quantity" required="1" />
                         </tree>
                     </field>
                 </group>
