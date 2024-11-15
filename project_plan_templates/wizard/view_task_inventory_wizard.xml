@@ -31,12 +31,13 @@
                                     <field name="project_stock_products" invisible="1"/>
                                 </group>
                                 <field name="task_inventory_lines">
-                                    <tree editable="editable_bottom">
-                                        <field name="product_id" domain="[('id', 'in', parent.project_stock_products)]"/>
+                                    <tree editable="bottom">
+                                        <field name="product_id" domain="[('id', 'in', parent.project_stock_products)]" widget="many2one" options="{'no_create': True}" />
                                         <field name="product_packaging_id"/>
                                         <field name="product_uom_qty"/>
                                         <field name="quantity"/>
                                         <field name="product_uom" string="Unidad"/>
+                                        <!-- Los campos invisibles se mantienen, si es necesario -->
                                         <!-- <field name="company_id" invisible="1"/>
                                         <field name="product_uom_category_id" invisible="1"/> -->
                                     </tree>
