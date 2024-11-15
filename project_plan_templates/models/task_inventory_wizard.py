@@ -71,7 +71,7 @@ class ProjectCreation(models.TransientModel):
         self.ensure_one()
 
         self.project_task_id.project_id.project_picking_lines.reservado_update(self.stock_move_ids)
-
+        
         stock_move_ids_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'product_packaging_id': line.product_packaging_id.id,
