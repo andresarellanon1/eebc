@@ -43,7 +43,7 @@ class ProjectPlanPickingLine(models.Model):
     
     def reservado_update(self, move_ids):
         for record in self:
-            for move_id in move_ids: # Iteramos sobre los movimientos solo una vez por cada registro.
+            for move_id in move_ids: # Iteramos sobre los movimientos solo una vez por cada registro
                 _logger.warning(f'Se itera sobre los productos')
                 if record.product_id.id == move_id.product_id.id:  # Verificamos si el producto coincide.
                     _logger.warning(f'Coincidio el producto: {record.product_id.name} con {move_id.product_id.name}')
