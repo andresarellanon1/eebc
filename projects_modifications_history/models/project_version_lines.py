@@ -15,41 +15,49 @@ class ProjecVersionLines(models.Model):
     project_name = fields.Char(string='Project name')
     project_version_history_id = fields.Many2one('project.version.history', string="Project history")
 
+    #Relación que obtiene los valores de el project_plan_lines en la versión actual
     project_plan_lines = fields.Many2many(
         'project.plan.line',
         string='Planeación',
-        relation='project_version_lines_project_plan_line_rel'
+        relation='project_version_lines_project_plan_line_rel' #Permite que haya más relaciones Many2many hacia project.plan.line
     )
+
+    #Relación que obtiene los valores de el project_picking_lines en la versión actual
     project_picking_lines = fields.Many2many(
         'project.picking.lines',
         string='Stock',
-        relation='project_version_lines_picking_lines_rel'
+        relation='project_version_lines_picking_lines_rel' #Permite que haya más relaciones Many2many hacia project.picking.lines
     )
 
+    #Relación que obtiene los valores de el project_plan_lines en la versión anterior
     previous_version_plan_lines = fields.Many2many(
         'project.plan.line',
         string="Last version plan lines",
-        relation='project_version_lines_previous_plan_line_rel'
+        relation='project_version_lines_previous_plan_line_rel' 
     )
 
+    #Relación que obtiene los valores de el project_picking_lines en la versión anterior
     previous_version_picking_lines = fields.Many2many(
         'project.picking.lines',
         string="Last version picking lines",
-        relation='project_version_lines_previous_picking_lines_rel'
+        relation='project_version_lines_previous_picking_lines_rel' 
     )
 
+    #Campo del valor del número de la versión
     version_number = fields.Char(
         string='Version Number',
         compute='_compute_version_number',
-        store=True
+        store=True #Indica que el valor se almacena en la base de datos
     )
 
+    #Boleano que indica si tiene versión previa
     has_previous_version = fields.Boolean(
         string="Has Previous Version",
         compute='_compute_previous_version_lines',
-        store=True
+        store=True #Indica que el valor se almacena en la base de datos
     )
 
+    #Método que computa el número de versión
     @api.depends('modification_date', 'project_id')
     def _compute_version_number(self):
         for record in self:
@@ -65,7 +73,6 @@ class ProjecVersionLines(models.Model):
             else:
                 # If no project_id is set, assign version number "V0"
                 record.version_number = "V0"
-
 
     @api.depends('project_id')
     def _compute_previous_version_lines(self):

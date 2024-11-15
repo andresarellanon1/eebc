@@ -1,4 +1,8 @@
 from odoo import fields, models, api
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class ProjectPlanPickings(models.Model):
 
@@ -26,6 +30,7 @@ class ProjectPlanPickingLine(models.Model):
     _name = 'project.picking.lines'
     _description = 'Project picking lines'
 
+
     project_id = fields.Many2one('project.project', string="Project Plan")
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
     product_id = fields.Many2one('product.product', string="Product", required=True)
@@ -38,7 +43,7 @@ class ProjectPlanPickingLine(models.Model):
     standard_price = fields.Float(string="Price")
     subtotal = fields.Float(string="Subtotal")
     
-    def reservado_update(self, move_ids):
+    def reservado_update(self, task_inventory_lines):
         for record in self:
             for move_id in move_ids: # Iteramos sobre los movimientos solo una vez por cada registro.
                 if record.product_id == move_id.product_id:  # Verificamos si el producto coincide.
