@@ -10,14 +10,14 @@
 
     """,
     'depends': ['purchase', 'account','base'],
-
+ 
     "data": [
         "security/ir.model.access.csv",
         "views/notices_views.xml",
         "views/menu.xml",
         "views/stock_picking_views.xml",
         "wizard/notice_file_wizard_view.xml",
-        "wizard/select_notice_wizard.xml"
+        "wizard/select_notice_wizard_view.xml"
         
     ],
     "application": True,
