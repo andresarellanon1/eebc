@@ -49,7 +49,7 @@ class ProjectPlanPickingLine(models.Model):
                 _logger.warning(f'Se itera sobre los productos')
                 if record.product_id.id == inventory_lines.product_id.id:  # Verificamos si el producto coincide.
                     _logger.warning(f'Coincidio el producto: {record.product_id.name} con {inventory_lines.product_id.name}')
-                    if record.quantity >= (record.reservado += inventory_lines.quantity):
+                    if record.quantity >= (record.reservado + inventory_lines.quantity):
                         record.reservado += inventory_lines.quantity  # Actualizamos el campo 'reservado' sumando la cantidad del stock_move
                         _logger.warning(f'Se actualizo el campo reservado a: {record.reservado}')
         
