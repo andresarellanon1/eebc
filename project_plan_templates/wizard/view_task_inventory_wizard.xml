@@ -31,7 +31,7 @@
                                     <field name="project_stock_products" invisible="1"/>
                                 </group>
                                 <field name="task_inventory_lines">
-                                    <tree editable="bottom" edit="True">
+                                    <tree editable="bottom" options=" {'no_open': True, 'no_create': True}">
                                         <field name="product_id" domain="[('id', 'in', parent.project_stock_products)]"/>
                                         <field name="product_packaging_id"/>
                                         <field name="product_uom_qty"/>
