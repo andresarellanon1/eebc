@@ -56,7 +56,6 @@ class ProjectCreation(models.TransientModel):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
 
-    # TODO: Trae los product_id, pero dominio no domina
     @api.onchange('name')
     def _onchange_project_task_id(self):
         if self.project_task_id:
