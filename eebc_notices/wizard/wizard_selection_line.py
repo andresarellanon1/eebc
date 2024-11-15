@@ -11,13 +11,7 @@ class WizardSelectionLine(models.TransientModel):
     quantity = fields.Float(string='Quantity', default=1.0, required=True)
 
 
-    @api.model
-    def default_get(self, fields):
-        res = super(WizardSelectionLine, self).default_get(fields)
-        if 'location_id' in self._context:
-            res['location_id'] = self._context['location_id']
-        return res
-        
+
     def _get_notice_domain(self):
         """Get domain to filter notices based on cantidad"""
         location_id = self._context.get('location_id')  # Utiliza .get() para evitar KeyError
