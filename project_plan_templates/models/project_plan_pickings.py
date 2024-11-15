@@ -44,17 +44,14 @@ class ProjectPlanPickingLine(models.Model):
     subtotal = fields.Float(string="Subtotal")
     
     def reservado_update(self, task_inventory_lines):
-    for record in self:
-        for inventory_lines in task_inventory_lines: # Iteramos sobre los movimientos solo una vez por cada registro
-            _logger.warning(f'Se itera sobre los productos')
-            if record.product_id.id == inventory_lines.product_id.id:  # Verificamos si el producto coincide.
-                _logger.warning(f'Coincidio el producto: {record.product_id.name} con {inventory_lines.product_id.name}')
-                if record.quantity >= record.reservado += inventory_lines.quantity:
-                    record.reservado += inventory_lines.quantity  # Actualizamos el campo 'reservado' sumando la cantidad del stock_move
-                    _logger.warning(f'Se actualizo el campo reservado a: {record.reservado}')
-                    return True
-                else:
-                    return False
+        for record in self:
+            for inventory_lines in task_inventory_lines: # Iteramos sobre los movimientos solo una vez por cada registro
+                _logger.warning(f'Se itera sobre los productos')
+                if record.product_id.id == inventory_lines.product_id.id:  # Verificamos si el producto coincide.
+                    _logger.warning(f'Coincidio el producto: {record.product_id.name} con {inventory_lines.product_id.name}')
+                    if record.quantity >= record.reservado += inventory_lines.quantity:
+                        record.reservado += inventory_lines.quantity  # Actualizamos el campo 'reservado' sumando la cantidad del stock_move
+                        _logger.warning(f'Se actualizo el campo reservado a: {record.reservado}')
         
 
 
