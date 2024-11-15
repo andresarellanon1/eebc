@@ -66,10 +66,9 @@ class ProjectPlan(models.Model):
     @api.onchange('project_plan_pickings')
     def calculate_project_plan_cost(self):
 
-        if self.id:
-            total_cost = 0.0
+        total_cost = 0.0
 
-            for record in self.picking_lines:
-                total_cost += record.subtotal
+        for record in self.picking_lines:
+            total_cost += record.subtotal
             
-            self.plan_total_cost = total_cost
+        self.plan_total_cost = total_cost
