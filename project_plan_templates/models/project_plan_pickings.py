@@ -46,6 +46,6 @@ class ProjectPlanPickingLine(models.Model):
             for move_id in move_ids: # Iteramos sobre los movimientos solo una vez por cada registro.
                 _logger.warning(f'Se itera sobre los productos')
                 if record.product_id.id == move_id.product_id.id:  # Verificamos si el producto coincide.
-                    _logger.warning(f'Coincidio el producto: {record.product_id.id}')
+                    _logger.warning(f'Coincidio el producto: {record.product_id.name} con {move_id.product_id.name}')
                     record.reservado += move_id.quantity  # Actualizamos el campo 'reservado' sumando la cantidad del stock_move
                     _logger.warning(f'Se actualizo el campo reservado a: {record.reservado}')
