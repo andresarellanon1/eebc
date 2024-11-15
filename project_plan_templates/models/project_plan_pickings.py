@@ -68,5 +68,3 @@ class ProjectPlanPickingLine(models.Model):
             self.subtotal = self.standard_price * quantity
         else:
             self.subtotal = 0.00
-
-        self.project_plan_id.calculate_project_plan_cost()
