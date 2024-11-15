@@ -53,7 +53,7 @@ class SelectNoticeWizard(models.TransientModel):
             record = line.record_id
             quantity = line.quantity
             # Ejemplo: Imprime los valores (reemplazar por lógica real)
-            _logger.warning(f"Processing record {record.name} with quantity {quantity}")
+            _logger.warning(f"Processing record {record.display_name} with quantity {quantity}")
         return {'type': 'ir.actions.act_window_close'}
     
    
