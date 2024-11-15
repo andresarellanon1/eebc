@@ -24,9 +24,6 @@ class SelectNoticeWizard(models.TransientModel):
     line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
     selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
     
-    notices_id = fields.Many2one('notices.notices', string='Notice', domain=lambda self: self._get_notice_domain())
-
-    
 
     @api.depends('line_ids')
     def _compute_selected_records_count(self):
@@ -42,16 +39,6 @@ class SelectNoticeWizard(models.TransientModel):
             
         return res
     
-
-    def add_line(self):
-        """
-        Método para agregar una nueva línea al One2many.
-        """
-        # Asegurarse de que la línea se cree con el contexto del wizard
-        self.env['wizard.selection.line'].with_context(self.env.context).create({
-            'wizard_id': self.id,
-            'quantity': 1.0,  # Valor por defecto, puedes modificar según tus necesidades
-        })
 
     def _get_notice_domain(self):
         """Get domain to filter notices based on cantidad"""

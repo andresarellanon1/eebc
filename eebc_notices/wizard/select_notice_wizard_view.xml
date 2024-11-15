@@ -15,7 +15,6 @@
                         </field>
                     </group>
                     <footer>
-                        <button name="add_line" string="Add Line" type="object" class="btn-secondary"/>
                         <button string="Confirm" type="object" name="action_get_products" class="btn-primary"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
