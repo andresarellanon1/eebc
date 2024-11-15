@@ -66,6 +66,13 @@ class ProjectCreation(models.TransientModel):
             _logger.warning(f'El valor de project_stock_products es: {self.project_stock_products}')
             return {'domain': {'product_id': [('id', 'in', product_ids)]}}
 
+    @api.onchange('name')
+    def _compute_max_quantity(self):
+        for inv_lines in self.task_inventory_lines:
+            for proyect_lines in self.project_task_id.project_id.project_picking_lines:
+                if inv_lines.product_id == proyect_lines.product_id
+                    inv_lines.max_quantity = proyect_lines.quantity
+
     def action_confirm_create_inventory(self):
         self.ensure_one()
 
