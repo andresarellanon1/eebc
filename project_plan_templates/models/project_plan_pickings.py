@@ -52,13 +52,15 @@ class ProjectPlanPickingLine(models.Model):
 
     @api.depends('product_id')
     def _compute_standard_price(self):
-        self.standard_price = self.product_id.standard_price
+        for record in self:
+            record.standard_price = record.product_id.standard_price
 
     @api.depends('quantity')
     def _compute_subtotal(self):
-        quantity = self.quantity
+        for record in self:
+            quantity = record.quantity
 
-        if quantity >= 0:
-            self.subtotal = self.standard_price * quantity
-        else:
-            self.subtotal = 0.00
+            if quantity >= 0:
+                record.subtotal = record.standard_price * quantity
+            else:
+                record.subtotal = 0.00
