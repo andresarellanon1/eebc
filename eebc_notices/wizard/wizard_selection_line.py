@@ -5,5 +5,5 @@ class WizardSelectionLine(models.TransientModel):
     _description = 'Wizard Selection Line'
 
     wizard_id = fields.Many2one('select.notice.wizard', string='Wizard', required=True)
-    record_id = fields.Many2one('your.model', string='Record', required=True)
+    record_id = fields.Many2one('notices.notices', string='Aviso', required=True)
     quantity = fields.Float(string='Quantity', default=1.0, required=True)
