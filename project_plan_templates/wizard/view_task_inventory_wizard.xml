@@ -30,8 +30,8 @@
                                 <group>
                                     <field name="project_stock_products" invisible="1"/>
                                 </group>
-                                <field name="task_inventory_lines" widget="many2many_tags">
-                                    <tree editable="bottom" create="true">
+                                <field name="task_inventory_lines" mode="tree,form">
+                                    <tree editable="bottom">
                                         <field name="product_id" domain="[('id', 'in', parent.project_stock_products)]"/>
                                         <field name="product_packaging_id"/>
                                         <field name="product_uom_qty"/>
@@ -70,8 +70,7 @@
                             </page>
                         </notebook>
                         <footer>
-                            <button name="action_confirm_create_inventory" string="Create Inventory" type="object"
-                                    class="btn-primary"/>
+                            <button name="action_confirm_create_inventory" string="Create Inventory" type="object" class="btn-primary"/>
                             <button string="Cancel" class="btn-secondary" special="cancel"/>
                         </footer>
                     </sheet>
