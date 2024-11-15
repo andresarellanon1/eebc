@@ -63,6 +63,7 @@ class ProjectPlan(models.Model):
             }
         }
 
+    @api.depends('project_plan_pickings.quantity')
     def calculate_project_plan_cost(self):
         total_cost = 0.0
 
