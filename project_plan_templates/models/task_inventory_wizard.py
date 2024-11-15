@@ -11,6 +11,7 @@ class ProjectCreation(models.TransientModel):
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
     project_stock_products = fields.Many2many('product.product', string="Productos")
+    
 
     # Sección de información general
     name = fields.Char(string='Referencia')
@@ -55,16 +56,22 @@ class ProjectCreation(models.TransientModel):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
 
-    @api.onchange('project_task_id')
+    # TODO: Trae los product_id, pero dominio no domina
+    @api.onchange('name')
     def _onchange_project_task_id(self):
         if self.project_task_id:
             project = self.project_task_id.project_id
-            product_ids = project.project_picking_lines.mapped('product_id.id')
+            product_ids = [int(product.id) for product in project.project_picking_lines.mapped('product_id')]
+            _logger.warning(f'El valor de product_ids es: {product_ids}')
             self.project_stock_products = [(6, 0, product_ids)]
-            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
+            _logger.warning(f'El valor de project_stock_products es: {self.project_stock_products}')
+            return {'domain': {'product_id': [('id', 'in', product_ids)]}}
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
+
+        #self.project_task_id.project_id.project_picking_lines.reservado_update(stock_move_ids)
+
         stock_move_ids_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'product_packaging_id': line.product_packaging_id.id,
