@@ -18,6 +18,7 @@
                 </group>
                
                 <footer>
+                    <button name="add_line" string="Add Line" type="object" class="btn-secondary"/>
                     <button name="create_notice" type="object" string="Crear aviso" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
