@@ -5,9 +5,11 @@
         <field name="model">select.notice.wizard</field>
         <field name="arch" type="xml">
              <form string="Select Products">
+                <field name="stock_picking_location_id" />
+
                 <sheet>
                     <group>
-                        <field name="line_ids" widget="one2many_list" context="{'location_id': context.get('location_id')}">
+                        <field name="line_ids" widget="one2many_list">
                             <tree editable="bottom">
                                 <field name="record_id" />
                                 <field name="quantity"/>
