@@ -28,7 +28,11 @@ class SelectNoticeWizard(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(SelectNoticeWizard, self).default_get(fields)
+
+        _logger.warning('ENTRAMOS AL DEFAULT_GET')
         if 'location_id' in self._context:
+            _logger.warning('SE CUMPLIO EL IF')
+
             res['stock_picking_location_id'] = self._context['location_id']
        
         return res
