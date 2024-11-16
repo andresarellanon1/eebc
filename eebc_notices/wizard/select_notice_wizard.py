@@ -22,7 +22,7 @@ class SelectNoticeWizard(models.TransientModel):
     )
     line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
     selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
-    stock_picking_location_id = fields.Integer(
+    stock_picking_location_id = fields.Char(
         string='id almacen',
     )
 
