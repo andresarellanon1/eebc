@@ -22,22 +22,21 @@ class SelectNoticeWizard(models.TransientModel):
     )
     line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
     selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
-    stock_picking_location_id = fields.Char(
+    stock_picking_location_id = fields.Integer(
         string='id almacen',
+        compute='_compute_stock_picking_location_id'
     )
 
 
     @api.model
-    def default_get(self, fields):
-        res = super(SelectNoticeWizard, self).default_get(fields)
+    def _compute_stock_picking_location_id(self):
+        _logger.warning("Entramos coocapsmcsa")
 
-        _logger.warning('ENTRAMOS AL DEFAULT_GET')
-        if 'location_id' in self._context:
-            _logger.warning('SE CUMPLIO EL IF')
+        
+        self.stock_picking_location_id = self._context['location_id']
 
-            res['stock_picking_location_id'] = self._context['location_id']
-       
-        return res
+        _logger.warning("Calor dede self stock puinckin: %s",  self.stock_picking_location_id)
+
 
     @api.depends('line_ids')
     def _compute_selected_records_count(self):
