@@ -10,10 +10,18 @@ class WizardSelectionLine(models.TransientModel):
     record_id = fields.Many2one('notices.notices', string='Aviso', required=True, domain=lambda self: self._get_notice_domain())
     quantity = fields.Float(string='Quantity', default=1.0, required=True)
 
-
+    @api.model
+    def default_get(self, fields):
+        res = super(WizardSelectionLine, self).default_get(fields)
+        if 'location_id' in self._context:
+            res['location_id'] = self._context['location_id']
+        return res
 
     def _get_notice_domain(self):
         """Get domain to filter notices based on cantidad"""
-        location_id = self._context.get('location_id')  # Utiliza .get() para evitar KeyError
-        _logger.warning('Contexto: %s',location_id)
-        return [('quantity', '>', 0),('stock_location_origin_id','=',self._context['location_id'])] if self.quantity else []
+        location_id = self._context.get('location_id')
+        _logger.warning('Location ID desde el dominio: %s', location_id)
+        domain = [('quantity', '>', 0)]
+        if location_id:
+            domain.append(('stock_location_origin_id', '=', location_id))
+        return domain
