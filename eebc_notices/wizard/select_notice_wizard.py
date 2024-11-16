@@ -28,7 +28,7 @@ class SelectNoticeWizard(models.TransientModel):
     )
 
 
-    @api.model
+    @api.depends('stock_picking_location_id')
     def _compute_stock_picking_location_id(self):
         _logger.warning("Entramos coocapsmcsa")
 
