@@ -24,13 +24,10 @@ class SelectNoticeWizard(models.TransientModel):
         if 'location_id' in self._context:
             res['stock_picking_location_id'] = self._context['location_id']
         
-        res['line_ids'] = [
-        (0, 0, {
-            'wizard_id': self.id,  # Se asignará automáticamente
-            'quantity': 1.0,  # Cantidad predeterminada
-        }) 
-    ]
+        
             
+        _logger.warning('id value: %s', self.id)
+        
         _logger.warning('res value: %s', res)
         return res
     
