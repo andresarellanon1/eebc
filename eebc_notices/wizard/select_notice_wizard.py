@@ -51,12 +51,6 @@ class SelectNoticeWizard(models.TransientModel):
         for wizard in self:
             wizard.selected_records_count = len(wizard.line_ids)
 
-    @api.model
-    def default_get(self, fields):
-        res = super(SelectNoticeWizard, self).default_get(fields)
-        if 'cantidad' in self._context:
-            res['quantity'] = self._context['cantidad']
-        return res
 
     def _get_notice_domain(self):
         """Get domain to filter notices based on cantidad"""
