@@ -4,9 +4,7 @@
 from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 
-import base64
-import pandas as pd
-import io
+
 
 import logging
 
