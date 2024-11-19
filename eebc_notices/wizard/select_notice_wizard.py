@@ -53,6 +53,7 @@ class SelectNoticeWizard(models.TransientModel):
     #     return [('quantity', '>', 0), ('stock_location_origin_id', '=', self._context.get('location_id'))] if self.quantity else []
 
     def action_get_products(self):
+        _logger.warning('id value2: %s', self.id)
         for line in self.line_ids:
             record = line.record_id
             quantity = line.quantity
