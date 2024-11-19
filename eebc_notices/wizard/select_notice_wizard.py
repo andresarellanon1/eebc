@@ -27,25 +27,13 @@ class SelectNoticeWizard(models.TransientModel):
         _logger.warning('res value: %s', res)
         return res
     
-    notices_id = fields.Many2one(
-        'notices.notices',
-        string='notices_id',
-        domain=lambda self: self._get_notice_domain()
-    )
+    # notices_id = fields.Many2one(
+    #     'notices.notices',
+    #     string='notices_id',
+    #     domain=lambda self: self._get_notice_domain()
+    # )
     line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
     selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
-    
-   
-
-
-    @api.depends('stock_picking_location_id')
-    def _compute_stock_picking_location_id(self):
-        _logger.warning("Entramos coocapsmcsa")
-
-        
-        self.stock_picking_location_id = self._context['location_id']
-
-        _logger.warning("Calor dede self stock puinckin: %s",  self.stock_picking_location_id)
 
 
     @api.depends('line_ids')
@@ -54,9 +42,9 @@ class SelectNoticeWizard(models.TransientModel):
             wizard.selected_records_count = len(wizard.line_ids)
 
 
-    def _get_notice_domain(self):
-        """Get domain to filter notices based on cantidad"""
-        return [('quantity', '>', 0), ('stock_location_origin_id', '=', self._context.get('location_id'))] if self.quantity else []
+    # def _get_notice_domain(self):
+    #     """Get domain to filter notices based on cantidad"""
+    #     return [('quantity', '>', 0), ('stock_location_origin_id', '=', self._context.get('location_id'))] if self.quantity else []
 
     def action_get_products(self):
         for line in self.line_ids:
