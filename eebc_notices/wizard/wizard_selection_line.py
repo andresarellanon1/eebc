@@ -15,6 +15,10 @@ class WizardSelectionLine(models.TransientModel):
     def _get_notice_domain(self):
         """Get domain to filter notices based on cantidad"""
         location_id = self.wizard_id.stock_picking_location_id
+        
+        
+        _logger.warning('Location ID desde el dominio: %s', location_id)
+        _logger.warning('wizard_id: %s', self.wizard_id)
         _logger.warning('Location ID desde el dominio: %s', location_id)
         domain = [('quantity', '>', 0)]
         if location_id:
