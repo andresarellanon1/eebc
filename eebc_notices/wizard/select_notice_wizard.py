@@ -11,29 +11,56 @@ import logging
 _logger = logging.getLogger(__name__)
 
 class SelectNoticeWizard(models.TransientModel):
-
     _name = "select.notice.wizard"
     _description = "Wizard where we will select the notice to take the product"
-    
+
     quantity = fields.Float(string="Cantidad", readonly=True,)
     notices_id = fields.Many2one(
+        'notices.notices',
         string='notices_id',
-        comodel_name='notices.notices',
         domain=lambda self: self._get_notice_domain()
-)
-    
-    
+    )
+    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
+    selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
+    stock_picking_location_id = fields.Integer(
+        string='id almacen',
+        compute='_compute_stock_picking_location_id'
+    )
+
+
+    @api.depends('stock_picking_location_id')
+    def _compute_stock_picking_location_id(self):
+        _logger.warning("Entramos coocapsmcsa")
+
+        
+        self.stock_picking_location_id = self._context['location_id']
+
+        _logger.warning("Calor dede self stock puinckin: %s",  self.stock_picking_location_id)
+
+
+    @api.depends('line_ids')
+    def _compute_selected_records_count(self):
+        for wizard in self:
+            wizard.selected_records_count = len(wizard.line_ids)
+
     @api.model
     def default_get(self, fields):
         res = super(SelectNoticeWizard, self).default_get(fields)
         if 'cantidad' in self._context:
             res['quantity'] = self._context['cantidad']
-            
-            
         return res
 
     def _get_notice_domain(self):
         """Get domain to filter notices based on cantidad"""
-        return [('quantity', '>=', 0),('stock_location_origin_id','=',self._context['location_id'])] if self.quantity else []
+        return [('quantity', '>', 0), ('stock_location_origin_id', '=', self._context.get('location_id'))] if self.quantity else []
+
+    def action_get_products(self):
+        for line in self.line_ids:
+            record = line.record_id
+            quantity = line.quantity
+            _logger.warning(f"Processing record {record.display_name} with quantity {quantity}")
+        return {'type': 'ir.actions.act_window_close'}
+
     
+   
    
