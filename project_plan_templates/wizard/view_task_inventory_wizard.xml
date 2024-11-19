@@ -37,7 +37,7 @@
                                         <field name="product_uom_qty"/>
                                         <field name="quantity" decoration-danger='quantity &lt; max_quantity'/>
                                         <field name="product_uom" string="Unidad"/>
-                                        <field name="max_quantity" column_invisible="true"/>
+                                        <field name="max_quantity"/>
                                     </tree>
                                 </field>
 
