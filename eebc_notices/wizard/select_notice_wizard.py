@@ -23,6 +23,13 @@ class SelectNoticeWizard(models.TransientModel):
         res = super(SelectNoticeWizard, self).default_get(fields)
         if 'location_id' in self._context:
             res['stock_picking_location_id'] = self._context['location_id']
+        
+        res['line_ids'] = [
+        (0, 0, {
+            'wizard_id': self.id,  # Se asignará automáticamente
+            'quantity': 1.0,  # Cantidad predeterminada
+        }) 
+    ]
             
         _logger.warning('res value: %s', res)
         return res
