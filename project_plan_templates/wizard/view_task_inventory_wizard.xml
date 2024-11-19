@@ -49,6 +49,7 @@
                                         <field name="product_packaging_id"/>
                                         <field name="product_uom_qty"/>
                                         <field name="quantity"/>
+                                        <field name="max_quantity"/>
                                         <field name="product_uom"/>
                                     </form>
                                 </field>
@@ -83,8 +84,7 @@
                             </page>
                         </notebook>
                         <footer>
-                            <button name="action_confirm_create_inventory" string="Create Inventory" type="object"
-                                    class="btn-primary" disable="quantity &lt; max_quantity"/>
+                            <button name="action_confirm_create_inventory" string="Create Inventory" type="object" class="btn-primary" disable="max_quantity &lt; quantity"/>
                             <button string="Cancel" class="btn-secondary" special="cancel"/>
                         </footer>
                     </sheet>
