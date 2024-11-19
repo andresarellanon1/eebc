@@ -40,8 +40,8 @@ class ProjectPlanPickingLine(models.Model):
     project_plan_id = fields.Many2one('project.plan', string="Project plan")
     reservado = fields.Float(string='Reservado')
     stock_move_id = fields.Many2one('stock.move', string='Project Stock')
-    standard_price = fields.Float(string="Price")
-    subtotal = fields.Float(string="Subtotal")
+    standard_price = fields.Float(string="Price", compute='_compute_standard_price')
+    subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal")
     total_cost = fields.Float(string="Total cost")
     
     def reservado_update(self, task_inventory_lines):
@@ -56,15 +56,17 @@ class ProjectPlanPickingLine(models.Model):
         
 
 
-    @api.onchange('product_id')
-    def onchange_product_price(self):
-        self.standard_price = self.product_id.standard_price
+    @api.depends('product_id')
+    def _compute_standard_price(self):
+        for record in self:
+            record.standard_price = record.product_id.standard_price
 
-    @api.onchange('quantity')
-    def onchange_quantity(self):
-        quantity = self.quantity
+    @api.depends('quantity')
+    def _compute_subtotal(self):
+        for record in self:
+            quantity = record.quantity
 
-        if quantity >= 0:
-            self.subtotal = self.standard_price * quantity
-        else:
-            self.subtotal = 0.00
+            if quantity >= 0:
+                record.subtotal = record.standard_price * quantity
+            else:
+                record.subtotal = 0.00

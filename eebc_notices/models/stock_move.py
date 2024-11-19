@@ -112,6 +112,7 @@ class StockMove(models.Model):
         }
         
     def call_wizard_select_notice(self):
+        _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
        
         return {
             'type': 'ir.actions.act_window',

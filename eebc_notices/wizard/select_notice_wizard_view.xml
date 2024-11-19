@@ -4,28 +4,24 @@
         <field name="name">Wizard Select Notice</field>
         <field name="model">select.notice.wizard</field>
         <field name="arch" type="xml">
-             <form string="Wizard File Upload">
-            <sheet>
-                <group>
-                    <!-- Campo de conteo de registros seleccionados -->
-                    <field name="selected_records_count" readonly="1" />
-                </group>
-                
-                <!-- Haz que la lista ocupe todo el ancho -->
-                <group colspan="4">
-                    <field name="line_ids" nolabel="1" >
-                        <tree editable="bottom">
-                            <field name="record_id" required="1" />
-                            <field name="quantity" required="1" />
-                        </tree>
-                    </field>
-                </group>
-            </sheet>
-            <footer>
-                <button string="Confirm" type="object" name="action_get_products" class="btn-primary" />
-                <button string="Cancel" class="btn-secondary" special="cancel" />
-            </footer>
-        </form>
+             <form string="Select Products">
+                <field name="stock_picking_location_id" />
+
+                <sheet>
+                    <group>
+                        <field name="line_ids" widget="one2many_list">
+                            <tree editable="bottom">
+                                <field name="record_id" />
+                                <field name="quantity"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="Confirm" type="object" name="action_get_products" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+             </form>
         </field>
     </record>
 
