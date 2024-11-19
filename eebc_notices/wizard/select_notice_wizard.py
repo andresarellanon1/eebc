@@ -31,16 +31,8 @@ class SelectNoticeWizard(models.TransientModel):
         res = super(SelectNoticeWizard, self).default_get(fields)
         if 'location_id' in self._context:
             res['stock_picking_location_id'] = self._context['location_id']
-        if 'proveedor' in self._context:
-            res['res_partner_supplier_id'] = self._context['proveedor']
-        if 'origin' in self._context:
-            res['purchases_order_id'] = self._context['origin']
-        if 'product_description' in self._context:
-            res['description'] = self._context['product_description']
-        if 'invoices' in self._context:
-            res['account_move_invoice_ids'] = self._context['invoices']
-        if 'default_message' in self._context:
-            res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
+            
+        _logger.warning('res value: %s', res)
         return res
 
 
