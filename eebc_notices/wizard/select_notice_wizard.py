@@ -43,6 +43,8 @@ class SelectNoticeWizard(models.TransientModel):
     @api.depends('line_ids')
     def _compute_selected_records_count(self):
         for wizard in self:
+            _logger.warning('id value2: %s', wizard.id)
+            
             wizard.selected_records_count = len(wizard.line_ids)
 
 
