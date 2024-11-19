@@ -15,17 +15,9 @@ class SelectNoticeWizard(models.TransientModel):
     _description = "Wizard where we will select the notice to take the product"
 
     quantity = fields.Float(string="Cantidad", readonly=True,)
-    notices_id = fields.Many2one(
-        'notices.notices',
-        string='notices_id',
-        domain=lambda self: self._get_notice_domain()
-    )
-    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
-    selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
     stock_picking_location_id = fields.Integer(
         string='id almacen',
     )
-    
     @api.model
     def default_get(self, fields):
         res = super(SelectNoticeWizard, self).default_get(fields)
@@ -34,6 +26,16 @@ class SelectNoticeWizard(models.TransientModel):
             
         _logger.warning('res value: %s', res)
         return res
+    
+    notices_id = fields.Many2one(
+        'notices.notices',
+        string='notices_id',
+        domain=lambda self: self._get_notice_domain()
+    )
+    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
+    selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
+    
+   
 
 
     @api.depends('stock_picking_location_id')
