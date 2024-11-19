@@ -28,7 +28,7 @@
                         icon="fa-area-chart"
                         invisible="not has_aviso_in_attributes_fake"/>
 
-                 <button name="call_wizard" 
+                 <button name="call_wizard_select_notice" 
                         type="object" 
                         string="Seleccionar aviso" 
                         icon="fa-area-chart"

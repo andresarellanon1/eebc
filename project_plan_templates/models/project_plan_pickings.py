@@ -1,4 +1,8 @@
 from odoo import fields, models, api
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class ProjectPlanPickings(models.Model):
 
@@ -26,6 +30,7 @@ class ProjectPlanPickingLine(models.Model):
     _name = 'project.picking.lines'
     _description = 'Project picking lines'
 
+
     project_id = fields.Many2one('project.project', string="Project Plan")
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
     product_id = fields.Many2one('product.product', string="Product", required=True)
@@ -35,9 +40,33 @@ class ProjectPlanPickingLine(models.Model):
     project_plan_id = fields.Many2one('project.plan', string="Project plan")
     reservado = fields.Float(string='Reservado')
     stock_move_id = fields.Many2one('stock.move', string='Project Stock')
+    standard_price = fields.Float(string="Price", compute='_compute_standard_price')
+    subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal")
+    total_cost = fields.Float(string="Total cost")
     
-    def reservado_update(self, move_ids):
+    def reservado_update(self, task_inventory_lines):
         for record in self:
-            for move_id in move_ids: # Iteramos sobre los movimientos solo una vez por cada registro.
-                if record.product_id == move_id.product_id:  # Verificamos si el producto coincide.
-                    record.reservado += move_id.quantity  # Actualizamos el campo 'reservado' sumando la cantidad del stock_move
+            for inventory_lines in task_inventory_lines: # Iteramos sobre los movimientos solo una vez por cada registro
+                _logger.warning(f'Se itera sobre los productos')
+                if record.product_id.id == inventory_lines.product_id.id:  # Verificamos si el producto coincide.
+                    _logger.warning(f'Coincidio el producto: {record.product_id.name} con {inventory_lines.product_id.name}')
+                    if record.quantity >= (record.reservado + inventory_lines.quantity):
+                        record.reservado += inventory_lines.quantity  # Actualizamos el campo 'reservado' sumando la cantidad del stock_move
+                        _logger.warning(f'Se actualizo el campo reservado a: {record.reservado}')
+        
+
+
+    @api.depends('product_id')
+    def _compute_standard_price(self):
+        for record in self:
+            record.standard_price = record.product_id.standard_price
+
+    @api.depends('quantity')
+    def _compute_subtotal(self):
+        for record in self:
+            quantity = record.quantity
+
+            if quantity >= 0:
+                record.subtotal = record.standard_price * quantity
+            else:
+                record.subtotal = 0.00

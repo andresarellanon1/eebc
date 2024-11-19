@@ -18,6 +18,10 @@ class ProjectPlan(models.Model):
         string="Picking Lines"
     )
 
+    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
+    note = fields.Char()
+
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
     # When the 'project_plan_pickings' field is modified, 
@@ -58,3 +62,8 @@ class ProjectPlan(models.Model):
                 'default_description': self.description,
             }
         }
+
+    @api.depends('picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
