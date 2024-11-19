@@ -24,8 +24,24 @@ class SelectNoticeWizard(models.TransientModel):
     selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
     stock_picking_location_id = fields.Integer(
         string='id almacen',
-        compute='_compute_stock_picking_location_id'
     )
+    
+    @api.model
+    def default_get(self, fields):
+        res = super(SelectNoticeWizard, self).default_get(fields)
+        if 'location_id' in self._context:
+            res['stock_picking_location_id'] = self._context['location_id']
+        if 'proveedor' in self._context:
+            res['res_partner_supplier_id'] = self._context['proveedor']
+        if 'origin' in self._context:
+            res['purchases_order_id'] = self._context['origin']
+        if 'product_description' in self._context:
+            res['description'] = self._context['product_description']
+        if 'invoices' in self._context:
+            res['account_move_invoice_ids'] = self._context['invoices']
+        if 'default_message' in self._context:
+            res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
+        return res
 
 
     @api.depends('stock_picking_location_id')
