@@ -13,6 +13,8 @@ class NoticesHistory(models.Model):
     location_id = fields.Many2one(
         'stock.location', "Source Location",
         required=True)
+
+    # SALIDA DE INVENTARIO DESDE EL ORIGEN 
     quantity = fields.Float(string='Cantidad')
     picking_code = fields.Char(
         string='Tipo de operacion',
@@ -45,8 +47,6 @@ class NoticesHistory(models.Model):
     #     self.picking_ids = po.picking_ids 
 
         # Hay que mapear por el producto que se encuentra por picking id
-
-
 
 
 

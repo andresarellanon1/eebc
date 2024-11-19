@@ -11,6 +11,7 @@ class ProjectCreation(models.TransientModel):
     stock_move_ids = fields.Many2many('stock.move', string="Stock move")
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
     project_stock_products = fields.Many2many('product.product', string="Productos")
+    task_inventory_lines = fields.Many2many('task.inventory.line', string='Productos del proyecto')
 
     # Sección de información general
     name = fields.Char(string='Referencia')
@@ -59,15 +60,25 @@ class ProjectCreation(models.TransientModel):
     def _onchange_project_task_id(self):
         if self.project_task_id:
             project = self.project_task_id.project_id
-            # Convertir explícitamente cada ID a tipo int para asegurar que tenemos números
             product_ids = [int(product.id) for product in project.project_picking_lines.mapped('product_id')]
             _logger.warning(f'El valor de product_ids es: {product_ids}')
             self.project_stock_products = [(6, 0, product_ids)]
             _logger.warning(f'El valor de project_stock_products es: {self.project_stock_products}')
-            return {'domain': {'stock_move_ids': [('product_id', 'in', product_ids)]}}
+            return {'domain': {'product_id': [('id', 'in', product_ids)]}}
+
+    @api.onchange('name')
+    def _compute_max_quantity(self):
+        for inv_lines in self.task_inventory_lines:
+            for proyect_lines in self.project_task_id.project_id.project_picking_lines:
+                if inv_lines.product_id == proyect_lines.product_id:
+                    inv_lines.max_quantity = proyect_lines.quantity
+                    _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
+
+        self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
+        
         stock_move_ids_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'product_packaging_id': line.product_packaging_id.id,
@@ -77,7 +88,7 @@ class ProjectCreation(models.TransientModel):
             'location_id': line.location_id.id,
             'location_dest_id': line.location_dest_id.id,
             'name': line.name,
-        }) for line in self.stock_move_ids]
+        }) for line in self.task_inventory_lines]
 
         stock_picking_vals = {
             'name': self.name,

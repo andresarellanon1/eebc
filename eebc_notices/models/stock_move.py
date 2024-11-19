@@ -31,7 +31,7 @@ class StockMove(models.Model):
         related='picking_type_id.code',
         readonly=True)
 
-
+# COMPARAR CON EL ORIGEN DE PICKING CON EL ORIGEN DEL AVISO QUE ESTA COMPUTADO CON EL LOCATION_DEST DE LOS REGISTROS DE HISTORIAL 
     @api.depends('product_id.attribute_line_ids', 'picking_type_id.code')
     def _compute_has_aviso_in_attributes(self):
         for move in self:
@@ -39,7 +39,7 @@ class StockMove(models.Model):
             move.has_aviso_in_attributes = (
                 any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')) 
             )
-            move.has_type_picking_notice_approve = move.picking_type_id.code == 'incoming'
+            move.has_type_picking_notice_approve = move.picking_type_id.code in ['incoming','outgoing','internal']
 
             if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True:
                 _logger.warning('1')
@@ -55,9 +55,11 @@ class StockMove(models.Model):
             
             else:
                 _logger.warning('2')
-
-                move.has_aviso_in_attributes_fake = True
-
+                
+                if move.picking_type_id.code == 'mrp_operation':
+                    move.has_aviso_in_attributes_fake = False
+                else:
+                    move.has_aviso_in_attributes_fake = True
 
             
                
@@ -106,6 +108,24 @@ class StockMove(models.Model):
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
                 'stock_move_id':self.id
+            }
+        }
+        
+    def call_wizard_select_notice(self):
+        _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
+       
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Wizard File Upload',
+            'res_model': 'select.notice.wizard',
+            'view_mode': 'form',
+            'view_id': self.env.ref('eebc_notices.wizard_select_notice_view').id,  # Aquí se especifica el ID correcto de la vista
+            'target': 'new',
+            'context': {
+                'product_id': self.product_id.id,  # Pasar valores por defecto
+                'cantidad':  self.product_uom_qty,
+                'location_id': self.picking_id.location_id.id,
+
             }
         }
 
