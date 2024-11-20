@@ -48,8 +48,12 @@ class StockMove(models.Model):
             has_aviso = any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id'))
             is_valid_picking_type = move.picking_type_id.code in ['incoming', 'outgoing']
 
+            _logger.warning('has_aviso 1: %s',has_aviso)
+            _logger.warning('is_valid_picking_type 2: %s',is_valid_picking_type)
             # Lógica para establecer la visibilidad de los botones
             if has_aviso and is_valid_picking_type:
+                _logger.warning('Entramos a if')
+
                 move.has_aviso_in_attributes = True
                 move.show_aviso_button = True
                  
@@ -60,6 +64,7 @@ class StockMove(models.Model):
                 _logger.warning('booleano 2: %s',move.show_outgoing_button)
 
             else:
+                _logger.warning('Entramos a else')
                 move.has_aviso_in_attributes = False
                 move.show_aviso_button = False
                 move.show_incoming_button = False
