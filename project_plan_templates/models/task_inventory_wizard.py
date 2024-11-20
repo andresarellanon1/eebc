@@ -42,16 +42,16 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    @api.onchange('task_inventory_lines')
+    @api.onchange('task_id_char')
     def _compute_task_id(self):
         self.task_id_char = self.project_task_id.name
 
-    @api.onchange('task_inventory_lines')
+    @api.onchange('picking_type_id')
     def _compute_picking_type_id(self):
         _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
         self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
 
-    @api.onchange('task_inventory_lines')
+    @api.onchange('origin')
     def _compute_origin(self):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
