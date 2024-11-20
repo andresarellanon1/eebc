@@ -12,7 +12,6 @@ class ProjectCreation(models.TransientModel):
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
     project_stock_products = fields.Many2many('product.product', string="Productos")
     task_inventory_lines = fields.Many2many('task.inventory.line', string='Productos del proyecto')
-    
 
     # Sección de información general
     name = fields.Char(string='Referencia')
@@ -123,7 +122,8 @@ class ProjectCreation(models.TransientModel):
                 'view_mode': 'form',
                 'target': 'current',
             }
-        except ValueError as e:
+        except psycopg2.Error as e:
+            _logger.error(f"Error en línea de inventario {line.id}: {str(e)}")
             self._compute_task_id()
             self._compute_picking_type_id()
             self._compute_origin()
