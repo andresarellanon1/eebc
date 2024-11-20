@@ -1,6 +1,6 @@
 from odoo import models, fields, api
 import logging
-
+import psycopg2
 _logger = logging.getLogger(__name__)
 
 class ProjectCreation(models.TransientModel):
@@ -122,7 +122,7 @@ class ProjectCreation(models.TransientModel):
                 'view_mode': 'form',
                 'target': 'current',
             }
-        except psycopg2.Error as e:
+        except ValueError as e:
             _logger.error(f"Error en línea de inventario {line.id}: {str(e)}")
             self._compute_task_id()
             self._compute_picking_type_id()
