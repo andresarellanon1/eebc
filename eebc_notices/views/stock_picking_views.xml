@@ -26,13 +26,13 @@
                         type="object" 
                         string="Agregar aviso" 
                         icon="fa-area-chart"
-                        invisible="not show_aviso_button and show_outgoing_button"/>
+                        invisible="show_outgoing_button"/>
 
                  <button name="action_show_outgoing" 
                         type="object" 
                         string="Seleccionar aviso" 
                         icon="fa-area-chart"
-                        invisible="not show_aviso_button and show_incoming_button"/>
+                        invisible="show_incoming_button"/>
             </xpath>
         </field>
     </record>
