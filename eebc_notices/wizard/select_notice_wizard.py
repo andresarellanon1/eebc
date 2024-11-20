@@ -42,29 +42,6 @@ class SelectNoticeWizard(models.TransientModel):
     #     string='notices_id',
     #     domain=lambda self: self._get_notice_domain()
     # )
-    line_ids = fields.One2many(
-        'wizard.selection.line',
-        'wizard_id',
-        string='Lines',
-        compute='_compute_line_ids',
-        store=False  # Si no necesitas almacenarlo en la base de datos
-    )
-
-    @api.depends('stock_picking_location_id', 'quantity')
-    def _compute_line_ids(self):
-        for wizard in self:
-            if wizard.stock_picking_location_id and wizard.quantity:
-                # Generar las líneas después de que los otros campos tengan datos
-                wizard.line_ids = [(5, 0, 0)]  # Limpia las líneas existentes
-                wizard.line_ids = [
-                    (0, 0, {
-                        'record_id': record.id,
-                        'quantity': wizard.quantity,
-                    })
-                    for record in self.env['notices.notices'].search([
-                        ('stock_location_origin_id', '=', wizard.stock_picking_location_id)
-                    ])
-                ]    
     selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
 
 
@@ -79,6 +56,9 @@ class SelectNoticeWizard(models.TransientModel):
     # def _get_notice_domain(self):
     #     """Get domain to filter notices based on cantidad"""
     #     return [('quantity', '>', 0), ('stock_location_origin_id', '=', self._context.get('location_id'))] if self.quantity else []
+
+
+    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
 
     def action_get_products(self):
         _logger.warning('id value2: %s', self.id)
