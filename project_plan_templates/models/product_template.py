@@ -17,3 +17,4 @@ class ProductTemplate(models.Model):
         string='Service Tracking',
         default='no', 
     )
+    project_template_id = fields.Many2one('product.template', string='Project Template')
