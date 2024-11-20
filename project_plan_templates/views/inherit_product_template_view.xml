@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sale_project.product_template_form_view_invoice_policy_inherit_sale_project"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='project_template_id']" position="replace">
-                <attribute name="invisible">1</attribute>
+                <field name="project_plan_id"/>
             </xpath>
         </field>
     </record>
