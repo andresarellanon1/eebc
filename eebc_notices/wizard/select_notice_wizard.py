@@ -20,7 +20,7 @@ class SelectNoticeWizard(models.TransientModel):
 
     def _compute_stock_move_id(self):
         for record in self:
-            record.stock_move_id = self.env['stock.move'].search([('id', '=', self._context.get('active_id'))])
+            record.stock_move_id = self.env['stock.move'].browse(self._context.get('active_id'))
 
     @api.depends('stock_move_id')
     def _compute_line_ids(self):
@@ -45,7 +45,10 @@ class SelectNoticeWizard(models.TransientModel):
                         'notice_ids': [(0, 0, notice.id)],
                         'quantity': 0  # Inicialmente 0, puedes cambiarlo si es necesario.
                     }))
-            wizard.line_ids = lines  # Asignar las líneas calculadas en memoria
+            
+            # Asignar las líneas calculadas en memoria
+            wizard.line_ids = [(5, 0, 0)]  # Eliminar registros anteriores, si los hay.
+            wizard.line_ids = lines  # Asignar las nuevas líneas
 
     def action_get_products(self):
         for wizard in self:
@@ -69,6 +72,7 @@ class SelectNoticeWizard(models.TransientModel):
                     })
 
         return {'type': 'ir.actions.act_window_close'}
+
 
 
     
