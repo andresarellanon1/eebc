@@ -17,8 +17,9 @@ class WizardSelectionLine(models.TransientModel):
         
         current_wizard = self.env['select.notice.wizard'].browse(self.env.context.get('active_id'))
         
+        current_wizard2 = self.env.context.get('active_id')
         
-        
+        _logger.warning('current_wizard2: %s', current_wizard2)
         _logger.warning('Location ID desde el dominio: %s', location_id)
         _logger.warning('wizard_id: %s', current_wizard)
         _logger.warning('Location ID desde el dominio: %s', location_id)
