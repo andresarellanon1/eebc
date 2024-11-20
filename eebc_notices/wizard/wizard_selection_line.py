@@ -15,7 +15,7 @@ class WizardSelectionLine(models.TransientModel):
         """Get domain to filter notices based on cantidad"""
         location_id = self.wizard_id.stock_picking_location_id
         
-        id_wiz  = self.env['select.notice.wizard'].search([])
+        id_wiz  = self.env['select.notice.wizard'].search([('active','=', True)])
         
         
         

@@ -14,6 +14,12 @@ class SelectNoticeWizard(models.TransientModel):
     _name = "select.notice.wizard"
     _description = "Wizard where we will select the notice to take the product"
 
+    
+    active = fields.Boolean(
+        string='active',
+        
+    )
+    
     quantity = fields.Float(string="Cantidad", readonly=True,)
     stock_picking_location_id = fields.Integer(
         string='id almacen',
@@ -24,7 +30,7 @@ class SelectNoticeWizard(models.TransientModel):
         if 'location_id' in self._context:
             res['stock_picking_location_id'] = self._context['location_id']
         
-        
+        res['active'] = True
             
         jeje = self.env.context.get('active_id')        
         _logger.warning('jeje value: %s', jeje)
@@ -54,10 +60,13 @@ class SelectNoticeWizard(models.TransientModel):
 
     def action_get_products(self):
         _logger.warning('id value2: %s', self.id)
+        
         for line in self.line_ids:
             record = line.record_id
             quantity = line.quantity
             _logger.warning(f"Processing record {record.display_name} with quantity {quantity}")
+        
+        self.active = False
         return {'type': 'ir.actions.act_window_close'}
 
     
