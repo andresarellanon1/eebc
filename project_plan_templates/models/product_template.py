@@ -5,6 +5,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     project_plan_id = fields.Many2one('project.plan', string="Project plan template")
+    project_id = fields.Many2one('project.project', string="Project")
     service_policy = fields.Many2one('product_template', string="Service Policy")
     service_tracking = fields.Selection(
         selection=[
