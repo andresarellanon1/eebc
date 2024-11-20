@@ -23,7 +23,7 @@
         "wizard/view_task_inventory_wizard.xml",
         "views/inherit_project_task_inventory_view_form.xml",
         #"views/inherit_product_template_view.xml",
-        "views/inherit_product_template_view_delete.xml",
+        # "views/inherit_product_template_view_delete.xml",
         "wizard/view_project_sale_creation_wizard_form.xml",
         "views/task_picking_line.xml",
     ],
