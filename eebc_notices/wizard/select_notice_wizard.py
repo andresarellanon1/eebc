@@ -26,8 +26,8 @@ class SelectNoticeWizard(models.TransientModel):
         
         
             
-        _logger.warning('id value: %s', self.id)
-        
+        jeje = self.env.context.get('active_id')        
+        _logger.warning('jeje value: %s', jeje)
         _logger.warning('res value: %s', res)
         return res
     
