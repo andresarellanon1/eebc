@@ -4,9 +4,7 @@
 from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 
-import base64
-import pandas as pd
-import io
+
 
 import logging
 
@@ -49,6 +47,7 @@ class NoticeFileWizard(models.TransientModel):
             res['account_move_invoice_ids'] = self._context['invoices']
         if 'default_message' in self._context:
             res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
+        _logger.warning('VALOR DE RES1: %s', res)
         return res
 
     def create_notice(self):
