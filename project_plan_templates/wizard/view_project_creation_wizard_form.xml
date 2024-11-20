@@ -21,7 +21,7 @@
                                     </group>
                                     <div style="100%">
                                         <field name="project_plan_lines" nolabel="1">
-                                            <list editable="editable_bottom" create="1" style="width: 100%;">
+                                            <tree editable="editable_bottom" style="width: 100%;">
                                                 <field name="name"/>
                                                 <field name="chapter"/>
                                                 <field name="description"/>
@@ -32,7 +32,7 @@
                                                 <field name="task_timesheet_id" options="{'create': True}"/>
                                                 <field name="stage_id"/>
                                                 <button name="action_preview_task" type="object" class="oe_highlight" string="Preview task"/>
-                                            </list>
+                                            </tree>
                                         </field>
                                     </div>
                                 </page>
