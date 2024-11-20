@@ -24,19 +24,16 @@ class StockMove(models.Model):
     show_aviso_button = fields.Boolean(
         string="Mostrar botón de aviso",
         compute='_compute_aviso_button_flags',
-        store=True,
     )
 
     show_incoming_button = fields.Boolean(
         string="Mostrar botón de entrada",
         compute='_compute_aviso_button_flags',
-        store=True,
     )
 
     show_outgoing_button = fields.Boolean(
         string="Mostrar botón de salida",
         compute='_compute_aviso_button_flags',
-        store=True,
     )
 
 
