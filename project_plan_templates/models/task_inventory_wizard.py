@@ -73,8 +73,6 @@ class ProjectCreation(models.TransientModel):
                 if inv_lines.product_id == proyect_lines.product_id:
                     inv_lines.max_quantity = proyect_lines.quantity - proyect_lines.reservado
                     _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
-                    inv_lines.location_id = self.location_id
-                    inv_lines.location_dest_id = self.location_dest_id
 
     def action_confirm_create_inventory(self):
         try:
@@ -87,9 +85,9 @@ class ProjectCreation(models.TransientModel):
                 'product_uom_qty': line.product_uom_qty,
                 'quantity': line.quantity,
                 'product_uom': line.product_uom.id,
-                'location_id': line.location_id.id,
-                'location_dest_id': line.location_dest_id.id,
-                'name': line.name,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'name': self.name,
             }) for line in self.task_inventory_lines]
 
             stock_picking_vals = {
