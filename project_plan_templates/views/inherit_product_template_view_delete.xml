@@ -5,8 +5,9 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="sale_project.product_template_form_view_invoice_policy_inherit_sale_project"/>
         <field name="arch" type="xml">
-            <!-- Localizar y eliminar el campo 'project_template_id' -->
-            <xpath expr="//div/field[@name='project_template_id']" position="replace"/>
+            <xpath expr="//field[@name='project_template_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
