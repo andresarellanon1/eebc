@@ -38,6 +38,8 @@
                                         <field name="quantity" decoration-danger='max_quantity &lt; quantity'/>
                                         <field name="max_quantity"/>
                                         <field name="product_uom" string="Unidad"/>
+                                        <field name="location_id" column_invisible="true"/>
+                                        <field name="location_dest_id" column_invisible="true"/>
                                     </tree>
                                 </field>
                             </page>
