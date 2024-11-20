@@ -19,7 +19,7 @@ class WizardSelectionLine(models.TransientModel):
         
         
         _logger.warning('Location ID desde el dominio: %s', location_id)
-        _logger.warning('wizard_id: %s', current_wizard)
+        _logger.warning('wizard_id location: %s', current_wizard.stock_picking_location_id)
         _logger.warning('Location ID desde el dominio: %s', location_id)
         domain = [('quantity', '>', 0)]
         if location_id:
