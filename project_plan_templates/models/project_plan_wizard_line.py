@@ -15,6 +15,7 @@ class ProjectPlanWizardLine(models.TransientModel):
     planned_date_end = fields.Datetime(string="Planned End Date")
     partner_id = fields.Many2many('res.users', string="Partner")
     task_timesheet_id = fields.Many2one('task.timesheet', string="Timesheet Task")
-    stage_id = fields.Integer(
+    stage_id = fields.Many2one(
+        'project.task.type',
         string="Stage",
     )
