@@ -18,7 +18,6 @@
                 <field name="picking_type_codigo" invisible="1"/>
                 <field name="show_outgoing_button" invisible="1"/>
                 <field name="show_incoming_button" invisible="1"/>
-                <field name="show_aviso_button" invisible="1"/>
 
 
 
