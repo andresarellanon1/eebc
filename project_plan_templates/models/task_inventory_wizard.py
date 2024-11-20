@@ -16,11 +16,11 @@ class ProjectCreation(models.TransientModel):
     # Sección de información general
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner', string='Contacto')
-    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id', store=True)
+    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id')
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
-    origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
+    origin = fields.Char(string='Documento origen', compute="_compute_origin")
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     task_id_char = fields.Char(string='Tarea origen', compute="_compute_task_id")
     user_id = fields.Many2one('res.users', string='Contacto')
@@ -42,16 +42,16 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    @api.onchange('task_id_char')
+    @api.onchange('project_task_id')
     def _compute_task_id(self):
         self.task_id_char = self.project_task_id.name
 
-    @api.onchange('picking_type_id')
+    @api.onchange('project_task_id')
     def _compute_picking_type_id(self):
         _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
         self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
 
-    @api.onchange('origin')
+    @api.onchange('project_task_id')
     def _compute_origin(self):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
