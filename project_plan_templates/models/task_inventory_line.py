@@ -4,6 +4,7 @@ class TaskInventoryLine(models.TransientModel):
     _name = 'task.inventory.line'
     _description = 'Line to assign products to task inventory'
 
+    inventory_id = fields.Many2one('task.inventory.wizard')
     task_id = fields.Many2one('project.task', string="Tarea")
     stock_picking = fields.Many2one('stock.picking')
 
