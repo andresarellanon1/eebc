@@ -10,14 +10,16 @@ class WizardSelectionLine(models.TransientModel):
     record_id = fields.Many2one('notices.notices', string='Aviso', required=True, domain=lambda self: self._get_notice_domain())
     quantity = fields.Float(string='Quantity', default=1.0, required=True)
 
-   
 
+  
     def _get_notice_domain(self):
         """Get domain to filter notices based on cantidad"""
-        location_id = self.wizard_id.stock_picking_location_id
+        location_id = self._origin.wizard_id.stock_picking_location_id
+        
         _logger.warning('Location ID desde el dominio: %s', location_id)
+
         domain = [('quantity', '>', 0)]
         if location_id:
             _logger.warning('valor del location id: %s', location_id)
-            domain.append(('stock_location_origin_id', '=', self.wizard_id.stock_picking_location_id))
+            domain.append(('stock_location_origin_id', '=', self._origin.wizard_id.stock_picking_location_id))
         return domain

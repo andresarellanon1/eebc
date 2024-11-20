@@ -12,6 +12,7 @@ class ProjectCreation(models.TransientModel):
     stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
     project_stock_products = fields.Many2many('product.product', string="Productos")
     task_inventory_lines = fields.Many2many('task.inventory.line', string='Productos del proyecto')
+    
 
     # Sección de información general
     name = fields.Char(string='Referencia')
