@@ -35,20 +35,22 @@ class SelectNoticeWizard(models.TransientModel):
             ])
             notice_ids = self.env['notices.notices'].search([('id', 'in', notice_history_ids.ids)])
 
-            # Crear las líneas en memoria (sin usar create())
+            _logger.warning()
+            # Limpiar las líneas existentes en caso de que haya alguna
+            wizard.line_ids = [(5, 0, 0)]  # Eliminar líneas previas si existían
+
+            # Crear las nuevas líneas en memoria
             lines = []
             for notice_history in notice_history_ids:
                 for notice in notice_ids:
-                    # Usamos (0, 0, {...}) para insertar en memoria los valores sin crear registros.
                     lines.append((0, 0, {
                         'notice_history_ids': [(0, 0, notice_history.id)],
                         'notice_ids': [(0, 0, notice.id)],
                         'quantity': 0  # Inicialmente 0, puedes cambiarlo si es necesario.
                     }))
             
-            # Asignar las líneas calculadas en memoria
-            wizard.line_ids = [(5, 0, 0)]  # Eliminar registros anteriores, si los hay.
-            wizard.line_ids = lines  # Asignar las nuevas líneas
+            # Asignar las líneas al campo One2many
+            wizard.line_ids = lines
 
     def action_get_products(self):
         for wizard in self:
