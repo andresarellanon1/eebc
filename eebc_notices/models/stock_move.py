@@ -52,8 +52,13 @@ class StockMove(models.Model):
             if has_aviso and is_valid_picking_type:
                 move.has_aviso_in_attributes = True
                 move.show_aviso_button = True
+                 
                 move.show_incoming_button = move.picking_type_id.code == 'incoming'
                 move.show_outgoing_button = move.picking_type_id.code == 'outgoing'
+
+                _logger.warning('booleano 1: %s',move.show_incoming_button)
+                _logger.warning('booleano 2: %s',move.show_outgoing_button)
+
             else:
                 move.has_aviso_in_attributes = False
                 move.show_aviso_button = False
