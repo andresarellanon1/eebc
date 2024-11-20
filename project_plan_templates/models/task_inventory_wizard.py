@@ -127,4 +127,4 @@ class ProjectCreation(models.TransientModel):
             self._compute_task_id()
             self._compute_picking_type_id()
             self._compute_origin()
-        continue
+        
