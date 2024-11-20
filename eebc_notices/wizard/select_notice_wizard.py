@@ -15,11 +15,6 @@ class SelectNoticeWizard(models.TransientModel):
     _description = "Wizard where we will select the notice to take the product"
 
     
-    active = fields.Boolean(
-        string='active',
-        
-    )
-    
     quantity = fields.Float(string="Cantidad", readonly=True,)
     stock_picking_location_id = fields.Integer(
         string='id almacen',
@@ -34,19 +29,9 @@ class SelectNoticeWizard(models.TransientModel):
         if 'location_id' in self._context:
             res['stock_picking_location_id'] = self._context['location_id']
         
-        res['active'] = True
-            
-        jeje = self.env.context.get('active_id')        
-        _logger.warning('jeje value: %s', jeje)
         _logger.warning('res value: %s', res)
         return res
     
-    # notices_id = fields.Many2one(
-    #     'notices.notices',
-    #     string='notices_id',
-    #     domain=lambda self: self._get_notice_domain()
-    # )
-
 
     @api.depends('line_ids')
     def _compute_selected_records_count(self):
@@ -54,12 +39,6 @@ class SelectNoticeWizard(models.TransientModel):
             _logger.warning('id value2: %s', wizard.id)
             
             wizard.selected_records_count = len(wizard.line_ids)
-
-
-    # def _get_notice_domain(self):
-    #     """Get domain to filter notices based on cantidad"""
-    #     return [('quantity', '>', 0), ('stock_location_origin_id', '=', self._context.get('location_id'))] if self.quantity else []
-
 
 
     def action_get_products(self):
