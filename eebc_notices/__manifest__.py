@@ -1,7 +1,6 @@
 {
     'name': "EBBC NOTICES",
     'version': '17.0.1.72',
-    'depends': ["stock"],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
@@ -9,7 +8,7 @@
         Este modulo es para los avisos.
 
     """,
-    'depends': ['purchase', 'account','base'],
+    'depends': ['purchase', 'account','base','sale_stock','stock'],
  
     "data": [
         "security/ir.model.access.csv",

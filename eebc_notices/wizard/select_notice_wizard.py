@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import _, fields, models, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 
@@ -15,60 +15,60 @@ class SelectNoticeWizard(models.TransientModel):
     _description = "Wizard where we will select the notice to take the product"
 
     
-    active = fields.Boolean(
-        string='active',
-        
-    )
-    
-    quantity = fields.Float(string="Cantidad", readonly=True,)
-    stock_picking_location_id = fields.Integer(
-        string='id almacen',
-    )
-    @api.model
-    def default_get(self, fields):
-        res = super(SelectNoticeWizard, self).default_get(fields)
-        if 'location_id' in self._context:
-            res['stock_picking_location_id'] = self._context['location_id']
-        
-        res['active'] = True
-            
-        jeje = self.env.context.get('active_id')        
-        _logger.warning('jeje value: %s', jeje)
-        _logger.warning('res value: %s', res)
-        return res
-    
-    # notices_id = fields.Many2one(
-    #     'notices.notices',
-    #     string='notices_id',
-    #     domain=lambda self: self._get_notice_domain()
-    # )
-    selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
+    quantity = fields.Float(string="Demanda total", readonly=True,)
+ 
+    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines', compute='_compute_line_ids')
 
-
-    @api.depends('line_ids')
-    def _compute_selected_records_count(self):
+    stock_move_id = fields.Many2one('stock.move',
+        string='Traslado',
+        
+            compute='_compute_stock_move_id' )
+        
+    def _compute_stock_move_id(self):
+        for record in self:
+            record.stock_move_id = self.env['stock.move'].search([('id','=', self._context.get('active_id'))])
+        
+    @api.depends('stock_move_id')
+    def _compute_line_ids(self):
         for wizard in self:
-            _logger.warning('id value2: %s', wizard.id)
-            
-            wizard.selected_records_count = len(wizard.line_ids)
 
 
-    # def _get_notice_domain(self):
-    #     """Get domain to filter notices based on cantidad"""
-    #     return [('quantity', '>', 0), ('stock_location_origin_id', '=', self._context.get('location_id'))] if self.quantity else []
+            if not wizard.stock_move_id:
+                continue
+            notice_history_ids = self.env['notices.history'].search([('quantity','>',0),('product_id', '=', wizard.stock_move_id.product_id.id),('location_id','=',wizard.stock_move_id.location_id.id)])
+            notice_ids = self.env['notices.notices'].search([('id','in', notice_history_ids.ids)])
+           
+            # Queremos conseguir el id de los notices con dantidad positiva y que esten con el destino = stock_move_location_dest_id 
+            self.line_ids.create({
 
+                'notice_history_ids': [(0,0,notice_history_ids)],
+                'notice_ids':[(0,0,notice_ids)],
+                'quantity': 0
+            })
 
-    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
 
     def action_get_products(self):
-        _logger.warning('id value2: %s', self.id)
+        for wizard in self:
+            total = 0
+            for line in wizard.line_ids:
+                total += line.quantity
+            if total != wizard.quantity:
+                raise ValidationError(f"La cantidad y la demanda deben coincidir.Total: {total} / Demanda: {wizard.quantity}")
+            for line in wizard.line_ids:
+                for notice in line.notice_ids:
+
+                    notice.write({
+                            'history_ids': [(0, 0, {
+                                'location_id': wizard.stock_move_id.picking_id.location_id.id,
+                                'location_dest_id': wizard.stock_move_id.picking_id.location_dest_id.id,
+                                'quantity': line.quantity * (-1),
+                                # 'folio': entry.folio,  el folio tiene que ese Primeras entradas, primeras salidas
+                                'picking_code': wizard.stock_move_id.picking_id.picking_type_codeype,
+                                'origin': wizard.stock_move_id.picking_id.sale_id.name,
+                                'sale_order_id':wizard.stock_move_id.picking_id.sale_id.id
+                            })]
+                    })
         
-        for line in self.line_ids:
-            record = line.record_id
-            quantity = line.quantity
-            _logger.warning(f"Processing record {record.display_name} with quantity {quantity}")
-        
-        self.active = False
         return {'type': 'ir.actions.act_window_close'}
 
     
