@@ -85,6 +85,8 @@ class ProjectCreation(models.TransientModel):
                 'product_uom_qty': line.product_uom_qty,
                 'quantity': line.quantity,
                 'product_uom': line.product_uom.id,
+                'location_id': line.location_id.id,
+                'location_dest_id': line.location_dest_id.id,
                 'name': line.name,
             }) for line in self.task_inventory_lines]
 
