@@ -4,80 +4,67 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-
-# TODO: que picking id sea tipo de entrada para que salga el boton de aviso
-# campo que muestre el aviso relacionado
+    # Campo booleano que indica si el producto tiene un atributo de 'aviso'
     has_aviso_in_attributes = fields.Boolean(
-        string="Tiene 'aviso' en atributos",
-        compute='_compute_has_aviso_in_attributes'
+        string="Producto con aviso en atributos",
+        compute='_compute_aviso_button_flags',
     )
 
-    existing_product_in_notice = fields.Boolean(
-        string="Producto existente en 'aviso'",
-        compute='_compute_existing_product_in_notice'
-    )
-    has_aviso_in_attributes_fake = fields.Boolean(
-        string="Tiene 'aviso' en atributos",
-        compute="_compute_has_aviso_in_attributes"
-    )
-    has_type_picking_notice_approve= fields.Boolean(
-        string="Puede el tipo de operacion crear aviso  ",
-        compute='_compute_has_aviso_in_attributes'
-    )
+    # Campo relacionado con el código del tipo de picking
     picking_type_codigo = fields.Selection(
         related='picking_type_id.code',
-        readonly=True)
+        readonly=True
+    )
 
-# COMPARAR CON EL ORIGEN DE PICKING CON EL ORIGEN DEL AVISO QUE ESTA COMPUTADO CON EL LOCATION_DEST DE LOS REGISTROS DE HISTORIAL 
-    @api.depends('product_id.attribute_line_ids', 'picking_type_id.code')
-    def _compute_has_aviso_in_attributes(self):
+    # Campos adicionales necesarios para la lógica de la vista
+    show_aviso_button = fields.Boolean(
+        string="Mostrar botón de aviso",
+        compute='_compute_aviso_button_flags',
+        store=True,
+    )
+
+    show_incoming_button = fields.Boolean(
+        string="Mostrar botón de entrada",
+        compute='_compute_aviso_button_flags',
+        store=True,
+    )
+
+    show_outgoing_button = fields.Boolean(
+        string="Mostrar botón de salida",
+        compute='_compute_aviso_button_flags',
+        store=True,
+    )
+
+
+    # Método computado para manejar la visibilidad de los botones
+    @api.depends('product_id.attribute_line_ids', 'picking_type_id.code', 'product_id')
+    def _compute_aviso_button_flags(self):
         for move in self:
-            # Verifica si el producto tiene el atributo 'aviso' y si el tipo de picking está relacionado con la orden de compra
-            move.has_aviso_in_attributes = (
-                any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')) 
-            )
-            move.has_type_picking_notice_approve = move.picking_type_id.code in ['incoming','outgoing','internal']
+            # Verifica si el producto tiene el atributo 'aviso' y si el tipo de picking está permitido
+            has_aviso = any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id'))
+            is_valid_picking_type = move.picking_type_id.code in ['incoming', 'outgoing']
 
-            if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True:
-                _logger.warning('1')
-
-                if move.existing_product_in_notice == True:
-                    _logger.warning('1.1')
-
-                    move.has_aviso_in_attributes_fake = False
-                else:
-                    _logger.warning('1.2')
-
-                    move.has_aviso_in_attributes_fake = True
-            
+            # Lógica para establecer la visibilidad de los botones
+            if has_aviso and is_valid_picking_type:
+                move.has_aviso_in_attributes = True
+                move.show_aviso_button = True
+                move.show_incoming_button = move.picking_type_id.code == 'incoming'
+                move.show_outgoing_button = move.picking_type_id.code == 'outgoing'
             else:
-                _logger.warning('2')
-                
-                if move.picking_type_id.code == 'mrp_operation':
-                    move.has_aviso_in_attributes_fake = False
-                else:
-                    move.has_aviso_in_attributes_fake = True
+                move.has_aviso_in_attributes = False
+                move.show_aviso_button = False
+                move.show_incoming_button = False
+                move.show_outgoing_button = False
 
-            
-               
 
-    @api.depends('product_id')
-    def _compute_existing_product_in_notice(self):
-       for move in self:
-        # Buscar todos los registros en 'notices.notices' que tengan lotes relacionados con el producto
-        for notice in self.env['notices.notices'].search([]):
-            # Verificar si alguno de los lotes en 'lot_ids' pertenece al producto especificado
-            if any(lot.product_id == move.product_id for lot in notice.lot_ids):
-                _logger.warning('HAY AVISOS con este producto')
-                move.existing_product_in_notice = True
-                break
-            _logger.warning('HAY AVISOS con este producto')
-            move.existing_product_in_notice = False
 
-    def call_wizard(self):
+ 
+
+    def action_show_incoming(self):
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
         invoice_names = ", ".join(order.invoice_ids.mapped('name')) if order.invoice_ids else "No hay facturas"
         proveedor_name = self.picking_id.partner_id.name if self.picking_id.partner_id else "Proveedor no definido"
@@ -109,7 +96,7 @@ class StockMove(models.Model):
             }
         }
         
-    def call_wizard_select_notice(self):
+    def action_show_outgoing(self):
         _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
        
         return {
