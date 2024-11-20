@@ -17,15 +17,14 @@ class Notices(models.Model):
         string='Proveedor',
         comodel_name='res.partner',
     )
-    folio = fields.Char(string='Folio')
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
     quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
-    stock_location_origin_id = fields.Many2one(
-        string='Almacen origen',
-        comodel_name='stock.location',        
-        compute='_compute_location_origin_id'
-    )
+    # stock_location_origin_id = fields.Many2one(
+    #     string='Almacen origen',
+    #     comodel_name='stock.location',        
+    #     compute='_compute_location_origin_id'
+    # )
     lot_ids = fields.Many2many(
         string='Series',
         comodel_name='stock.lot',
@@ -56,13 +55,13 @@ class Notices(models.Model):
         inverse_name='notice_id',
     )
 
-    @api.depends('history_ids')
-    def _compute_location_origin_id(self):
-        for notice in self:
-            for history_record in notice.history_ids:
-                if history_record.location_dest:
-                    self.stock_location_origin_id = history_record.location_dest
-                    break
+    # @api.depends('history_ids')
+    # def _compute_location_origin_id(self):
+    #     for notice in self:
+    #         for history_record in notice.history_ids:
+    #             if history_record.location_dest:
+    #                 self.stock_location_origin_id.append(history_record.location_dest) 
+                    
 
     @api.depends('history_ids')
     def _compute_series(self):
