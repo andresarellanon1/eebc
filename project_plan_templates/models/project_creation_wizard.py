@@ -12,8 +12,8 @@ class ProjectCreation(models.TransientModel):
     project_name = fields.Char(string="Project Name", required=True)
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
-    project_plan_lines = fields.One2many(
-        'project.plan.wizard.line', 'wizard_id',
+    project_plan_lines = fields.Many2many(
+        'project.plan.line', 
         string="Project Plan Lines"
     )
     
