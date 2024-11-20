@@ -1,4 +1,4 @@
-from odoo improt models, fields, api
+from odoo import models, fields, api
 
 class ProjectPlanWizardLine(models.TransientModel):
 
