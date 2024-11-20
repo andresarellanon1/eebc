@@ -20,8 +20,6 @@
 
                         <group>
                             <field name="product_uom_qty"/>
-                            <!-- <field name="location_id"/>
-                            <field name="location_dest_id"/> -->
                         </group>
 
                         <!-- <group>

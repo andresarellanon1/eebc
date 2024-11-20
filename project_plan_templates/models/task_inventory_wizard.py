@@ -67,17 +67,16 @@ class ProjectCreation(models.TransientModel):
             _logger.warning(f'El valor de project_stock_products es: {self.project_stock_products}')
             return {'domain': {'product_id': [('id', 'in', product_ids)]}}
 
-    @api.onchange('task_inventory_lines.product_id')
+    @api.onchange('task_inventory_lines')
     def _compute_max_quantity(self):
         for inv_lines in self.task_inventory_lines:
             for proyect_lines in self.project_task_id.project_id.project_picking_lines:
                 if inv_lines.product_id == proyect_lines.product_id:
-                    inv_lines.max_quantity = proyect_lines.quantity
+                    inv_lines.max_quantity = proyect_lines.quantity - proyect_lines.reservado
                     _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
-
         self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
         
         stock_move_ids_vals = [(0, 0, {
@@ -86,8 +85,6 @@ class ProjectCreation(models.TransientModel):
             'product_uom_qty': line.product_uom_qty,
             'quantity': line.quantity,
             'product_uom': line.product_uom.id,
-            'location_id': line.location_id.id,
-            'location_dest_id': line.location_dest_id.id,
             'name': line.name,
         }) for line in self.task_inventory_lines]
 
