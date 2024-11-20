@@ -9,10 +9,10 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     # Campo booleano que indica si el producto tiene un atributo de 'aviso'
-    has_aviso_in_attributes = fields.Boolean(
-        string="Producto con aviso en atributos",
-        compute='_compute_aviso_button_flags',
-    )
+    # has_aviso_in_attributes = fields.Boolean(
+    #     string="Producto con aviso en atributos",
+    #     compute='_compute_aviso_button_flags',
+    # )
 
     # Campo relacionado con el código del tipo de picking
     picking_type_codigo = fields.Selection(
