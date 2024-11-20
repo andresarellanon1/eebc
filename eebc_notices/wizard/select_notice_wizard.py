@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import _, fields, models, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 
@@ -15,12 +15,12 @@ class SelectNoticeWizard(models.TransientModel):
     _description = "Wizard where we will select the notice to take the product"
 
     
-    quantity = fields.Float(string="Cantidad", readonly=True,)
+    quantity = fields.Float(string="Demanda total", readonly=True,)
  
     line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines', compute='_compute_line_ids')
 
     stock_move_id = fields.Many2one('stock.move',
-        string='stock_move_id',
+        string='Traslado',
         
             compute='_compute_stock_move_id' )
         
@@ -49,8 +49,14 @@ class SelectNoticeWizard(models.TransientModel):
 
     def action_get_products(self):
         for wizard in self:
+            total = 0
+            for line in wizard.line_ids:
+                total += line.quantity
+            if total != wizard.quantity:
+                raise ValidationError(f"La cantidad y la demanda deben coincidir.Total: {total} / Demanda: {wizard.quantity}")
             for line in wizard.line_ids:
                 for notice in line.notice_ids:
+
                     notice.write({
                             'history_ids': [(0, 0, {
                                 'location_id': wizard.stock_move_id.picking_id.location_id.id,
