@@ -76,8 +76,6 @@ class ProjectCreation(models.TransientModel):
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
-        self._compute_picking_type_id()
-        self._compute_origin()
         self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
         
         stock_move_ids_vals = [(0, 0, {
@@ -86,8 +84,6 @@ class ProjectCreation(models.TransientModel):
             'product_uom_qty': line.product_uom_qty,
             'quantity': line.quantity,
             'product_uom': line.product_uom.id,
-            'location_id': line.location_id.id,
-            'location_dest_id': line.location_dest_id.id,
             'name': line.name,
         }) for line in self.task_inventory_lines]
 
