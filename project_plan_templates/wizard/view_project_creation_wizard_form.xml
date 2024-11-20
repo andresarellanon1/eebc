@@ -22,7 +22,7 @@
                                     <div style="100%">
                                         <field name="project_plan_lines" nolabel="1">
 
-                                            <tree editable="bottom" edit="True" create="True" style="width: 100%;">
+                                            <tree editable="bottom" style="width: 100%;">
                                                 <field name="name"/>
                                                 <field name="chapter"/>
                                                 <field name="description"/>
