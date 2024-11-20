@@ -32,7 +32,6 @@
                                                 <field name="partner_id" widget="many2many_avatar_user"/>
                                                 <field name="task_timesheet_id" options="{'create': True}"/>
                                                 <field name="stage_id"/>
-                                                <button name="action_preview_task" type="object" class="oe_highlight" string="Preview task"/>
                                             </tree>
                                         </field>
                                     </div>
