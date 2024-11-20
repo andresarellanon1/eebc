@@ -43,16 +43,16 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    @api.onchange('task_inventory_lines')
+    @api.onchange('task_id_char')
     def _compute_task_id(self):
         self.task_id_char = self.project_task_id.name
 
-    @api.onchange('task_inventory_lines')
+    @api.onchange('picking_type_id')
     def _compute_picking_type_id(self):
         _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
         self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
 
-    @api.onchange('task_inventory_lines')
+    @api.onchange('origin')
     def _compute_origin(self):
         _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
@@ -76,49 +76,55 @@ class ProjectCreation(models.TransientModel):
                     _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
 
     def action_confirm_create_inventory(self):
-        self.ensure_one()
-        self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
-        
-        stock_move_ids_vals = [(0, 0, {
-            'product_id': line.product_id.id,
-            'product_packaging_id': line.product_packaging_id.id,
-            'product_uom_qty': line.product_uom_qty,
-            'quantity': line.quantity,
-            'product_uom': line.product_uom.id,
-            'name': line.name,
-        }) for line in self.task_inventory_lines]
+        try:
+            self.ensure_one()
+            self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
 
-        stock_picking_vals = {
-            'name': self.name,
-            'partner_id': self.partner_id.id,
-            'picking_type_id': self.project_task_id.project_id.default_picking_type_id.id,
-            'location_id': self.location_id.id,
-            'location_dest_id': self.location_dest_id.id,
-            'scheduled_date': self.scheduled_date,
-            'origin': self.project_task_id.name,
-            'task_id': self.project_task_id.id,
-            'user_id': self.user_id.id,
-            'move_ids': stock_move_ids_vals,
-            'carrier_id': self.carrier_id.id,
-            'carrier_tracking_ref': self.carrier_tracking_ref,
-            'weight': self.weight,
-            'shipping_weight': self.shipping_weight,
-            'group_id': self.group_id.id,
-            'company_id': self.company_id.id,
-            'transport_type': self.transport_type,
-            'custom_document_identification': self.custom_document_identification,
-            'lat_origin': self.lat_origin,
-            'long_origin': self.long_origin,
-            'lat_dest': self.lat_dest,
-            'long_dest': self.long_dest,
-        }
+            stock_move_ids_vals = [(0, 0, {
+                'product_id': line.product_id.id,
+                'product_packaging_id': line.product_packaging_id.id,
+                'product_uom_qty': line.product_uom_qty,
+                'quantity': line.quantity,
+                'product_uom': line.product_uom.id,
+                'name': line.name,
+            }) for line in self.task_inventory_lines]
 
-        stock_picking = self.env['stock.picking'].create(stock_picking_vals)
+            stock_picking_vals = {
+                'name': self.name,
+                'partner_id': self.partner_id.id,
+                'picking_type_id': self.project_task_id.project_id.default_picking_type_id.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'scheduled_date': self.scheduled_date,
+                'origin': self.project_task_id.name,
+                'task_id': self.project_task_id.id,
+                'user_id': self.user_id.id,
+                'move_ids': stock_move_ids_vals,
+                'carrier_id': self.carrier_id.id,
+                'carrier_tracking_ref': self.carrier_tracking_ref,
+                'weight': self.weight,
+                'shipping_weight': self.shipping_weight,
+                'group_id': self.group_id.id,
+                'company_id': self.company_id.id,
+                'transport_type': self.transport_type,
+                'custom_document_identification': self.custom_document_identification,
+                'lat_origin': self.lat_origin,
+                'long_origin': self.long_origin,
+                'lat_dest': self.lat_dest,
+                'long_dest': self.long_dest,
+            }
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'stock.picking',
-            'res_id': stock_picking.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
+            stock_picking = self.env['stock.picking'].create(stock_picking_vals)
+
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'stock.picking',
+                'res_id': stock_picking.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
+        except ValueError as e:
+            self._compute_task_id()
+            self._compute_picking_type_id()
+            self._compute_origin()
+            continue
