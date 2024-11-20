@@ -13,18 +13,18 @@ class WizardSelectionLine(models.TransientModel):
   
     def _get_notice_domain(self):
         """Get domain to filter notices based on cantidad"""
-        location_id = self.wizard_id.stock_picking_location_id
+        location_id = self._origin.wizard_id.stock_picking_location_id
         
         # current_wizard = self.env['select.notice.wizard'].browse()
         
         # current_wizard2 = self.env.context.get('active_id')
         
         # _logger.warning('current_wizard2: %s', current_wizard2)
-        # _logger.warning('Location ID desde el dominio: %s', location_id)
+        _logger.warning('Location ID desde el dominio: %s', location_id)
         # _logger.warning('wizard_id: %s', current_wizard)
         # _logger.warning('Location ID desde el dominio: %s', location_id)
         domain = [('quantity', '>', 0)]
         if location_id:
             _logger.warning('valor del location id: %s', location_id)
-            domain.append(('stock_location_origin_id', '=', self.wizard_id.stock_picking_location_id))
+            domain.append(('stock_location_origin_id', '=', self._origin.wizard_id.stock_picking_location_id))
         return domain

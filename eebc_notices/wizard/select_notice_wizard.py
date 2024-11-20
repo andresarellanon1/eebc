@@ -24,6 +24,10 @@ class SelectNoticeWizard(models.TransientModel):
     stock_picking_location_id = fields.Integer(
         string='id almacen',
     )
+
+    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
+    selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
+
     @api.model
     def default_get(self, fields):
         res = super(SelectNoticeWizard, self).default_get(fields)
@@ -42,7 +46,6 @@ class SelectNoticeWizard(models.TransientModel):
     #     string='notices_id',
     #     domain=lambda self: self._get_notice_domain()
     # )
-    selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
 
 
     @api.depends('line_ids')
@@ -58,7 +61,6 @@ class SelectNoticeWizard(models.TransientModel):
     #     return [('quantity', '>', 0), ('stock_location_origin_id', '=', self._context.get('location_id'))] if self.quantity else []
 
 
-    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
 
     def action_get_products(self):
         _logger.warning('id value2: %s', self.id)
