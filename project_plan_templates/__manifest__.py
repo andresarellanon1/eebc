@@ -21,10 +21,11 @@
         "views/inherit_project_task_form_inherited2.xml",
         "views/plan_project_stock_tree_view.xml",
         "wizard/view_task_inventory_wizard.xml",
-        "views/inherit_product_template_view.xml",
+        "views/inherit_project_task_inventory_view_form.xml",
+        #"views/inherit_product_template_view.xml",
         "views/inherit_product_template_view_delete.xml",
         "wizard/view_project_sale_creation_wizard_form.xml",
-        "views/task_picking_line.xml"
+        "views/task_picking_line.xml",
     ],
     "license": "LGPL-3",
     'installable': True,
