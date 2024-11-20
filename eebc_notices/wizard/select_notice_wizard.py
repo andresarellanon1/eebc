@@ -42,7 +42,7 @@ class SelectNoticeWizard(models.TransientModel):
     #     string='notices_id',
     #     domain=lambda self: self._get_notice_domain()
     # )
-    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines')
+    line_ids = fields.One2many('notices.notices', 'wizard_id', string='Lines')
     selected_records_count = fields.Integer(string='Selected Records', compute='_compute_selected_records_count')
 
 
