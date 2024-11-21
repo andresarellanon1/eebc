@@ -44,7 +44,7 @@ class ProjectCreation(models.TransientModel):
     long_dest = fields.Float(string="Longitud de destino")
 
     #variables adicionales
-    quantity_flag = fields.Boolean(default=False)
+    quantity_flag = fields.Boolean(compute="_compute_max_quantity")
 
     @api.onchange('name')
     def _compute_task_id(self):
