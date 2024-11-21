@@ -71,7 +71,7 @@ class SelectNoticeWizard(models.TransientModel):
                     }))
             
             # Asignar las líneas al campo One2many
-            wizard.write({'line_ids': lines})
+            wizard.line_ids = lines
             
             _logger.warning('lineas de wizard: %s',wizard.line_ids )
             
