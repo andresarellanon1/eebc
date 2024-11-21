@@ -1,5 +1,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
+import logging
+logger = logging.getLogger(__name__)
 
 class ProjectPlan(models.Model):
     _name = 'project.plan'
@@ -48,6 +50,7 @@ class ProjectPlan(models.Model):
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
+        logger.warning(f"Id de plantilla {self.id}")
         return {
             'name': 'Create Project',
             'view_mode': 'form',
