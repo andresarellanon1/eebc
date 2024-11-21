@@ -65,8 +65,8 @@ class SelectNoticeWizard(models.TransientModel):
             for notice_history in notice_history_ids:
                 for notice in notice_ids:
                     lines.append((0, 0, {
-                        'notice_history_ids': [(0, 0, notice_history.id)],
-                        'notice_ids': [(0, 0, notice.id)],
+                        'history_ids': [(4, notice_history.id)],
+                        'notice_id': [(4, notice.id)],
                         'quantity': 0  # Inicialmente 0, puedes cambiarlo si es necesario.
                     }))
             
