@@ -27,9 +27,15 @@ class StockMove(models.Model):
             has_aviso = any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id'))
             is_valid_picking_type = move.picking_type_id.code in ['incoming', 'outgoing']
             if has_aviso and is_valid_picking_type:
+                _logger.warning('ENTRAMOS A IF')
                 move.show_incoming_button = move.picking_type_id.code == 'incoming'
                 move.show_outgoing_button = move.picking_type_id.code == 'outgoing'
+                _logger.warning('move.show_outgoing_button: %s', move.show_outgoing_button)
+                _logger.warning('move.show_incoming_button: %s', move.show_incoming_button)
+                
             else:
+                _logger.warning('ENTRAMOS A ELSE')
+                
                 move.show_incoming_button = False
                 move.show_outgoing_button = False
 
@@ -62,6 +68,7 @@ class StockMove(models.Model):
                 'origin': self.picking_id.origin,
                 'lot_ids':self.lot_ids,
                 'purchase_id': purchase_order_id,
+                'sale_ids': purchase_order_id._get_sale_orders if purchase_order_id else False,
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
