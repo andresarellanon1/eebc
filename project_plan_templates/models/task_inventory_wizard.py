@@ -75,7 +75,7 @@ class ProjectCreation(models.TransientModel):
             for proyect_lines in self.project_task_id.project_id.project_picking_lines:
                 if inv_lines.product_id == proyect_lines.product_id:
                     inv_lines.max_quantity = proyect_lines.quantity - proyect_lines.reservado
-                    if (proyect_lines.quantity - proyect_lines.reservado) < inv_lines.max_quantity:
+                    if inv_lines.quantity < inv_lines.max_quantity:
                         self.quantity_flag = True
                     _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
 
@@ -84,8 +84,7 @@ class ProjectCreation(models.TransientModel):
         for inv_lines in self.task_inventory_lines:
             for proyect_lines in self.project_task_id.project_id.project_picking_lines:
                 if inv_lines.product_id == proyect_lines.product_id:
-                    if (proyect_lines.quantity - proyect_lines.reservado) < inv_lines.max_quantity:
-                        self.quantity_flag = True
+                    if self.quantity_flag:
                         raise ValidationError("La cantidad de los productos no puede ser mayor a la cantidad máxima")
 
     def action_confirm_create_inventory(self):
