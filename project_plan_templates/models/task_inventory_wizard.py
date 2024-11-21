@@ -1,6 +1,6 @@
 from odoo import models, fields, api
 import logging
-import psycopg2
+from odoo.exceptions import ValidationError
 _logger = logging.getLogger(__name__)
 
 class ProjectCreation(models.TransientModel):
@@ -79,10 +79,20 @@ class ProjectCreation(models.TransientModel):
                         quantity_flag = True
                     _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
 
+    @api.constrains('quantity_flag')
+    def _check_date_end(self):
+        for inv_lines in self.task_inventory_lines:
+            for proyect_lines in self.project_task_id.project_id.project_picking_lines:
+                if inv_lines.product_id == proyect_lines.product_id:
+                    if (proyect_lines.quantity - proyect_lines.reservado) < inv_lines.max_quantity:
+                        quantity_flag = True
+                        raise ValidationError("La cantidad de los productos no puede ser mayor a la cantidad máxima")
 
     def action_confirm_create_inventory(self):
-        try:
-            self.ensure_one()
+        self.ensure_one()
+        if quantity_flag:
+            self._check_date_end()
+        else:
             self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
 
             stock_move_ids_vals = [(0, 0, {
@@ -130,9 +140,4 @@ class ProjectCreation(models.TransientModel):
                 'view_mode': 'form',
                 'target': 'current',
             }
-        except ValueError as e:
-            _logger.error(f"Error en línea de inventario {line.id}: {str(e)}")
-            self._compute_task_id()
-            self._compute_picking_type_id()
-            self._compute_origin()
         
