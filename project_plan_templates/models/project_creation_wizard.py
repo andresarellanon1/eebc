@@ -12,11 +12,6 @@ class ProjectCreation(models.TransientModel):
     project_name = fields.Char(string="Project Name", required=True)
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
-
-    project_plan_lines = fields.Many2many(
-        'project.plan.line', 
-        string="Project Plan Lines"
-    )
     
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
@@ -41,10 +36,8 @@ class ProjectCreation(models.TransientModel):
     def _compute_wizard_plan_lines(self):
         for record in self:
             if record.project_plan_id:
-            # Limpiar las líneas existentes
                 record.wizard_plan_lines = [(5, 0, 0)]
 
-                # Agregar nuevas líneas basadas en `project_plan_lines`
                 wizard_lines = []
                 for line in record.project_plan_id.project_plan_lines:
                     wizard_lines.append((0, 0, {

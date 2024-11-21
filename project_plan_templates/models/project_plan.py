@@ -50,7 +50,6 @@ class ProjectPlan(models.Model):
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
-        logger.warning(f"Id de plantilla {self.id}")
         return {
             'name': 'Create Project',
             'view_mode': 'form',
@@ -59,7 +58,6 @@ class ProjectPlan(models.Model):
             'target': 'new',
             'context': {
                 'default_project_plan_id': self.id,
-                'default_project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
                 'default_project_plan_pickings': [(6, 0, self.project_plan_pickings.ids)],
                 'default_picking_lines': [(6, 0, self.picking_lines.ids)],
                 'default_description': self.description,
