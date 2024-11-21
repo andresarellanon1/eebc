@@ -27,14 +27,14 @@
 
         <record id="model_purchase_order_type_project" model="purchase.order.type">
             <field name="name">Projecto</field>
-            <field name="location_id">purchase_order_type.model_purchase_order_type_location_project</field>
-            <field name="sequence_id">purchase_order_type.seq_purchase_order_type_project</field>
+            <field name="location_id" ref="purchase_order_type.model_purchase_order_type_location_project"/>
+            <field name="sequence_id" ref="purchase_order_type.seq_purchase_order_type_project"/>
         </record>
 
         <record id="model_purchase_order_type_sale" model="purchase.order.type">
             <field name="name">Venta</field>
-            <field name="location_id">purchase_order_type.model_purchase_order_type_location_sale</field>
-            <field name="sequence_id">purchase_order_type.seq_purchase_order_type_sale</field>
+            <field name="location_id" ref="purchase_order_type.model_purchase_order_type_location_sale"/>
+            <field name="sequence_id" ref="purchase_order_type.seq_purchase_order_type_sale"/>
         </record>
     </data>
 </odoo>
