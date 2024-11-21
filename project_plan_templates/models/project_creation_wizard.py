@@ -34,12 +34,7 @@ class ProjectCreation(models.TransientModel):
 
     sale_order_id = fields.Many2one('sale.order')
 
-    @api.onchange('project_plan_id')
-    def _compute_wizard_plan_lines(self):
-        for record in self:
-            if record.project_plan_id:
-                # Computar las líneas del proyecto del plan
-                record.wizard_plan_lines = [(6, 0, record.project_plan_id.project_plan_lines.ids)]
+    
 
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
