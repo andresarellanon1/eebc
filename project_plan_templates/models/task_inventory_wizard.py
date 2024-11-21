@@ -78,8 +78,11 @@ class ProjectCreation(models.TransientModel):
                     inv_lines.max_quantity = proyect_lines.quantity - proyect_lines.reservado
                     if inv_lines.quantity > inv_lines.max_quantity:
                         self.quantity_flag = True
-                    _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
-                    _logger.warning(f'El valor de quantity_flag es: {self.quantity_flag}')
+                        _logger.warning(f'El valor de quantity_flag en el if es: {self.quantity_flag}')
+                    else:
+                        self.quantity_flag = False
+                        _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
+                        _logger.warning(f'El valor de quantity_flag en el else es: {self.quantity_flag}')
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
