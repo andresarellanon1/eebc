@@ -4,9 +4,7 @@
 from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 
-import base64
-import pandas as pd
-import io
+
 
 import logging
 
@@ -49,6 +47,7 @@ class NoticeFileWizard(models.TransientModel):
             res['account_move_invoice_ids'] = self._context['invoices']
         if 'default_message' in self._context:
             res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
+        _logger.warning('VALOR DE RES1: %s', res)
         return res
 
     def create_notice(self):
@@ -77,15 +76,13 @@ class NoticeFileWizard(models.TransientModel):
                         'folio': self.folio,
                         'picking_code': self._context['type'],
                         'origin': self._context['origin'],
-                        'origin_invoice_ids':self._context['origin_invoice_ids'],
-                        'sale_order_id':self._context['sale_invoice_ids'],
+                        'purchase_order_id':self._context['purchase_order_id']
                     })]
                 })
         else:
             notice = self.env['notices.notices'].create({
                 'product_id': self._context['product_id'],
                 'quantity': self.quantity,
-                'folio': self.folio,
                 'description': self.description,
                 'partner_id': self._context['proveedor_id'],
                 'notice': self.notice,
@@ -104,8 +101,6 @@ class NoticeFileWizard(models.TransientModel):
             })
         # Limpieza del contexto
         self = self.with_context(
-            origin_invoice_ids=False,
-            sale_invoice_ids=False,
             lot_ids=False
         )
 

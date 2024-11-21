@@ -12,10 +12,6 @@ class ProjectCreation(models.TransientModel):
     project_name = fields.Char(string="Project Name", required=True)
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
-    project_plan_lines = fields.Many2many(
-        'project.plan.line', 
-        string="Project Plan Lines"
-    )
     
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
@@ -27,9 +23,21 @@ class ProjectCreation(models.TransientModel):
         string="Picking Lines"
     )
 
+    wizard_plan_lines = fields.One2many(
+        'project.plan.wizard.line', 'wizard_id',
+        string="Project Plan Lines"
+    )
+
     is_sale_order = fields.Boolean(default=False)
 
     sale_order_id = fields.Many2one('sale.order')
+
+    @api.onchange('project_plan_id')
+    def _compute_wizard_plan_lines(self):
+        for record in self:
+            if record.project_plan_id:
+                # Computar las líneas del proyecto del plan
+                record.wizard_plan_lines = [(6, 0, record.project_plan_id.project_plan_lines.ids)]
 
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
@@ -66,7 +74,7 @@ class ProjectCreation(models.TransientModel):
             'task_timesheet_id': line.task_timesheet_id.id,
             'partner_id': [(6, 0, line.partner_id.ids)],
             'stage_id': line.stage_id,
-        }) for line in self.project_plan_lines if line.use_project_task]
+        }) for line in self.wizard_plan_lines if line.use_project_task]
 
         picking_lines_vals = [(0, 0, {
             'product_id': line.product_id.id,
