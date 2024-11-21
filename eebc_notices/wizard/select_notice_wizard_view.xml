@@ -11,7 +11,7 @@
                     <field name="stock_move_id" readonly="1"/>
                     <field name="quantity" readonly="1"/>
 
-                        <field name="line_ids" >
+                        <field name="line_ids" editable="bottom">
                             <tree editable="bottom">
                                 <field name="notice_ids" widget="many2many_tags" />
 
