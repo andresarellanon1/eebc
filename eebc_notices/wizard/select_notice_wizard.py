@@ -16,11 +16,29 @@ class SelectNoticeWizard(models.TransientModel):
 
     quantity = fields.Float(string="Demanda total", readonly=True,)
     line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines', compute='_compute_line_ids')
-    stock_move_id = fields.Many2one('stock.move', string='Traslado', compute='_compute_stock_move_id')
+    stock_move_id = fields.Many2one('stock.move', string='Traslado', domain=lambda self: self._get_stock_move_domain())
 
-    def _compute_stock_move_id(self):
-        for record in self:
-            record.stock_move_id = self.env['stock.move'].browse(self._context.get('active_id'))
+    # def _compute_stock_move_id(self):
+    #     for record in self:
+    #         record.stock_move_id = self.env['stock.move'].browse(self._context.get('active_id'))
+
+    @api.model
+    def default_get(self, fields):
+        res = super(SelectNoticeWizard, self).default_get(fields)
+        if 'stock_move_id' in self._context:
+            res['stock_move_id'] = self._context['stock_move_id']
+        # Asignar el mensaje de error desde el contexto
+        _logger.warning('VALOR DE RES1: %s', res)
+        return res
+    
+    def _get_stock_move_domain(self):
+        if not self:
+            return []
+        return [
+            ('product_id', '=', self.stock_move_id.product_id.id),
+            ('location_id', '=', self.stock_move_id.location_id.id),
+            ('quantity', '>', 0)
+        ]
 
     @api.depends('stock_move_id')
     def _compute_line_ids(self):
