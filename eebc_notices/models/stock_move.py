@@ -68,7 +68,7 @@ class StockMove(models.Model):
                 'origin': self.picking_id.origin,
                 'lot_ids':self.lot_ids,
                 'purchase_id': purchase_order_id,
-                'sale_ids': purchase_order_id._get_sale_orders if purchase_order_id else False,
+                'sale_ids': order._get_sale_orders if order else False,
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
