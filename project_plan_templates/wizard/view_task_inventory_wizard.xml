@@ -71,7 +71,7 @@
                             </page>
                         </notebook>
                         <footer>
-                            <button name="action_confirm_create_inventory" string="Create Inventory" type="object" class="btn-primary" disable="quantity_flag &lt; quantity"/>
+                            <button name="action_confirm_create_inventory" string="Create Inventory" type="object" class="btn-primary" disable='quantity_flag'/>
                             <button string="Cancel" class="btn-secondary" special="cancel"/>
                         </footer>
                     </sheet>
