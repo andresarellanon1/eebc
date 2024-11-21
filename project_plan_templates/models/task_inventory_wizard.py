@@ -90,7 +90,7 @@ class ProjectCreation(models.TransientModel):
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
-        if quantity_flag:
+        if self.quantity_flag:
             self._check_date_end()
         else:
             self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
