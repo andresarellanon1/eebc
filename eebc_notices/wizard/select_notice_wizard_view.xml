@@ -5,13 +5,16 @@
         <field name="model">select.notice.wizard</field>
         <field name="arch" type="xml">
              <form string="Select Products">
-                <field name="stock_picking_location_id" />
 
                 <sheet>
                     <group>
-                        <field name="line_ids" widget="one2many_list">
+                    <field name="stock_move_id" readonly="1"/>
+                    <field name="quantity" readonly="1"/>
+
+                        <field name="line_ids" editable="bottom">
                             <tree editable="bottom">
-                                <field name="record_id" />
+                                <field name="notice_ids" widget="many2many_tags" />
+
                                 <field name="quantity"/>
                             </tree>
                         </field>
@@ -24,6 +27,7 @@
              </form>
         </field>
     </record>
+
 
 
     

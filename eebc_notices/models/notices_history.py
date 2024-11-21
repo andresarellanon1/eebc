@@ -13,7 +13,11 @@ class NoticesHistory(models.Model):
     location_id = fields.Many2one(
         'stock.location', "Source Location",
         required=True)
-
+    
+    product_id = fields.Many2one(
+        string='Recurso',
+        comodel_name='product.product',
+    )
     # SALIDA DE INVENTARIO DESDE EL ORIGEN 
     quantity = fields.Float(string='Cantidad')
     picking_code = fields.Char(
@@ -33,21 +37,6 @@ class NoticesHistory(models.Model):
     )
     folio = fields.Char(string='Folio')
     
-    
-    # picking_ids = fields.Many2many(
-    #     'stock.picking', 
-    #     compute = "_compute_picking_ids",
-    #     string='Operaciones de Almacén'
-    # )
-    
-    # @api.depends("origin")
-    # def _compute_picking_ids(self):
-
-    #     po = self.env['purchase.order'].search([('name','=',self.origin)])
-    #     self.picking_ids = po.picking_ids 
-
-        # Hay que mapear por el producto que se encuentra por picking id
-
 
 
     

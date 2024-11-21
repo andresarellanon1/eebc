@@ -7,18 +7,15 @@ class ProjectLines(models.Model):
     _description = 'Project plan lines'
  
     name = fields.Char(string="Name")
-    chapter = fields.Char(string="Chapter", required=True)
+    chapter = fields.Char(string="Chapter")
     clave = fields.Integer(string="Task id")
     description = fields.Char(string="Description")
     project_plan_id = fields.Many2one('project.plan', string="Project plan")
-    product_uom = fields.Many2one('uom.uom', string="Unit of mesure")
-    unit_price = fields.Float(string="Unit price")
-    amount_total = fields.Float(string="Amount total")
     use_project_task = fields.Boolean(default=True, string="Use task")
-    stage_id = fields.Selection(
+    stage_id = fields.Many2one(
+        'project.task.type',
         string="Stage",
-        selection=[('first', 'First stage'), ('second', 'Second stage'), ('third', 'Third stage')]
-        )
+    )
     planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Begin date")
     planned_date_end = fields.Datetime(default=fields.Date.context_today, string="End date")
     origin_project_id = fields.Many2one('project.project', string="Project")

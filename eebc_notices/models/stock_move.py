@@ -4,80 +4,46 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-
-# TODO: que picking id sea tipo de entrada para que salga el boton de aviso
-# campo que muestre el aviso relacionado
-    has_aviso_in_attributes = fields.Boolean(
-        string="Tiene 'aviso' en atributos",
-        compute='_compute_has_aviso_in_attributes'
-    )
-
-    existing_product_in_notice = fields.Boolean(
-        string="Producto existente en 'aviso'",
-        compute='_compute_existing_product_in_notice'
-    )
-    has_aviso_in_attributes_fake = fields.Boolean(
-        string="Tiene 'aviso' en atributos",
-        compute="_compute_has_aviso_in_attributes"
-    )
-    has_type_picking_notice_approve= fields.Boolean(
-        string="Puede el tipo de operacion crear aviso  ",
-        compute='_compute_has_aviso_in_attributes'
-    )
     picking_type_codigo = fields.Selection(
         related='picking_type_id.code',
-        readonly=True)
+        readonly=True
+    )
+    show_incoming_button = fields.Boolean(
+        string="Mostrar botón de entrada",
+        compute='_compute_aviso_button_flags',
+    )
+    show_outgoing_button = fields.Boolean(
+        string="Mostrar botón de salida",
+        compute='_compute_aviso_button_flags',
+    )
 
-# COMPARAR CON EL ORIGEN DE PICKING CON EL ORIGEN DEL AVISO QUE ESTA COMPUTADO CON EL LOCATION_DEST DE LOS REGISTROS DE HISTORIAL 
-    @api.depends('product_id.attribute_line_ids', 'picking_type_id.code')
-    def _compute_has_aviso_in_attributes(self):
+    @api.depends('product_id.attribute_line_ids', 'picking_type_id.code', 'product_id')
+    def _compute_aviso_button_flags(self):
         for move in self:
-            # Verifica si el producto tiene el atributo 'aviso' y si el tipo de picking está relacionado con la orden de compra
-            move.has_aviso_in_attributes = (
-                any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')) 
-            )
-            move.has_type_picking_notice_approve = move.picking_type_id.code in ['incoming','outgoing','internal']
-
-            if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True:
-                _logger.warning('1')
-
-                if move.existing_product_in_notice == True:
-                    _logger.warning('1.1')
-
-                    move.has_aviso_in_attributes_fake = False
-                else:
-                    _logger.warning('1.2')
-
-                    move.has_aviso_in_attributes_fake = True
-            
-            else:
-                _logger.warning('2')
+            has_aviso = any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id'))
+            is_valid_picking_type = move.picking_type_id.code in ['incoming', 'outgoing']
+            if has_aviso and is_valid_picking_type:
+                _logger.warning('ENTRAMOS A IF')
+                move.show_incoming_button = move.picking_type_id.code == 'incoming'
+                move.show_outgoing_button = move.picking_type_id.code == 'outgoing'
+                _logger.warning('move.show_outgoing_button: %s', move.show_outgoing_button)
+                _logger.warning('move.show_incoming_button: %s', move.show_incoming_button)
                 
-                if move.picking_type_id.code == 'mrp_operation':
-                    move.has_aviso_in_attributes_fake = False
-                else:
-                    move.has_aviso_in_attributes_fake = True
+            else:
+                _logger.warning('ENTRAMOS A ELSE')
+                
+                move.show_incoming_button = False
+                move.show_outgoing_button = False
 
-            
-               
 
-    @api.depends('product_id')
-    def _compute_existing_product_in_notice(self):
-       for move in self:
-        # Buscar todos los registros en 'notices.notices' que tengan lotes relacionados con el producto
-        for notice in self.env['notices.notices'].search([]):
-            # Verificar si alguno de los lotes en 'lot_ids' pertenece al producto especificado
-            if any(lot.product_id == move.product_id for lot in notice.lot_ids):
-                _logger.warning('HAY AVISOS con este producto')
-                move.existing_product_in_notice = True
-                break
-            _logger.warning('HAY AVISOS con este producto')
-            move.existing_product_in_notice = False
 
-    def call_wizard(self):
+ 
+
+    def action_show_incoming(self):
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
         invoice_names = ", ".join(order.invoice_ids.mapped('name')) if order.invoice_ids else "No hay facturas"
         proveedor_name = self.picking_id.partner_id.name if self.picking_id.partner_id else "Proveedor no definido"
@@ -101,9 +67,8 @@ class StockMove(models.Model):
                 'location_dest_id': self.picking_id.location_dest_id.id,
                 'origin': self.picking_id.origin,
                 'lot_ids':self.lot_ids,
-                'origin_invoice_ids':self.picking_id.purchase_id.invoice_ids,
-                'sale_invoice_ids':self.picking_id.purchase_id.order_line.id,
                 'purchase_id': purchase_order_id,
+                'sale_ids': order._get_sale_orders().ids if order else False,
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
@@ -111,7 +76,7 @@ class StockMove(models.Model):
             }
         }
         
-    def call_wizard_select_notice(self):
+    def action_show_outgoing(self):
         _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
        
         return {
@@ -125,6 +90,7 @@ class StockMove(models.Model):
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
                 'location_id': self.picking_id.location_id.id,
+                'stock_move_id': self.id
 
             }
         }

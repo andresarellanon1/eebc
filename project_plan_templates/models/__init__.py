@@ -15,3 +15,4 @@ from . import project_sale_creation_wizard
 from . import product_template
 from . import task_inventory_line
 from . import stock_picking_type
+from . import project_plan_wizard_line

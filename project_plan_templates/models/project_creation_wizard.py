@@ -12,10 +12,6 @@ class ProjectCreation(models.TransientModel):
     project_name = fields.Char(string="Project Name", required=True)
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
-    project_plan_lines = fields.Many2many(
-        'project.plan.line', 
-        string="Project Plan Lines"
-    )
     
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
@@ -27,9 +23,36 @@ class ProjectCreation(models.TransientModel):
         string="Picking Lines"
     )
 
+    wizard_plan_lines = fields.One2many(
+        'project.plan.wizard.line', 'wizard_id',
+        string="Project Plan Lines"
+    )
+
     is_sale_order = fields.Boolean(default=False)
 
     sale_order_id = fields.Many2one('sale.order')
+
+    @api.onchange('project_plan_id')
+    def _compute_wizard_plan_lines(self):
+        for record in self:
+            if record.project_plan_id:
+                record.wizard_plan_lines = [(5, 0, 0)]
+
+                wizard_lines = []
+                for line in record.project_plan_id.project_plan_lines:
+                    wizard_lines.append((0, 0, {
+                        'name': line.name,
+                        'chapter': line.chapter,
+                        'description': line.description,
+                        'use_project_task': line.use_project_task,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
+                        'partner_id': line.partner_id.id if line.partner_id else False,
+                        'stage_id': line.stage_id.id if line.stage_id else False,
+                    }))
+            
+                record.wizard_plan_lines = wizard_lines
 
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
@@ -66,7 +89,7 @@ class ProjectCreation(models.TransientModel):
             'task_timesheet_id': line.task_timesheet_id.id,
             'partner_id': [(6, 0, line.partner_id.ids)],
             'stage_id': line.stage_id,
-        }) for line in self.project_plan_lines if line.use_project_task]
+        }) for line in self.wizard_plan_lines if line.use_project_task]
 
         picking_lines_vals = [(0, 0, {
             'product_id': line.product_id.id,
@@ -114,6 +137,8 @@ class ProjectCreation(models.TransientModel):
         current_task_type = None
         for line in self.project_plan_lines:
             if line.stage_id:
+                logger.info(f"Stage ID: {line.stage_id}")
+                logger.info(f"Project: {project}")
                 current_task_type = self.get_or_create_task_type(line.stage_id, project)
             else:
                 current_task_type = self.get_or_create_task_type('Extras', project)
@@ -142,15 +167,21 @@ class ProjectCreation(models.TransientModel):
     # it simply assigns the task to this existing stage.
 
     def get_or_create_task_type(self, stage_id, project):
+        logger.info(f"Stage ID: {stage_id}")
+        logger.info(f"Project: {project}")
+
         task_type = self.env['project.task.type'].search([
             ('name', '=', stage_id),
             ('project_ids', 'in', project.id)
         ], limit=1)
+
+        logger.info(f"Task Type obtenidos: {task_type}")
 
         if not task_type:
             task_type = self.env['project.task.type'].create({
                 'name': stage_id,
                 'project_ids': [(4, project.id)],
             })
+            logger.info(f"Task Type creado: {task_type}")
             
         return task_type

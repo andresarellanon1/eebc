@@ -1,5 +1,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
+import logging
+logger = logging.getLogger(__name__)
 
 class ProjectPlan(models.Model):
     _name = 'project.plan'
@@ -56,9 +58,8 @@ class ProjectPlan(models.Model):
             'target': 'new',
             'context': {
                 'default_project_plan_id': self.id,
-                'default_project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
                 'default_project_plan_pickings': [(6, 0, self.project_plan_pickings.ids)],
-                'deafult_picking_lines': [(6, 0, self.picking_lines.ids)],
+                'default_picking_lines': [(6, 0, self.picking_lines.ids)],
                 'default_description': self.description,
             }
         }
