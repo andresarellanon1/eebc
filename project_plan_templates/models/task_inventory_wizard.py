@@ -79,19 +79,12 @@ class ProjectCreation(models.TransientModel):
                     if inv_lines.quantity < inv_lines.max_quantity:
                         self.quantity_flag = True
                     _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
-
-    @api.constrains('quantity_flag')
-    def _check_date_end(self):
-        for inv_lines in self.task_inventory_lines:
-            for proyect_lines in self.project_task_id.project_id.project_picking_lines:
-                if inv_lines.product_id == proyect_lines.product_id:
-                    if self.quantity_flag:
-                        raise ValidationError("La cantidad de los productos no puede ser mayor a la cantidad máxima")
+                    _logger.warning(f'El valor de quantity_flag es: {self.quantity_flag}')
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
         if self.quantity_flag:
-            self._check_date_end()
+            raise ValidationError("La cantidad de los productos no puede ser mayor a la cantidad máxima")
         else:
             self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
 
