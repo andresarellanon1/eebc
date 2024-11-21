@@ -79,7 +79,6 @@ class ProjectCreation(models.TransientModel):
                 if inv_lines.product_id == proyect_lines.product_id:
                     if inv_lines.quantity > inv_lines.max_quantity:
                         return = True
-                    else:
                         
 
     def action_confirm_create_inventory(self):
