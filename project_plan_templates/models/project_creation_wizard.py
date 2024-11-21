@@ -42,7 +42,7 @@ class ProjectCreation(models.TransientModel):
         for record in self:
             if record.project_plan_id:
                 # Computar las líneas del proyecto del plan
-                record.wizard_plan_lines = [(6, 0, record.project_plan_id.project_plan_lines.ids)]
+                record.wizard_plan_lines = [(6, 0, self.project_plan_lines)]
 
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
