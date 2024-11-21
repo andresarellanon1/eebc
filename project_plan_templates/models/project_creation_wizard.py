@@ -172,15 +172,21 @@ class ProjectCreation(models.TransientModel):
     # it simply assigns the task to this existing stage.
 
     def get_or_create_task_type(self, stage_id, project):
+        logger.info(f"Stage ID: {stage_id}")
+        logger.info(f"Project: {project}")
+
         task_type = self.env['project.task.type'].search([
             ('name', '=', stage_id),
             ('project_ids', 'in', project.id)
         ], limit=1)
+
+        logger.info(f"Task Type obtenidos: {task_type}")
 
         if not task_type:
             task_type = self.env['project.task.type'].create({
                 'name': stage_id,
                 'project_ids': [(4, project.id)],
             })
+            logger.info(f"Task Type creado: {task_type}")
             
         return task_type
