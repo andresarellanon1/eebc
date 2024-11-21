@@ -19,4 +19,3 @@ class ProjectPlanWizardLine(models.TransientModel):
         'project.task.type',
         string="Stage",
     )
-    project_plan_id = fields.Many2one('project.plan', string="Project plan")
