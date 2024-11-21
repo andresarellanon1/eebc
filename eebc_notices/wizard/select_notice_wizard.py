@@ -53,7 +53,6 @@ class SelectNoticeWizard(models.TransientModel):
             ])
             notice_ids = self.env['notices.notices'].search([('id', 'in', notice_history_ids.ids)])
 
-            _logger.warning()
             # Limpiar las líneas existentes en caso de que haya alguna
             wizard.line_ids = [(5, 0, 0)]  # Eliminar líneas previas si existían
 
