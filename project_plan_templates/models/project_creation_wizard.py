@@ -144,6 +144,8 @@ class ProjectCreation(models.TransientModel):
         current_task_type = None
         for line in self.project_plan_lines:
             if line.stage_id:
+                logger.info(f"Stage ID: {line.stage_id}")
+                logger.info(f"Project: {project}")
                 current_task_type = self.get_or_create_task_type(line.stage_id, project)
             else:
                 current_task_type = self.get_or_create_task_type('Extras', project)
