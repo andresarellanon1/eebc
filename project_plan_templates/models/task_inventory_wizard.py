@@ -42,6 +42,9 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
+    #variables adicionales
+    quantity_flag = fields.Boolean(default=False)
+
     @api.onchange('name')
     def _compute_task_id(self):
         self.task_id_char = self.project_task_id.name
@@ -72,7 +75,10 @@ class ProjectCreation(models.TransientModel):
             for proyect_lines in self.project_task_id.project_id.project_picking_lines:
                 if inv_lines.product_id == proyect_lines.product_id:
                     inv_lines.max_quantity = proyect_lines.quantity - proyect_lines.reservado
+                    if (proyect_lines.quantity - proyect_lines.reservado) < inv_lines.max_quantity
+                        quantity_flag = True
                     _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
+
 
     def action_confirm_create_inventory(self):
         try:
