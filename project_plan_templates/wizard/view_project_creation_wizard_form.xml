@@ -20,7 +20,7 @@
                                         <field name="project_plan_id" invisible="1"/>
                                     </group>
                                     <div style="100%">
-                                        <field name="wizard_plan_lines" nolabel="1">
+                                        <field name="project_plan_lines" nolabel="1">
                                             <tree editable="bottom" style="width: 100%;">
                                                 <field name="name"/>
                                                 <field name="chapter"/>
