@@ -74,7 +74,7 @@ class ProjectCreation(models.TransientModel):
                 if inv_lines.product_id == proyect_lines.product_id:
                     inv_lines.max_quantity = proyect_lines.quantity - proyect_lines.reservado
         
-        def _quantity_flag(self):
+    def _quantity_flag(self):
         for inv_lines in self.task_inventory_lines:
             for proyect_lines in self.project_task_id.project_id.project_picking_lines:
                 if inv_lines.product_id == proyect_lines.product_id:
