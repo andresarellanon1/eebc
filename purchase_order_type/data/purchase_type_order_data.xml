@@ -19,11 +19,13 @@
 
         <record id="model_purchase_order_type_location_project" model="stock.location">
             <field name="name">Projectos</field>
+            <field name="usage">view</field>
             <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record id="model_purchase_order_type_location_sale" model="stock.location">
             <field name="name">Ventas</field>
+            <field name="usage">view</field>
             <field name="company_id" ref="base.main_company"/>
         </record>
 
