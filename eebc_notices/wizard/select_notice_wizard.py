@@ -95,6 +95,7 @@ class SelectNoticeWizard(models.TransientModel):
         _logger.warning('Vao' )
 
 
+
         for wizard in self:
             _logger.warning('Entramos a wizard ciclo' )
 
