@@ -12,8 +12,8 @@
                     <field name="quantity" readonly="1"/>
 
                         <field name="line_ids" editable="bottom">
-                            <tree editable="bottom">
-                                <field name="notice_ids" widget="many2many_tags" />
+                            <tree >
+                                <field name="notice_ids" widget='one2many' />
 
                                 <field name="quantity"/>
                             </tree>

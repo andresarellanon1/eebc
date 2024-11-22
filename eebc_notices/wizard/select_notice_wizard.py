@@ -15,7 +15,7 @@ class SelectNoticeWizard(models.TransientModel):
     _description = "Wizard where we will select the notice to take the product"
 
     quantity = fields.Float(string="Demanda total", readonly=True,)
-    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Lines', compute='_compute_line_ids')
+    line_ids = fields.One2many('wizard.selection.line', 'wizard_id', string='Registro de avisos', compute='_compute_line_ids')
     stock_move_id = fields.Many2one('stock.move', string='Traslado', domain=lambda self: self._get_stock_move_domain())
 
     # def _compute_stock_move_id(self):
