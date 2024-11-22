@@ -1,15 +1,15 @@
 {
-    'name': "EEBC Settings",
-    'version': '17.0.0.02',
+    'name': "Purchase Order Projects",
+    'version': '17.0.0.08',
     'depends': [
-        "base",
-        "purchase",
+        "eebc_settings",
+        "purchase_order_type",
     ],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
     'description': """
-        Este modulo conforma las configuraciones.
+        Este modulo conforma las configuraciones de las ordenes de compra.
     """,
     "data": [
         "views/inherit_views.xml",

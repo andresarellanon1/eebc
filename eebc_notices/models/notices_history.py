@@ -13,7 +13,11 @@ class NoticesHistory(models.Model):
     location_id = fields.Many2one(
         'stock.location', "Source Location",
         required=True)
-
+    
+    product_id = fields.Many2one(
+        string='Recurso',
+        comodel_name='product.product',
+    )
     # SALIDA DE INVENTARIO DESDE EL ORIGEN 
     quantity = fields.Float(string='Cantidad')
     picking_code = fields.Char(

@@ -50,7 +50,6 @@ class ProjectPlan(models.Model):
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
-        logger.warning(f"Id de plantilla {self.id}")
         return {
             'name': 'Create Project',
             'view_mode': 'form',
