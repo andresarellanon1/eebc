@@ -33,30 +33,30 @@ class ProjectCreation(models.TransientModel):
     # conditional assignments are used to handle potential empty values.
     
     @api.onchange('project_plan_id')
-        def _compute_wizard_plan_lines(self):
+    def _compute_wizard_plan_lines(self):
         
-        for record in self:
-            if record.project_plan_id:
-                # Clear existing wizard plan lines
-                record.wizard_plan_lines = [(5, 0, 0)]
+    for record in self:
+        if record.project_plan_id:
+            # Clear existing wizard plan lines
+            record.wizard_plan_lines = [(5, 0, 0)]
 
-                # Prepare new wizard lines from project plan template
-                wizard_lines = []
-                for line in record.project_plan_id.project_plan_lines:
-                    wizard_lines.append((0, 0, {
-                        'name': line.name,
-                        'chapter': line.chapter,
-                        'description': line.description,
-                        'use_project_task': line.use_project_task,
-                        'planned_date_begin': line.planned_date_begin,
-                        'planned_date_end': line.planned_date_end,
-                        'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
-                        'partner_id': line.partner_id.id if line.partner_id else False,
-                        'stage_id': line.stage_id.id if line.stage_id else False,
-                    }))
+            # Prepare new wizard lines from project plan template
+            wizard_lines = []
+            for line in record.project_plan_id.project_plan_lines:
+                wizard_lines.append((0, 0, {
+                    'name': line.name,
+                    'chapter': line.chapter,
+                    'description': line.description,
+                    'use_project_task': line.use_project_task,
+                    'planned_date_begin': line.planned_date_begin,
+                    'planned_date_end': line.planned_date_end,
+                    'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
+                    'partner_id': line.partner_id.id if line.partner_id else False,
+                    'stage_id': line.stage_id.id if line.stage_id else False,
+                }))
             
-                # Update record with new wizard lines
-                record.wizard_plan_lines = wizard_lines
+            # Update record with new wizard lines
+            record.wizard_plan_lines = wizard_lines
 
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
