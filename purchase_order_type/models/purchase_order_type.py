@@ -9,7 +9,7 @@ class PurchaseOrderType(models.Model):
     _description = "Tipo de orden de compra"
 
     name = fields.Char('Nombre', required=True)
-    picking_type_id = fields.Many2one('stock.warehouse', string='Tipo de operación', default=False)
+    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', default=False)
     location_id = fields.Many2one('stock.location', string='Ubicación', required=True)
     sequence_id = fields.Many2one('ir.sequence', string='Secuencia')
 
