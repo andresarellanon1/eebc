@@ -39,6 +39,8 @@ class ProjectCreation(models.TransientModel):
 
     note = fields.Char()
 
+    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+
     @api.onchange('project_plan_id')
     def _compute_wizard_plan_lines(self):
         for record in self:
@@ -204,3 +206,8 @@ class ProjectCreation(models.TransientModel):
             logger.info(f"Task Type creado: {task_type}")
             
         return task_type
+
+        @api.depends('wizard_picking_lines.subtotal')
+        def _compute_total_cost(self):
+            for plan in self:
+                plan.plan_total_cost = sum(line.subtotal for line in plan.wizard_picking_lines)
