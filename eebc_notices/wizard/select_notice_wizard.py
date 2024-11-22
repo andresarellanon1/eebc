@@ -41,7 +41,6 @@ class SelectNoticeWizard(models.TransientModel):
             res['quantity'] = self._context['cantidad']
         
         _logger.warning('VALOR DE RES1: %s', res)
-        self._create_line_ids()
         return res
     
     # def _get_stock_move_domain(self):
@@ -86,7 +85,11 @@ class SelectNoticeWizard(models.TransientModel):
             
     #         _logger.warning('lineas de wizard: %s',wizard.line_ids )
 
-
+    @api.model
+    def create(self, vals):
+        wizard = super(SelectNoticeWizard, self).create(vals)
+        wizard._create_line_ids()
+        return wizard
 
 
     def _create_line_ids(self):
