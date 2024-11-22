@@ -100,16 +100,14 @@ class SelectNoticeWizard(models.TransientModel):
                 ('product_id', '=', wizard.stock_move_id.product_id.id),
                 ('location_id', '=', wizard.stock_move_id.location_id.id)
             ])
+            # Limpiar las líneas existentes en caso de que haya alguna
+
             _logger.warning('lineas de historial de aviso: %s',notice_history_ids )
             notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
             _logger.warning('lineas de aviso: %s',notice_ids )
 
-            # Limpiar las líneas existentes en caso de que haya alguna
             wizard.quantity_ids = [(5, 0, 0)]  # Eliminar líneas previas si existían
 
-            _logger.warning('lineas de historial de aviso: %s',notice_history_ids )
-            notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
-            _logger.warning('lineas de aviso: %s',notice_ids )
 
             lines = [(0,0,{'notice_ids':notice.id,'quantity': 0}) for notice in notice_ids]
             _logger.warning('lineas de lineas: %s',lines )
