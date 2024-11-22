@@ -7,8 +7,6 @@ class ProjectCreation(models.TransientModel):
     _description = 'Wizard to confirm project creation'
 
     project_task_id = fields.Many2one('project.task', string="Project Task")
-    # stock_move_ids = fields.Many2many('stock.move', string="Stock move")
-    # stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
     project_stock_products = fields.Many2many('product.product', string="Productos")
     task_inventory_lines = fields.One2many('task.inventory.line', 'inventory_id', string='Productos del proyecto')
     
