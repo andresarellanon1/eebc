@@ -26,6 +26,29 @@ class ProjectCreation(models.TransientModel):
         string="Project Plan Lines"
     )
 
+    wizard_picking_lines = fields.One2many(
+        'project.picking.wizard.line', 'wizard_creation_id',
+        string="Project Picking Lines"
+    )
+
+    @api.onchange('project_plan_pickings')
+    def _compute_wizard_picking_lines(self):
+        for record in self:
+            # Limpiamos las líneas previas
+            record.wizard_picking_lines = [(5, 0, 0)]
+
+            # Construimos las líneas del wizard basándonos en los picking seleccionados
+            wizard_lines = []
+            for picking in record.project_plan_pickings:
+                for line in picking.project_picking_lines:
+                    wizard_lines.append((0, 0, {
+                        'product_id': line.product_id.id,
+                        'quantity': line.quantity,
+                    }))
+
+            # Asignamos las líneas creadas al campo del wizard
+            record.wizard_picking_lines = wizard_lines
+
     # Updates wizard plan lines when the project plan template changes. 
     # This method first clears any existing wizard plan lines using a (5, 0, 0)
     # command, then creates new wizard lines by copying all relevant fields from
