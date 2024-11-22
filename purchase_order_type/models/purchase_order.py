@@ -18,10 +18,10 @@ class PurchaseOrder(models.Model):
 
         return res
     
-    @api.onchange('purchase_order_type_id'):
+    @api.onchange('purchase_order_type_id')
     def _onchange_purchase_order_type_id(self):
         for record in self:
             if not record.purchase_order_type_id.picking_type_id:
                 continue
-            
+
             record.picking_type_id = record.purchase_order_type_id.picking_type_id
