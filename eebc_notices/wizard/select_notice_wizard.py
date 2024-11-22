@@ -92,8 +92,15 @@ class SelectNoticeWizard(models.TransientModel):
     def _create_line_ids(self):
         _logger.warning('Entramos a metodo' )
 
+        _logger.warning('Vao' )
+
+
         for wizard in self:
+            _logger.warning('Entramos a wizard ciclo' )
+
             if not wizard.stock_move_id:
+                _logger.warning('Entramos a continue' )
+
                 continue  # No asignar nada si no hay stock_move_id
 
             notice_history_ids = self.env['notices.history'].search([
