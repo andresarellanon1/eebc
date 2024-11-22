@@ -1,15 +1,14 @@
 from odoo import models, fields, api
 import logging
 from odoo.exceptions import ValidationError
-_logger = logging.getLogger(__name__)
 
 class ProjectCreation(models.TransientModel):
     _name = 'task.inventory.wizard'
     _description = 'Wizard to confirm project creation'
 
     project_task_id = fields.Many2one('project.task', string="Project Task")
-    stock_move_ids = fields.Many2many('stock.move', string="Stock move")
-    stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
+    # stock_move_ids = fields.Many2many('stock.move', string="Stock move")
+    # stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
     project_stock_products = fields.Many2many('product.product', string="Productos")
     task_inventory_lines = fields.One2many('task.inventory.line', 'inventory_id', string='Productos del proyecto')
     
@@ -49,12 +48,10 @@ class ProjectCreation(models.TransientModel):
 
     @api.onchange('name')
     def _compute_picking_type_id(self):
-        _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
         self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
 
     @api.onchange('name')
     def _compute_origin(self):
-        _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
         self.origin = self.project_task_id.name
 
     @api.onchange('name')
@@ -62,9 +59,7 @@ class ProjectCreation(models.TransientModel):
         if self.project_task_id:
             project = self.project_task_id.project_id
             product_ids = [int(product.id) for product in project.project_picking_lines.mapped('product_id')]
-            _logger.warning(f'El valor de product_ids es: {product_ids}')
             self.project_stock_products = [(6, 0, product_ids)]
-            _logger.warning(f'El valor de project_stock_products es: {self.project_stock_products}')
             return {'domain': {'product_id': [('id', 'in', product_ids)]}}
 
     @api.onchange('task_inventory_lines')
