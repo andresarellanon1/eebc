@@ -1,6 +1,6 @@
 {
     'name': "Purchase Order Projects",
-    'version': '17.0.0.06',
+    'version': '17.0.0.07',
     'depends': [
         "eebc_settings",
         "purchase_order_type",
