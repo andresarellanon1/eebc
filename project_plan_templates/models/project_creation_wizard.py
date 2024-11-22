@@ -91,10 +91,14 @@ class ProjectCreation(models.TransientModel):
             'stage_id': line.stage_id,
         }) for line in self.wizard_plan_lines if line.use_project_task]
 
+        logger.warning(f"project_plan")
+
         picking_lines_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'quantity': line.quantity,
         }) for line in self.picking_lines]
+
+        logger.warning(f"picking_line")
 
         project_vals = {
             'name': self.project_name,
@@ -103,8 +107,12 @@ class ProjectCreation(models.TransientModel):
             'project_picking_lines': picking_lines_vals,
         }
 
+        logger.warning(f"project_vals")
+
         project = self.env['project.project'].create(project_vals)
         self.create_project_tasks(project)
+
+        logger.warning(f"create_project_task")
 
         self.project_plan_id.project_name = False
 
