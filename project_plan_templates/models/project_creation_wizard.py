@@ -28,11 +28,6 @@ class ProjectCreation(models.TransientModel):
         string="Project Plan Lines"
     )
 
-    wizard_picking_lines = fields.One2many(
-        'project.picking.wizard.line', 'wizard_creation_id',
-        string="Project Picking Lines"
-    )
-
     is_sale_order = fields.Boolean(default=False)
 
     sale_order_id = fields.Many2one('sale.order')
