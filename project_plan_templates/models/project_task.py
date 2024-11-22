@@ -16,9 +16,9 @@ class ProjectTask(models.Model):
             'target': 'new',
             'context': {
                 'default_project_task_id': self.id,
-                'default_stock_picking_ids': [(6, 0, self.stock_ids.ids)],
+                # 'default_stock_picking_ids': [(6, 0, self.stock_ids.ids)],
                 'default_user_id': self.env.user.id,
-                'default_stock_move_ids': [(6, 0, self.stock_ids.move_ids.ids)],
+                # 'default_stock_move_ids': [(6, 0, self.stock_ids.move_ids.ids)],
             }
         }
 
