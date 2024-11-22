@@ -1,6 +1,6 @@
 {
     'name': "Purchase Order Type",
-    'version': '17.0.0.12',
+    'version': '17.0.0.13',
     'depends': [
         "eebc_settings",
         "purchase_stock"
