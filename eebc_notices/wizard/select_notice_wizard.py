@@ -43,6 +43,7 @@ class SelectNoticeWizard(models.TransientModel):
 
 
         for wizard in self:
+            _logger.warning('Entramos al ciclo')
             if not wizard.stock_move_id:
                 continue  # No asignar nada si no hay stock_move_id
 
@@ -65,7 +66,7 @@ class SelectNoticeWizard(models.TransientModel):
         # Obtener productos bajo un contexto específico
         # location_id = self.env['product.product'].search([('type', '=', 'product')])
         # lines = [(0, 0, {'product_id': product.id, 'quantity': 1.0}) for product in products]
-        res['quantity_ids'] = lines
+            res['quantity_ids'] = lines
         _logger.warning('VALOR DE RES1: %s', res)
         return res
     
