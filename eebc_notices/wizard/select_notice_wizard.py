@@ -109,7 +109,7 @@ class SelectNoticeWizard(models.TransientModel):
             wizard.quantity_ids = [(5, 0, 0)]  # Eliminar líneas previas si existían
 
 
-            lines = [(0,0,{'notice_ids':notice.id,'quantity': 0}) for notice in notice_ids]
+            lines = [(0,0,{'notice_id':notice.id,'quantity': 0}) for notice in notice_ids]
             _logger.warning('lineas de lineas: %s',lines )
             wizard.quantity_ids = lines
 
