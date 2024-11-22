@@ -115,8 +115,8 @@ class StockMove(models.Model):
 
             notice_history_ids = self.env['notices.history'].search([
                 ('quantity', '>', 0),
-                ('product_id', '=', self.id.product_id.id),
-                ('location_id', '=', self.id.location_id.id)
+                ('product_id', '=', self.product_id.id),
+                ('location_id', '=', self.location_id.id)
             ])
             # Limpiar las líneas existentes en caso de que haya alguna
 
