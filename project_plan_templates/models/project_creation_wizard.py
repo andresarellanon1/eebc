@@ -28,6 +28,11 @@ class ProjectCreation(models.TransientModel):
         string="Project Plan Lines"
     )
 
+    wizard_picking_lines = One2many(
+        'project.picking.wizard.line', 'wizard_creation_id',
+        string="Project Picking Lines"
+    )
+
     is_sale_order = fields.Boolean(default=False)
 
     sale_order_id = fields.Many2one('sale.order')
@@ -61,12 +66,24 @@ class ProjectCreation(models.TransientModel):
     # and assigns the combined list to 'picking_lines' in the current record.
 
     @api.onchange('project_plan_pickings')
-    def onchange_picking_lines(self):
+    def _compute_wizard_picking_lines(self):
         for record in self:
-            lines = self.env['project.picking.lines']
+            record.wizard_picking_lines = [(5, 0, 0)]
+
+            wizard_lines = []
             for picking in record.project_plan_pickings:
-                lines |= picking.project_picking_lines
-            record.picking_lines = lines.filtered('product_id')
+                for line in picking.project_picking_lines:
+                    wizard_lines.append((0, 0, {
+                        'product_id': line.product_id.id,
+                        'quantity': line.quantity,
+                        'location_id': line.location_id.id if line.location_id else False,
+                        'picking_name': picking.name,
+                        'project_plan_id': picking.project_plan_id.id if picking.project_plan_id else False,
+                        'reservado': line.reservado,
+                        'stock_move_id': line.stock_move_id.id if line.stock_move_id else False,
+                    }))
+
+            record.wizard_picking_lines = wizard_lines
 
     # The `action_confirm_create_project` method creates a complete project based on the template.
     # It prepares the data for project tasks and inventory items by filtering lines with 
