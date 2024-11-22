@@ -72,6 +72,7 @@ class NoticeFileWizard(models.TransientModel):
                     'history_ids': [(0, 0, {
                         'location_dest': self._context['location_dest_id'],
                         'location_id': self._context['location_id'],
+                        'product_id': self._context['product_id'],
                         'quantity': self.quantity,
                         'folio': self.folio,
                         'picking_code': self._context['type'],
@@ -90,13 +91,14 @@ class NoticeFileWizard(models.TransientModel):
             self.env['notices.history'].create({
                 'location_id': self._context['location_id'],
                 'location_dest': self._context['location_dest_id'],
+                'product_id': self._context['product_id'],
                 'quantity': self.quantity,
                 'picking_code': self._context['type'],
                 'notice_id': notice.id,
                 'folio': self.folio,
                 'origin': self._context['origin'],
                 'purchase_order_id':self._context['purchase_id'],
-                'sale_order_id':self._context['sale_invoice_ids'],
+                'sale_order_id':self._context['sale_ids'],
                 'stock_move_id':self._context['stock_move_id'],
             })
         # Limpieza del contexto

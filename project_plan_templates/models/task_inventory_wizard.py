@@ -43,9 +43,6 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    #variables adicionales
-    quantity_flag = fields.Boolean(default=False)
-
     @api.onchange('name')
     def _compute_task_id(self):
         self.task_id_char = self.project_task_id.name
@@ -76,14 +73,19 @@ class ProjectCreation(models.TransientModel):
             for proyect_lines in self.project_task_id.project_id.project_picking_lines:
                 if inv_lines.product_id == proyect_lines.product_id:
                     inv_lines.max_quantity = proyect_lines.quantity - proyect_lines.reservado
-                    if inv_lines.quantity < inv_lines.max_quantity:
-                        self.quantity_flag = True
-                    _logger.warning(f'El valor de max_quantity es: {inv_lines.max_quantity}')
-                    _logger.warning(f'El valor de quantity_flag es: {self.quantity_flag}')
+        
+    def _quantity_flag(self):
+        for inv_lines in self.task_inventory_lines:
+            for proyect_lines in self.project_task_id.project_id.project_picking_lines:
+                if inv_lines.product_id == proyect_lines.product_id:
+                    if inv_lines.quantity > inv_lines.max_quantity:
+                        return True
+                        
 
     def action_confirm_create_inventory(self):
         self.ensure_one()
-        if self.quantity_flag:
+    
+        if self._quantity_flag():
             raise ValidationError("La cantidad de los productos no puede ser mayor a la cantidad máxima")
         else:
             self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
