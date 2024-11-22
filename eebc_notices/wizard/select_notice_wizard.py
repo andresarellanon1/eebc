@@ -90,6 +90,8 @@ class SelectNoticeWizard(models.TransientModel):
 
 
     def _create_line_ids(self):
+        _logger.warning('Entramos a metodo' )
+
         for wizard in self:
             if not wizard.stock_move_id:
                 continue  # No asignar nada si no hay stock_move_id
