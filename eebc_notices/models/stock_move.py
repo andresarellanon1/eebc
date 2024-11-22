@@ -8,55 +8,34 @@ _logger = logging.getLogger(__name__)
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    # Campo booleano que indica si el producto tiene un atributo de 'aviso'
-    has_aviso_in_attributes = fields.Boolean(
-        string="Producto con aviso en atributos",
-        compute='_compute_aviso_button_flags',
-    )
-
-    # Campo relacionado con el código del tipo de picking
     picking_type_codigo = fields.Selection(
         related='picking_type_id.code',
         readonly=True
     )
-
-    # Campos adicionales necesarios para la lógica de la vista
-    show_aviso_button = fields.Boolean(
-        string="Mostrar botón de aviso",
-        compute='_compute_aviso_button_flags',
-        store=True,
-    )
-
     show_incoming_button = fields.Boolean(
         string="Mostrar botón de entrada",
         compute='_compute_aviso_button_flags',
-        store=True,
     )
-
     show_outgoing_button = fields.Boolean(
         string="Mostrar botón de salida",
         compute='_compute_aviso_button_flags',
-        store=True,
     )
 
-
-    # Método computado para manejar la visibilidad de los botones
     @api.depends('product_id.attribute_line_ids', 'picking_type_id.code', 'product_id')
     def _compute_aviso_button_flags(self):
         for move in self:
-            # Verifica si el producto tiene el atributo 'aviso' y si el tipo de picking está permitido
             has_aviso = any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id'))
             is_valid_picking_type = move.picking_type_id.code in ['incoming', 'outgoing']
-
-            # Lógica para establecer la visibilidad de los botones
             if has_aviso and is_valid_picking_type:
-                move.has_aviso_in_attributes = True
-                move.show_aviso_button = True
+                _logger.warning('ENTRAMOS A IF')
                 move.show_incoming_button = move.picking_type_id.code == 'incoming'
                 move.show_outgoing_button = move.picking_type_id.code == 'outgoing'
+                _logger.warning('move.show_outgoing_button: %s', move.show_outgoing_button)
+                _logger.warning('move.show_incoming_button: %s', move.show_incoming_button)
+                
             else:
-                move.has_aviso_in_attributes = False
-                move.show_aviso_button = False
+                _logger.warning('ENTRAMOS A ELSE')
+                
                 move.show_incoming_button = False
                 move.show_outgoing_button = False
 
@@ -89,6 +68,7 @@ class StockMove(models.Model):
                 'origin': self.picking_id.origin,
                 'lot_ids':self.lot_ids,
                 'purchase_id': purchase_order_id,
+                'sale_ids': order._get_sale_orders().ids if order else False,
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas

@@ -1,10 +1,9 @@
 {
     'name': "Purchase Order Type",
-    'version': '17.0.0.05',
+    'version': '17.0.0.13',
     'depends': [
-        "base",
         "eebc_settings",
-        "purchase_stock",
+        "purchase_stock"
     ],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
@@ -15,8 +14,9 @@
     "data": [
         "security/res.groups.xml",
         "security/ir.model.access.csv",
+        "data/purchase_type_order_data.xml",
         "views/purchase_order_type.xml",
-        "views/inherit_views.xml",
+        "views/inherit_views.xml"
     ],
     "application": False,
     "installable": True,
