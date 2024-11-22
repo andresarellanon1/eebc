@@ -42,13 +42,13 @@ class SelectNoticeWizard(models.TransientModel):
     def action_get_products(self):
         for wizard in self:
             total = 0
-            for line in wizard.line_ids:
+            for line in wizard.quantity_ids:
                 total += line.quantity
             if total != wizard.quantity:
                 raise ValidationError(f"La cantidad y la demanda deben coincidir. Total: {total} / Demanda: {wizard.quantity}")
 
-            for line in wizard.line_ids:
-                for notice in line.notice_ids:
+            for line in wizard.quantity_ids:
+                for notice in line.notice_id:
                     notice.write({
                         'history_ids': [(0, 0, {
                             'location_id': wizard.stock_move_id.picking_id.location_id.id,
