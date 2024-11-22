@@ -81,7 +81,7 @@ class StockMove(models.Model):
        
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Wizard File Upload',
+            'name': 'Wizard Select Product',
             'res_model': 'select.notice.wizard',
             'view_mode': 'form',
             'view_id': self.env.ref('eebc_notices.wizard_select_notice_view').id,  # Aquí se especifica el ID correcto de la vista
