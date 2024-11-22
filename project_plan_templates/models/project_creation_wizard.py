@@ -37,6 +37,8 @@ class ProjectCreation(models.TransientModel):
 
     sale_order_id = fields.Many2one('sale.order')
 
+    note = fields.Char()
+
     @api.onchange('project_plan_id')
     def _compute_wizard_plan_lines(self):
         for record in self:
