@@ -1,10 +1,8 @@
 {
     'name': "Purchase Order Type",
-    'version': '17.0.0.08',
+    'version': '17.0.0.09',
     'depends': [
-        "base",
-        "eebc_settings",
-        "purchase_stock",
+        "purchase_order_project",
     ],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <record id="seq_purchase_order_type_project" model="ir.sequence">
             <field name="name">Secuencia de compras tipo Projecto</field>
             <field name="code">purchase.order.type.project</field>
