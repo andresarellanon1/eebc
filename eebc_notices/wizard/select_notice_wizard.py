@@ -22,7 +22,6 @@ class SelectNoticeWizard(models.TransientModel):
         'wizard.selection.line',
         'wizard_id',
         string='Cantidades',
-        compute='_compute_line_ids'
     )
 
     quantity = fields.Float(string="Demanda total", readonly=True,)
@@ -42,6 +41,7 @@ class SelectNoticeWizard(models.TransientModel):
             res['quantity'] = self._context['cantidad']
         
         _logger.warning('VALOR DE RES1: %s', res)
+        self._create_line_ids()
         return res
     
     # def _get_stock_move_domain(self):
@@ -89,8 +89,7 @@ class SelectNoticeWizard(models.TransientModel):
 
 
 
-    @api.depends('stock_move_id')
-    def _compute_line_ids(self):
+    def _create_line_ids(self):
         for wizard in self:
             if not wizard.stock_move_id:
                 continue  # No asignar nada si no hay stock_move_id
