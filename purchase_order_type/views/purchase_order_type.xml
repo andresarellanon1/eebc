@@ -53,6 +53,7 @@
                         <field name="name"/>
                     </group>
                     <group>
+                        <field name="is_picking_type_setting_enabled" invisible="True" readonly="True"/>
                         <field name="picking_type_id" invisible="not is_picking_type_setting_enabled"/>
                         <field name="location_id" invisible="is_picking_type_setting_enabled"/>
                         <field name="sequence_id"/>
