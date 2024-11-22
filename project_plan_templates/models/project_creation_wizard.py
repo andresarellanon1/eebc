@@ -103,7 +103,7 @@ class ProjectCreation(models.TransientModel):
         picking_lines_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'quantity': line.quantity,
-        }) for line in self.picking_lines]
+        }) for line in self.wizard_picking_lines]
 
         logger.warning(f"picking_line")
 
