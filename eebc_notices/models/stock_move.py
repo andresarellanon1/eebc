@@ -79,7 +79,7 @@ class StockMove(models.Model):
     def action_show_outgoing(self):
         _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
 
-        lines_to_wizard =self._create_line_ids()
+        notice_lines_to_wizard =self._create_line_ids()
        
         return {
             'type': 'ir.actions.act_window',
@@ -93,24 +93,14 @@ class StockMove(models.Model):
                 'cantidad':  self.product_uom_qty,
                 'location_id': self.picking_id.location_id.id,
                 'stock_move_id': self.id,
-                'lines':lines_to_wizard
+                'lines':notice_lines_to_wizard
 
             }
         }
 
     def _create_line_ids(self):
-        _logger.warning('Entramos a metodo' )
-
-        _logger.warning('Vao' )
-
-
-
         for wizard in self:
-            _logger.warning('Entramos a wizard ciclo' )
-
             if not wizard.id:
-                _logger.warning('Entramos a continue' )
-
                 continue  # No asignar nada si no hay stock_move_id
 
             notice_history_ids = self.env['notices.history'].search([
@@ -118,16 +108,8 @@ class StockMove(models.Model):
                 ('product_id', '=', self.product_id.id),
                 ('location_id', '=', self.location_id.id)
             ])
-            # Limpiar las líneas existentes en caso de que haya alguna
-
-            _logger.warning('lineas de historial de aviso: %s',notice_history_ids )
             notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
-            _logger.warning('lineas de aviso: %s',notice_ids )
-
-
-
             lines = [(0,0,{'notice_id':notice.id,'quantity': 0}) for notice in notice_ids]
-            _logger.warning('lineas de lineas: %s',lines )
             return lines
 
            
