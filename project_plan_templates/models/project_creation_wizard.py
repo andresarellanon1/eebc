@@ -119,8 +119,6 @@ class ProjectCreation(models.TransientModel):
             'stage_id': line.stage_id,
         }) for line in self.wizard_plan_lines if line.use_project_task]
 
-        logger.warning(f"project_plan")
-
         picking_lines_vals = [(0, 0, {
             'product_id': line.product_id.id,
             'quantity': line.quantity,
