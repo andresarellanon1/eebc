@@ -19,6 +19,8 @@ class ProjectPlanPickings(models.Model):
     active = fields.Boolean(string="Active", default=True)
     project_id = fields.Many2one('project.project', string="Project")
 
+    note = fields.Char()
+
     # Override of create method to handle any additional 
     # logic needed during template creation.
     @api.model

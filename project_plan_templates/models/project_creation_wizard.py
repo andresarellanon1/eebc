@@ -16,11 +16,6 @@ class ProjectCreation(models.TransientModel):
         string="Picking Templates"
     )
 
-    picking_lines = fields.Many2many(
-        'project.picking.lines',
-        string="Picking Lines"
-    )
-
     wizard_plan_lines = fields.One2many(
         'project.plan.wizard.line', 'wizard_id',
         string="Project Plan Lines"
@@ -83,20 +78,6 @@ class ProjectCreation(models.TransientModel):
 
                 # Update record with new wizard lines
                 record.wizard_plan_lines = wizard_lines
-
-    # This method allows the user to select multiple inventory templates 
-    # and combines all their products into a single list. 
-    # When the 'project_plan_pickings' field is modified, 
-    # it aggregates the 'project_picking_lines' from each selected picking 
-    # and assigns the combined list to 'picking_lines' in the current record.
-
-    @api.onchange('project_plan_pickings')
-    def onchange_picking_lines(self):
-        for record in self:
-            lines = self.env['project.picking.lines']
-            for picking in record.project_plan_pickings:
-                lines |= picking.project_picking_lines
-            record.picking_lines = lines.filtered('product_id')
 
     # The `action_confirm_create_project` method creates a complete project based on the template.
     # It prepares the data for project tasks and inventory items by filtering lines with 
