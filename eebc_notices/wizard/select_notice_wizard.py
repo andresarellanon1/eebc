@@ -115,7 +115,7 @@ class SelectNoticeWizard(models.TransientModel):
 
             _logger.warning('lineas de lineas: %s',lines )
             
-            _logger.warning('lineas de wizard: %s',wizard.line_ids )
+            _logger.warning('lineas de wizard: %s',wizard.quantity_ids )
 
  
             
