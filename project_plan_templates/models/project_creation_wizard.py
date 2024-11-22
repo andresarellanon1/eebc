@@ -31,6 +31,8 @@ class ProjectCreation(models.TransientModel):
         string="Project Picking Lines"
     )
 
+    note = fields.Char()
+
     @api.onchange('project_plan_pickings')
     def _compute_wizard_picking_lines(self):
         for record in self:
