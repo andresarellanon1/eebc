@@ -9,7 +9,7 @@
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="purchase_order_type_id" readonly="state not in ('draft')" options="{'no_create': True, 'no_create_edit': True}"/>
             </xpath>
-            <xpath expr="//field[@name='picking_type_id']" position="attibutes">
+            <xpath expr="//field[@name='picking_type_id']" position="attributes">
                 <attribute name="required">not purchase_order_type_id.warehouse_id</attribute>
             </xpath>
         </field>
