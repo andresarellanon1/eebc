@@ -42,21 +42,21 @@ class SelectNoticeWizard(models.TransientModel):
         # Asignar el mensaje de error desde el contexto
 
 
-        for wizard in self:
-            _logger.warning('Entramos al ciclo')
-            if not wizard.stock_move_id:
-                continue  # No asignar nada si no hay stock_move_id
+       
+         
+        notice_history_ids = self.env['notices.history'].search([
+            ('quantity', '>', 0),
+            ('product_id', '=', self.stock_move_id.product_id.id),
+            ('location_id', '=', self.stock_move_id.location_id.id)
+        ])
+        _logger.warning('lineas de historial de aviso: %s',notice_history_ids )
+        notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
+        _logger.warning('lineas de aviso: %s',notice_ids )
 
-            notice_history_ids = self.env['notices.history'].search([
-                ('quantity', '>', 0),
-                ('product_id', '=', wizard.stock_move_id.product_id.id),
-                ('location_id', '=', wizard.stock_move_id.location_id.id)
-            ])
-            _logger.warning('lineas de historial de aviso: %s',notice_history_ids )
-            notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
-            _logger.warning('lineas de aviso: %s',notice_ids )
+        lines = [(0,0,{'notice_ids':notice.id,'quantity': 0}) for notice in notice_ids]
 
-            lines = [(0,0,{'notice_ids':notice.id,'quantity': 0}) for notice in notice_ids]
+        _logger.warning('lineas de lineas: %s',lines )
+
 
             # for notice in notice_ids:
             #     lines.append((0, 0, {
@@ -66,7 +66,7 @@ class SelectNoticeWizard(models.TransientModel):
         # Obtener productos bajo un contexto específico
         # location_id = self.env['product.product'].search([('type', '=', 'product')])
         # lines = [(0, 0, {'product_id': product.id, 'quantity': 1.0}) for product in products]
-            res['quantity_ids'] = lines
+        res['quantity_ids'] = lines
         _logger.warning('VALOR DE RES1: %s', res)
         return res
     
