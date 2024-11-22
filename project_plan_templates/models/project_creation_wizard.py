@@ -28,7 +28,7 @@ class ProjectCreation(models.TransientModel):
         string="Project Plan Lines"
     )
 
-    wizard_picking_lines = fields.One2many(
+    wizard_picking_lines = One2many(
         'project.picking.wizard.line', 'wizard_creation_id',
         string="Project Picking Lines"
     )
@@ -36,10 +36,6 @@ class ProjectCreation(models.TransientModel):
     is_sale_order = fields.Boolean(default=False)
 
     sale_order_id = fields.Many2one('sale.order')
-
-    note = fields.Char()
-
-    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
     @api.onchange('project_plan_id')
     def _compute_wizard_plan_lines(self):
@@ -70,24 +66,12 @@ class ProjectCreation(models.TransientModel):
     # and assigns the combined list to 'picking_lines' in the current record.
 
     @api.onchange('project_plan_pickings')
-    def _compute_wizard_picking_lines(self):
+    def onchange_picking_lines(self):
         for record in self:
-            record.wizard_picking_lines = [(5, 0, 0)]
-
-            wizard_lines = []
+            lines = self.env['project.picking.lines']
             for picking in record.project_plan_pickings:
-                for line in picking.project_picking_lines:
-                    wizard_lines.append((0, 0, {
-                        'product_id': line.product_id.id,
-                        'quantity': line.quantity,
-                        'location_id': line.location_id.id if line.location_id else False,
-                        'picking_name': picking.name,
-                        'project_plan_id': picking.project_plan_id.id if picking.project_plan_id else False,
-                        'reservado': line.reservado,
-                        'stock_move_id': line.stock_move_id.id if line.stock_move_id else False,
-                    }))
-
-            record.wizard_picking_lines = wizard_lines
+                lines |= picking.project_picking_lines
+            record.picking_lines = lines.filtered('product_id')
 
     # The `action_confirm_create_project` method creates a complete project based on the template.
     # It prepares the data for project tasks and inventory items by filtering lines with 
@@ -158,8 +142,6 @@ class ProjectCreation(models.TransientModel):
         current_task_type = None
         for line in self.project_plan_lines:
             if line.stage_id:
-                logger.info(f"Stage ID: {line.stage_id}")
-                logger.info(f"Project: {project}")
                 current_task_type = self.get_or_create_task_type(line.stage_id, project)
             else:
                 current_task_type = self.get_or_create_task_type('Extras', project)
@@ -188,26 +170,15 @@ class ProjectCreation(models.TransientModel):
     # it simply assigns the task to this existing stage.
 
     def get_or_create_task_type(self, stage_id, project):
-        logger.info(f"Stage ID: {stage_id}")
-        logger.info(f"Project: {project}")
-
         task_type = self.env['project.task.type'].search([
             ('name', '=', stage_id),
             ('project_ids', 'in', project.id)
         ], limit=1)
-
-        logger.info(f"Task Type obtenidos: {task_type}")
 
         if not task_type:
             task_type = self.env['project.task.type'].create({
                 'name': stage_id,
                 'project_ids': [(4, project.id)],
             })
-            logger.info(f"Task Type creado: {task_type}")
             
         return task_type
-
-        @api.depends('wizard_picking_lines.subtotal')
-        def _compute_total_cost(self):
-            for plan in self:
-                plan.plan_total_cost = sum(line.subtotal for line in plan.wizard_picking_lines)
