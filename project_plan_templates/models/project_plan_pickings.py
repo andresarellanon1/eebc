@@ -19,6 +19,8 @@ class ProjectPlanPickings(models.Model):
     active = fields.Boolean(string="Active", default=True)
     project_id = fields.Many2one('project.project', string="Project")
 
+    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+
     # Override of create method to handle any additional 
     # logic needed during template creation.
     @api.model
@@ -31,6 +33,11 @@ class ProjectPlanPickings(models.Model):
     def toggle_active(self):
         for record in self:
             record.active = not record.active
+
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
 
 # Model to manage individual product lines within
 # project plan picking templates. Handles product 
