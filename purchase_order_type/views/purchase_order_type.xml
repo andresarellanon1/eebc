@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <tree string="Tipo de orden de compra">
                 <field name="name" readonly="1"/>
+                <field name="warehouse_id" readonly="1"/>
                 <field name="location_id" readonly="1"/>
                 <field name="sequence_id" readonly="1"/>
             </tree>
@@ -18,6 +19,7 @@
         <field name="arch" type="xml">
             <search string="Buscar tipo de orden de compra">
                 <field name="name"/>
+                <field name="warehouse_id"/>
                 <field name="location_id"/>
                 <field name="sequence_id"/>
             </search>
@@ -51,7 +53,8 @@
                         <field name="name"/>
                     </group>
                     <group>
-                        <field name="location_id"/>
+                        <field name="picking_type_id" invisible="not is_picking_type_setting_enabled"/>
+                        <field name="location_id" invisible="is_picking_type_setting_enabled"/>
                         <field name="sequence_id"/>
                     </group>
                 </sheet>
