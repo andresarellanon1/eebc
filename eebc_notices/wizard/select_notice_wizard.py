@@ -39,6 +39,8 @@ class SelectNoticeWizard(models.TransientModel):
             res['stock_move_id'] = self._context['stock_move_id']
         if 'cantidad' in self._context:
             res['quantity'] = self._context['cantidad']
+        if 'lines' in self._context:
+            res['quantity_ids'] = self._context['lines']
         
         _logger.warning('VALOR DE RES1: %s', res)
         return res
@@ -85,49 +87,49 @@ class SelectNoticeWizard(models.TransientModel):
             
     #         _logger.warning('lineas de wizard: %s',wizard.line_ids )
 
-    @api.model
-    def create(self, vals):
-        wizard = super(SelectNoticeWizard, self).create(vals)
-        wizard._create_line_ids()
-        return wizard
+    # @api.model
+    # def create(self, vals):
+    #     wizard = super(SelectNoticeWizard, self).create(vals)
+    #     wizard._create_line_ids()
+    #     return wizard
 
 
-    def _create_line_ids(self):
-        _logger.warning('Entramos a metodo' )
+    # def _create_line_ids(self):
+    #     _logger.warning('Entramos a metodo' )
 
-        _logger.warning('Vao' )
-
-
-
-        for wizard in self:
-            _logger.warning('Entramos a wizard ciclo' )
-
-            if not wizard.stock_move_id:
-                _logger.warning('Entramos a continue' )
-
-                continue  # No asignar nada si no hay stock_move_id
-
-            notice_history_ids = self.env['notices.history'].search([
-                ('quantity', '>', 0),
-                ('product_id', '=', wizard.stock_move_id.product_id.id),
-                ('location_id', '=', wizard.stock_move_id.location_id.id)
-            ])
-            # Limpiar las líneas existentes en caso de que haya alguna
-
-            _logger.warning('lineas de historial de aviso: %s',notice_history_ids )
-            notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
-            _logger.warning('lineas de aviso: %s',notice_ids )
-
-            wizard.quantity_ids = [(5, 0, 0)]  # Eliminar líneas previas si existían
+    #     _logger.warning('Vao' )
 
 
-            lines = [(0,0,{'notice_id':notice.id,'quantity': 0}) for notice in notice_ids]
-            _logger.warning('lineas de lineas: %s',lines )
-            wizard.quantity_ids = lines
 
-            _logger.warning('lineas de lineas: %s',lines )
+    #     for wizard in self:
+    #         _logger.warning('Entramos a wizard ciclo' )
+
+    #         if not wizard.stock_move_id:
+    #             _logger.warning('Entramos a continue' )
+
+    #             continue  # No asignar nada si no hay stock_move_id
+
+    #         notice_history_ids = self.env['notices.history'].search([
+    #             ('quantity', '>', 0),
+    #             ('product_id', '=', wizard.stock_move_id.product_id.id),
+    #             ('location_id', '=', wizard.stock_move_id.location_id.id)
+    #         ])
+    #         # Limpiar las líneas existentes en caso de que haya alguna
+
+    #         _logger.warning('lineas de historial de aviso: %s',notice_history_ids )
+    #         notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
+    #         _logger.warning('lineas de aviso: %s',notice_ids )
+
+    #         wizard.quantity_ids = [(5, 0, 0)]  # Eliminar líneas previas si existían
+
+
+    #         lines = [(0,0,{'notice_id':notice.id,'quantity': 0}) for notice in notice_ids]
+    #         _logger.warning('lineas de lineas: %s',lines )
+    #         wizard.quantity_ids = lines
+
+    #         _logger.warning('lineas de lineas: %s',lines )
             
-            _logger.warning('lineas de wizard: %s',wizard.quantity_ids )
+    #         _logger.warning('lineas de wizard: %s',wizard.quantity_ids )
 
  
             
