@@ -13,8 +13,11 @@ class WizardSelectionLine(models.TransientModel):
     
     @api.depends('notice_id')
     def _compute_notice_id(self):
+        _logger.warning('Entramos a compute')
         for record in self:
-            record.quantity_available = self.notice_id.quantity
+            if record.notice_id:
+                record.quantity_available = record.notice_id.quantity
+                _logger.warning('cantidad disponible: %s',record.notice_id.quantity)
     
     
     
