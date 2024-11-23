@@ -56,7 +56,10 @@ class SelectNoticeWizard(models.TransientModel):
                             'quantity': line.quantity * (-1),
                             'picking_code': wizard.stock_move_id.picking_id.picking_type_code,
                             'origin': wizard.stock_move_id.picking_id.sale_id.name,
-                            'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id
+                            'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id,
+                            'product_id': wizard.stock_move_id.product_id.id,
+                            'folio': notice.folio,
+                            'purchase_order_id':self._context['purchase_order_id']
                         })]
                     })
 

@@ -73,6 +73,7 @@ class StockMove(models.Model):
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
                 'stock_move_id':self.id
+                
             }
         }
         
@@ -80,7 +81,8 @@ class StockMove(models.Model):
         _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
 
         notice_lines_to_wizard =self._create_line_ids()
-       
+        order = self.env['purchase.order'].search([('name', '=', self.origin)])
+
         return {
             'type': 'ir.actions.act_window',
             'name': 'Wizard Select Product',
@@ -93,7 +95,8 @@ class StockMove(models.Model):
                 'cantidad':  self.product_uom_qty,
                 'location_id': self.picking_id.location_id.id,
                 'stock_move_id': self.id,
-                'lines':notice_lines_to_wizard
+                'lines':notice_lines_to_wizard,
+                'purchase_order_id': order.id
 
             }
         }
