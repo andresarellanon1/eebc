@@ -8,19 +8,12 @@ class WizardSelectionLine(models.TransientModel):
     wizard_id = fields.Many2one('select.notice.wizard', string='Wizard')
     notice_id = fields.Many2one('notices.notices', string='Avisos', readonly=True )
     quantity = fields.Float(string='Cantidad asignada', default=0, required=True)
-    quantity_available = fields.Float(string='Cantidad disponible',readonly=True, 
-        compute='_compute_notice_id' )
-    
-    @api.depends('notice_id')
-    def _compute_notice_id(self):
-        _logger.warning('Entramos a compute')
-        for record in self:
-            if record.notice_id:
-                record.quantity_available = record.notice_id.quantity
-                _logger.warning('cantidad disponible: %s',record.notice_id.quantity)
-    
-    
-    
+    quantity_available = fields.Float(
+        string='Cantidad disponible',
+        readonly=True,
+        related='notice_id.quantity'
+    )
+   
 
 
   
