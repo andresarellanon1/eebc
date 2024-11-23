@@ -49,7 +49,7 @@ class SelectNoticeWizard(models.TransientModel):
 
             for line in wizard.quantity_ids:
                 for notice in line.notice_id:
-                    notice.write({
+                    notice.sudo().write({
                         'history_ids': [(0, 0, {
                             'location_id': wizard.stock_move_id.picking_id.location_id.id,
                             'location_dest_id': wizard.stock_move_id.picking_id.location_dest_id.id,
