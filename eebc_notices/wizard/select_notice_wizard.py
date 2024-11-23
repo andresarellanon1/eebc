@@ -41,8 +41,12 @@ class SelectNoticeWizard(models.TransientModel):
 
     def action_get_products(self):
         for wizard in self:
+            _logger.warning('first for')
+
             total = 0
             for line in wizard.quantity_ids:
+                _logger.warning('second for')
+
                 total += line.quantity
             _logger.warning('Valor de total: %s', total)
             if total != wizard.quantity:
