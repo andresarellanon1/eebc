@@ -6,6 +6,14 @@ class SaleOrder(models.Model):
 
     is_project = fields.Boolean(string="Is project?", default=False)
     project_name = fields.Char(string="Project title")
+    state = fields.Selection(
+        selection_add=[
+            ('estimation', 'Estimation')
+        ],
+        ondelete={
+            'estimation': 'set default'
+        }
+    )
 
     def action_confirm(self):
         self.ensure_one()
