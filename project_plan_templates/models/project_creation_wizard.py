@@ -16,15 +16,37 @@ class ProjectCreation(models.TransientModel):
         string="Picking Templates"
     )
 
-    picking_lines = fields.Many2many(
-        'project.picking.lines',
-        string="Picking Lines"
-    )
-
     wizard_plan_lines = fields.One2many(
         'project.plan.wizard.line', 'wizard_id',
         string="Project Plan Lines"
     )
+
+    wizard_picking_lines = fields.One2many(
+        'project.picking.wizard.line', 'wizard_creation_id',
+        string="Project Picking Lines"
+    )
+
+    note = fields.Char()
+
+    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+
+    @api.onchange('project_plan_pickings')
+    def _compute_wizard_picking_lines(self):
+        for record in self:
+            # Limpiamos las líneas previas
+            record.wizard_picking_lines = [(5, 0, 0)]
+
+            # Construimos las líneas del wizard basándonos en los picking seleccionados
+            wizard_lines = []
+            for picking in record.project_plan_pickings:
+                for line in picking.project_picking_lines:
+                    wizard_lines.append((0, 0, {
+                        'product_id': line.product_id.id,
+                        'quantity': line.quantity,
+                    }))
+
+            # Asignamos las líneas creadas al campo del wizard
+            record.wizard_picking_lines = wizard_lines
 
     # Updates wizard plan lines when the project plan template changes. 
     # This method first clears any existing wizard plan lines using a (5, 0, 0)
@@ -34,43 +56,28 @@ class ProjectCreation(models.TransientModel):
     
     @api.onchange('project_plan_id')
     def _compute_wizard_plan_lines(self):
-        
-    for record in self:
-        if record.project_plan_id:
-            # Clear existing wizard plan lines
-            record.wizard_plan_lines = [(5, 0, 0)]
-
-            # Prepare new wizard lines from project plan template
-            wizard_lines = []
-            for line in record.project_plan_id.project_plan_lines:
-                wizard_lines.append((0, 0, {
-                    'name': line.name,
-                    'chapter': line.chapter,
-                    'description': line.description,
-                    'use_project_task': line.use_project_task,
-                    'planned_date_begin': line.planned_date_begin,
-                    'planned_date_end': line.planned_date_end,
-                    'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
-                    'partner_id': line.partner_id.id if line.partner_id else False,
-                    'stage_id': line.stage_id.id if line.stage_id else False,
-                }))
-            
-            # Update record with new wizard lines
-            record.wizard_plan_lines = wizard_lines
-
-    # This method allows the user to select multiple inventory templates 
-    # and combines all their products into a single list. 
-    # When the 'project_plan_pickings' field is modified, 
-    # it aggregates the 'project_picking_lines' from each selected picking 
-    # and assigns the combined list to 'picking_lines' in the current record.
-
-    @api.onchange('project_plan_pickings')
-    def onchange_picking_lines(self):
         for record in self:
-            lines = self.env['project.picking.lines']
-            for picking in record.project_plan_pickings:
-                lines |= picking.project_picking_lines
-            record.picking_lines = lines.filtered('product_id')
+            if record.project_plan_id:
+                # Clear existing wizard plan lines
+                record.wizard_plan_lines = [(5, 0, 0)]
+
+                # Prepare new wizard lines from project plan template
+                wizard_lines = []
+                for line in record.project_plan_id.project_plan_lines:
+                    wizard_lines.append((0, 0, {
+                        'name': line.name,
+                        'chapter': line.chapter,
+                        'description': line.description,
+                        'use_project_task': line.use_project_task,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
+                        'partner_id': line.partner_id.id if line.partner_id else False,
+                        'stage_id': line.stage_id.id if line.stage_id else False,
+                    }))
+
+                # Update record with new wizard lines
+                record.wizard_plan_lines = wizard_lines
 
     # The `action_confirm_create_project` method creates a complete project based on the template.
     # It prepares the data for project tasks and inventory items by filtering lines with 
@@ -98,6 +105,8 @@ class ProjectCreation(models.TransientModel):
             'quantity': line.quantity,
         }) for line in self.picking_lines]
 
+        logger.warning(f"picking_line")
+
         project_vals = {
             'name': self.project_name,
             'description': self.description,
@@ -105,8 +114,12 @@ class ProjectCreation(models.TransientModel):
             'project_picking_lines': picking_lines_vals,
         }
 
+        logger.warning(f"project_vals")
+
         project = self.env['project.project'].create(project_vals)
         self.create_project_tasks(project)
+
+        logger.warning(f"create_project_task")
 
         self.project_plan_id.project_name = False
 
@@ -179,3 +192,8 @@ class ProjectCreation(models.TransientModel):
             })
             
         return task_type
+
+    @api.depends('wizard_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.wizard_picking_lines)
