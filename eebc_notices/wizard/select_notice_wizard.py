@@ -73,7 +73,7 @@ class SelectNoticeWizard(models.TransientModel):
             for quantity_line in wizard.notice_ids:
                 if quantity_line.quantity > quantity_line.notice_id.quantity:
                     notices_list.append({
-                        'name': quantity_line.notice_id.name,  # Ajusta 'name' al campo que contiene el nombre del aviso
+                        'name': quantity_line.notice_id.display_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
                         'available': quantity_line.notice_id.quantity,
                     })
 
