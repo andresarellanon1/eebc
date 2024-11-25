@@ -20,6 +20,10 @@ class Notices(models.Model):
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
     quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
+    quantity_to_show = fields.Float(
+        string='valor fijo de cantidad',
+    )
+    
     # stock_location_origin_id = fields.Many2one(
     #     string='Almacen origen',
     #     comodel_name='stock.location',        
@@ -63,6 +67,12 @@ class Notices(models.Model):
     #                 self.stock_location_origin_id.append(history_record.location_dest) 
                     
 
+    
+    @api.onchange('quantity')
+    def _onchange_quantity(self):
+        self.quantity_to_show = self.quantity
+    
+    
     @api.depends('history_ids')
     def _compute_series(self):
         for notice in self:
