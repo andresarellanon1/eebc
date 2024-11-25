@@ -35,6 +35,7 @@ class SelectNoticeWizard(models.TransientModel):
             res['quantity'] = self._context['cantidad']
         if 'lines' in self._context:
             res['quantity_ids'] = self._context['lines']
+        _logger.warning('vALORDE LINEASS RES : %s',res)
         
         return res
     
