@@ -10,7 +10,7 @@
                 <field name="project_name" invisible="is_project != True"/>
             </xpath>
             <xpath expr="//field[@name='product_template_id']" position="replace">
-                <field name="product_template_id" string="Product" column_invisible="True" readonly="not product_updatable" required="not display_type" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name }" options="{ 'no_open': True, }" domain="[('sale_ok', '=', True), ('detailed_type', '=', 'service') if is_project]" widget="sol_product_many2one" placeholder="Type to find a product..."/>
+                <field name="product_template_id" string="Product" column_invisible="True" readonly="not product_updatable" required="not display_type" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name }" options="{ 'no_open': True, }" domain="[('sale_ok', '=', True), ('detailed_type', '=', 'service') if is_project else []]" widget="sol_product_many2one" placeholder="Type to find a product..."/>
             </xpath>
         </field>
     </record>
