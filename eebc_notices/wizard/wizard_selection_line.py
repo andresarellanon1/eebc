@@ -11,7 +11,7 @@ class WizardSelectionLine(models.TransientModel):
     quantity_available = fields.Float(
         string='Cantidad disponible',
         readonly=True,
-        related='notice_id.quantity'
+        related='notice_id.quantity_to_show'
     )
    
 
