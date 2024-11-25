@@ -2,7 +2,6 @@
     'name': "Purchase Order Projects",
     'version': '17.0.0.09',
     'depends': [
-        "eebc_settings",
         "purchase_order_type",
     ],
     'author': "Quadro Soluciones",
