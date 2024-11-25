@@ -17,4 +17,13 @@ class WizardSelectionLine(models.TransientModel):
 
 
   
+    @api.model
+    def default_get(self, fields):
+        res = super(WizardSelectionLine, self).default_get(fields)
+        if self.notice_id:
+            self.quantity_available = self.notice_id.quantity
+       
+        _logger.warning('vALORDE LINEASS RES wwwwwwazaaaaaaaaaa : %s',res)
+        
+        return res
     
