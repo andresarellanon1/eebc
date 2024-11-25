@@ -19,12 +19,22 @@ class SaleOrder(models.Model):
         }
     )
 
+    project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
 
     def action_confirm(self):
         self.ensure_one()
         for sale in self:
             if sale.is_project:
                 sale.state == 'estimation'
+                plan_lines = []
+                for line in order_line:
+                    plan_lines.appen((0, 0, {
+                        'name': line.name,
+                    }))
+                    for plan in line.product_id.project_plan_id:
+                        plan_lines.append((0, 0, {
+                            
+                        }))
             else:
                 return super(SaleOrder, self).action_confirm()
 

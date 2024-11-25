@@ -6,3 +6,4 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     products_project_domain = fields.Many2many('product.template', store=True)
+    code = fields.Char(string="Code")

@@ -12,6 +12,9 @@
                 <field name="is_project"/>
                 <field name="project_name" invisible="is_project != True"/>
             </xpath>
+            <xpath expr="//group//field[@name='product_id']">
+                <field name="code"/>
+            </xpath>
         </field>
     </record>
 </odoo>
