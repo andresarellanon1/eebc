@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+import json
 
 class SaleOrder(models.Model):
 
@@ -14,14 +15,14 @@ class SaleOrder(models.Model):
             'estimation': 'set default'
         }
     )
-    product_template_ids = fields.Binary(string="products_domain")
+    products_template_domain = fields.Char(string="products_domain", compute="_compute_product_domain", store=True)
 
-    # @api.onchange('is_project')
-    # def _onchange_is_project(self):
-    #     for record in self:
-    #         if(record.is_project):
-    #             record.
-                
+    @api.depends('is_project')
+    def _compute_product_domain(self):
+        for record in self:
+            if(record.is_project):
+                products = self.env['product.template'].search([('detailed_type', '=', 'service')])
+                record.products_template_domain = json.dumps([('id', 'in', products.ids)])
 
     def action_confirm(self):
         self.ensure_one()
