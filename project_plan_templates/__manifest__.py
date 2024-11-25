@@ -7,7 +7,7 @@
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [
-                'project', 'product'
+                'project', 'product', 'sale'
                ],
     'data': [
         "views/project_menu.xml",
