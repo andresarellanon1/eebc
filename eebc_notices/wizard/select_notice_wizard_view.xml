@@ -12,9 +12,8 @@
                     <field name="quantity" readonly="1"/>
 
                         <field name="quantity_ids">
-                            <tree editable="bottom" >
-                                <field name="notice_id"/>
-
+                            <tree >
+                                <field name="notice_id"  options="{'no_open': True}"/>
                                 <field name="quantity"/>
                             </tree>
                         </field>

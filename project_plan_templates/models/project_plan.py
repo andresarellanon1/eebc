@@ -1,28 +1,32 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
-import logging
-logger = logging.getLogger(__name__)
 
+# Model for managing project plan templates. This model serves
+# as a template for creating projects, containing project configurations,
+# task lines, and inventory picking templates with their associated costs.
 class ProjectPlan(models.Model):
     _name = 'project.plan'
     _description = 'Templates for project plans'
 
+    # Basic template information fields
     name = fields.Char(string="Name", required=True)
     project_name = fields.Char(string="Project name")
     description = fields.Html(string="Description")
+    note = fields.Char()
+    
+    # Relation fields for project and line management
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
     project_id = fields.Many2one('project.project', string="Project")
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
-
     picking_lines = fields.One2many(
         'project.picking.lines',
         'project_plan_id',
         string="Picking Lines"
     )
 
+    # Computed and company fields
     plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
-    note = fields.Char()
 
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
@@ -64,6 +68,9 @@ class ProjectPlan(models.Model):
             }
         }
 
+    # Computes the total cost of the project plan by summing
+    # the subtotals of all picking lines. Updates 
+    # whenever the subtotals of picking lines change.
     @api.depends('picking_lines.subtotal')
     def _compute_total_cost(self):
         for plan in self:

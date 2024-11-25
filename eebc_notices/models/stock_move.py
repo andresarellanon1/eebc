@@ -73,12 +73,16 @@ class StockMove(models.Model):
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
                 'stock_move_id':self.id
+                
             }
         }
         
     def action_show_outgoing(self):
         _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
-       
+
+        notice_lines_to_wizard =self._create_line_ids()
+        order = self.env['purchase.order'].search([('name', '=', self.origin)])
+
         return {
             'type': 'ir.actions.act_window',
             'name': 'Wizard Select Product',
@@ -90,10 +94,27 @@ class StockMove(models.Model):
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
                 'location_id': self.picking_id.location_id.id,
-                'stock_move_id': self.id
+                'stock_move_id': self.id,
+                'lines':notice_lines_to_wizard,
+                'purchase_order_id': order.id
 
             }
         }
 
+    def _create_line_ids(self):
+        for wizard in self:
+            if not wizard.id:
+                continue  # No asignar nada si no hay stock_move_id
+
+            notice_history_ids = self.env['notices.history'].search([
+                ('quantity', '>', 0),
+                ('product_id', '=', self.product_id.id),
+                ('location_id', '=', self.location_id.id)
+            ])
+            notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
+            lines = [(0,0,{'notice_id':notice.id,'quantity': 0}) for notice in notice_ids]
+            return lines
+
+           
 
 
