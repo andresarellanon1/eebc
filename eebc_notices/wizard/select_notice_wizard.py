@@ -71,6 +71,7 @@ class SelectNoticeWizard(models.TransientModel):
             notices_list = []
 
             for quantity_line in wizard.notice_ids:
+                _logger.warning(f'Valor id de la linea{quantity_line}, valor de display name {quantity_line.notice_id.display_name}, valor de cantidad {quantity_line.notice_id.quantity}')
                 if quantity_line.quantity > quantity_line.notice_id.quantity:
                     notices_list.append({
                         'name': quantity_line.notice_id.display_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
