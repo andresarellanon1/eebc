@@ -35,6 +35,7 @@ class SelectNoticeWizard(models.TransientModel):
             res['quantity'] = self._context['cantidad']
         if 'lines' in self._context:
             res['quantity_ids'] = self._context['lines']
+        _logger.warning('vALORDE LINEASS RES : %s',res)
         
         return res
     
@@ -42,16 +43,7 @@ class SelectNoticeWizard(models.TransientModel):
     def action_get_products(self):
         for wizard in self:
             _logger.warning('first for')
-
-            total = 0
-            for line in wizard.quantity_ids:
-                _logger.warning('second for')
-
-                total += line.quantity
-            _logger.warning('Valor de total: %s', total)
-            if total != wizard.quantity:
-                raise ValidationError(f"La cantidad y la demanda deben coincidir. Total: {total} / Demanda: {wizard.quantity}")
-
+            self._check_quantities()
             for line in wizard.quantity_ids:
                 for notice in line.notice_id:
                     notice.sudo().write({
@@ -70,6 +62,16 @@ class SelectNoticeWizard(models.TransientModel):
 
         return {'type': 'ir.actions.act_window_close'}
 
+    @api.constrains('quantity_ids')  # Decorador que valida automáticamente
+    def _check_quantities(self):
+        for wizard in self:
+            total = sum(line.quantity for line in wizard.quantity_ids)
+            _logger.warning('Valor de total: %s', total)
+
+            if total != wizard.quantity:
+                raise ValidationError(
+                    f"La cantidad y la demanda deben coincidir. Cantidad asignada: {total} / Demanda: {wizard.quantity}"
+                )
 
 
     
