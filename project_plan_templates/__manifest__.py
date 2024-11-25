@@ -24,6 +24,7 @@
         "views/inherit_project_task_inventory_view_form.xml",
         "wizard/view_project_sale_creation_wizard_form.xml",
         "views/task_picking_line.xml",
+        "views/inherit_sale_order_view_form.xml"
     ],
     "license": "LGPL-3",
     'installable': True,
