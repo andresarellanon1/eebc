@@ -9,6 +9,9 @@
                 <field name="is_project"/>
                 <field name="project_name" invisible="is_project != True"/>
             </xpath>
+            <xpath expr="//field[@name='product_template_id']" position="attributes">
+                <attribute name="domain"> products_template_domain </attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
