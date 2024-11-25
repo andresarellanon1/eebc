@@ -14,6 +14,14 @@ class SaleOrder(models.Model):
             'estimation': 'set default'
         }
     )
+    product_template_ids = fields.Binary(string="products_domain")
+
+    # @api.onchange('is_project')
+    # def _onchange_is_project(self):
+    #     for record in self:
+    #         if(record.is_project):
+    #             record.
+                
 
     def action_confirm(self):
         self.ensure_one()
