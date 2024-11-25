@@ -15,6 +15,11 @@ class SaleOrder(models.Model):
         }
     )
 
+    # @api.onchange('is_project')
+    # def _onchange_is_project(self):
+    #     for record in self:
+    #         if(record.is_project):
+
     def action_confirm(self):
         self.ensure_one()
          # Initialize empty lists to separate service products and other products
