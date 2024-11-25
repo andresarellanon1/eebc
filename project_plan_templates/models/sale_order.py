@@ -4,6 +4,9 @@ class SaleOrder(models.Model):
 
     _inherit = 'sale.order'
 
+    is_project = fields.Boolean(string="Is project?", default=False)
+    project_name = fields.Char(string="Project title")
+
     def action_confirm(self):
         self.ensure_one()
          # Initialize empty lists to separate service products and other products
