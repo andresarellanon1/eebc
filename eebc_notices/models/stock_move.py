@@ -106,7 +106,8 @@ class StockMove(models.Model):
         for move in self:
             _logger.warning('id del producto :%s',move.product_id.id)
             _logger.warning('id del location_id :%s',move.location_id.id)
-            _logger.warning('id del producto :%s',move.product_id.id)
+            _logger.warning('id del move :%s',move.id)
+
 
             if not move.id:
                 _logger.warning('entra if')
