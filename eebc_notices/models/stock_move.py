@@ -105,7 +105,12 @@ class StockMove(models.Model):
     def _create_line_ids(self):
         for move in self:
             _logger.warning('id del producto :%s',move.product_id.id)
+            _logger.warning('id del location_id :%s',move.location_id.id)
+            _logger.warning('id del producto :%s',move.product_id.id)
+
             if not move.id:
+                _logger.warning('entra if')
+
                 continue  # No asignar nada si no hay stock_move_id
 
             notice_history_ids = self.env['notices.history'].search([
