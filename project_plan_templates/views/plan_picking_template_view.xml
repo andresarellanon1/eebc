@@ -39,13 +39,20 @@
                             </page>
                             <page name="picking_lines" string="Pickings">  <!-- Page for the 'project_picking_lines' field -->
                                 <field name="project_picking_lines" nolabel="1">  
-                                    <tree editable="editable_bottom" style="width: 100%;"> 
-                                        <field name="product_id"/>  <!-- Product ID field in the picking lines -->
-                                        <field name="quantity"/>  <!-- Quantity field in the picking lines -->
-                                        <field name="standard_price"/>  <!-- Standard price field in the picking lines -->
-                                        <field name="subtotal"/>  <!-- Subtotal field in the picking lines -->
+                                    <tree editable="editable_bottom" style="width: 100%;">  <!-- Display a tree of picking lines -->
+                                        <field name="product_id"/>  <!-- Display the 'product_id' field in the picking line -->
+                                        <field name="quantity"/>  <!-- Display the 'quantity' field in the picking line -->
+                                        <field name="standard_price"/>  <!-- Display the 'standard_price' field -->
+                                        <field name="subtotal"/>  <!-- Display the 'subtotal' field -->
                                     </tree>
                                 </field>
+                                <group>
+                                    <group colspan="4">
+                                    </group>
+                                    <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                                        <field name="plan_total_cost"/>  <!-- Display the 'plan_total_cost' field -->
+                                    </group>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>

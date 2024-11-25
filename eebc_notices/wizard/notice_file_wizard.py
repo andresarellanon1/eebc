@@ -77,7 +77,9 @@ class NoticeFileWizard(models.TransientModel):
                         'folio': self.folio,
                         'picking_code': self._context['type'],
                         'origin': self._context['origin'],
-                        'purchase_order_id':self._context['purchase_order_id']
+                        'purchase_order_id':self._context['purchase_order_id'],
+                        'sale_order_id':self._context['sale_ids'],
+
                     })]
                 })
         else:
