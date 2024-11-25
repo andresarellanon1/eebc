@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
     def _compute_product_domain(self):
         for record in self:
             if(record.is_project):
-                products = self.env['project.template'].search([('detailed_type', '=', 'service')])
+                products = self.env['product.template'].search([('detailed_type', '=', 'service')])
                 record.products_template_domain = json.dumps([('id', 'in', products.ids)])
 
     def action_confirm(self):
