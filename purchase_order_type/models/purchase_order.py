@@ -11,7 +11,7 @@ class PurchaseOrder(models.Model):
     def _prepare_picking(self):
         res = super(PurchaseOrder, self)._prepare_picking()
 
-        is_picking_type_enabled = self.is_picking_type_enabled
+        is_picking_type_enabled = self.purchase_order_type_id.is_picking_type_enabled
 
         if self.purchase_order_type_id and not is_picking_type_enabled:
             res['location_dest_id'] = self.purchase_order_type_id.location_id.id
