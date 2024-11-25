@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_order_project_form_view" model="ir.ui.view">
+        <field name="name">purchase.order.project.form.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase_order_type.purchase_order_type_purchase_order_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_order_type_id']" position="after">
+                <field name="project_ids" widget="many2many_tags" invisible="purchase_order_type_id != 1" readonly="state not in ('draft')" options="{'no_create': True, 'no_create_edit': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

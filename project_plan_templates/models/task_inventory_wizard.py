@@ -1,53 +1,39 @@
 from odoo import models, fields, api
 import logging
-
-_logger = logging.getLogger(__name__)
+from odoo.exceptions import ValidationError
 
 class ProjectCreation(models.TransientModel):
     _name = 'task.inventory.wizard'
     _description = 'Wizard to confirm project creation'
 
-    
     project_task_id = fields.Many2one('project.task', string="Project Task")
+    project_stock_products = fields.Many2many('product.product', string="Productos")
+    task_inventory_lines = fields.One2many('task.inventory.line', 'inventory_id', string='Productos del proyecto')
     
-    stock_move_ids = fields.Many2many('stock.move', string="Stock move")
-    product_ids = fields.Many2many('product.product', string="Productos", domain=lambda self: self._get_product_domain())
-    stock_picking_ids = fields.Many2many('stock.picking', string="Stock picking")
-
-    # stock_move_id = fields.Many2many('stock.move', string="Stock move" )
-
+    # Sección de información general
     name = fields.Char(string='Referencia')
-    partner_id = fields.Many2one('res.partner',  string='Contacto')
-    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id', store=True)
+    partner_id = fields.Many2one('res.partner', string='Contacto')
+    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id')
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
-    origin = fields.Char(string='Documento origen', compute="_compute_origin", store=True)
-    
+    origin = fields.Char(string='Documento origen', compute="_compute_origin")
     task_id = fields.Many2one('stock.picking', string='Tarea de origen')
     task_id_char = fields.Char(string='Tarea origen', compute="_compute_task_id")
-    
     user_id = fields.Many2one('res.users', string='Contacto')
-    
-    
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
-    
-    # Sección de Información adicional
 
+    # Sección de Información adicional
     carrier_id = fields.Many2one('delivery.carrier')
     carrier_tracking_ref = fields.Char(string="Referencia de rastreo")
     weight = fields.Float(string="Peso")
     shipping_weight = fields.Float(string="Peso para envío")
-
     group_id = fields.Many2one('procurement.group', string="Grupo de aprovisionamiento")
     company_id = fields.Many2one('res.company', string="Empresa")
-    
-    transport_type = fields.Selection( string="Tipo de transporte",
-        selection=[('00', 'No usa carreteras federales'), ('01', 'Autotransporte Federal')])
-    # customs regimes
-    # customs document type
+    transport_type = fields.Selection(string="Tipo de transporte", selection=[('00', 'No usa carreteras federales'), ('01', 'Autotransporte Federal')])
     custom_document_identification = fields.Char(string="Customs Document Identification")
 
+    # Sección de localización
     lat_origin = fields.Float(string="Latitud de origen")
     long_origin = fields.Float(string="Longitud de origen")
     lat_dest = fields.Float(string="Latitud de destino")
@@ -57,56 +43,57 @@ class ProjectCreation(models.TransientModel):
     def _compute_task_id(self):
         self.task_id_char = self.project_task_id.name
 
-    # @api.onchange('name')
-    # def _compute_task_id(self):
-    #     for record in self:
-    #         if record.name:
-    #             task = self.env['project.task'].search([('id', '=', record.name)], limit=1)
-    #             if task:
-    #                 record.task_id = task.id
-
     @api.onchange('name')
     def _compute_picking_type_id(self):
-            _logger.warning(f'El valor de picking typ es: {self.project_task_id.project_id.default_picking_type_id}')
-            self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
+        self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
 
     @api.onchange('name')
     def _compute_origin(self):
-            _logger.warning(f'El valor de origin es: {self.project_task_id.name}')
-            self.origin = self.project_task_id.name
+        self.origin = self.project_task_id.name
 
-    # def _get_product_domain(self):
-    #     # Calculamos el dominio para filtrar solo los productos que ya están asociados a las líneas de picking del picking
-    #     picking_ids = self.stock_picking_ids.ids  # Obtenemos los IDs de los picking seleccionados
-    #     if not picking_ids:
-    #         return [('id', '=', False)]  # Si no hay picking seleccionado, no permitimos seleccionar productos
+    @api.onchange('name')
+    def _onchange_project_task_id(self):
+        if self.project_task_id:
+            project = self.project_task_id.project_id
+            product_ids = [int(product.id) for product in project.project_picking_lines.mapped('product_id')]
+            self.project_stock_products = [(6, 0, product_ids)]
+            return {'domain': {'product_id': [('id', 'in', product_ids)]}}
 
-    #     # Recuperamos los productos asociados a las líneas de project.picking.lines
-    #     products_in_picking_lines = self.env['project.picking.line'].search([
-    #         ('picking_id', 'in', picking_ids)
-    #     ]).mapped('product_id')  # Obtener los productos asociados
-
-    #     # El dominio es de los productos que están asociados a esas líneas de picking
-    #     return [('id', 'in', products_in_picking_lines.ids)]
-
-
+    @api.onchange('task_inventory_lines')
+    def _compute_max_quantity(self):
+        for inv_lines in self.task_inventory_lines:
+            for proyect_lines in self.project_task_id.project_id.project_picking_lines:
+                if inv_lines.product_id == proyect_lines.product_id:
+                    inv_lines.max_quantity = proyect_lines.quantity - proyect_lines.reservado
+        
+    def _quantity_flag(self):
+        for inv_lines in self.task_inventory_lines:
+            for proyect_lines in self.project_task_id.project_id.project_picking_lines:
+                if inv_lines.product_id == proyect_lines.product_id:
+                    if inv_lines.quantity > inv_lines.max_quantity:
+                        return True
+                        
 
     def action_confirm_create_inventory(self):
-            self.ensure_one()
+        self.ensure_one()
+    
+        if self._quantity_flag():
+            raise ValidationError("La cantidad de los productos no puede ser mayor a la cantidad máxima")
+        else:
+            self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
+
             stock_move_ids_vals = [(0, 0, {
                 'product_id': line.product_id.id,
                 'product_packaging_id': line.product_packaging_id.id,
-                'product_uom_qty':line.product_uom_qty,
-                'quantity':line.quantity,
-                'product_uom':line.product_uom.id,
-                'picking_type_codigo':line.picking_type_codigo,
-                'location_id':line.location_id.id,
-                'location_dest_id':line.location_dest_id.id,
-                'name':line.name,
+                'product_uom_qty': line.product_uom_qty,
+                'quantity': line.quantity,
+                'product_uom': line.product_uom.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'name': self.name,
+            }) for line in self.task_inventory_lines]
 
-            }) for line in self.stock_move_ids]
-
-            stock_picking_vals ={
+            stock_picking_vals = {
                 'name': self.name,
                 'partner_id': self.partner_id.id,
                 'picking_type_id': self.project_task_id.project_id.default_picking_type_id.id,
@@ -117,10 +104,8 @@ class ProjectCreation(models.TransientModel):
                 'task_id': self.project_task_id.id,
                 'user_id': self.user_id.id,
                 'move_ids': stock_move_ids_vals,
-                
                 'carrier_id': self.carrier_id.id,
                 'carrier_tracking_ref': self.carrier_tracking_ref,
-
                 'weight': self.weight,
                 'shipping_weight': self.shipping_weight,
                 'group_id': self.group_id.id,
@@ -142,3 +127,4 @@ class ProjectCreation(models.TransientModel):
                 'view_mode': 'form',
                 'target': 'current',
             }
+        

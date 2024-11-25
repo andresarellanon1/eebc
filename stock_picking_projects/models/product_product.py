@@ -7,6 +7,8 @@ class ProductProduct(models.Model):
     
     quantity = fields.Integer(string='Cantidad')
     reserved_qty = fields.Float(string='Reservado')
+    # total_cost = fields.Float(string='Costo total', store=True)
+    # supplier_cost = fields.Float(string='Costo', store=True)
     total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
     supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
     currency = fields.Char(string="Currency")
@@ -21,19 +23,12 @@ class ProductProduct(models.Model):
         copied = True
     )
 
-    product_id = fields.Many2one(
-        'product.product', 
-        string='Producto',
-        store = True,
-        copied = True
-    )
-
-    @api.onchange('product_id')
+    @api.onchange('product_tmpl_id')
     def _onchange_product(self):
         for record in self:
-            record.name = record.product_id.name
-            monto = record.product_id.product_tmpl_id.last_supplier_last_price
-            origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
+            record.name = record.product_tmpl_id.name
+            monto = record.product_tmpl_id.last_supplier_last_price
+            origin_currency = record.product_tmpl_id.last_supplier_last_order_currency_id.name
             tipo_cambio = record.project_id.exchange_rate
             project_currency = record.project_id.custom_currency_id.name
 
@@ -78,18 +73,16 @@ class ProductProduct(models.Model):
                     record.display_supplier_cost = f"{record.supplier_cost:.2f} {origin_currency}"
 
 
-    @api.onchange('quantity','product_id')
+    @api.onchange('quantity','product_tmpl_id')
     def _compute_total_cost(self):
         self._onchange_product()
         for record in self:
             total = (record.supplier_cost * record.quantity)
             impuestos = ((total) * record.project_id.taxes_id.amount)/100
-            origin_currency = record.product_id.product_tmpl_id.last_supplier_last_order_currency_id.name
+            origin_currency = record.product_tmpl_id.last_supplier_last_order_currency_id.name
 
             record.total_cost = total + impuestos
-            _logger.warning(f'El currency del forms es: {record.project_id.custom_currency_id.name}')
-            _logger.warning(f'El origin currency es: {origin_currency}')
-            _logger.warning(f'El record cambio es: {record.cambio}')
+            
             if origin_currency == 'USD' or origin_currency == 'MXN':
                 if origin_currency == 'MXN' and record.cambio == True :
                     record.display_total_cost = f"{record.total_cost:.2f} USD"
@@ -99,7 +92,7 @@ class ProductProduct(models.Model):
                     record.display_total_cost = f"{record.total_cost:.2f} {origin_currency}"
 
 
-    @api.onchange('quantity','product_id')
+    @api.onchange('quantity','product_tmpl_id')
     def _compute_final_cost(self):
         self.project_id._product_currency()
         self.project_id._final_cost()

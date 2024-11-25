@@ -17,12 +17,12 @@
                     <group name="used_materials">
                         <field name="product_ids">
                             <tree editable="bottom">
-                                <field name="product_id"/>
+                                <field name="product_tmpl_id" string="Producto"/>
                                 <field name="quantity"/>
                                 <field name="reserved_qty"/>
                                 <field name="display_supplier_cost" readonly="1"/>
                                 <field name="display_total_cost" readonly="1"/>
-                                <field name="name" column_invisible="true"/>
+                                <field name="name" column_invisible="true"/> 
                             </tree>
                         </field>
                     </group>
