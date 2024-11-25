@@ -51,6 +51,8 @@ class SelectNoticeWizard(models.TransientModel):
                 total += line.quantity
             _logger.warning('Valor de total: %s', total)
             if total != wizard.quantity:
+                wizard.quantity_ids.invalidate_cache()  # Opcional para prevenir recargas
+
                 raise ValidationError(f"La cantidad y la demanda deben coincidir. Total: {total} / Demanda: {wizard.quantity}")
 
             for line in wizard.quantity_ids:
