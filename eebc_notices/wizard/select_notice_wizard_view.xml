@@ -11,10 +11,9 @@
                     <field name="stock_move_id" readonly="1"/>
                     <field name="quantity" readonly="1"/>
 
-                        <field name="line_ids" editable="bottom">
+                        <field name="quantity_ids">
                             <tree >
-                                <field name="notice_ids" widget='one2many' />
-
+                                <field name="notice_id"  options="{'no_open': True}"/>
                                 <field name="quantity"/>
                             </tree>
                         </field>

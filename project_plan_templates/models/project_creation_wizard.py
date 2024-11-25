@@ -1,8 +1,4 @@
 from odoo import models, fields, api
-import logging
-logger = logging.getLogger(__name__)
-
-#TODO Update comments on the code
 
 class ProjectCreation(models.TransientModel):
     _name = 'project.creation.wizard'
@@ -12,15 +8,12 @@ class ProjectCreation(models.TransientModel):
     project_name = fields.Char(string="Project Name", required=True)
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
+    is_sale_order = fields.Boolean(default=False)
+    sale_order_id = fields.Many2one('sale.order')
     
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
         string="Picking Templates"
-    )
-
-    picking_lines = fields.Many2many(
-        'project.picking.lines',
-        string="Picking Lines"
     )
 
     wizard_plan_lines = fields.One2many(
@@ -28,16 +21,47 @@ class ProjectCreation(models.TransientModel):
         string="Project Plan Lines"
     )
 
-    is_sale_order = fields.Boolean(default=False)
+    wizard_picking_lines = fields.One2many(
+        'project.picking.wizard.line', 'wizard_creation_id',
+        string="Project Picking Lines"
+    )
 
-    sale_order_id = fields.Many2one('sale.order')
+    note = fields.Char()
 
+    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+
+    @api.onchange('project_plan_pickings')
+    def _compute_wizard_picking_lines(self):
+        for record in self:
+            # Limpiamos las líneas previas
+            record.wizard_picking_lines = [(5, 0, 0)]
+
+            # Construimos las líneas del wizard basándonos en los picking seleccionados
+            wizard_lines = []
+            for picking in record.project_plan_pickings:
+                for line in picking.project_picking_lines:
+                    wizard_lines.append((0, 0, {
+                        'product_id': line.product_id.id,
+                        'quantity': line.quantity,
+                    }))
+
+            # Asignamos las líneas creadas al campo del wizard
+            record.wizard_picking_lines = wizard_lines
+
+    # Updates wizard plan lines when the project plan template changes. 
+    # This method first clears any existing wizard plan lines using a (5, 0, 0)
+    # command, then creates new wizard lines by copying all relevant fields from
+    # the project plan template lines. For relations that could be null (task_timesheet_id, partner_id, stage_id),
+    # conditional assignments are used to handle potential empty values.
+    
     @api.onchange('project_plan_id')
     def _compute_wizard_plan_lines(self):
         for record in self:
             if record.project_plan_id:
+                # Clear existing wizard plan lines
                 record.wizard_plan_lines = [(5, 0, 0)]
 
+                # Prepare new wizard lines from project plan template
                 wizard_lines = []
                 for line in record.project_plan_id.project_plan_lines:
                     wizard_lines.append((0, 0, {
@@ -51,22 +75,9 @@ class ProjectCreation(models.TransientModel):
                         'partner_id': line.partner_id.id if line.partner_id else False,
                         'stage_id': line.stage_id.id if line.stage_id else False,
                     }))
-            
+
+                # Update record with new wizard lines
                 record.wizard_plan_lines = wizard_lines
-
-    # This method allows the user to select multiple inventory templates 
-    # and combines all their products into a single list. 
-    # When the 'project_plan_pickings' field is modified, 
-    # it aggregates the 'project_picking_lines' from each selected picking 
-    # and assigns the combined list to 'picking_lines' in the current record.
-
-    @api.onchange('project_plan_pickings')
-    def onchange_picking_lines(self):
-        for record in self:
-            lines = self.env['project.picking.lines']
-            for picking in record.project_plan_pickings:
-                lines |= picking.project_picking_lines
-            record.picking_lines = lines.filtered('product_id')
 
     # The `action_confirm_create_project` method creates a complete project based on the template.
     # It prepares the data for project tasks and inventory items by filtering lines with 
@@ -76,8 +87,6 @@ class ProjectCreation(models.TransientModel):
 
     def action_confirm_create_project(self):
         self.ensure_one()
-
-        logger.warning(f"Sale: {self.sale_order_id.id}")
 
         project_plan_lines_vals = [(0, 0, {
             'name': line.name,
@@ -96,6 +105,8 @@ class ProjectCreation(models.TransientModel):
             'quantity': line.quantity,
         }) for line in self.picking_lines]
 
+        logger.warning(f"picking_line")
+
         project_vals = {
             'name': self.project_name,
             'description': self.description,
@@ -103,8 +114,12 @@ class ProjectCreation(models.TransientModel):
             'project_picking_lines': picking_lines_vals,
         }
 
+        logger.warning(f"project_vals")
+
         project = self.env['project.project'].create(project_vals)
         self.create_project_tasks(project)
+
+        logger.warning(f"create_project_task")
 
         self.project_plan_id.project_name = False
 
@@ -137,8 +152,6 @@ class ProjectCreation(models.TransientModel):
         current_task_type = None
         for line in self.project_plan_lines:
             if line.stage_id:
-                logger.info(f"Stage ID: {line.stage_id}")
-                logger.info(f"Project: {project}")
                 current_task_type = self.get_or_create_task_type(line.stage_id, project)
             else:
                 current_task_type = self.get_or_create_task_type('Extras', project)
@@ -167,21 +180,20 @@ class ProjectCreation(models.TransientModel):
     # it simply assigns the task to this existing stage.
 
     def get_or_create_task_type(self, stage_id, project):
-        logger.info(f"Stage ID: {stage_id}")
-        logger.info(f"Project: {project}")
-
         task_type = self.env['project.task.type'].search([
             ('name', '=', stage_id),
             ('project_ids', 'in', project.id)
         ], limit=1)
-
-        logger.info(f"Task Type obtenidos: {task_type}")
 
         if not task_type:
             task_type = self.env['project.task.type'].create({
                 'name': stage_id,
                 'project_ids': [(4, project.id)],
             })
-            logger.info(f"Task Type creado: {task_type}")
             
         return task_type
+
+    @api.depends('wizard_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.wizard_picking_lines)
