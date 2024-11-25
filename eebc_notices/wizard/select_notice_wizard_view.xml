@@ -11,7 +11,7 @@
                     <field name="stock_move_id" options="{'no_open': True}" readonly="1"/>
                     <field name="quantity" readonly="1"/>
 
-                        <field name="quantity_ids">
+                        <field name="notice_ids">
                             <tree create="0">
                                 <field name="notice_id"  options="{'no_open': True}"/>
                                 <field name="quantity"/>
