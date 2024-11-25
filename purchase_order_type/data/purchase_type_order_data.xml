@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <record id="seq_purchase_order_type_project" model="ir.sequence">
-            <field name="name">Secuencia de compras tipo Projecto</field>
+            <field name="name">Secuencia de compras tipo Proyecto</field>
             <field name="code">purchase.order.type.project</field>
             <field name="prefix">TP</field>
             <field name="padding">5</field>
@@ -18,7 +18,7 @@
         </record>
 
         <record id="model_purchase_order_type_location_project" model="stock.location">
-            <field name="name">Projectos</field>
+            <field name="name">Proyectos</field>
             <field name="usage">view</field>
             <field name="company_id" ref="False"/>
         </record>
@@ -30,7 +30,7 @@
         </record>
 
         <record id="model_purchase_order_type_project" model="purchase.order.type">
-            <field name="name">Projecto</field>
+            <field name="name">Proyecto</field>
             <field name="location_id" ref="purchase_order_type.model_purchase_order_type_location_project"/>
             <field name="sequence_id" ref="purchase_order_type.seq_purchase_order_type_project"/>
         </record>

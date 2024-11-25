@@ -11,9 +11,9 @@ class PurchaseOrder(models.Model):
     def _prepare_picking(self):
         res = super(PurchaseOrder, self)._prepare_picking()
 
-        enable_purchase_picking_type_from_purchase_order_type = self.env["ir.config_parameter"].sudo().get_param("purchase.enable_purchase_picking_type_from_purchase_order_type")
+        is_picking_type_enabled = self.is_picking_type_enabled
 
-        if self.purchase_order_type_id and not enable_purchase_picking_type_from_purchase_order_type:
+        if self.purchase_order_type_id and not is_picking_type_enabled:
             res['location_dest_id'] = self.purchase_order_type_id.location_id.id
 
         return res
