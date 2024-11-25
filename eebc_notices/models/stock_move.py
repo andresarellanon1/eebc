@@ -119,6 +119,8 @@ class StockMove(models.Model):
                 ('product_id', '=', move.product_id.id),
                 ('location_id', '=', move.location_id.id)
             ])
+            _logger.warning('lineas de hiostorial :%s',notice_history_ids)
+
             notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
             lines = [(0,0,{'notice_id':notice.id,'quantity': 0}) for notice in notice_ids]
             return lines
