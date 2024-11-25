@@ -29,6 +29,19 @@ class Notices(models.Model):
     #     comodel_name='stock.location',        
     #     compute='_compute_location_origin_id'
     # )
+
+    def create(self, vals):
+        # Si 'quantity' está en los valores, asegúrate de asignarlo a 'quantity_to_show'
+        if 'quantity' in vals:
+            vals['quantity_to_show'] = vals['quantity']
+        return super(Notices, self).create(vals)
+
+    def write(self, vals):
+        # Actualiza 'quantity_to_show' cuando se modifique 'quantity'
+        if 'quantity' in vals:
+            for record in self:
+                vals['quantity_to_show'] = vals.get('quantity', record.quantity)
+        return super(Notices, self).write(vals)
     lot_ids = fields.Many2many(
         string='Series',
         comodel_name='stock.lot',
