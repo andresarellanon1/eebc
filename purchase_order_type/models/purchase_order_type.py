@@ -18,12 +18,13 @@ class PurchaseOrderType(models.Model):
     @api.depends('picking_type_id')
     def _compute_company_id(self):
         for record in self:
-            record.company_id = record.picking_type_id.company_id or False
+            record.company_id = record.picking_type_id.company_id
 
     @api.onchange('is_picking_type_enabled')
     def _onchange_is_picking_type_enabled(self):
         for record in self:
             if record.is_picking_type_enabled:
                 record.location_id = False
+                record.sequence_id = False
             else:
                 record.picking_type_id = False
