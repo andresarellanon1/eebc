@@ -8,9 +8,7 @@ class WizardSelectionLine(models.TransientModel):
     wizard_id = fields.Many2one('select.notice.wizard', string='Wizard')
     notice_id = fields.Many2one('notices.notices', string='Avisos')
     quantity = fields.Float(string='Cantidad asignada', default=0, required=True)
-    quantity_available = fields.Float(string='Cantidad disponible',
-    readonly=True 
-    )
+    quantity_available = fields.Float(string='Cantidad disponible')
 
     
     test_name = fields.Char(
