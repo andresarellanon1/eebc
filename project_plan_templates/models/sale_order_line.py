@@ -9,12 +9,12 @@ class SaleOrderLine(models.Model):
     def _products_project_domain(self, is_project):
         for record in self:
             if is_project:
-                record.products_project_domain = self.search['product.template'].search([
+                record.products_project_domain = self.env['product.template'].search([
                     ('detailed_type', '=', 'service'),
                     ('sale_ok', '=', True),
                 ])
             else:
-                record.products_project_domain = self.search['product.template'].search([
+                record.products_project_domain = self.env['product.template'].search([
                     ('sale_ok', '=', True),
                 ])
 
