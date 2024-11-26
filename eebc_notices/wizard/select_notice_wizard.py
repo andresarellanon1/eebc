@@ -70,17 +70,20 @@ class SelectNoticeWizard(models.TransientModel):
                 )
             notices_list = []
 
-            for quantity_line in wizard.notice_ids:
+            for line in wizard.notice_ids:
+                _logger.warning(f'nombre {line.test_name} cantidad disponible: {line.quantity_available} cantidad establecida: {line.quantity}')
         
-                if quantity_line.quantity > quantity_line.quantity_available:
+                if line.quantity > line.quantity_available:
+                    _logger.warning('se cumpole if')
                     notices_list.append({
-                        'name': quantity_line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
-                        'available': quantity_line.quantity_available,
+                        'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
+                        'available': line.quantity_available,
                     })
-
+            _logger.warning('Valor de lista: %s', notices_list)
+            
             if notices_list:
                 # Construir el mensaje del ValidationError
-                message = "Las siguientes cantidades exceden las disponibles:\n"
+                message = "Los siguientes avisos tienen cantidades que exceden las disponibles:\n"
                 for notice in notices_list:
                     message += f"- {notice['name']}: {notice['available']} disponibles\n"
                 
