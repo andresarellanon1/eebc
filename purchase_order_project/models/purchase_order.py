@@ -13,5 +13,4 @@ class PurchaseOrder(models.Model):
         for record in self:
             super(PurchaseOrder, record)._onchange_purchase_order_type_id()
             
-            if record.id != 1:
-                record.project_ids = False
+            if record.id != 1: record.project_ids = False
