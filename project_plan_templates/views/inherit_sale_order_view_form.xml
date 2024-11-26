@@ -19,7 +19,7 @@
             <xpath expr="//group//field[@name='product_id']" position="before">
                 <field name="code"/>
             </xpath>
-            <xpath expr="//page[@name='other_information'" position="after">
+            <xpath expr="//page[@name='other_information']" position="after">
                 <page name="project_tasks" string="Project Tasks">
                     <field name="project_plan_lines" nolabel="1" invisible="state != 'estimation' or state != 'budget'">
                         <tree editable="editable_bottom" style="width: 100%;">
