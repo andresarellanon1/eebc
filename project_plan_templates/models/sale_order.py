@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
 
     @api.onchange('is_project')
     def _products_domain(self):
-        self.order_line._products_project_domain(is_project)
+        self.order_line._products_project_domain(self.is_project)
 
     def action_confirm(self):
         self.ensure_one()
