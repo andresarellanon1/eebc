@@ -42,7 +42,7 @@ class SelectNoticeWizard(models.TransientModel):
             self._check_quantities()
             for line in wizard.notice_ids:
                 for notice in line.notice_id:
-                    notice.sudo().write({
+                    notice.write({
                         'history_ids': [(0, 0, {
                             'location_id': wizard.stock_move_id.picking_id.location_id.id,
                             'location_dest_id': wizard.stock_move_id.picking_id.location_dest_id.id,
@@ -51,7 +51,7 @@ class SelectNoticeWizard(models.TransientModel):
                             'origin': wizard.stock_move_id.picking_id.sale_id.name,
                             'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id,
                             'product_id': wizard.stock_move_id.product_id.id,
-                            'folio': notice.folio,
+                            # 'folio': notice.folio, ¿que sucedera con el folio?
                             'purchase_order_id':self._context['purchase_order_id']
                         })]
                     })
@@ -66,8 +66,6 @@ class SelectNoticeWizard(models.TransientModel):
     def _check_quantities(self):
         for wizard in self:
             total = sum(line.quantity for line in wizard.notice_ids)
-            _logger.warning('Valor de total: %s', total)
-
             if total != wizard.quantity:
                 raise ValidationError(
                     f"La cantidad y la demanda deben coincidir. Cantidad total asignada: {total} / Demanda: {wizard.quantity}"
