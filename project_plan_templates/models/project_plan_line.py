@@ -24,10 +24,18 @@ class ProjectLines(models.Model):
    )
    partner_id = fields.Many2many('res.users', string="Assigned user")
    task_timesheet_id = fields.Many2one('task.timesheet', string="Timesheet")
+   sale_order_id = fields.Many2one('sale.order', string="Origin")
 
    # Scheduling fields
    planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Begin date")
    planned_date_end = fields.Datetime(default=fields.Date.context_today, string="End date")
+
+   display_type = fields.Selection(
+    [
+        ('line_section', 'Section')
+    ]
+   )
+   code = fields.Char(string="Code")
 
    # This method creates a temporary task preview for the current line.
    # It generates a task with the line's configuration including:
