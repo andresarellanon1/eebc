@@ -1,8 +1,7 @@
 {
     'name': "Purchase Order Type",
-    'version': '17.0.0.13',
+    'version': '17.0.0.18',
     'depends': [
-        "eebc_settings",
         "purchase_stock"
     ],
     'author': "Quadro Soluciones",
