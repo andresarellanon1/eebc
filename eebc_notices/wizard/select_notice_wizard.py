@@ -70,29 +70,20 @@ class SelectNoticeWizard(models.TransientModel):
 
             if total != wizard.quantity:
                 raise ValidationError(
-                    f"La cantidad y la demanda deben coincidir. Cantidad asignada: {total} / Demanda: {wizard.quantity}"
+                    f"La cantidad y la demanda deben coincidir. Cantidad total asignada: {total} / Demanda: {wizard.quantity}"
                 )
             notices_list = []
-            notices_list_v2 = wizard._context.get('lines', [])
-            _logger.warning('lista valores: %s', notices_list_v2)
-
-            for line in wizard.notice_ids:
-                
-                _logger.warning(f'nombre {line.test_name} cantidad disponible: {line.quantity_available} cantidad establecida: {line.quantity}')
-        
+            for line in wizard.notice_ids:        
                 if line.quantity > line.quantity_available:
-                    _logger.warning('se cumpole if')
                     notices_list.append({
                         'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
                         'available': line.quantity_available,
-                    })
-            _logger.warning('Valor de lista: %s', notices_list)
-            
+                        'established': line.quantity
+                    })            
             if notices_list:
-                # Construir el mensaje del ValidationError
                 message = "Los siguientes avisos tienen cantidades que exceden las disponibles:\n"
                 for notice in notices_list:
-                    message += f"- {notice['name']}: {notice['available']} disponibles\n"
+                    message += f"- {notice['name']}: {notice['available']} disponibles / {notice['established']} establecidos\n"
                 
                 raise ValidationError(message)
 
