@@ -7,7 +7,6 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     products_project_domain = fields.Many2many('product.template', store=True)
-    products_project_domain2 = fields.One2many('product.template','sl_id')
 
     def _products_project_domain(self, is_project):
         _logger.warning('ENTRÓ A LA FUNCIÓN')
