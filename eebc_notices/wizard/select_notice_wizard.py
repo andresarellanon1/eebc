@@ -45,7 +45,7 @@ class SelectNoticeWizard(models.TransientModel):
                     notice.write({
                         'history_ids': [(0, 0, {
                             'location_id': wizard.stock_move_id.picking_id.location_id.id,
-                            'location_dest_id': wizard.stock_move_id.picking_id.location_dest_id.id,
+                            'location_dest': wizard.stock_move_id.picking_id.location_dest_id.id,
                             'quantity': line.quantity * (-1),
                             'picking_code': wizard.stock_move_id.picking_id.picking_type_code,
                             'origin': wizard.stock_move_id.picking_id.sale_id.name,
