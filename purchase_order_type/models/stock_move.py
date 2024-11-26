@@ -7,11 +7,6 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     def _action_confirm(self, merge=True, merge_into=False):
-        moves = super(StockMove, self)._action_confirm()
-
-        for move in moves:
-            logger.warning(move)
-
+        moves = super(StockMove, self)._action_confirm(merge, merge_into)
+        logger.warning(moves)
         return moves
-    #     for move in moves:
-    #         if move.purchase_id and move.purchase_id.
