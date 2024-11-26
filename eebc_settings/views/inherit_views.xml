@@ -11,10 +11,6 @@
                     help="(En desarrollo) Agrega el prefijo a los folios de compra de acuerdo a ubicación en el tipo de compra.">
                     <field name="enable_purchase_location_reference" />
                 </setting>
-                <setting id="setting_enable_purchase_picking_type_from_purchase_order_type"
-                    help="Utilizar tipos de operación desde el tipo de compra en lugar de la ubicación del tipo de compra.">
-                    <field name="enable_purchase_picking_type_from_purchase_order_type" />
-            </setting>
             </xpath>
         </field>
     </record>
