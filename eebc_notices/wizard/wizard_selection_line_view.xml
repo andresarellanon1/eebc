@@ -10,7 +10,7 @@
                     <group>
                     <field name="notice_id" readonly="1" options="{'no_open': True}" />
                     <field name="quantity" />
-                    <field name="quantity_available" />
+                    <field name="quantity_available" readonly="1" />
 
 
 

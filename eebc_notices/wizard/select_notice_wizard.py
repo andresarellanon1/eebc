@@ -59,87 +59,42 @@ class SelectNoticeWizard(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
-    @api.constrains('notice_ids')
+   
+
+
+    @api.constrains('notice_ids')  # Decorador que valida automáticamente
     def _check_quantities(self):
         for wizard in self:
-            # Validar el total asignado
             total = sum(line.quantity for line in wizard.notice_ids)
-            _logger.warning('Valor de total desde notice_ids: %s', total)
+            _logger.warning('Valor de total: %s', total)
 
             if total != wizard.quantity:
                 raise ValidationError(
                     f"La cantidad y la demanda deben coincidir. Cantidad asignada: {total} / Demanda: {wizard.quantity}"
                 )
-
-            # Lista para inconsistencias
             notices_list = []
+            notices_list_v2 = wizard._context.get('lines', [])
+            _logger.warning('lista valores: %s', notices_list_v2)
 
-            # Obtener líneas del contexto
-            context_lines = wizard._context.get('lines', [])
-            _logger.warning('Líneas obtenidas desde el contexto: %s', context_lines)
-
-            # Validar cantidades combinando notice_ids y context_lines
             for line in wizard.notice_ids:
-                _logger.warning('Procesando línea con notice_id: %s', line.notice_id.id)
-
-                # Buscar datos en context_lines basados en notice_id
-                notice_data = next((data[2] for data in context_lines if data[2]['notice_id'] == line.notice_id.id), None)
                 
-                if notice_data:
-                    _logger.warning('Datos del aviso desde contexto: %s', notice_data)
-                    
-                    # Comparar quantity del One2many con quantity_available del contexto
-                    if line.quantity > notice_data['quantity_available']:
-                        _logger.warning('Se cumple la condición de cantidad excedida')
-                        notices_list.append({
-                            'name': line.test_name,
-                            'available': notice_data['quantity_available'],
-                        })
-                else:
-                    _logger.warning(f'No se encontró información de contexto para notice_id: {line.notice_id.id}')
-
-            # Generar mensaje de error si hay inconsistencias
+                _logger.warning(f'nombre {line.test_name} cantidad disponible: {line.quantity_available} cantidad establecida: {line.quantity}')
+        
+                if line.quantity > line.quantity_available:
+                    _logger.warning('se cumpole if')
+                    notices_list.append({
+                        'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
+                        'available': line.quantity_available,
+                    })
+            _logger.warning('Valor de lista: %s', notices_list)
+            
             if notices_list:
+                # Construir el mensaje del ValidationError
                 message = "Los siguientes avisos tienen cantidades que exceden las disponibles:\n"
                 for notice in notices_list:
                     message += f"- {notice['name']}: {notice['available']} disponibles\n"
                 
                 raise ValidationError(message)
-
-
-    # @api.constrains('notice_ids')  # Decorador que valida automáticamente
-    # def _check_quantities(self):
-    #     for wizard in self:
-    #         total = sum(line.quantity for line in wizard.notice_ids)
-    #         _logger.warning('Valor de total: %s', total)
-
-    #         if total != wizard.quantity:
-    #             raise ValidationError(
-    #                 f"La cantidad y la demanda deben coincidir. Cantidad asignada: {total} / Demanda: {wizard.quantity}"
-    #             )
-    #         notices_list = []
-    #         notices_list_v2 = wizard._context.get('lines', [])
-    #         _logger.warning('lista valores: %s', notices_list_v2)
-
-    #         for line in wizard.notice_ids:
-                
-    #             _logger.warning(f'nombre {line.test_name} cantidad disponible: {line.quantity_available} cantidad establecida: {line.quantity}')
-        
-    #             if line.quantity > line.quantity_available:
-    #                 _logger.warning('se cumpole if')
-    #                 notices_list.append({
-    #                     'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
-    #                     'available': line.quantity_available,
-    #                 })
-    #         _logger.warning('Valor de lista: %s', notices_list)
-            
-    #         if notices_list:
-    #             # Construir el mensaje del ValidationError
-    #             message = "Los siguientes avisos tienen cantidades que exceden las disponibles:\n"
-    #             for notice in notices_list:
-    #                 message += f"- {notice['name']}: {notice['available']} disponibles\n"
-                
-    #             raise ValidationError(message)
 
 
 
