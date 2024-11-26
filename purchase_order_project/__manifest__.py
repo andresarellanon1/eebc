@@ -1,6 +1,6 @@
 {
     'name': "Purchase Order Projects",
-    'version': '17.0.0.10',
+    'version': '17.0.0.11',
     'depends': [
         "purchase_order_type",
     ],
