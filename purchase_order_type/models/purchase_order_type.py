@@ -10,15 +10,10 @@ class PurchaseOrderType(models.Model):
 
     name = fields.Char('Nombre', required=True)
     picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación')
-    company_id = fields.Many2one('res.company', string='Compañia', compute="_compute_company_id")
+    company_id = fields.Many2one('res.company', string='Empresa')
     location_id = fields.Many2one('stock.location', string='Ubicación')
     sequence_id = fields.Many2one('ir.sequence', string='Secuencia')
     is_picking_type_enabled = fields.Boolean(string='Utilizar Tipos de operación', default=True)
-
-    @api.depends('picking_type_id')
-    def _compute_company_id(self):
-        for record in self:
-            record.company_id = record.picking_type_id.company_id
 
     @api.onchange('is_picking_type_enabled')
     def _onchange_is_picking_type_enabled(self):
