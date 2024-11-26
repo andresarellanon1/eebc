@@ -67,7 +67,7 @@ class StockMove(models.Model):
                 'location_dest_id': self.picking_id.location_dest_id.id,
                 'origin': self.picking_id.origin,
                 'lot_ids':self.lot_ids,
-                'purchase_id': purchase_order_id,
+                'purchase_order_id': purchase_order_id,
                 'sale_ids': order._get_sale_orders().ids if order else False,
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
@@ -81,6 +81,7 @@ class StockMove(models.Model):
         _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
 
         notice_lines_to_wizard =self._create_line_ids()
+        _logger.warning('Valor de las lineas : %s', notice_lines_to_wizard)
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
 
         return {
@@ -102,17 +103,26 @@ class StockMove(models.Model):
         }
 
     def _create_line_ids(self):
-        for wizard in self:
-            if not wizard.id:
+        for move in self:
+            _logger.warning('id del producto :%s',move.product_id.id)
+            _logger.warning('id del location_id :%s',move.location_id.id)
+            _logger.warning('id del move :%s',move.id)
+
+
+            if not move.id:
+                _logger.warning('entra if')
+
                 continue  # No asignar nada si no hay stock_move_id
 
             notice_history_ids = self.env['notices.history'].search([
                 ('quantity', '>', 0),
-                ('product_id', '=', self.product_id.id),
-                ('location_id', '=', self.location_id.id)
+                ('product_id', '=', move.product_id.id),
+                ('location_id', '=', move.location_id.id)
             ])
+            _logger.warning('lineas de hiostorial :%s',notice_history_ids)
+
             notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
-            lines = [(0,0,{'notice_id':notice.id,'quantity': 0}) for notice in notice_ids]
+            lines = [(0,0,{'notice_id':notice.id,'quantity': 0, 'quantity_available': notice.quantity,'test_name':notice.display_name}) for notice in notice_ids]
             return lines
 
            

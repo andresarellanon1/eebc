@@ -1,6 +1,6 @@
 {
     'name': "EEBC Settings",
-    'version': '17.0.0.02',
+    'version': '17.0.0.04',
     'depends': [
         "base",
         "purchase",

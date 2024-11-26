@@ -8,9 +8,10 @@
 
                 <sheet>
                     <group>
-                    <field name="notice_id" />
+                    <field name="notice_id" options="{'no_open': True}" />
                     <field name="quantity" />
                     <field name="quantity_available" />
+
 
 
                     </group>
