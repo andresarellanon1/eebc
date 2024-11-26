@@ -23,7 +23,7 @@ class SaleOrderLine(models.Model):
                     ('sale_ok', '=', True),
                 ])
 
-            _logger.warning(f'{record.products_project_domain.id}')
+            _logger.warning(f'{record.products_project_domain.ids}')
 
     # product_template_id = fields.Many2one(
     #     string="Product Template",
