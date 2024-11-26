@@ -7,7 +7,6 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     project_plan_id = fields.Many2one('project.plan', string="Project plan template")
-    sl_id = fields.Many2one('sale.order.line')
 
     # Validates that a project plan template is uniquely assigned to a service product.
     # Prevents multiple service products from being associated with the same project plan.
