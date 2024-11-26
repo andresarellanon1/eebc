@@ -68,16 +68,19 @@ class SelectNoticeWizard(models.TransientModel):
                 raise ValidationError(
                     f"La cantidad y la demanda deben coincidir. Cantidad asignada: {total} / Demanda: {wizard.quantity}"
                 )
-            notices_list = []
+            # notices_list = []
+            notices_list = wizard._context.get('lines', [])
+            _logger.warning('lista valores: %s', notices_list)
 
             for line in wizard.notice_ids:
-                _logger.warning(f'nombre {line.test_name} cantidad disponible: {line.quantity_available} cantidad establecida: {line.quantity}')
+                
+                _logger.warning(f'nombre {line.test_name} cantidad disponible: {line.get('quantity_available')} cantidad establecida: {line.quantity}')
         
                 if line.quantity > line.quantity_available:
                     _logger.warning('se cumpole if')
                     notices_list.append({
                         'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
-                        'available': line.quantity_available,
+                        'available': line.get('quantity_available'),
                     })
             _logger.warning('Valor de lista: %s', notices_list)
             
