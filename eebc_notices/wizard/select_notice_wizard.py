@@ -14,14 +14,10 @@ class SelectNoticeWizard(models.TransientModel):
     _name = "select.notice.wizard"
     _description = "Wizard where we will select the notice to take the product"
 
-    notice_ids = fields.Many2many(
-        'notices.notices',
-        string='Avisos',
-    )
-    quantity_ids = fields.One2many(
+    notice_ids = fields.One2many(
         'wizard.selection.line',
         'wizard_id',
-        string='Cantidades',
+        string='Avisos',
     )
     quantity = fields.Float(string="Demanda total", readonly=True,)
     stock_move_id = fields.Many2one('stock.move', string='Traslado')
@@ -34,7 +30,7 @@ class SelectNoticeWizard(models.TransientModel):
         if 'cantidad' in self._context:
             res['quantity'] = self._context['cantidad']
         if 'lines' in self._context:
-            res['quantity_ids'] = self._context['lines']
+            res['notice_ids'] = self._context['lines']
         _logger.warning('vALORDE LINEASS RES : %s',res)
         
         return res
@@ -44,7 +40,7 @@ class SelectNoticeWizard(models.TransientModel):
         for wizard in self:
             _logger.warning('first for')
             self._check_quantities()
-            for line in wizard.quantity_ids:
+            for line in wizard.notice_ids:
                 for notice in line.notice_id:
                     notice.sudo().write({
                         'history_ids': [(0, 0, {
@@ -62,16 +58,40 @@ class SelectNoticeWizard(models.TransientModel):
 
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.constrains('quantity_ids')  # Decorador que valida automáticamente
+    @api.constrains('notice_ids')  # Decorador que valida automáticamente
     def _check_quantities(self):
         for wizard in self:
-            total = sum(line.quantity for line in wizard.quantity_ids)
+            total = sum(line.quantity for line in wizard.notice_ids)
             _logger.warning('Valor de total: %s', total)
 
             if total != wizard.quantity:
                 raise ValidationError(
                     f"La cantidad y la demanda deben coincidir. Cantidad asignada: {total} / Demanda: {wizard.quantity}"
                 )
+            notices_list = []
+
+            for line in wizard.notice_ids:
+                _logger.warning(f'nombre {line.test_name} cantidad disponible: {line.quantity_available} cantidad establecida: {line.quantity}')
+        
+                if line.quantity > line.quantity_available:
+                    _logger.warning('se cumpole if')
+                    notices_list.append({
+                        'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
+                        'available': line.quantity_available,
+                    })
+            _logger.warning('Valor de lista: %s', notices_list)
+            
+            if notices_list:
+                # Construir el mensaje del ValidationError
+                message = "Los siguientes avisos tienen cantidades que exceden las disponibles:\n"
+                for notice in notices_list:
+                    message += f"- {notice['name']}: {notice['available']} disponibles\n"
+                
+                raise ValidationError(message)
+
+
+
+            
 
 
     
