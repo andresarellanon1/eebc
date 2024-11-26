@@ -17,13 +17,13 @@ class SaleOrderLine(models.Model):
                     ('detailed_type', '=', 'service'),
                     ('sale_ok', '=', True),
                 ])
-                record.products_project_domain = products.ids
+                record.products_project_domain = self.env['product.template'].browse(products.ids)
             else:
                 _logger.warning('IS PROJECT ES FALSE')
                 products = self.env['product.template'].search([
                     ('sale_ok', '=', True),
                 ])
-                record.products_project_domain = products.ids
+                record.products_project_domain = self.env['product.template'].browse(products.ids)
 
             
             _logger.warning(f'{record.products_project_domain.ids}')
