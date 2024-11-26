@@ -80,6 +80,8 @@ class SelectNoticeWizard(models.TransientModel):
 
             # Validar cantidades combinando notice_ids y context_lines
             for line in wizard.notice_ids:
+                _logger.warning('Procesando línea con notice_id: %s', line.notice_id.id)
+
                 # Buscar datos en context_lines basados en notice_id
                 notice_data = next((data[2] for data in context_lines if data[2]['notice_id'] == line.notice_id.id), None)
                 
