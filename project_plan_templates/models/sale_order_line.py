@@ -6,24 +6,17 @@ class SaleOrderLine(models.Model):
 
     products_project_domain = fields.Many2many('product.template', compute="_products_project_domain", store=True)
 
-    # @api.depends()
-    # def _products_project_domain(self):
-    #     for record in self:
-            
-
-    # @api.depends()
-    # def _compute_partner_domain_ids(self):
-    #     for record in self:
-    #         partner_ids = record.move_ids.mapped('partner_id.id')
-    #         child_ids = record.move_ids.mapped('partner_id.child_ids.id')
-    #         company_partner_id = record.company_id.partner_id.id if record.company_id and record.company_id.partner_id else False
-
-    #         all_partner_ids = partner_ids + child_ids
-    #         if company_partner_id:
-    #             all_partner_ids.append(company_partner_id)
-
-    #         record.partner_domain_ids = self.env['res.partner'].browse(all_partner_ids)
-
+    def _products_project_domain(self, is_project):
+        for record in self:
+            if is_project:
+                record.products_project_domain = self.search['product.template'].search([
+                    ('detailed_type', '=', 'service'),
+                    ('sale_ok', '=', True),
+                ])
+            else:
+                record.products_project_domain = self.search['product.template'].search([
+                    ('sale_ok', '=', True),
+                ])
 
     # product_template_id = fields.Many2one(
     #     string="Product Template",
