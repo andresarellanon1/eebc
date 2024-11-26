@@ -25,16 +25,23 @@ class SaleOrder(models.Model):
         self.ensure_one()
         for sale in self:
             if sale.is_project:
-                sale.state == 'estimation'
+                sale.state = 'estimation'
                 plan_lines = []
-                for line in order_line:
-                    plan_lines.appen((0, 0, {
-                        'name': line.name,
-                    }))
-                    for plan in line.product_id.project_plan_id:
-                        plan_lines.append((0, 0, {
-                            
-                        }))
+                for line in sale.order_line:
+                    if line.product_id.project_plan_id:
+                        for plan in line.product_id.project_plan_id.project_plan_lines:
+                            if line.display_type == 'line_section':
+                                plan_lines.append((0, 0, {
+                                    'name': line.name,
+                                    'display_type': line.display_type
+                                }))
+                            else:
+                                plan_lines.append((0, 0, {
+                                    'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
+                                    'description': plan.description,
+                                    'task_timesheet_id': plan.task_timesheet_id.id,
+                                }))
+                sale.project_plan_lines = plan_lines
             else:
                 return super(SaleOrder, self).action_confirm()
 

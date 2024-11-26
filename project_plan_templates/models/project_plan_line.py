@@ -30,6 +30,13 @@ class ProjectLines(models.Model):
    planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Begin date")
    planned_date_end = fields.Datetime(default=fields.Date.context_today, string="End date")
 
+   display_type = fields.Selection(
+    [
+        ('line_section', 'Section')
+    ]
+   )
+   code = fields.Char(string="Code")
+
    # This method creates a temporary task preview for the current line.
    # It generates a task with the line's configuration including:
    # - Task name and description
