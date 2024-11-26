@@ -20,6 +20,9 @@ class SaleOrder(models.Model):
     )
 
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
+    @api.onchange('is_project')
+    def _products_domain(self):
+        self.order_line._products_project_domain(self.is_project)
 
     def action_confirm(self):
         self.ensure_one()

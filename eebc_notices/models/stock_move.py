@@ -115,14 +115,13 @@ class StockMove(models.Model):
                 continue  # No asignar nada si no hay stock_move_id
 
             notice_history_ids = self.env['notices.history'].search([
-                ('quantity', '>', 0),
                 ('product_id', '=', move.product_id.id),
                 ('location_id', '=', move.location_id.id)
             ])
             _logger.warning('lineas de hiostorial :%s',notice_history_ids)
 
-            notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids)])
-            lines = [(0,0,{'notice_id':notice.id,'quantity': 0}) for notice in notice_ids]
+            notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids),('quantity', '>', 0)])
+            lines = [(0,0,{'notice_id':notice.id,'quantity': 0, 'quantity_available': notice.quantity,'test_name':notice.display_name}) for notice in notice_ids]
             return lines
 
            

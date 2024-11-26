@@ -20,9 +20,6 @@ class Notices(models.Model):
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
     quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
-    quantity_to_show = fields.Float(
-        string='valor fijo de cantidad',
-    )
     
     # stock_location_origin_id = fields.Many2one(
     #     string='Almacen origen',
@@ -30,18 +27,7 @@ class Notices(models.Model):
     #     compute='_compute_location_origin_id'
     # )
 
-    def create(self, vals):
-        # Si 'quantity' está en los valores, asegúrate de asignarlo a 'quantity_to_show'
-        if 'quantity' in vals:
-            vals['quantity_to_show'] = vals['quantity']
-        return super(Notices, self).create(vals)
 
-    def write(self, vals):
-        # Actualiza 'quantity_to_show' cuando se modifique 'quantity'
-        if 'quantity' in vals:
-            for record in self:
-                vals['quantity_to_show'] = vals.get('quantity', record.quantity)
-        return super(Notices, self).write(vals)
     lot_ids = fields.Many2many(
         string='Series',
         comodel_name='stock.lot',
@@ -79,11 +65,6 @@ class Notices(models.Model):
     #             if history_record.location_dest:
     #                 self.stock_location_origin_id.append(history_record.location_dest) 
                     
-
-    
-    @api.onchange('quantity')
-    def _onchange_quantity(self):
-        self.quantity_to_show = self.quantity
     
     
     @api.depends('history_ids')
