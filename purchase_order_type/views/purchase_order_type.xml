@@ -55,14 +55,11 @@
                         <field name="name"/>
                     </group>
                     <group>
-                        <field name="is_picking_type_enabled" invisible="True" readonly="True"/>
+                        <field name="is_picking_type_enabled"/>
                         <field name="company_id" invisible="True" readonly="True"/>
-                        <field name="picking_type_id" invisible="not is_picking_type_enabled" required="is_picking_type_enabled" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}"/>
+                        <field name="picking_type_id" invisible="not is_picking_type_enabled" required="is_picking_type_enabled" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                         <field name="location_id" invisible="is_picking_type_enabled" required="not is_picking_type_enabled"/>
                         <field name="sequence_id" invisible="is_picking_type_enabled" required="not is_picking_type_enabled"/>
-                    </group>
-                    <group>
-                        <field name="is_picking_type_enabled"/>
                     </group>
                 </sheet>
             </form>
