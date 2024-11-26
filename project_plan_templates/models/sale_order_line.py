@@ -17,13 +17,15 @@ class SaleOrderLine(models.Model):
                     ('detailed_type', '=', 'service'),
                     ('sale_ok', '=', True),
                 ])
+                record.products_project_domain = products.ids
             else:
                 _logger.warning('IS PROJECT ES FALSE')
-                record.products_project_domain = self.env['product.template'].search([
+                products = self.env['product.template'].search([
                     ('sale_ok', '=', True),
                 ])
+                record.products_project_domain = products.ids
 
-            record.products_project_domain = products.ids
+            
             _logger.warning(f'{record.products_project_domain.ids}')
 
     # product_template_id = fields.Many2one(
