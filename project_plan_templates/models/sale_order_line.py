@@ -4,7 +4,7 @@ class SaleOrderLine(models.Model):
 
     _inherit = 'sale.order.line'
 
-    products_project_domain = fields.Many2many('product.template', compute="_products_project_domain", store=True)
+    products_project_domain = fields.Many2many('product.template')
 
     def _products_project_domain(self, is_project):
         for record in self:
