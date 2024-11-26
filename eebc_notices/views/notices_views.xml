@@ -13,32 +13,33 @@
                 <sheet>
                     <group>
                         <group string="Ubicaciones">
-                            <field name="location_id" string="Ubicación Origen"/>
-                            <field name="location_dest" string="Ubicación Destino"/>
+                            <field name="location_id" string="Ubicación Origen" readonly="1"/>
+                            <field name="location_dest" string="Ubicación Destino" readonly="1"/>
                         </group>
                         <group string="Información del Producto">
-                            <field name="product_id" string="Recurso"/>
-                            <field name="quantity" string="Cantidad"/>
+                            <field name="product_id" string="Recurso" readonly="1"/>
+                            <field name="quantity" string="Cantidad" readonly="1"/>
                         </group>
                     </group>
                     <group>
                         <group string="Referencias">
-                            <field name="notice_id" string="Aviso Relacionado"/>
-                            <field name="folio" string="Folio"/>
-                            <field name="origin" string="Documento Origen"/>
+                            <field name="notice_id" string="Aviso Relacionado" readonly="1"/>
+                            <field name="folio" string="Folio" readonly="1"/>
+                            <field name="origin" string="Documento Origen" readonly="1"/>
                         </group>
                         <group string="Operaciones Relacionadas">
-                            <field name="picking_code" string="Tipo de Operación"/>
-                            <field name="purchase_order_id" string="Orden de Compra"/>
-                            <field name="sale_order_id" string="Orden de Venta"/>
-                            <field name="picking_id" string="Traslado"/>
-                            <field name="stock_move_id" string="Movimiento de Inventario"/>
+                            <field name="picking_code" string="Tipo de Operación" readonly="1"/>
+                            <field name="purchase_order_id" string="Orden de Compra" readonly="1"/>
+                            <field name="sale_order_id" string="Orden de Venta" readonly="1"/>
+                            <field name="picking_id" string="Traslado" readonly="1"/>
+                            <field name="stock_move_id" string="Movimiento de Inventario" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
+
    
     <record id="notices_notices_form" model="ir.ui.view">
     <field name="name">notices.notices.form</field>
