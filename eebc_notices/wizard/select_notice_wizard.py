@@ -62,7 +62,7 @@ class SelectNoticeWizard(models.TransientModel):
     @api.constrains('notice_ids')
     def _check_quantities(self):
         for wizard in self:
-            # Validar desde el campo `notice_ids` (One2many)
+            # Validar el total asignado
             total = sum(line.quantity for line in wizard.notice_ids)
             _logger.warning('Valor de total desde notice_ids: %s', total)
 
@@ -70,40 +70,32 @@ class SelectNoticeWizard(models.TransientModel):
                 raise ValidationError(
                     f"La cantidad y la demanda deben coincidir. Cantidad asignada: {total} / Demanda: {wizard.quantity}"
                 )
-            
-            # Lista para mensajes de validación
+
+            # Lista para inconsistencias
             notices_list = []
-            
-            # Intentar obtener valores desde el contexto
+
+            # Obtener líneas del contexto
             context_lines = wizard._context.get('lines', [])
             _logger.warning('Líneas obtenidas desde el contexto: %s', context_lines)
 
-            if context_lines:
-                # Validar cantidades desde el contexto
-                for line in context_lines:
-                    data = line[2]  # El diccionario con los datos del aviso
-                    _logger.warning('Datos del aviso desde contexto: %s', data)
+            # Validar cantidades combinando notice_ids y context_lines
+            for line in wizard.notice_ids:
+                # Buscar datos en context_lines basados en notice_id
+                notice_data = next((data[2] for data in context_lines if data[2]['notice_id'] == line.notice_id.id), None)
+                
+                if notice_data:
+                    _logger.warning('Datos del aviso desde contexto: %s', notice_data)
                     
-                    # Validar si la cantidad excede la disponibilidad
-                    if data['quantity'] > data['quantity_available']:
-                        _logger.warning('Se cumple la condición desde contexto')
-                        notices_list.append({
-                            'name': data['test_name'],
-                            'available': data['quantity_available'],
-                        })
-            else:
-                # Validar desde `notice_ids` si no hay datos en el contexto
-                for line in wizard.notice_ids:
-                    _logger.warning(
-                        f"nombre {line.test_name} cantidad disponible: {line.quantity_available} cantidad establecida: {line.quantity}"
-                    )
-                    if line.quantity > line.quantity_available:
-                        _logger.warning('Se cumple la condición desde notice_ids')
+                    # Comparar quantity del One2many con quantity_available del contexto
+                    if line.quantity > notice_data['quantity_available']:
+                        _logger.warning('Se cumple la condición de cantidad excedida')
                         notices_list.append({
                             'name': line.test_name,
-                            'available': line.quantity_available,
+                            'available': notice_data['quantity_available'],
                         })
-            
+                else:
+                    _logger.warning(f'No se encontró información de contexto para notice_id: {line.notice_id.id}')
+
             # Generar mensaje de error si hay inconsistencias
             if notices_list:
                 message = "Los siguientes avisos tienen cantidades que exceden las disponibles:\n"
