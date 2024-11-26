@@ -71,14 +71,11 @@ class SelectNoticeWizard(models.TransientModel):
             notices_list = []
 
             for quantity_line in wizard.notice_ids:
-                _logger.warning('valor de cantidad notice: %s',quantity_line.notice_id.quantity)
-                _logger.warning('valor de cantidad lineas: %s',quantity_line.quantity)
-
-                _logger.warning(f'Valor id de la linea {quantity_line}, valor de display name {quantity_line.notice_id.display_name}, valor de cantidad {quantity_line.notice_id.quantity}')
-                if quantity_line.quantity > quantity_line.notice_id.quantity:
+        
+                if quantity_line.quantity > quantity_line.quantity_available:
                     notices_list.append({
-                        'name': quantity_line.notice_id.display_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
-                        'available': quantity_line.notice_id.quantity,
+                        'name': quantity_line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
+                        'available': quantity_line.quantity_available,
                     })
 
             if notices_list:
