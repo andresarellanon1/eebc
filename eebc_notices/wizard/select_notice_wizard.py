@@ -68,9 +68,9 @@ class SelectNoticeWizard(models.TransientModel):
                 raise ValidationError(
                     f"La cantidad y la demanda deben coincidir. Cantidad asignada: {total} / Demanda: {wizard.quantity}"
                 )
-            # notices_list = []
-            notices_list = wizard._context.get('lines', [])
-            _logger.warning('lista valores: %s', notices_list)
+            notices_list = []
+            notices_list_v2 = wizard._context.get('lines', [])
+            _logger.warning('lista valores: %s', notices_list_v2)
 
             for line in wizard.notice_ids:
                 
