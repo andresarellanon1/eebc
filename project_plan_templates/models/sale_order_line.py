@@ -13,19 +13,16 @@ class SaleOrderLine(models.Model):
         for record in self:
             if is_project:
                 _logger.warning('IS PROJECT ES TRUE')
-                products = self.env['product.template'].search([
+                record.products_project_domain = self.env['product.template'].search([
                     ('detailed_type', '=', 'service'),
                     ('sale_ok', '=', True),
                 ])
-                record.products_project_domain = self.env['product.template'].browse(products.ids)
             else:
                 _logger.warning('IS PROJECT ES FALSE')
-                products = self.env['product.template'].search([
+                record.products_project_domain = self.env['product.template'].search([
                     ('sale_ok', '=', True),
                 ])
-                record.products_project_domain = self.env['product.template'].browse(products.ids)
 
-            
             _logger.warning(f'{record.products_project_domain.ids}')
 
     # product_template_id = fields.Many2one(
