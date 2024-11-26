@@ -1,4 +1,6 @@
 from odoo import fields, models, api
+import logging
+_logger = logging.getLogger(__name__)
 
 class SaleOrderLine(models.Model):
 
@@ -7,16 +9,21 @@ class SaleOrderLine(models.Model):
     products_project_domain = fields.Many2many('product.template')
 
     def _products_project_domain(self, is_project):
+        _logger.warning('ENTRÓ A LA FUNCIÓN')
         for record in self:
             if is_project:
+                _logger.warning('IS PROJECT ES TRUE')
                 record.products_project_domain = self.env['product.template'].search([
                     ('detailed_type', '=', 'service'),
                     ('sale_ok', '=', True),
                 ])
             else:
+                _logger.warning('IS PROJECT ES FALSE')
                 record.products_project_domain = self.env['product.template'].search([
                     ('sale_ok', '=', True),
                 ])
+
+            _logger.warning(f'{record.products_project_domain.id}')
 
     # product_template_id = fields.Many2one(
     #     string="Product Template",
