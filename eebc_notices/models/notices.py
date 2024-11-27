@@ -18,6 +18,16 @@ class Notices(models.Model):
         string='Proveedor',
         comodel_name='res.partner',
     )
+    
+    name = fields.Char(
+        string='name',
+        
+        related='notice',
+        readonly=True,
+        store=True
+        
+    )
+    
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
     quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
