@@ -66,6 +66,7 @@ class SaleOrder(models.Model):
                                     'subtotal': picking.subtotal
                                 }))
                 sale.project_plan_lines = plan_lines
+                sale.project_picking_lines = picking_lines
             else:
                 return super(SaleOrder, self).action_confirm()
 
