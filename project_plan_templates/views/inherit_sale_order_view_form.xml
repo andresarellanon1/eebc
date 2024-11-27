@@ -31,6 +31,16 @@
                         </tree>
                     </field>
                 </page>
+                <page name="picking_tasks" string="Stock">
+                    <field name="project_picking_lines" nolabel="1" invisible="state not in ('estimation', 'budget')">
+                        <tree editable="editable_bottom" style="width: 100%">
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="standard_price"/>
+                            <field name="subtotal"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
         </field>
     </record>
