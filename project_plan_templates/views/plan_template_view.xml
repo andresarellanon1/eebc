@@ -29,6 +29,7 @@
                             <label for="name"/>  
                             <h1><field name="name" class="w-100" required="1"/></h1>
                             <field name="product_template_ids" string="Servicios" domain="[('id', 'in', service_project_domain)]"/>
+                            <field name="service_project_domain" invisible="1"/>
                         </div>
                         <notebook>  <!-- Tabbed sections within the form -->
 
