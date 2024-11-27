@@ -24,14 +24,10 @@ class SaleOrder(models.Model):
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
-    total_product_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+    total_product_cost = fields.Float(string="Total cost", compute='_compute_total_product_cost', default=0.0)
+    total_cost = fields.Float(compute='_compute_total_cost', store=True)
 
-    @api.onchange('is_project')
-    def _onchange_is_project(self):
-        for record in self:
-            record.order_line = None
-
-
+    @api.depends('order_line.product_id', 'order_line.product_uom_qty')
     def _compute_total_product_cost(self):
         for order in self:
             total_cost = 0.0
@@ -40,6 +36,13 @@ class SaleOrder(models.Model):
                 if line.product_id:
                     total_cost += line.product_id.standard_price * line.product_uom_qty
             order.total_product_cost = total_cost
+
+            
+    @api.onchange('is_project')
+    def _onchange_is_project(self):
+        for record in self:
+            record.order_line = None
+
 
     def action_confirm(self):
         self.ensure_one()
