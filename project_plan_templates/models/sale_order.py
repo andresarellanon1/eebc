@@ -65,6 +65,7 @@ class SaleOrder(models.Model):
                             }))
                         for picking in line.product_id.project_plan_id.picking_lines:
                             picking_lines.append((0, 0, {
+                                'name': picking.product_id.name,
                                 'product_id': picking.product_id.id,
                                 'quantity': picking.quantity,
                                 'standard_price': picking.standard_price,
