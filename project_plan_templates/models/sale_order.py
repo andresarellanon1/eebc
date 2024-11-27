@@ -41,6 +41,7 @@ class SaleOrder(models.Model):
                 picking_lines = []
                 for line in sale.order_line:
                     for plan in line.product_id.project_plan_id.project_plan_lines:
+                        logger.warning(f"Section: {line.display_type}")
                         if line.display_type == 'line_section':
                             logger.warning(f"Section: {line.name}")
                             plan_lines.append((0, 0, {
@@ -50,6 +51,7 @@ class SaleOrder(models.Model):
                                 'task_timesheet_id': False,
                             }))
                         else:
+                            logger.warning(f"Plan Lines: {line.name}")
                             plan_lines.append((0, 0, {
                                 'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
                                 'description': plan.description,
