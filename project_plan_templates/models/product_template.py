@@ -32,6 +32,6 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         self.project_plan_id.product_template_ids.id = self.id
 
-        result = super(Model, self).write(vals)
+        result = super(ProductTemplate, self).write(vals)
         # Lógica después de la actualización
         return result
