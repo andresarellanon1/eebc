@@ -92,6 +92,6 @@ class ProjectPlan(models.Model):
     def write(self, vals):
         self._compute_service_project_domain
         self.product_template_ids.project_plan_id.id = self.id
-        result = super(Model, self).write(vals)
+        result = super(ProjectPlan, self).write(vals)
         return result
 
