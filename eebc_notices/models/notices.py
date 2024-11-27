@@ -19,14 +19,7 @@ class Notices(models.Model):
         comodel_name='res.partner',
     )
     
-    name = fields.Char(
-        string='name',
-        
-        related='notice',
-        readonly=True,
-        store=True
-        
-    )
+
     
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
@@ -37,7 +30,12 @@ class Notices(models.Model):
     #     comodel_name='stock.location',        
     #     compute='_compute_location_origin_id'
     # )
-
+    name = fields.Char(
+            string='Name',
+            compute='_compute_name',
+            store=True,
+            readonly=True
+        )
 
     lot_ids = fields.Many2many(
         string='Series',
@@ -78,6 +76,12 @@ class Notices(models.Model):
                     
     
     
+    @api.depends('notice')
+    def _compute_name(self):
+        for record in self:
+            # Concatenar 'Aviso' al valor del campo `notice`
+            record.name = f"Aviso: {record.notice}" if record.notice else "Aviso sin nombre"
+
     @api.depends('history_ids')
     def _compute_series(self):
         for notice in self:
