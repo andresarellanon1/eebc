@@ -88,3 +88,11 @@ class ProjectPlan(models.Model):
                 ('sale_ok', '=', True),
             ])
             record.service_project_domain = [(6, 0, service.ids)]
+    
+    def write(self, vals):
+        self._compute_service_project_domain
+        self.product_template_ids.project_plan_id.id = self.id
+
+        result = super(Model, self).write(vals)
+        return result
+
