@@ -30,3 +30,5 @@ class SaleOrderLine(models.Model):
                 ])
 
                 record.products_project_domain = [(6, 0, products.ids)]
+
+        
