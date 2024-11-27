@@ -29,9 +29,9 @@ class ProductTemplate(models.Model):
                         "No puede haber más de un servicio con el mismo plan de proyecto."
                     ) % record.project_plan_id.display_name)
 
-    def write(self, vals):
-        self.project_plan_id.product_template_ids.id = self.id
+    # def write(self, vals):
+    #     self.project_plan_id.product_template_ids = self.id
 
-        result = super(ProductTemplate, self).write(vals)
-        # Lógica después de la actualización
-        return result
+    #     result = super(ProductTemplate, self).write(vals)
+    #     # Lógica después de la actualización
+    #     return result
