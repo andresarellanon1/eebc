@@ -42,12 +42,12 @@ class SaleOrder(models.Model):
                 for line in sale.order_line:
                     if line.display_type == 'line_section':
                         logger.warning(f"Section: {line.name}")
-                            plan_lines.append((0, 0, {
-                                'name': line.name,
-                                'display_type': line.display_type,
-                                'description': False,
-                                'task_timesheet_id': False,
-                            }))
+                        plan_lines.append((0, 0, {
+                            'name': line.name,
+                            'display_type': line.display_type,
+                            'description': False,
+                            'task_timesheet_id': False,
+                        }))
                     else:
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             logger.warning(f"Plan Lines: {line.name}")
