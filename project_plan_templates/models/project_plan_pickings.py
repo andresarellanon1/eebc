@@ -46,6 +46,7 @@ class ProjectPlanPickingLine(models.Model):
     _name = 'project.picking.lines'
     _description = 'Project picking lines'
 
+    name = fields.Char()
     # Relation fields for project and template linking
     project_id = fields.Many2one('project.project', string="Project Plan")
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
