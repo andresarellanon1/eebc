@@ -78,12 +78,12 @@ class ProjectPlan(models.Model):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
 
-    @api.constrains('product_template_ids')
+    @api.onchange('service_project_domain','product_template_ids.project_plan_id')
     def _compute_service_project_domain(self):
         for record in self:
             service = self.env['product.template'].search([
                 ('detailed_type', '=', 'service'),
-                # ('service_tracking', '=', 'project_only'),
+                ('service_tracking', '=', 'project_only'),
                 ('project_plan_id', '=', False),
                 ('sale_ok', '=', True),
             ])
