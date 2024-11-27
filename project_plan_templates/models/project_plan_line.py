@@ -37,6 +37,7 @@ class ProjectLines(models.Model):
         ]
    )
    code = fields.Char(string="Code")
+   sequence = fields.Integer()
 
    # This method creates a temporary task preview for the current line.
    # It generates a task with the line's configuration including:
