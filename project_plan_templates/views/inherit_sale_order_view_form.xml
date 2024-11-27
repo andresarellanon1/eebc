@@ -22,8 +22,8 @@
                 <field name="product_template_id" string="Product" readonly="not product_updatable" required="not display_type" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom':product_uom,'company_id': parent.company_id,'default_list_price': price_unit,'default_description_sale': name}" options="{'no_open': True,}" domain="[('id', 'in', products_project_domain)]" widget="sol_product_many2one" placeholder="Type to find a product..."/>
             </xpath>
             <xpath expr="//page[@name='other_information']" position="after">
-                <page name="project_tasks" string="Project Tasks">
-                    <field name="project_plan_lines" nolabel="1" invisible="state not in ('estimation', 'budget')">
+                <page name="project_tasks" string="Project Tasks" invisible="state not in ('estimation', 'budget')">
+                    <field name="project_plan_lines" nolabel="1">
                         <tree editable="editable_bottom" style="width: 100%;">
                             <field name="name"/>
                             <field name="description"/>
@@ -31,8 +31,8 @@
                         </tree>
                     </field>
                 </page>
-                <page name="picking_tasks" string="Stock">
-                    <field name="project_picking_lines" nolabel="1" invisible="state not in ('estimation', 'budget')">
+                <page name="picking_tasks" string="Stock" invisible="state not in ('estimation', 'budget')">
+                    <field name="project_picking_lines" nolabel="1">
                         <tree editable="editable_bottom" style="width: 100%">
                             <field name="product_id"/>
                             <field name="quantity"/>
