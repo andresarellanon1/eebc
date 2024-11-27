@@ -50,11 +50,11 @@ class ProjectPlanPickingLine(models.Model):
     # Relation fields for project and template linking
     project_id = fields.Many2one('project.project', string="Project Plan")
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
-    product_id = fields.Many2one('product.product', string="Product", required=True)
+    product_id = fields.Many2one('product.product', string="Product")
     sale_order_id = fields.Many2one('sale.order')
     
     # Quantity and location tracking fields
-    quantity = fields.Float(string="Quantity", required=True)
+    quantity = fields.Float(string="Quantity")
     location_id = fields.Many2one('stock.location', string="Location")
     reservado = fields.Float(string='Reservado')
     
