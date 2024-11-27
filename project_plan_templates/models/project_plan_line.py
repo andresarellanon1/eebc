@@ -31,9 +31,9 @@ class ProjectLines(models.Model):
    planned_date_end = fields.Datetime(default=fields.Date.context_today, string="End date")
 
    display_type = fields.Selection(
-    [
-        ('line_section', 'Section')
-    ]
+        [
+            ('line_section', 'Section')
+        ]
    )
    code = fields.Char(string="Code")
 
