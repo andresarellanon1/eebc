@@ -3,7 +3,6 @@ import logging
 _logger = logging.getLogger(__name__)
 
 class SaleOrderLine(models.Model):
-
     _inherit = 'sale.order.line'
 
     products_project_domain = fields.Many2many('product.template', store=True, compute="_products_project_domain")
@@ -30,3 +29,5 @@ class SaleOrderLine(models.Model):
                 ])
 
                 record.products_project_domain = [(6, 0, products.ids)]
+
+        
