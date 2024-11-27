@@ -21,6 +21,7 @@ class SaleOrder(models.Model):
         }
     )
 
+    project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
 
@@ -33,10 +34,12 @@ class SaleOrder(models.Model):
         self.ensure_one()
         for sale in self:
             if sale.is_project:
+                sale.project_plan_pickings = [(5, 0, 0)]
                 sale.project_plan_lines = [(5, 0, 0)]
                 sale.project_picking_lines = [(5, 0, 0)]
 
                 sale.state = 'estimation'
+                plan_pickings = []
                 plan_lines = []
                 picking_lines = []
                 for line in sale.order_line:
@@ -56,6 +59,7 @@ class SaleOrder(models.Model):
                             'subtotal': False
                         }))
                     else:
+                        plan_pickings.append
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             plan_lines.append((0, 0, {
                                 'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
@@ -72,6 +76,10 @@ class SaleOrder(models.Model):
                                 'subtotal': picking.subtotal,
                                 'display_type': False
                             }))
+                        for project_picking in line.product_id.project_plan_id.project_plan_pickings:
+                            plan_pickings.append((4, project_picking.id))
+
+                sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
                 sale.project_picking_lines = picking_lines
             else:
@@ -81,6 +89,3 @@ class SaleOrder(models.Model):
         self.ensure_one()
         for sale in self:
             sale.state == 'budget'
-
-    
-            

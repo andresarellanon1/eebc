@@ -49,8 +49,8 @@
                             </control>
                             <field name="sequence" widget="handle"/>
                             <field name="display_type" column_invisible="True"/>
-                            <field name="name"/>
                             <field name="product_id"/>
+                            <field name="name"/>
                             <field name="quantity"/>
                             <field name="standard_price"/>
                             <field name="subtotal"/>
