@@ -41,14 +41,7 @@ class SaleOrder(models.Model):
                 picking_lines = []
                 for line in sale.order_line:
                     for plan in line.product_id.project_plan_id.project_plan_lines:
-                        if not line.display_type:
-                            plan_lines.append((0, 0, {
-                                'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
-                                'description': plan.description,
-                                'task_timesheet_id': plan.task_timesheet_id.id,
-                                'display_type': False
-                            }))
-                        else:
+                        if line.display_type == 'line_section':
                             logger.warning(f"Section: {line.name}")
                             plan_lines.append((0, 0, {
                                 'name': line.name,
@@ -56,16 +49,15 @@ class SaleOrder(models.Model):
                                 'description': False,
                                 'task_timesheet_id': False,
                             }))
-                    for picking in line.product_id.project_plan_id.picking_lines:
-                        if not line.display_type:
-                            picking_lines.append((0, 0, {
-                                'product_id': picking.product_id.id,
-                                'quantity': picking.quantity,
-                                'standard_price': picking.standard_price,
-                                'subtotal': picking.subtotal,
+                        else:
+                            plan_lines.append((0, 0, {
+                                'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
+                                'description': plan.description,
+                                'task_timesheet_id': plan.task_timesheet_id.id,
                                 'display_type': False
                             }))
-                        else:
+                    for picking in line.product_id.project_plan_id.picking_lines:
+                        if line.display_type == 'line_section':
                             picking_lines.append((0, 0, {
                                 'name': line.name,
                                 'display_type': line.display_type,
@@ -73,6 +65,14 @@ class SaleOrder(models.Model):
                                 'quantity': False,
                                 'standard_price': False,
                                 'subtotal': False
+                            }))
+                        else:
+                            picking_lines.append((0, 0, {
+                                'product_id': picking.product_id.id,
+                                'quantity': picking.quantity,
+                                'standard_price': picking.standard_price,
+                                'subtotal': picking.subtotal,
+                                'display_type': False
                             }))
                 sale.project_plan_lines = plan_lines
                 sale.project_picking_lines = picking_lines
