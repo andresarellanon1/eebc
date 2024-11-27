@@ -41,33 +41,29 @@ class SaleOrder(models.Model):
                 picking_lines = []
                 for line in sale.order_line:
                     if line.display_type == 'line_section':
-                        logger.warning(f"Section: {line.name}")
                         plan_lines.append((0, 0, {
                             'name': line.name,
                             'display_type': line.display_type,
                             'description': False,
                             'task_timesheet_id': False,
                         }))
+                        picking_lines.append((0, 0, {
+                            'name': line.name,
+                            'display_type': line.display_type,
+                            'product_id': False,
+                            'quantity': False,
+                            'standard_price': False,
+                            'subtotal': False
+                        }))
                     else:
                         for plan in line.product_id.project_plan_id.project_plan_lines:
-                            logger.warning(f"Plan Lines: {line.name}")
                             plan_lines.append((0, 0, {
                                 'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
                                 'description': plan.description,
                                 'task_timesheet_id': plan.task_timesheet_id.id,
                                 'display_type': False
                             }))
-                    for picking in line.product_id.project_plan_id.picking_lines:
-                        if line.display_type == 'line_section':
-                            picking_lines.append((0, 0, {
-                                'name': line.name,
-                                'display_type': line.display_type,
-                                'product_id': False,
-                                'quantity': False,
-                                'standard_price': False,
-                                'subtotal': False
-                            }))
-                        else:
+                        for picking in line.product_id.project_plan_id.picking_lines:
                             picking_lines.append((0, 0, {
                                 'product_id': picking.product_id.id,
                                 'quantity': picking.quantity,
