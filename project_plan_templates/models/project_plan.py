@@ -1,22 +1,34 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
+# Model for managing project plan templates. This model serves
+# as a template for creating projects, containing project configurations,
+# task lines, and inventory picking templates with their associated costs.
 class ProjectPlan(models.Model):
     _name = 'project.plan'
     _description = 'Templates for project plans'
 
+    # Basic template information fields
     name = fields.Char(string="Name", required=True)
+    product_template_ids = fields.Many2one('product.template',string="Servicio")
+    service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
     project_name = fields.Char(string="Project name")
     description = fields.Html(string="Description")
+    note = fields.Char()
+    
+    # Relation fields for project and line management
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
     project_id = fields.Many2one('project.project', string="Project")
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
-
     picking_lines = fields.One2many(
         'project.picking.lines',
         'project_plan_id',
         string="Picking Lines"
     )
+
+    # Computed and company fields
+    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
 
     # This method allows the user to select multiple inventory templates 
     # and combines all their products into a single list. 
@@ -52,9 +64,34 @@ class ProjectPlan(models.Model):
             'target': 'new',
             'context': {
                 'default_project_plan_id': self.id,
-                'default_project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
                 'default_project_plan_pickings': [(6, 0, self.project_plan_pickings.ids)],
-                'deafult_picking_lines': [(6, 0, self.picking_lines.ids)],
+                'default_picking_lines': [(6, 0, self.picking_lines.ids)],
                 'default_description': self.description,
             }
         }
+
+    # Computes the total cost of the project plan by summing
+    # the subtotals of all picking lines. Updates 
+    # whenever the subtotals of picking lines change.
+    @api.depends('picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
+
+    @api.onchange('service_project_domain','product_template_ids.project_plan_id')
+    def _compute_service_project_domain(self):
+        for record in self:
+            service = self.env['product.template'].search([
+                ('detailed_type', '=', 'service'),
+                ('service_tracking', '=', 'project_only'),
+                ('project_plan_id', '=', False),
+                ('sale_ok', '=', True),
+            ])
+            record.service_project_domain = [(6, 0, service.ids)]
+    
+    # def write(self, vals):
+    #     self._compute_service_project_domain
+    #     self.product_template_ids.project_plan_id = self.id
+    #     result = super(ProjectPlan, self).write(vals)
+    #     return result
+

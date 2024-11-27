@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="wizard_select_notice_view" model="ir.ui.view">
+        <field name="name">Wizard Select Notice</field>
+        <field name="model">select.notice.wizard</field>
+        <field name="arch" type="xml">
+             <form string="Select Products">
+
+                <sheet>
+                    <group>
+                    <field name="stock_move_id" options="{'no_open': True}" readonly="1"/>
+                    <field name="quantity" readonly="1"/>
+
+                        <field name="notice_ids">
+                            <tree create="0">
+                                <field name="notice_id"  options="{'no_open': True}"/>
+                                <field name="quantity"/>
+                                <field name="quantity_available" column_invisible="1" />
+                                <field name="test_name" column_invisible="1" invisible="1"/>
+
+
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="Confirm" type="object" name="action_get_products" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+             </form>
+        </field>
+    </record>
+
+
+
+    
+    <!-- <record id="wizard_select_notice_error" model="ir.ui.view">
+        <field name="name">Wizard Error</field>
+        <field name="model">select.notice.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Error">
+              <group>
+                    <field name="message" readonly="1" />
+                </group>
+                <footer>
+                    <button string="Cerrar" class="btn-primary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record> -->
+
+</odoo>

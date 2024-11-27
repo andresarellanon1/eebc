@@ -20,8 +20,8 @@
                                         <field name="project_plan_id" invisible="1"/>
                                     </group>
                                     <div style="100%">
-                                        <field name="project_plan_lines" nolabel="1">
-                                            <tree editable="editable_bottom" style="width: 100%;">
+                                        <field name="wizard_plan_lines" nolabel="1">
+                                            <tree editable="bottom" style="width: 100%;">
                                                 <field name="name"/>
                                                 <field name="chapter"/>
                                                 <field name="description"/>
@@ -31,7 +31,6 @@
                                                 <field name="partner_id" widget="many2many_avatar_user"/>
                                                 <field name="task_timesheet_id" options="{'create': True}"/>
                                                 <field name="stage_id"/>
-                                                <button name="action_preview_task" type="object" class="oe_highlight" string="Preview task"/>
                                             </tree>
                                         </field>
                                     </div>
@@ -41,13 +40,22 @@
                                         <field name="project_plan_pickings" widget="many2many_tags"/>
                                     </group>
                                     <div>
-                                        <field name="picking_lines">
-                                            <tree editable="editable_bottom" style="width: 100%;">
-                                                <field name="product_id" />
-                                                <field name="quantity" />
-                                                <field name="location_id" />
+                                        <field name="wizard_picking_lines">
+                                            <tree editable="editable_bottom" style="width: 100%;">  <!-- Display a tree of picking lines -->
+                                                <field name="product_id"/>  <!-- Display the 'product_id' field in the picking line -->
+                                                <field name="quantity"/>  <!-- Display the 'quantity' field in the picking line -->
+                                                <field name="standard_price"/>  <!-- Display the 'standard_price' field -->
+                                                <field name="subtotal"/>  <!-- Display the 'subtotal' field -->
                                             </tree>
                                         </field>
+                                        <group>
+                                            <group colspan="4">
+                                                <field colspan="2" name="note" nolabel="1"/>  <!-- 'note' field for additional information -->
+                                            </group>
+                                            <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                                                <field name="plan_total_cost"/>  <!-- Display the 'plan_total_cost' field -->
+                                            </group>
+                                        </group>
                                     </div>
                                 </page>
                             </notebook>

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <!-- Define a new tree view for the 'project.picking.lines' model -->
         <record id="plan_template_view_tree" model="ir.ui.view">
-            <field name="name">project.picking.lines.tree</field>
-            <field name="model">project.picking.lines</field>
+            <field name="name">project.picking.lines.tree</field>  <!-- Name of the tree view -->
+            <field name="model">project.picking.lines</field>  <!-- The model to which the view is applied -->
             <field name="arch" type="xml">
                 <tree>
-                    <field name="product_id"/>
-                    <field name="quantity"/>
+                    <field name="product_id"/>  <!-- Display the 'product_id' field -->
+                    <field name="quantity"/>  <!-- Display the 'quantity' field -->
                 </tree>
             </field>
         </record>

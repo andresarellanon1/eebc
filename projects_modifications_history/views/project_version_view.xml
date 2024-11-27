@@ -42,7 +42,7 @@
                             </page>
                             <page name="tasks" string="Tasks changes">
                                 <div invisible="not previous_version_plan_lines and not project_plan_lines">
-                                    <h1>Tasks before modification</h1>
+                                    <h1 style="padding-bottom: 10px">Tasks before modification</h1>
                                     <div>
                                         <field name="previous_version_plan_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not previous_version_plan_lines">
                                             <tree style="width: 100%" editable="bottom">
@@ -58,7 +58,7 @@
                                         </field>
                                         <p invisible="previous_version_plan_lines"> There is no previous plan lines before modifications </p>
                                     </div>
-                                    <h1>Tasks after modification</h1>
+                                    <h1 style="padding-bottom: 10px">Tasks after modification</h1>
                                     <div>
                                         <field name="project_plan_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not project_plan_lines">
                                             <tree style="width: 100%" editable="bottom">
@@ -76,13 +76,15 @@
 
                                     </div>
                                 </div>
-                                <div invisible="previous_version_plan_lines and project_plan_lines">
-                                    <p>No plan lines has been modified</p>
+                                <div invisible="previous_version_plan_lines">
+                                    <div invisible="project_plan_lines">
+                                        <p>No plan lines has been modified</p>
+                                    </div>
                                 </div>
                             </page>
                             <page name="stock" string="Stock changes">
                                 <div invisible="not previous_version_picking_lines and not project_picking_lines">
-                                    <h1>Stock before changes</h1>
+                                    <h1 style="padding-bottom: 10px">Stock before changes</h1>
                                     <div>
                                         <field name="previous_version_picking_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not previous_version_picking_lines">
                                             <tree style="width: 100%" editable="bottom">
@@ -94,7 +96,7 @@
                                         <p invisible="previous_version_picking_lines"> There is no previous plan lines before modifications </p>
 
                                     </div>
-                                    <h1>Stock after changes</h1>
+                                    <h1 style="padding-bottom: 10px">Stock after changes</h1>
                                     <div>
                                         <field name="project_picking_lines" nolabel="1" readonly="1" style="pointer-events:none" invisible="not project_picking_lines">
                                             <tree style="width: 100%" editable="bottom">
@@ -107,8 +109,10 @@
 
                                     </div>
                                 </div>
-                                <div invisible="(previous_version_picking_lines and project_picking_lines)">
-                                    <p>No stock lines has been modified</p>
+                                <div invisible="previous_version_picking_lines">
+                                    <div invisible="project_picking_lines">
+                                        <p>No stock lines has been modified</p>
+                                    </div>
                                 </div>
                             </page>
                         </notebook>

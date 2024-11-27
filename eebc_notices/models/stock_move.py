@@ -4,90 +4,59 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-
-# TODO: que picking id sea tipo de entrada para que salga el boton de aviso
-# campo que muestre el aviso relacionado
-
-
-    has_aviso_in_attributes = fields.Boolean(
-        string="Tiene 'aviso' en atributos",
-        compute='_compute_has_aviso_in_attributes'
-    )
-    has_aviso_in_attributes_fake = fields.Boolean(
-        string="Tiene 'aviso' en atributos",
-        compute="_compute_has_aviso_in_attributes"
-    )
-
-
-
-    has_type_picking_notice_approve= fields.Boolean(
-        string="Puede el tipo de operacion crear aviso  ",
-        compute='_compute_has_aviso_in_attributes'
-    )
     picking_type_codigo = fields.Selection(
         related='picking_type_id.code',
-        readonly=True)
+        readonly=True
+    )
+    show_incoming_button = fields.Boolean(
+        string="Mostrar botón de entrada",
+        compute='_compute_aviso_button_flags',
+    )
+    show_outgoing_button = fields.Boolean(
+        string="Mostrar botón de salida",
+        compute='_compute_aviso_button_flags',
+    )
+    
+    notice_established = fields.Boolean(string = 'Aviso establecido', 
+    default=False
+    )
+    
+    notice_selected = fields.Boolean(string = 'Aviso seleccionado', 
+    default=False
+    )
 
-    @api.depends('product_id.attribute_line_ids', 'picking_type_id.code')
-    def _compute_has_aviso_in_attributes(self):
+    @api.depends('product_id.attribute_line_ids', 'picking_type_id.code', 'product_id')
+    def _compute_aviso_button_flags(self):
         for move in self:
-            # Verifica si el producto tiene el atributo 'aviso' y si el tipo de picking está relacionado con la orden de compra
-            move.has_aviso_in_attributes = (
-                any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id')) 
-            )
-            move.has_type_picking_notice_approve = move.picking_type_id.code == 'incoming'
-            _logger.warning("valor de has_aviso_in_attributes %s", move.has_aviso_in_attributes)
-            _logger.warning("valor de has_type_picking_notice_approve %s", move.has_type_picking_notice_approve)
-
-            if move.has_aviso_in_attributes ==True and move.has_type_picking_notice_approve==True :
-                move.has_aviso_in_attributes_fake = True
-                _logger.warning("valor de has_aviso_in_attributes_fake %s", move.has_aviso_in_attributes_fake)
-            else:
-                _logger.warning("2 else")
+            has_aviso = any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id'))
+            is_valid_picking_type = move.picking_type_id.code in ['incoming', 'outgoing']
+            if has_aviso and is_valid_picking_type:
+                _logger.warning('ENTRAMOS A IF')
+                move.show_incoming_button = move.picking_type_id.code == 'incoming'
+                move.show_outgoing_button = move.picking_type_id.code == 'outgoing'
+                _logger.warning('move.show_outgoing_button: %s', move.show_outgoing_button)
+                _logger.warning('move.show_incoming_button: %s', move.show_incoming_button)
                 
-                move.has_aviso_in_attributes_fake = False
+            else:
+                _logger.warning('ENTRAMOS A ELSE')
+                
+                move.show_incoming_button = False
+                move.show_outgoing_button = False
 
-        
-        
 
 
-    
-    
-    def call_wizard(self):
+ 
 
-        _logger.warning('Producto name: %s', self.product_id.name)
-        _logger.warning('Cantidad: %s', self.product_uom_qty)
-        _logger.warning('type: %s', self.picking_id.picking_type_code)
-        
-        _logger.warning('Descripcion: %s', self.description_picking)
-        
-
-        _logger.warning('documento origen: %s', self.origin)
-
-        # Buscar la orden de compra relacionada con el origen
+    def action_show_incoming(self):
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
-
-        # Obtener las facturas y sus nombres
         invoice_names = ", ".join(order.invoice_ids.mapped('name')) if order.invoice_ids else "No hay facturas"
-
-        _logger.warning('invoices: %s', invoice_names)
-
-        # Obtener el nombre del proveedor
         proveedor_name = self.picking_id.partner_id.name if self.picking_id.partner_id else "Proveedor no definido"
-
-  
-        # Obtener el ID del proveedor
         proveedor_id = self.picking_id.partner_id.id if self.picking_id.partner_id else False
-        _logger.warning('Proveedor ID: %s', proveedor_id)
-
-        # Obtener el ID de la orden de compra
         purchase_order_id = order.id if order else False
-        _logger.warning('Purchase Order ID: %s', purchase_order_id)
-       
-        # Obtener la descripción del producto en la línea del picking
         product_description = self.description_picking if self.description_picking else "Sin descripción"
         return {
             'type': 'ir.actions.act_window',
@@ -97,6 +66,7 @@ class StockMove(models.Model):
             'view_id': self.env.ref('eebc_notices.wizard_notice_file_view').id,  # Aquí se especifica el ID correcto de la vista
             'target': 'new',
             'context': {
+                'stock_move_id': self.id,
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
                 'proveedor': proveedor_name,  # Pasar el nombre del proveedor
@@ -105,37 +75,64 @@ class StockMove(models.Model):
                 'location_id': self.picking_id.location_id.id,
                 'location_dest_id': self.picking_id.location_dest_id.id,
                 'origin': self.picking_id.origin,
-                'purchase_id': purchase_order_id,
+                'lot_ids':self.lot_ids,
+                'purchase_order_id': purchase_order_id,
+                'sale_ids': order._get_sale_orders().ids if order else False,
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
+                'stock_move_id':self.id
+                
             }
         }
         
-    #    # Aquí el registro 'self' es el stock.move en el que se hizo clic
-    #     _logger.warning('Entramos al método de crear aviso para el movimiento: %s', self.id)
+    def action_show_outgoing(self):
+        _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
 
-    #     # Puedes acceder a los datos de la línea (stock.move) que recibió el clic
-    #     _logger.warning('Producto: %s', self.product_id)
-    #     _logger.warning('Cantidad: %s', self.product_uom_qty)
-    #     _logger.warning('Parner: %s', self.picking_id.partner_id)
-        
+        notice_lines_to_wizard =self._create_line_ids()
+        _logger.warning('Valor de las lineas : %s', notice_lines_to_wizard)
+        order = self.env['purchase.order'].search([('name', '=', self.origin)])
 
-    #     # Crear el aviso relacionado a partir de los datos del movimiento
-    #     notice_vals = {
-    #         'description': 'Aviso generado para el producto %s en la operación %s' % (self.product_id.name, self.picking_id.name),
-    #         'quantity': self.product_uom_qty,
-    #         'resource': self.product_id.id,
-    #         'supplier': self.picking_id.partner_id.id,
-    #         'description': self.product_id.description,
-            
-    #         # Otros valores que quieras pasar a notices.notices
-    #     }
-    #     _logger.warning('VALS PARA AVISO: %s', notice_vals)
-        
-        
-    #     notice = self.env['notices.notices'].create(notice_vals)
-    #     _logger.warning('Se ha creado el aviso con ID: %s', notice.id)
-        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Wizard Select Product',
+            'res_model': 'select.notice.wizard',
+            'view_mode': 'form',
+            'view_id': self.env.ref('eebc_notices.wizard_select_notice_view').id,  # Aquí se especifica el ID correcto de la vista
+            'target': 'new',
+            'context': {
+                'product_id': self.product_id.id,  # Pasar valores por defecto
+                'cantidad':  self.product_uom_qty,
+                'location_id': self.picking_id.location_id.id,
+                'stock_move_id': self.id,
+                'lines':notice_lines_to_wizard,
+                'purchase_order_id': order.id
+
+            }
+        }
+
+    def _create_line_ids(self):
+        for move in self:
+            _logger.warning('id del producto :%s',move.product_id.id)
+            _logger.warning('id del location_id :%s',move.location_id.id)
+            _logger.warning('id del move :%s',move.id)
+
+
+            if not move.id:
+                _logger.warning('entra if')
+
+                continue  # No asignar nada si no hay stock_move_id
+
+            notice_history_ids = self.env['notices.history'].search([
+                ('product_id', '=', move.product_id.id),
+                ('location_id', '=', move.location_id.id)
+            ])
+            _logger.warning('lineas de hiostorial :%s',notice_history_ids)
+
+            notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids),('quantity', '>', 0)])
+            lines = [(0,0,{'notice_id':notice.id,'quantity': 0, 'quantity_available': notice.quantity,'test_name':notice.display_name}) for notice in notice_ids]
+            return lines
+
+           
 
 
