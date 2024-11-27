@@ -78,7 +78,7 @@ class ProjectPlan(models.Model):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
 
-    @api.depends('project.plan')
+    @api.depends('id')
     def _compute_service_project_domain(self):
         for record in self:
             service = self.env['product.template'].search([
