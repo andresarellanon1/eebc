@@ -9,7 +9,6 @@ class SaleOrderLine(models.Model):
     products_project_domain = fields.Many2many('product.template', store=True)
     code = fields.Char(string="Code")
 
-
     def _products_project_domain(self, is_project):
         _logger.warning('ENTRÓ A LA FUNCIÓN')
         for record in self:
@@ -20,13 +19,13 @@ class SaleOrderLine(models.Model):
                     ('detailed_type', '=', 'service'),
                     ('sale_ok', '=', True),
                 ])
-                record.product_template_id = [(6, 0, products.ids)]
+                record.products_project_domain = [(6, 0, products.ids)]
             else:
                 _logger.warning('IS PROJECT ES FALSE')
                 products = self.env['product.template'].search([
                     ('sale_ok', '=', True),
                 ])
-                record.product_template_id = [(6, 0, products.ids)]
+                record.products_project_domain = [(6, 0, products.ids)]
 
 
-            _logger.warning(f'{record.product_template_id}')
+            _logger.warning(f'{record.products_project_domain.ids}')
