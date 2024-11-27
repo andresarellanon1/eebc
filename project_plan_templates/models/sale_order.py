@@ -40,7 +40,9 @@ class SaleOrder(models.Model):
                             if line.display_type == 'line_section':
                                 plan_lines.append((0, 0, {
                                     'name': line.name,
-                                    'display_type': line.display_type
+                                    'display_type': line.display_type,
+                                    'description': False,
+                                    'task_timesheet_id': False,
                                 }))
                             else:
                                 plan_lines.append((0, 0, {
@@ -52,7 +54,9 @@ class SaleOrder(models.Model):
                             if line.display_type == 'line_section':
                                 picking_lines.append((0, 0, {
                                     'name': line.name,
-                                    'display_type': line.display_type
+                                    'display_type': line.display_type,
+                                    'standar_price': False,
+                                    'subtotal': False
                                 }))
                             else:
                                 picking_lines.append((0, 0, {
