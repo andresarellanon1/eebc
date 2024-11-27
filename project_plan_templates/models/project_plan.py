@@ -89,9 +89,9 @@ class ProjectPlan(models.Model):
             ])
             record.service_project_domain = [(6, 0, service.ids)]
     
-    def write(self, vals):
-        self._compute_service_project_domain
-        self.product_template_ids.project_plan_id.id = self.id
-        result = super(ProjectPlan, self).write(vals)
-        return result
+    # def write(self, vals):
+    #     self._compute_service_project_domain
+    #     self.product_template_ids.project_plan_id = self.id
+    #     result = super(ProjectPlan, self).write(vals)
+    #     return result
 
