@@ -6,10 +6,11 @@ class SaleOrderLine(models.Model):
 
     _inherit = 'sale.order.line'
 
-    products_project_domain = fields.Many2many('product.template', store=True)
+    products_project_domain = fields.Many2many('product.template', store=True, compute="_products_project_domain")
     code = fields.Char(string="Code")
 
-    def _products_project_domain(self, is_project):
+    @api.depends('order_id', 'order_id.is_project')
+    def _products_project_domain(self):
         _logger.warning('ENTRÓ A LA FUNCIÓN')
         for record in self:
 
@@ -17,7 +18,7 @@ class SaleOrderLine(models.Model):
             _logger.warning('order_id: %s', record.order_id.is_project)
 
             
-            if is_project:
+            if record.order_id.is_project:
                 _logger.warning('IS PROJECT ES TRUE')
 
                 products = self.env['product.template'].search([
