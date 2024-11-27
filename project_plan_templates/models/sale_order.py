@@ -1,5 +1,7 @@
 from odoo import fields, models, api
 import json
+import logging
+logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
 
@@ -41,6 +43,7 @@ class SaleOrder(models.Model):
                     if line.product_id.project_plan_id:
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             if line.display_type == 'line_section':
+                                logger.warning(f"Section: {line.name}")
                                 plan_lines.append((0, 0, {
                                     'name': line.name,
                                     'display_type': line.display_type,
