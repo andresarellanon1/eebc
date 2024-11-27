@@ -31,6 +31,9 @@ class SaleOrder(models.Model):
         self.ensure_one()
         for sale in self:
             if sale.is_project:
+                sale.project_plan_lines = [(5, 0, 0)]
+                sale.project_picking_lines = [(5, 0, 0)]
+
                 sale.state = 'estimation'
                 plan_lines = []
                 picking_lines = []
@@ -55,12 +58,14 @@ class SaleOrder(models.Model):
                                 picking_lines.append((0, 0, {
                                     'name': line.name,
                                     'display_type': line.display_type,
-                                    'standar_price': False,
+                                    'product_id': False,
+                                    'quantity': False,
+                                    'standard_price': False,
                                     'subtotal': False
                                 }))
                             else:
                                 picking_lines.append((0, 0, {
-                                    'product_id': picking.product_id,
+                                    'product_id': picking.product_id.id,
                                     'quantity': picking.quantity,
                                     'standard_price': picking.standard_price,
                                     'subtotal': picking.subtotal
