@@ -12,6 +12,11 @@ class SaleOrderLine(models.Model):
     def _products_project_domain(self, is_project):
         _logger.warning('ENTRÓ A LA FUNCIÓN')
         for record in self:
+
+            _logger.warning('order_id: %s', record.order_id)
+            _logger.warning('order_id: %s', record.order_id.is_project)
+
+            
             if is_project:
                 _logger.warning('IS PROJECT ES TRUE')
 
