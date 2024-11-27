@@ -69,7 +69,8 @@ class ProjectPlanPickingLine(models.Model):
 
     display_type = fields.Selection(
         [
-            ('line_section', 'Section')
+            ('line_section', 'Section'),
+            ('line_note', 'Note'),
         ]
    )
     
