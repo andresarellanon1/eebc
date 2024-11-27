@@ -24,17 +24,12 @@ class SaleOrder(models.Model):
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
     total_product_cost = fields.Float(string="Total cost", compute='_compute_total_product_cost', default=0.0)
-    total_cost = fields.Float(compute='_compute_total_cost', store=True)
+    
 
-    @api.depends('order_line.product_id', 'order_line.product_uom_qty')
-    def _compute_total_product_cost(self):
-        for order in self:
-            total_cost = 0.0
-            for line in order.order_line:
-                # Calcular el costo de cada línea de producto
-                if line.product_id:
-                    total_cost += line.product_id.standard_price * line.product_uom_qty
-            order.total_product_cost = total_cost
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
 
             
     @api.onchange('is_project')
