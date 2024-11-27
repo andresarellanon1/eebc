@@ -103,6 +103,12 @@ class NoticeFileWizard(models.TransientModel):
                 'sale_order_id':self._context['sale_ids'],
                 'stock_move_id':self._context['stock_move_id'],
             })
+            
+            bool_notice_established = self.env['stock.move'].search([('id','=', self._context['stock_move_id'])]).notice_established
+            if bool_notice_established:
+                _logger.warning(f'Se cumple if de bool_notice_established, valor: {bool_notice_established}')
+                bool_notice_established = True
+                
         # Limpieza del contexto
         self = self.with_context(
             lot_ids=False
