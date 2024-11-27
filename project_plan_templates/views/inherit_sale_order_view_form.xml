@@ -12,6 +12,9 @@
             <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="action_create_project" string="Create project" invisible="state != 'estimation'"/>
             </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="replace">
+                <button name="action_cancel" type="object" string="Cancel" invisible="state not in ['draft', 'sent', 'sale', 'estimation'] or not id or locked" data-hotkey="x"/>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="before">
                 <field name="is_project" invisible="state in ('estimation', 'budget')"/>
                 <field name="project_name" invisible="is_project != True"/>
