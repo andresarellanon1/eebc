@@ -72,7 +72,8 @@ class ProjectPlanPickingLine(models.Model):
             ('line_section', 'Section'),
             ('line_note', 'Note'),
         ]
-   )
+    )
+    sequence = fields.Integer()
     
     # Updates the reserved quantity for products based on
     # task inventory lines. Verifies that the requested 
