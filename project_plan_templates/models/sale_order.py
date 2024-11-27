@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
 
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
-    total_product_cost = fields.Float(string="Total cost", compute='_compute_total_product_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_product_cost', default=0.0)
     
 
     @api.depends('project_picking_lines.subtotal')
