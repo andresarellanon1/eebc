@@ -18,6 +18,7 @@ class SelectNoticeWizard(models.TransientModel):
         'wizard.selection.line',
         'wizard_id',
         string='Avisos',
+         
     )
     quantity = fields.Float(string="Demanda total", readonly=True,)
     stock_move_id = fields.Many2one('stock.move', string='Traslado')
@@ -52,7 +53,8 @@ class SelectNoticeWizard(models.TransientModel):
                             'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id,
                             'product_id': wizard.stock_move_id.product_id.id,
                             # 'folio': notice.folio, ¿que sucedera con el folio?
-                            'purchase_order_id':self._context['purchase_order_id']
+                            'purchase_order_id':self._context['purchase_order_id'],
+                            'state': 'draft'
                         })]
                     })
         
@@ -91,6 +93,8 @@ class SelectNoticeWizard(models.TransientModel):
                     message += f"- {notice['name']}: {notice['available']} disponibles / {notice['established']} establecidos\n"
                 
                 raise ValidationError(message)
+
+# Requerimento(?) salidas parciales - Caso en el que la demanda total es mayor a la cantidad total de
 
 
 

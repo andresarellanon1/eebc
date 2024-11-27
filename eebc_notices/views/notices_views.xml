@@ -70,6 +70,8 @@
                                 <field name="folio"/>
                                 <field name="picking_code"/>
                                 <field name="origin"/>
+                                <field name="state"/>
+
                             </tree>
                         </field>
                     </page>
@@ -119,6 +121,8 @@
                 <field name="create_date"/>
                 <field name="quantity"/>
                 <field name="folio"/>
+                <field name="state"/>
+
 
                
             </tree>
