@@ -40,41 +40,40 @@ class SaleOrder(models.Model):
                 plan_lines = []
                 picking_lines = []
                 for line in sale.order_line:
-                    if line.product_id.project_plan_id:
-                        for plan in line.product_id.project_plan_id.project_plan_lines:
-                            if not line.display_type:
-                                plan_lines.append((0, 0, {
-                                    'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
-                                    'description': plan.description,
-                                    'task_timesheet_id': plan.task_timesheet_id.id,
-                                    'display_type': False
-                                }))
-                            else:
-                                logger.warning(f"Section: {line.name}")
-                                plan_lines.append((0, 0, {
-                                    'name': line.name,
-                                    'display_type': line.display_type,
-                                    'description': False,
-                                    'task_timesheet_id': False,
-                                }))
-                        for picking in line.product_id.project_plan_id.picking_lines:
-                            if not line.display_type:
-                                picking_lines.append((0, 0, {
-                                    'product_id': picking.product_id.id,
-                                    'quantity': picking.quantity,
-                                    'standard_price': picking.standard_price,
-                                    'subtotal': picking.subtotal,
-                                    'display_type': False
-                                }))
-                            else:
-                                picking_lines.append((0, 0, {
-                                    'name': line.name,
-                                    'display_type': line.display_type,
-                                    'product_id': False,
-                                    'quantity': False,
-                                    'standard_price': False,
-                                    'subtotal': False
-                                }))
+                    for plan in line.product_id.project_plan_id.project_plan_lines:
+                        if not line.display_type:
+                            plan_lines.append((0, 0, {
+                                'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
+                                'description': plan.description,
+                                'task_timesheet_id': plan.task_timesheet_id.id,
+                                'display_type': False
+                            }))
+                        else:
+                            logger.warning(f"Section: {line.name}")
+                            plan_lines.append((0, 0, {
+                                'name': line.name,
+                                'display_type': line.display_type,
+                                'description': False,
+                                'task_timesheet_id': False,
+                            }))
+                    for picking in line.product_id.project_plan_id.picking_lines:
+                        if not line.display_type:
+                            picking_lines.append((0, 0, {
+                                'product_id': picking.product_id.id,
+                                'quantity': picking.quantity,
+                                'standard_price': picking.standard_price,
+                                'subtotal': picking.subtotal,
+                                'display_type': False
+                            }))
+                        else:
+                            picking_lines.append((0, 0, {
+                                'name': line.name,
+                                'display_type': line.display_type,
+                                'product_id': False,
+                                'quantity': False,
+                                'standard_price': False,
+                                'subtotal': False
+                            }))
                 sale.project_plan_lines = plan_lines
                 sale.project_picking_lines = picking_lines
             else:
