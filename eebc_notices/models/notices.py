@@ -13,6 +13,7 @@ class Notices(models.Model):
         string='Recurso',
         comodel_name='product.product',
     )
+
     partner_id = fields.Many2one(
         string='Proveedor',
         comodel_name='res.partner',
@@ -103,7 +104,8 @@ class Notices(models.Model):
     @api.depends('history_ids.quantity')
     def _compute_quantity(self):
         for record in self:
-            record.quantity = sum(record.history_ids.mapped('quantity'))
+            approved_history = record.history_ids.filtered(lambda h: h.state == 'approved')
+            record.quantity = sum(approved_history.mapped('quantity'))
 
 
 
