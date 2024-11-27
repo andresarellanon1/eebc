@@ -80,7 +80,7 @@ class Notices(models.Model):
     def _compute_name(self):
         for record in self:
             # Concatenar 'Aviso' al valor del campo `notice`
-            record.name = f"Aviso: {record.notice}" if record.notice else "Aviso sin nombre"
+            record.name = f"Aviso {record.notice}" if record.notice else "Aviso sin nombre"
 
     @api.depends('history_ids')
     def _compute_series(self):
