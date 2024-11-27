@@ -20,6 +20,14 @@ class StockMove(models.Model):
         string="Mostrar botón de salida",
         compute='_compute_aviso_button_flags',
     )
+    
+    notice_established = fields.Boolean(string = 'Aviso establecido', 
+    default=False
+    )
+    
+    notice_selected = fields.Boolean(string = 'Aviso seleccionado', 
+    default=False
+    )
 
     @api.depends('product_id.attribute_line_ids', 'picking_type_id.code', 'product_id')
     def _compute_aviso_button_flags(self):
@@ -58,6 +66,7 @@ class StockMove(models.Model):
             'view_id': self.env.ref('eebc_notices.wizard_notice_file_view').id,  # Aquí se especifica el ID correcto de la vista
             'target': 'new',
             'context': {
+                'stock_move_id': self.id,
                 'product_id': self.product_id.id,  # Pasar valores por defecto
                 'cantidad':  self.product_uom_qty,
                 'proveedor': proveedor_name,  # Pasar el nombre del proveedor
