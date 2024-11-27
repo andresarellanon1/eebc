@@ -21,13 +21,11 @@
                         <field name="project_plan_lines" nolabel="1">
                             <tree editable="editable_bottom" style="width: 100%;">  <!-- Editable tree view for the planning lines -->
                                 <field name="name"/>  <!-- Name of the planning line -->
-                                <field name="chapter"/>  <!-- Chapter of the planning -->
                                 <field name="description"/>  <!-- Description of the task in the planning -->
                                 <field name="planned_date_begin" widget="daterange"/>  <!-- Planned start date -->
                                 <field name="planned_date_end" widget="daterange"/>  <!-- Planned end date -->
                                 <field name="partner_id" widget="many2many_avatar_user"/>  <!-- Responsible user associated -->
                                 <field name="task_timesheet_id" options="{'create': True}"/>  <!-- Related timesheet task, with option to create -->
-                                <field name="stage_id"/>  <!-- Stage of the task -->
                                 <!-- Button to preview the task -->
                                 <button name="action_preview_task" type="object" class="oe_highlight"
                                         string="Preview task"/>

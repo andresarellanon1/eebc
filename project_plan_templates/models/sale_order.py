@@ -19,6 +19,7 @@ class SaleOrder(models.Model):
         }
     )
 
+    project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     @api.onchange('is_project')
     def _products_domain(self):
         self.order_line._products_project_domain(self.is_project)
@@ -27,7 +28,23 @@ class SaleOrder(models.Model):
         self.ensure_one()
         for sale in self:
             if sale.is_project:
-                sale.state == 'estimation'
+                sale.state = 'estimation'
+                plan_lines = []
+                for line in sale.order_line:
+                    if line.product_id.project_plan_id:
+                        for plan in line.product_id.project_plan_id.project_plan_lines:
+                            if line.display_type == 'line_section':
+                                plan_lines.append((0, 0, {
+                                    'name': line.name,
+                                    'display_type': line.display_type
+                                }))
+                            else:
+                                plan_lines.append((0, 0, {
+                                    'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
+                                    'description': plan.description,
+                                    'task_timesheet_id': plan.task_timesheet_id.id,
+                                }))
+                sale.project_plan_lines = plan_lines
             else:
                 return super(SaleOrder, self).action_confirm()
 
