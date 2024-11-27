@@ -5,11 +5,15 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"></field>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="draft,estimation,budget,done" attrs="{'invisible': [('is_project', '=', False)]}"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale" attrs="{'invisible': [('is_project', '=', True)]}"/>
+            </xpath>
             <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="action_create_project" string="Create project" invisible="state != 'estimation'"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="before">
-                <field name="is_project"/>
+                <field name="is_project" invisible="state in ('estimation', 'budget')"/>
                 <field name="project_name" invisible="is_project != True"/>
             </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="replace">
@@ -21,7 +25,7 @@
             </xpath>
             <xpath expr="//page[@name='other_information']" position="after">
                 <page name="project_tasks" string="Project Tasks">
-                    <field name="project_plan_lines" nolabel="1" invisible="state != 'estimation' or state != 'budget'">
+                    <field name="project_plan_lines" nolabel="1" invisible="state not in ('estimation', 'budget')">
                         <tree editable="editable_bottom" style="width: 100%;">
                             <field name="name"/>
                             <field name="description"/>
