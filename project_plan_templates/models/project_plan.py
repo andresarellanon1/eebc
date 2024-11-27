@@ -83,7 +83,7 @@ class ProjectPlan(models.Model):
         for record in self:
             service = self.env['product.template'].search([
                 ('detailed_type', '=', 'service'),
-                ('service_tracking', '=', 'project_only'),
+                # ('service_tracking', '=', 'project_only'),
                 ('project_plan_id', '=', False),
                 ('sale_ok', '=', True),
             ])
