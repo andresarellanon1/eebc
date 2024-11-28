@@ -28,6 +28,8 @@
                         <div class="oe_title">
                             <label for="name"/>  
                             <h1><field name="name" class="w-100" required="1"/></h1>
+                            <field name="product_template_ids" string="Servicios" domain="[('id', 'in', service_project_domain)]"/>
+                            <field name="service_project_domain" invisible="1"/>
                         </div>
                         <notebook>  <!-- Tabbed sections within the form -->
 
@@ -39,12 +41,10 @@
                             <!-- Tasks Tab -->
                             <page name="tasks" string="Tasks">
                                 <field name="project_plan_lines" nolabel="1">
-                                    <tree editable="editable_bottom" style="width: 100%;">  
-                                        <field name="chapter"/>  <!-- Display the 'chapter' field for the task -->
+                                    <tree editable="editable_bottom" style="width: 100%;">
                                         <field name="name"/>  <!-- Display the 'name' field for the task -->
                                         <field name="description"/>  <!-- Display the 'description' field for the task -->
                                         <field name="task_timesheet_id" options="{'create': True}"/>  <!-- Allow creation of task timesheet -->
-                                        <field name="stage_id"/>  <!-- Display the 'stage_id' field for the task -->
                                     </tree>
                                 </field>
                             </page>

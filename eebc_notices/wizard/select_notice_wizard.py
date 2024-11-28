@@ -18,6 +18,7 @@ class SelectNoticeWizard(models.TransientModel):
         'wizard.selection.line',
         'wizard_id',
         string='Avisos',
+         
     )
     quantity = fields.Float(string="Demanda total", readonly=True,)
     stock_move_id = fields.Many2one('stock.move', string='Traslado')
@@ -42,52 +43,58 @@ class SelectNoticeWizard(models.TransientModel):
             self._check_quantities()
             for line in wizard.notice_ids:
                 for notice in line.notice_id:
-                    notice.sudo().write({
+                    notice.write({
                         'history_ids': [(0, 0, {
                             'location_id': wizard.stock_move_id.picking_id.location_id.id,
-                            'location_dest_id': wizard.stock_move_id.picking_id.location_dest_id.id,
+                            'location_dest': wizard.stock_move_id.picking_id.location_dest_id.id,
                             'quantity': line.quantity * (-1),
                             'picking_code': wizard.stock_move_id.picking_id.picking_type_code,
                             'origin': wizard.stock_move_id.picking_id.sale_id.name,
                             'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id,
                             'product_id': wizard.stock_move_id.product_id.id,
-                            'folio': notice.folio,
-                            'purchase_order_id':self._context['purchase_order_id']
+                            # 'folio': notice.folio, ¿que sucedera con el folio?
+                            'purchase_order_id':self._context['purchase_order_id'],
+                            'state': 'draft'
                         })]
                     })
+        
+        bool_notice_selected = self.env['stock.move'].search([('id','=',self.stock_move_id)])
+        
+        if bool_notice_selected:
+            _logger.warning(f'Se cumple if de bool_notice_selected, valor: {bool_notice_selected}')
+            bool_notice_selected = True
+            
 
         return {'type': 'ir.actions.act_window_close'}
+
+
+   
+
 
     @api.constrains('notice_ids')  # Decorador que valida automáticamente
     def _check_quantities(self):
         for wizard in self:
             total = sum(line.quantity for line in wizard.notice_ids)
-            _logger.warning('Valor de total: %s', total)
-
             if total != wizard.quantity:
                 raise ValidationError(
-                    f"La cantidad y la demanda deben coincidir. Cantidad asignada: {total} / Demanda: {wizard.quantity}"
+                    f"La cantidad y la demanda deben coincidir. Cantidad total asignada: {total} / Demanda: {wizard.quantity}"
                 )
             notices_list = []
-
-            for line in wizard.notice_ids:
-                _logger.warning(f'nombre {line.test_name} cantidad disponible: {line.quantity_available} cantidad establecida: {line.quantity}')
-        
+            for line in wizard.notice_ids:        
                 if line.quantity > line.quantity_available:
-                    _logger.warning('se cumpole if')
                     notices_list.append({
                         'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
                         'available': line.quantity_available,
-                    })
-            _logger.warning('Valor de lista: %s', notices_list)
-            
+                        'established': line.quantity
+                    })            
             if notices_list:
-                # Construir el mensaje del ValidationError
                 message = "Los siguientes avisos tienen cantidades que exceden las disponibles:\n"
                 for notice in notices_list:
-                    message += f"- {notice['name']}: {notice['available']} disponibles\n"
+                    message += f"- {notice['name']}: {notice['available']} disponibles / {notice['established']} establecidos\n"
                 
                 raise ValidationError(message)
+
+# Requerimento(?) salidas parciales - Caso en el que la demanda total es mayor a la cantidad total de
 
 
 

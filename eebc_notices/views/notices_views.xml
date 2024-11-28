@@ -4,6 +4,42 @@
 <!-- VIEWS -->
 
 
+
+    <record id="notices_history_form" model="ir.ui.view">
+        <field name="name">notices.history.form</field>
+        <field name="model">notices.history</field>
+        <field name="arch" type="xml">
+            <form string="Historial de Avisos">
+                <sheet>
+                    <group>
+                        <group string="Ubicaciones">
+                            <field name="location_id" string="Ubicación Origen" readonly="1"/>
+                            <field name="location_dest" string="Ubicación Destino" readonly="1"/>
+                        </group>
+                        <group string="Información del Producto">
+                            <field name="product_id" string="Recurso" readonly="1"/>
+                            <field name="quantity" string="Cantidad" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Referencias">
+                            <field name="notice_id" string="Aviso Relacionado" readonly="1"/>
+                            <field name="folio" string="Folio" readonly="1"/>
+                            <field name="origin" string="Documento Origen" readonly="1"/>
+                        </group>
+                        <group string="Operaciones Relacionadas">
+                            <field name="picking_code" string="Tipo de Operación" readonly="1"/>
+                            <field name="purchase_order_id" string="Orden de Compra" readonly="1"/>
+                            <field name="sale_order_id" string="Orden de Venta" readonly="1"/>
+                            <field name="picking_id" string="Traslado" readonly="1"/>
+                            <field name="stock_move_id" string="Movimiento de Inventario" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
    
     <record id="notices_notices_form" model="ir.ui.view">
     <field name="name">notices.notices.form</field>
@@ -26,7 +62,7 @@
                     <!-- Pestaña de Historial -->
                     <page string="Historial de Movimientos">
                         <field name="history_ids">
-                            <tree string="Historial de Movimientos">
+                            <tree string="Historial de Movimientos" create="0">
                                 <field name="location_dest"/>
                                 <field name="location_id"/>
                                 <field name="product_id"/>
@@ -34,6 +70,8 @@
                                 <field name="folio"/>
                                 <field name="picking_code"/>
                                 <field name="origin"/>
+                                <field name="state"/>
+
                             </tree>
                         </field>
                     </page>
@@ -83,6 +121,8 @@
                 <field name="create_date"/>
                 <field name="quantity"/>
                 <field name="folio"/>
+                <field name="state"/>
+
 
                
             </tree>
