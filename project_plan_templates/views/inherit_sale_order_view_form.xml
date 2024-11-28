@@ -52,7 +52,14 @@
                             <field name="subtotal"/>
                         </tree>
                     </field>
-                    <!-- Este es el lugar adecuado para usar el <group> fuera del <tree> -->
+                    <group>
+                        <group colspan="4">
+                            <field colspan="2" name="note" nolabel="1"/>  <!-- 'note' field for additional information -->
+                        </group>
+                        <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                            <field name="plan_total_cost"/>  <!-- Display the 'plan_total_cost' field -->
+                        </group>
+                    </group>
             </page>
 
             </xpath>
