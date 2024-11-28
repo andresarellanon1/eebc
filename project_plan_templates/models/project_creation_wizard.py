@@ -30,7 +30,7 @@ class ProjectCreation(models.TransientModel):
 
     plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
-    #@api.onchange('sale_order_id')
+    @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
         for record in self:
             
