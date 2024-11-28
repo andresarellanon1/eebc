@@ -118,10 +118,10 @@ class ProjectPlan(models.Model):
             product_template = self.env['product.template'].browse(vals['product_template_id'])
             if product_template and product_template.project_plan_id != self:
                 product_template.write({'project_plan_id': self.id})
-        else:
-            for record in self:
-                service = self.env['product.template'].search([
-                    ('project_plan_id', '=', record.id),
-                ])
-                service.write({'project_plan_id': False})
+        # else:
+        #     for record in self:
+        #         service = self.env['product.template'].search([
+        #             ('project_plan_id', '=', record.id),
+        #         ])
+        #         service.write({'project_plan_id': False})
         return result

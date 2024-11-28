@@ -27,10 +27,10 @@ class ProductTemplate(models.Model):
             plan = self.env['project.plan'].browse(vals['project_plan_id'])
             if plan:
                 plan.write({'product_template_id': self.id})
-        else:
-            for record in self:
-                plan = self.env['project.plan'].search([
-                    ('product_template_id', '=', record.id),
-                ])
-                plan.write({'product_template_id': False})
+        # else:
+        #     for record in self:
+        #         plan = self.env['project.plan'].search([
+        #             ('product_template_id', '=', record.id),
+        #         ])
+        #         plan.write({'product_template_id': False})
         return result
