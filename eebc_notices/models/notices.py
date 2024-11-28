@@ -30,7 +30,7 @@ class Notices(models.Model):
     
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
-    quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
+    quantity = fields.Float(string='Cantidad', compute='_compute_quantity')
     
     # stock_location_origin_id = fields.Many2one(
     #     string='Almacen origen',
