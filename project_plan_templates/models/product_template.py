@@ -28,3 +28,11 @@ class ProductTemplate(models.Model):
                         "El plan de proyecto '%s' ya está asignado a otro servicio. "
                         "No puede haber más de un servicio con el mismo plan de proyecto."
                     ) % record.project_plan_id.display_name)
+
+    @api.model
+    def write(self, vals):
+        self.project_plan_id.product_template_ids = self.id
+
+        result = super(ProductTemplate, self).write(vals)
+        # Lógica después de la actualización
+        return result

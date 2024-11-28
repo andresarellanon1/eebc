@@ -15,6 +15,9 @@
                 <field name="picking_type_codigo" invisible="0"/>
                 <field name="show_outgoing_button" invisible="0"/>
                 <field name="show_incoming_button" invisible="0"/>
+                <field name="notice_established" invisible="0"/>
+                <field name="notice_selected" invisible="0"/>
+
 
 
 
@@ -22,28 +25,16 @@
                         type="object" 
                         string="Agregar aviso" 
                         icon="fa-area-chart"
-                        invisible="not show_incoming_button"/>
+                        invisible="not show_incoming_button or notice_established == True"/>
 
                  <button name="action_show_outgoing" 
                         type="object" 
                         string="Seleccionar aviso" 
                         icon="fa-area-chart"
-                        invisible="not show_outgoing_button"/>
+                        invisible="not show_outgoing_button or notice_selected == True"/>
             </xpath>
         </field>
     </record>
 
-    <record id="form_view_inherit_stock_picking_type_notice" model="ir.ui.view">
-        <field name="name">form.view.inherit.stock.picking.type.notice</field>
-        <field name="model">stock.picking.type</field>
-        <field name="inherit_id" ref="stock.view_picking_type_form"/>
-        <field name="arch" type="xml">
-
-             <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='general']/group[@name='first']/group[1]/field[@name='auto_show_reception_report']" position="after">
-                <field name="notice_approve"/>
-            </xpath>
-
-         </field>
-    </record>
-
+   
 </odoo>

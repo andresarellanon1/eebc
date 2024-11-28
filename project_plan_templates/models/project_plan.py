@@ -10,6 +10,8 @@ class ProjectPlan(models.Model):
 
     # Basic template information fields
     name = fields.Char(string="Name", required=True)
+    product_template_ids = fields.Many2one('product.template',string="Servicio")
+    service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
     project_name = fields.Char(string="Project name")
     description = fields.Html(string="Description")
     note = fields.Char()
@@ -75,3 +77,22 @@ class ProjectPlan(models.Model):
     def _compute_total_cost(self):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
+
+    @api.onchange('service_project_domain','product_template_ids.project_plan_id')
+    def _compute_service_project_domain(self):
+        for record in self:
+            service = self.env['product.template'].search([
+                ('detailed_type', '=', 'service'),
+                ('service_tracking', '=', 'project_only'),
+                ('project_plan_id', '=', False),
+                ('sale_ok', '=', True),
+            ])
+            record.service_project_domain = [(6, 0, service.ids)]
+
+    @api.model
+    def write(self, vals):
+        self.product_template_ids.project_plan_id = self.id
+
+        result = super(ProjectPlan, self).write(vals)
+        # Lógica después de la actualización
+        return result
