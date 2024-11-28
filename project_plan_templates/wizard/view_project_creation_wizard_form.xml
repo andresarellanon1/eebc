@@ -30,7 +30,6 @@
                                                 <field name="planned_date_end" widget="daterange"/>
                                                 <field name="partner_id" widget="many2many_avatar_user"/>
                                                 <field name="task_timesheet_id" options="{'create': True}"/>
-                                                <field name="stage_id"/>
                                             </tree>
                                         </field>
                                     </div>
