@@ -124,6 +124,8 @@ class Notices(models.Model):
 
     @api.depends('history_ids.quantity')
     def _compute_quantity(self):
+        _logger.warning('Entramos a compute de quantity')
+        
         for record in self:
             approved_history = record.history_ids.filtered(lambda h: h.state == 'approved')
             _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')
