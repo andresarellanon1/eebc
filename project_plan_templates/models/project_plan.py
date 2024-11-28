@@ -11,7 +11,7 @@ class ProjectPlan(models.Model):
 
     # Basic template information fields
     name = fields.Char(string="Name", required=True)
-    product_template_ids = fields.Many2one('product.template', string="Servicio")
+    service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
     project_name = fields.Char(string="Project name")
     description = fields.Html(string="Description")
     note = fields.Char()
