@@ -36,7 +36,6 @@ class SaleOrder(models.Model):
         for record in self:
             record.order_line = None
 
-
     def action_confirm(self):
         self.ensure_one()
         for sale in self:
@@ -101,8 +100,6 @@ class SaleOrder(models.Model):
             'type': 'ir.actions.act_window',  # Action type to open a new window
             'target': 'new',  # Open in a modal ('new' window)
             'context': {
-                'default_wizard_plan_lines': [(6, 0, self.project_plan_lines.ids)],
-                'default_wizard_picking_lines': [(6, 0, self.project_picking_lines.ids)],
                 'default_sale_order_id': self.id  # Pass the current sale order ID
             }
         }
