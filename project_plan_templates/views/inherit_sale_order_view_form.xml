@@ -10,7 +10,7 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale" invisible="is_project != False"/>
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="after">
-                <button name="action_create_project" type="object" string="Create project" invisible="state != 'estimation'"/>
+                <button name="action_open_create_project_wizard" type="object" string="Create project" invisible="state != 'estimation'"/>
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="replace">
                 <button name="action_cancel" type="object" string="Cancel" invisible="state not in ['draft', 'sent', 'sale', 'estimation'] or not id or locked" data-hotkey="x"/>
