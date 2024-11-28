@@ -61,7 +61,6 @@ class SaleOrder(models.Model):
                             'subtotal': False
                         }))
                     else:
-                        plan_pickings.append
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             plan_lines.append((0, 0, {
                                 'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",

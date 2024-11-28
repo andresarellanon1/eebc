@@ -30,54 +30,49 @@ class ProjectCreation(models.TransientModel):
 
     plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
-    @api.onchange('project_plan_pickings')
-    def _compute_wizard_picking_lines(self):
+    @api.onchange('sale_order_id')
+    def _compute_wizard_lines(self):
         for record in self:
-            # Limpiamos las líneas previas
+            
             record.wizard_picking_lines = [(5, 0, 0)]
-
-            # Construimos las líneas del wizard basándonos en los picking seleccionados
-            wizard_lines = []
-            for picking in record.project_plan_pickings:
-                for line in picking.project_picking_lines:
-                    wizard_lines.append((0, 0, {
-                        'product_id': line.product_id.id,
-                        'quantity': line.quantity,
-                    }))
-
-            # Asignamos las líneas creadas al campo del wizard
-            record.wizard_picking_lines = wizard_lines
-
-    # Updates wizard plan lines when the project plan template changes. 
-    # This method first clears any existing wizard plan lines using a (5, 0, 0)
-    # command, then creates new wizard lines by copying all relevant fields from
-    # the project plan template lines. For relations that could be null (task_timesheet_id, partner_id, stage_id),
-    # conditional assignments are used to handle potential empty values.
-    
-    @api.onchange('project_plan_id')
-    def _compute_wizard_plan_lines(self):
-        for record in self:
-            if record.project_plan_id:
-                # Clear existing wizard plan lines
-                record.wizard_plan_lines = [(5, 0, 0)]
-
-                # Prepare new wizard lines from project plan template
-                wizard_lines = []
-                for line in record.project_plan_id.project_plan_lines:
-                    wizard_lines.append((0, 0, {
+            record.wizard_plan_lines = [(5, 0, 0)]
+            
+            plan_lines = []
+            picking_lines = []
+            for line in record.sale_order_id.project_picking_lines:
+                if line.display_type == 'line_section':
+                    plan_lines.append((0, 0, {
                         'name': line.name,
-                        'chapter': line.chapter,
-                        'description': line.description,
-                        'use_project_task': line.use_project_task,
-                        'planned_date_begin': line.planned_date_begin,
-                        'planned_date_end': line.planned_date_end,
-                        'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
-                        'partner_id': line.partner_id.id if line.partner_id else False,
-                        'stage_id': line.stage_id.id if line.stage_id else False,
+                        'display_type': line.display_type,
+                        'description': False,
+                        'task_timesheet_id': False,
+                    }))
+                    picking_lines.append((0, 0, {
+                        'name': line.name,
+                        'display_type': line.display_type,
+                        'product_id': False,
+                        'quantity': False,
+                        'standard_price': False,
+                        'subtotal': False
+                    }))
+                else:
+                    plan_lines.append((0, 0, {
+                        'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
+                        'description': plan.description,
+                        'task_timesheet_id': plan.task_timesheet_id.id,
+                        'display_type': False
+                    }))
+                    picking_lines.append((0, 0, {
+                        'name': picking.product_id.name,
+                        'product_id': picking.product_id.id,
+                        'quantity': picking.quantity,
+                        'standard_price': picking.standard_price,
+                        'subtotal': picking.subtotal,
+                        'display_type': False
                     }))
 
-                # Update record with new wizard lines
-                record.wizard_plan_lines = wizard_lines
+            record.wizard_plan_lines = plan_lines
+            record.wizard_picking_lines = picking_lines
 
     # The `action_confirm_create_project` method creates a complete project based on the template.
     # It prepares the data for project tasks and inventory items by filtering lines with 
@@ -96,8 +91,7 @@ class ProjectCreation(models.TransientModel):
             'planned_date_begin': line.planned_date_begin,
             'planned_date_end': line.planned_date_end,
             'task_timesheet_id': line.task_timesheet_id.id,
-            'partner_id': [(6, 0, line.partner_id.ids)],
-            'stage_id': line.stage_id,
+            'partner_id': [(6, 0, line.partner_id.ids)]
         }) for line in self.wizard_plan_lines if line.use_project_task]
 
         picking_lines_vals = [(0, 0, {

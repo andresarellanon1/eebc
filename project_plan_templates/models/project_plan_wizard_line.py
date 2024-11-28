@@ -12,10 +12,6 @@ class ProjectPlanWizardLine(models.TransientModel):
     wizard_id = fields.Many2one('project.creation.wizard', string="Wizard")
     partner_id = fields.Many2many('res.users', string="Assigned user")
     task_timesheet_id = fields.Many2one('task.timesheet', string="Timesheet Task")
-    stage_id = fields.Many2one(
-        'project.task.type',
-        string="Stage",
-    )
 
     # Task information fields
     name = fields.Char(string="Name")
@@ -27,3 +23,12 @@ class ProjectPlanWizardLine(models.TransientModel):
     # Schedule fields
     planned_date_begin = fields.Datetime(string="Planned Start Date")
     planned_date_end = fields.Datetime(string="Planned End Date")
+
+    display_type = fields.Selection(
+        [
+            ('line_section', 'Section'),
+            ('line_note', 'Note'),
+        ]
+    )
+    code = fields.Char(string="Code")
+    sequence = fields.Integer()
