@@ -1,6 +1,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
+
 # Model for managing project plan templates. This model serves
 # as a template for creating projects, containing project configurations,
 # task lines, and inventory picking templates with their associated costs.
@@ -10,12 +11,11 @@ class ProjectPlan(models.Model):
 
     # Basic template information fields
     name = fields.Char(string="Name", required=True)
-    product_template_ids = fields.Many2one('product.template',string="Servicio")
     service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
     project_name = fields.Char(string="Project name")
     description = fields.Html(string="Description")
     note = fields.Char()
-    
+
     # Relation fields for project and line management
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
     project_id = fields.Many2one('project.project', string="Project")
@@ -27,10 +27,30 @@ class ProjectPlan(models.Model):
     )
 
     # Computed and company fields
-    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
 
-    # This method allows the user to select multiple inventory templates 
+    product_template_id = fields.Many2one(
+        'product.template',
+        string="Servicio",
+        ondelete='restrict',  # Evita borrar accidentalmente el producto
+        inverse_name='project_plan_id'
+    )
+
+    @api.constrains('product_template_id')
+    def _check_unique_product_template(self):
+        for record in self:
+            if record.product_template_id:
+                duplicates = self.search([
+                    ('product_template_id', '=', record.product_template_id.id),
+                    ('id', '!=', record.id)
+                ])
+                if duplicates:
+                    raise ValidationError(
+                        "El producto '%s' ya está asignado a otro proyecto." % record.product_template_id.display_name
+                    )
+
+    # This method allows the user to select multiple inventory templates
     # and combines all their products into a single list. 
     # When the 'project_plan_pickings' field is modified, 
     # it aggregates the 'project_picking_lines' from each selected picking 
@@ -78,7 +98,7 @@ class ProjectPlan(models.Model):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
 
-    @api.onchange('service_project_domain','product_template_ids.project_plan_id')
+    @api.onchange('service_project_domain', 'product_template_ids.project_plan_id')
     def _compute_service_project_domain(self):
         for record in self:
             service = self.env['product.template'].search([
@@ -91,8 +111,8 @@ class ProjectPlan(models.Model):
 
     @api.model
     def write(self, vals):
-        self.product_template_ids.project_plan_id = self.id
-
         result = super(ProjectPlan, self).write(vals)
-        # Lógica después de la actualización
+        for record in self:
+            if 'product_template_id' in vals and record.product_template_id:
+                record.product_template_id.write({'project_plan_id': record.id})
         return result

@@ -6,33 +6,33 @@ from odoo.exceptions import ValidationError
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    project_plan_id = fields.Many2one('project.plan', string="Project plan template")
+    project_plan_id = fields.Many2one(
+        'project.plan',
+        string="Plantilla de proyecto",
+        ondelete='restrict',  # Evita borrar accidentalmente el proyecto
+        inverse_name='product_template_id'
+    )
 
     # Validates that a project plan template is uniquely assigned to a service product.
     # Prevents multiple service products from being associated with the same project plan.
     # Raises a ValidationError if a duplicate is found.
     @api.constrains('project_plan_id')
-    def _check_unique_project_plan_per_service(self):
+    def _check_unique_project_plan(self):
         for record in self:
             if record.project_plan_id:
-                # Search for duplicate service products with the same project plan
-                duplicate = self.env['product.template'].search([
-                    ('project_plan_id', '=', record.project_plan_id.id),  
-                    ('id', '!=', record.id),  
-                    ('type', '=', 'service') 
+                duplicates = self.search([
+                    ('project_plan_id', '=', record.project_plan_id.id),
+                    ('id', '!=', record.id)
                 ])
-                
-                # Raise validation error if duplicate found
-                if duplicate:
-                    raise ValidationError((
-                        "El plan de proyecto '%s' ya está asignado a otro servicio. "
-                        "No puede haber más de un servicio con el mismo plan de proyecto."
-                    ) % record.project_plan_id.display_name)
+                if duplicates:
+                    raise ValidationError(
+                        "El proyecto '%s' ya está asignado a otro producto." % record.project_plan_id.display_name
+                    )
 
     @api.model
     def write(self, vals):
-        self.project_plan_id.product_template_ids = self.id
-
         result = super(ProductTemplate, self).write(vals)
-        # Lógica después de la actualización
+        for record in self:
+            if 'project_plan_id' in vals and record.project_plan_id:
+                record.project_plan_id.write({'product_template_id': record.id})
         return result
