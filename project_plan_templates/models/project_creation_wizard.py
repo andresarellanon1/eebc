@@ -9,7 +9,7 @@ class ProjectCreation(models.TransientModel):
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
     is_sale_order = fields.Boolean(default=False)
-    sale_order_id = fields.Many2one('sale.order')
+    sale_order_id = fields.Many2one('sale.order', string="Sale order")
     
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
