@@ -122,5 +122,5 @@ class ProjectPlan(models.Model):
             service = self.env['product.template'].search([
                 ('project_plan_id', '=', self.id),
             ])
-            service.write({'project_plan_id': None})
+            service.write({'project_plan_id': False})
         return result
