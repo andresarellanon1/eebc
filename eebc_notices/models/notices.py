@@ -27,6 +27,7 @@ class Notices(models.Model):
     )
     
 
+
     
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
