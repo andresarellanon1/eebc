@@ -39,7 +39,7 @@ class ProjectCreation(models.TransientModel):
 
             plan_lines = []
             picking_lines = []
-            for line in record.sale_order_id.project_picking_lines:
+            for line in record.sale_order_id.project_plan_lines:
                 if line.display_type == 'line_section':
                     plan_lines.append((0, 0, {
                         'name': line.name,
@@ -47,6 +47,16 @@ class ProjectCreation(models.TransientModel):
                         'description': False,
                         'task_timesheet_id': False,
                     }))
+                else:
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'task_timesheet_id': line.task_timesheet_id.id,
+                        'display_type': False
+                    }))
+
+            for line in record.sale_order_id.project_picking_lines:
+                if line.display_type == 'line_section':
                     picking_lines.append((0, 0, {
                         'name': line.name,
                         'display_type': line.display_type,
@@ -56,18 +66,12 @@ class ProjectCreation(models.TransientModel):
                         'subtotal': False
                     }))
                 else:
-                    plan_lines.append((0, 0, {
-                        'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
-                        'description': plan.description,
-                        'task_timesheet_id': plan.task_timesheet_id.id,
-                        'display_type': False
-                    }))
                     picking_lines.append((0, 0, {
-                        'name': picking.product_id.name,
-                        'product_id': picking.product_id.id,
-                        'quantity': picking.quantity,
-                        'standard_price': picking.standard_price,
-                        'subtotal': picking.subtotal,
+                        'name': line.product_id.name,
+                        'product_id': line.product_id.id,
+                        'quantity': line.quantity,
+                        'standard_price': line.standard_price,
+                        'subtotal': line.subtotal,
                         'display_type': False
                     }))
 
