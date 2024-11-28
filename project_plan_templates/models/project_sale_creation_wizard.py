@@ -11,6 +11,7 @@ class ProjectSaleWizard(models.TransientModel):
    # Selection fields for products and services
    products_ids = fields.Many2many('product.template', 'wizard_product_template_rel',)
    services_ids = fields.Many2many('product.template', 'wizard_service_template_rel',)
+   project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
    
    # Reference fields
    sale_order_id = fields.Many2one('sale.order', string='Sale Order', required=True)

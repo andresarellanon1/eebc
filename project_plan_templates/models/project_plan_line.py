@@ -32,10 +32,12 @@ class ProjectLines(models.Model):
 
    display_type = fields.Selection(
         [
-            ('line_section', 'Section')
+            ('line_section', 'Section'),
+            ('line_note', 'Note'),
         ]
    )
    code = fields.Char(string="Code")
+   sequence = fields.Integer()
 
    # This method creates a temporary task preview for the current line.
    # It generates a task with the line's configuration including:

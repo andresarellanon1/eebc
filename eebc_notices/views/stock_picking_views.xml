@@ -36,17 +36,5 @@
         </field>
     </record>
 
-    <record id="form_view_inherit_stock_picking_type_notice" model="ir.ui.view">
-        <field name="name">form.view.inherit.stock.picking.type.notice</field>
-        <field name="model">stock.picking.type</field>
-        <field name="inherit_id" ref="stock.view_picking_type_form"/>
-        <field name="arch" type="xml">
-
-             <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='general']/group[@name='first']/group[1]/field[@name='auto_show_reception_report']" position="after">
-                <field name="notice_approve"/>
-            </xpath>
-
-         </field>
-    </record>
-
+   
 </odoo>
