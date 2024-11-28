@@ -79,6 +79,7 @@ class NoticeFileWizard(models.TransientModel):
                         'origin': self._context['origin'],
                         'purchase_order_id':self._context['purchase_order_id'],
                         'sale_order_id':self._context['sale_ids'],
+                        'state': 'draft',
 
                     })]
                 })
@@ -102,6 +103,8 @@ class NoticeFileWizard(models.TransientModel):
                 'purchase_order_id':self._context['purchase_order_id'],
                 'sale_order_id':self._context['sale_ids'],
                 'stock_move_id':self._context['stock_move_id'],
+                'state': 'draft',
+                
             })
             
             bool_notice_established = self.env['stock.move'].search([('id','=', self._context['stock_move_id'])]).notice_established

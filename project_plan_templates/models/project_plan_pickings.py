@@ -46,13 +46,15 @@ class ProjectPlanPickingLine(models.Model):
     _name = 'project.picking.lines'
     _description = 'Project picking lines'
 
+    name = fields.Char()
     # Relation fields for project and template linking
     project_id = fields.Many2one('project.project', string="Project Plan")
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
-    product_id = fields.Many2one('product.product', string="Product", required=True)
+    product_id = fields.Many2one('product.product', string="Product")
+    sale_order_id = fields.Many2one('sale.order')
     
     # Quantity and location tracking fields
-    quantity = fields.Float(string="Quantity", required=True)
+    quantity = fields.Float(string="Quantity")
     location_id = fields.Many2one('stock.location', string="Location")
     reservado = fields.Float(string='Reservado')
     
@@ -65,6 +67,14 @@ class ProjectPlanPickingLine(models.Model):
     standard_price = fields.Float(string="Price", compute='_compute_standard_price')
     subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal")
     total_cost = fields.Float(string="Total cost")
+
+    display_type = fields.Selection(
+        [
+            ('line_section', 'Section'),
+            ('line_note', 'Note'),
+        ]
+    )
+    sequence = fields.Integer()
     
     # Updates the reserved quantity for products based on
     # task inventory lines. Verifies that the requested 
