@@ -31,5 +31,5 @@ class ProductTemplate(models.Model):
             plan = self.env['project.plan'].search([
                 ('product_template_id', '=', self.id),
             ])
-            service.write({'product_template_id': None})
+            plan.write({'product_template_id': None})
         return result
