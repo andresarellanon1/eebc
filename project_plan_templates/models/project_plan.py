@@ -12,7 +12,6 @@ class ProjectPlan(models.Model):
     # Basic template information fields
     name = fields.Char(string="Name", required=True)
     product_template_ids = fields.Many2one('product.template', string="Servicio")
-    service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
     project_name = fields.Char(string="Project name")
     description = fields.Html(string="Description")
     note = fields.Char()
@@ -31,7 +30,27 @@ class ProjectPlan(models.Model):
     plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
 
-    # This method allows the user to select multiple inventory templates 
+    product_template_id = fields.Many2one(
+        'product.template',
+        string="Servicio",
+        ondelete='restrict',  # Evita borrar accidentalmente el producto
+        inverse_name='project_plan_id'
+    )
+
+    @api.constrains('product_template_id')
+    def _check_unique_product_template(self):
+        for record in self:
+            if record.product_template_id:
+                duplicates = self.search([
+                    ('product_template_id', '=', record.product_template_id.id),
+                    ('id', '!=', record.id)
+                ])
+                if duplicates:
+                    raise ValidationError(
+                        "El producto '%s' ya está asignado a otro proyecto." % record.product_template_id.display_name
+                    )
+
+    # This method allows the user to select multiple inventory templates
     # and combines all their products into a single list. 
     # When the 'project_plan_pickings' field is modified, 
     # it aggregates the 'project_picking_lines' from each selected picking 
@@ -92,9 +111,8 @@ class ProjectPlan(models.Model):
 
     @api.model
     def write(self, vals):
-        res = super(ProjectPlan, self).write(vals)
-        if 'product_template_ids' in vals:
-            for record in self:
-                if record.product_template_ids:
-                    record.product_template_ids.project_plan_id = record.id
-        return res
+        result = super(ProjectPlan, self).write(vals)
+        for record in self:
+            if 'product_template_id' in vals and record.product_template_id:
+                record.product_template_id.write({'project_plan_id': record.id})
+        return result
