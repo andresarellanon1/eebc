@@ -27,4 +27,9 @@ class ProductTemplate(models.Model):
             plan = self.env['project.plan'].browse(vals['project_plan_id'])
             if plan:
                 plan.write({'product_template_id': self.id})
+        else:
+            plan = self.env['project.plan'].search([
+                ('product_template_id', '=', self.id),
+            ])
+            service.write({'product_template_id': None})
         return result
