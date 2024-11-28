@@ -20,7 +20,7 @@ class StockPicking(models.Model):
             move_ids = picking.move_ids_without_package.mapped('id')
 
             # Filtrar los historiales relacionados y actualizar su estado
-            histories = self.env['history.model'].search([('stock_move_id', 'in', move_ids)])
+            histories = self.env['notices.history'].search([('stock_move_id', 'in', move_ids)])
             histories.write({'state': 'approved'})  # Cambia a tu estado deseado
 
         return res
@@ -36,7 +36,7 @@ class StockPicking(models.Model):
             move_ids = picking.move_ids_without_package.mapped('id')
 
             # Filtrar los historiales relacionados y actualizar su estado
-            histories = self.env['history.model'].search([('stock_move_id', 'in', move_ids)])
+            histories = self.env['notices.history'].search([('stock_move_id', 'in', move_ids)])
             histories.write({'state': 'canceled'})  # Cambia los estados a 'canceled'
 
         return res
