@@ -93,19 +93,18 @@ class SaleOrder(models.Model):
 
     def action_create_project(self):
         self.ensure_one()
-        for sale in self:
 
-            return {
-                'name': 'Projects creation',  # Wizard title
-                'view_mode': 'form',  # Display mode for the wizard
-                'res_model': 'project.creation.wizard',  # Model for the wizard
-                'type': 'ir.actions.act_window',  # Action type to open a new window
-                'target': 'new',  # Open in a modal ('new' window)
-                'context': {
-                    'default_wizard_plan_lines': [(6, 0, sale.project_plan_lines)],
-                    'default_wizard_picking_lines': [(6, 0, sale.project_picking_lines)],
-                    'default_sale_order_id': self.id  # Pass the current sale order ID
-                }
+        return {
+            'name': 'Projects creation',  # Wizard title
+            'view_mode': 'form',  # Display mode for the wizard
+            'res_model': 'project.creation.wizard',  # Model for the wizard
+            'type': 'ir.actions.act_window',  # Action type to open a new window
+            'target': 'new',  # Open in a modal ('new' window)
+            'context': {
+                'default_wizard_plan_lines': [(6, 0, sale.project_plan_lines)],
+                'default_wizard_picking_lines': [(6, 0, sale.project_picking_lines)],
+                'default_sale_order_id': self.id  # Pass the current sale order ID
             }
+        }
         
         
