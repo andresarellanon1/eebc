@@ -3,6 +3,13 @@ from odoo import fields, models, api
 
 # campo nuevo total computada(sumatoria de la cantidad de historiales)   - lISTO!!
 
+
+
+
+import logging
+
+_logger = logging.getLogger(__name__)
+
 class Notices(models.Model):
 
     _name= 'notices.notices'    
@@ -13,10 +20,14 @@ class Notices(models.Model):
         string='Recurso',
         comodel_name='product.product',
     )
+
     partner_id = fields.Many2one(
         string='Proveedor',
         comodel_name='res.partner',
     )
+    
+
+    
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
     quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
@@ -26,7 +37,12 @@ class Notices(models.Model):
     #     comodel_name='stock.location',        
     #     compute='_compute_location_origin_id'
     # )
-
+    name = fields.Char(
+            string='Name',
+            compute='_compute_name',
+            store=True,
+            readonly=True
+        )
 
     lot_ids = fields.Many2many(
         string='Series',
@@ -67,6 +83,12 @@ class Notices(models.Model):
                     
     
     
+    @api.depends('notice')
+    def _compute_name(self):
+        for record in self:
+            # Concatenar 'Aviso' al valor del campo `notice`
+            record.name = f"Aviso {record.notice}" if record.notice else "Aviso sin nombre"
+
     @api.depends('history_ids')
     def _compute_series(self):
         for notice in self:
@@ -103,7 +125,9 @@ class Notices(models.Model):
     @api.depends('history_ids.quantity')
     def _compute_quantity(self):
         for record in self:
-            record.quantity = sum(record.history_ids.mapped('quantity'))
+            approved_history = record.history_ids.filtered(lambda h: h.state == 'approved')
+            _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')
+            record.quantity = sum(approved_history.mapped('quantity'))
 
 
 

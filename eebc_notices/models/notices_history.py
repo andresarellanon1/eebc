@@ -36,6 +36,13 @@ class NoticesHistory(models.Model):
         comodel_name='stock.move'
     )
     folio = fields.Char(string='Folio')
+
+    state = fields.Selection(
+        string='state',
+        selection=[('draft', 'Borrador'), ('approved', 'Aprovado'), ('canceled', 'Cancelado')]
+    )
+    
+
     
 
 

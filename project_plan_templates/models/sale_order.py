@@ -24,11 +24,13 @@ class SaleOrder(models.Model):
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
-
+    
+            
     @api.onchange('is_project')
     def _onchange_is_project(self):
         for record in self:
             record.order_line = None
+
 
     def action_confirm(self):
         self.ensure_one()
