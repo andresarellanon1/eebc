@@ -3,6 +3,13 @@ from odoo import fields, models, api
 
 # campo nuevo total computada(sumatoria de la cantidad de historiales)   - lISTO!!
 
+
+
+
+import logging
+
+_logger = logging.getLogger(__name__)
+
 class Notices(models.Model):
 
     _name= 'notices.notices'    
@@ -119,6 +126,7 @@ class Notices(models.Model):
     def _compute_quantity(self):
         for record in self:
             approved_history = record.history_ids.filtered(lambda h: h.state == 'approved')
+            _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')
             record.quantity = sum(approved_history.mapped('quantity'))
 
 
