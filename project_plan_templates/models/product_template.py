@@ -31,8 +31,9 @@ class ProductTemplate(models.Model):
 
     @api.model
     def write(self, vals):
-        self.project_plan_id.product_template_ids = self.id
-
-        result = super(ProductTemplate, self).write(vals)
-        # Lógica después de la actualización
-        return result
+        res = super(ProductTemplate, self).write(vals)
+        if 'project_plan_id' in vals:
+            for record in self:
+                if record.project_plan_id:
+                    record.project_plan_id.product_template_ids = [(4, record.id)]
+        return res
