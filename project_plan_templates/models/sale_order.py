@@ -24,14 +24,7 @@ class SaleOrder(models.Model):
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
-    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_product_cost', default=0.0)
     
-
-    @api.depends('project_picking_lines.subtotal')
-    def _compute_total_cost(self):
-        for plan in self:
-            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
-
             
     @api.onchange('is_project')
     def _onchange_is_project(self):
