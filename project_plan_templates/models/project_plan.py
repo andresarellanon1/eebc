@@ -1,6 +1,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
+
 # Model for managing project plan templates. This model serves
 # as a template for creating projects, containing project configurations,
 # task lines, and inventory picking templates with their associated costs.
@@ -10,12 +11,12 @@ class ProjectPlan(models.Model):
 
     # Basic template information fields
     name = fields.Char(string="Name", required=True)
-    product_template_ids = fields.Many2one('product.template',string="Servicio")
+    product_template_ids = fields.Many2one('product.template', string="Servicio")
     service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
     project_name = fields.Char(string="Project name")
     description = fields.Html(string="Description")
     note = fields.Char()
-    
+
     # Relation fields for project and line management
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
     project_id = fields.Many2one('project.project', string="Project")
@@ -27,7 +28,7 @@ class ProjectPlan(models.Model):
     )
 
     # Computed and company fields
-    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
 
     # This method allows the user to select multiple inventory templates 
@@ -78,7 +79,7 @@ class ProjectPlan(models.Model):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
 
-    @api.onchange('service_project_domain','product_template_ids.project_plan_id')
+    @api.onchange('service_project_domain', 'product_template_ids.project_plan_id')
     def _compute_service_project_domain(self):
         for record in self:
             service = self.env['product.template'].search([
@@ -89,9 +90,11 @@ class ProjectPlan(models.Model):
             ])
             record.service_project_domain = [(6, 0, service.ids)]
 
-    # def write(self, vals):
-    #     self._compute_service_project_domain
-    #     self.product_template_ids.project_plan_id = self.id
-    #     result = super(ProjectPlan, self).write(vals)
-    #     return result
-
+    @api.model
+    def write(self, vals):
+        res = super(ProjectPlan, self).write(vals)
+        if 'product_template_ids' in vals:
+            for record in self:
+                if record.product_template_ids:
+                    record.product_template_ids.project_plan_id = record.id
+        return res
