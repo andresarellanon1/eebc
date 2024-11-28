@@ -17,6 +17,15 @@ class ProjectPickingWizardLine(models.TransientModel):
     subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal")
     total_cost = fields.Float(string="Total cost")
 
+    display_type = fields.Selection(
+        [
+            ('line_section', 'Section'),
+            ('line_note', 'Note'),
+        ]
+    )
+    code = fields.Char(string="Code")
+    sequence = fields.Integer()
+
     @api.depends('product_id')
     def _compute_standard_price(self):
         for record in self:

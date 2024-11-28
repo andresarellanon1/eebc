@@ -66,7 +66,6 @@ class SaleOrder(models.Model):
                             'subtotal': False
                         }))
                     else:
-                        plan_pickings.append
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             plan_lines.append((0, 0, {
                                 'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
@@ -96,3 +95,22 @@ class SaleOrder(models.Model):
         self.ensure_one()
         for sale in self:
             sale.state == 'budget'
+
+        # If there are any service products that require a project
+        if services_ids:
+            # Open the project creation wizard and pass the necessary context
+            return {
+                'name': 'Projects creation',  # Wizard title
+                'view_mode': 'form',  # Display mode for the wizard
+                'res_model': 'project.sale.creation.wizard',  # Model for the wizard
+                'type': 'ir.actions.act_window',  # Action type to open a new window
+                'target': 'new',  # Open in a modal ('new' window)
+                'context': {
+                    'default_wizard_plan_lines': [(6, 0, project_plan_lines)],  # Pass service IDs to wizard
+                    'default_wizard_picking_lines': [(6, 0, project_picking_lines)],  # Pass other product IDs
+                    'default_sale_order_id': self.id  # Pass the current sale order ID
+                }
+            }
+        else:
+            # If no service products require a project, proceed with the default action
+            return super(SaleOrder, self).action_confirm()
