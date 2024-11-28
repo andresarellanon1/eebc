@@ -31,7 +31,7 @@ class Notices(models.Model):
     
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
-    quantity = fields.Float(string='Cantidad', compute='_compute_quantity')
+    quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
     
     # stock_location_origin_id = fields.Many2one(
     #     string='Almacen origen',
@@ -123,7 +123,7 @@ class Notices(models.Model):
                         invoice_set.add(invoice.id)
             notice.sale_invoice_ids = [(6, 0, list(invoice_set))]
 
-    @api.depends('history_ids.quantity')
+    @api.depends('history_ids.quantity, history_ids.state')
     def _compute_quantity(self):
         _logger.warning('Entramos a compute de quantity')
         
