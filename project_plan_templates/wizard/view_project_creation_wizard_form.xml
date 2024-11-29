@@ -23,8 +23,9 @@
                                     <div style="100%">
                                         <field name="wizard_plan_lines" nolabel="1">
                                             <tree editable="bottom" style="width: 100%;">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="display_type" column_invisible="True"/>
                                                 <field name="name"/>
-                                                <field name="chapter"/>
                                                 <field name="description"/>
                                                 <field name="use_project_task"/>
                                                 <field name="planned_date_begin" widget="daterange"/>
@@ -42,6 +43,8 @@
                                     <div>
                                         <field name="wizard_picking_lines">
                                             <tree editable="editable_bottom" style="width: 100%;">  
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="display_type" column_invisible="True"/>
                                                 <field name="product_id"/>  
                                                 <field name="quantity"/>  
                                                 <field name="standard_price"/> 
