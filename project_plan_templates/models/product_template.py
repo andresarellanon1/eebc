@@ -27,7 +27,7 @@ class ProductTemplate(models.Model):
             if plan:
                 plan.write({'product_template_id': self.id})
         else:
-            self.project_plan_id.write{{'product_template_id': False }}
+            self.project_plan_id.write({'product_template_id': False })
             self.project_plan_id = False
 
         result = super(ProductTemplate, self).write(vals)
