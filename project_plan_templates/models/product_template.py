@@ -22,9 +22,9 @@ class ProductTemplate(models.Model):
 
     @api.model
     def write(self, vals):
+        result = super(ProductTemplate, self).write(vals)
         if 'project_plan_id' in vals and vals['project_plan_id']:
             plan = self.env['project.plan'].browse(vals['project_plan_id'])
             if plan:
                 plan.write({'product_template_id': self.id})
-        result = super(ProductTemplate, self).write(vals)
         return result
