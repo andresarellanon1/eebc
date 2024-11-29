@@ -40,12 +40,13 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         self.ensure_one()
 
-        if not self.project_name:
-            raise ValidationError(
-                f"Project name needed."
-            )
+        
         for sale in self:
             if sale.is_project:
+                if not sale.project_name:
+                    raise ValidationError(
+                        f"Project name needed."
+                    )
                 sale.project_plan_pickings = [(5, 0, 0)]
                 sale.project_plan_lines = [(5, 0, 0)]
                 sale.project_picking_lines = [(5, 0, 0)]
