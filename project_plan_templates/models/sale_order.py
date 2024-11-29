@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+from odoo.exceptions import UserError, ValidationError
 import json
 import logging
 logger = logging.getLogger(__name__)
@@ -38,6 +39,11 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         self.ensure_one()
+
+        if not self.project_name:
+            raise ValidationError(
+                f"Project name needed."
+            )
         for sale in self:
             if sale.is_project:
                 sale.project_plan_pickings = [(5, 0, 0)]
@@ -54,6 +60,10 @@ class SaleOrder(models.Model):
                             'name': line.name,
                             'display_type': line.display_type,
                             'description': False,
+                            'use_project_task': True,
+                            'planned_date_begin': False,
+                            'planned_date_end': False,
+                            'partner_id': False,
                             'task_timesheet_id': False,
                         }))
                         picking_lines.append((0, 0, {
@@ -69,6 +79,10 @@ class SaleOrder(models.Model):
                             plan_lines.append((0, 0, {
                                 'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
                                 'description': plan.description,
+                                'use_project_task': True,
+                                'planned_date_begin': False,
+                                'planned_date_end': False,
+                                'partner_id': [(6, 0. plan.partner_id.ids)],
                                 'task_timesheet_id': plan.task_timesheet_id.id,
                                 'display_type': False
                             }))
@@ -100,7 +114,8 @@ class SaleOrder(models.Model):
             'type': 'ir.actions.act_window',  
             'target': 'new',  
             'context': {
-                'default_sale_order_id': self.id 
+                'default_sale_order_id': self.id,
+                'default_project_name': self.project_name
             }
         }
         
