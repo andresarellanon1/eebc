@@ -27,8 +27,8 @@ class ProductTemplate(models.Model):
             if plan:
                 plan.write({'product_template_id': self.id})
         else:
-            self.project_plan_id.write({'product_template_id': False })
-            self.project_plan_id = False
-
+            if self.project_plan_id.product_template_id:
+                self.project_plan_id.write({'product_template_id': False })
+                self.project_plan_id = False  # Elimina la referencia
         result = super(ProductTemplate, self).write(vals)
         return result
