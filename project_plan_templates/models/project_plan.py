@@ -111,10 +111,14 @@ class ProjectPlan(models.Model):
     # Prevents recursion when saving both project plan and product template changes.
     @api.model
     def write(self, vals):
-        result = super(ProjectPlan, self).write(vals)
         # Evitar recursión infinita: Actualizar solo cuando sea necesario
         if 'product_template_id' in vals and vals['product_template_id']:
             product_template = self.env['product.template'].browse(vals['product_template_id'])
             if product_template and product_template.project_plan_id != self:
                 product_template.write({'project_plan_id': self.id})
+        else:
+            if self.product_template_id.project_plan_id:
+                self.product_template_id.project_plan_id = False
+                self.product_template_id = False
+        result = super(ProjectPlan, self).write(vals)
         return result

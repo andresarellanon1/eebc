@@ -36,7 +36,6 @@ class SaleOrder(models.Model):
         for record in self:
             record.order_line = None
 
-
     def action_confirm(self):
         self.ensure_one()
         for sale in self:
@@ -66,7 +65,6 @@ class SaleOrder(models.Model):
                             'subtotal': False
                         }))
                     else:
-                        plan_pickings.append
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             plan_lines.append((0, 0, {
                                 'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
@@ -92,7 +90,18 @@ class SaleOrder(models.Model):
             else:
                 return super(SaleOrder, self).action_confirm()
 
-    def action_create_project(self):
+    def action_open_create_project_wizard(self):
         self.ensure_one()
-        for sale in self:
-            sale.state == 'budget'
+
+        return {
+            'name': 'Projects creation',  # Wizard title
+            'view_mode': 'form',  # Display mode for the wizard
+            'res_model': 'project.creation.wizard',  # Model for the wizard
+            'type': 'ir.actions.act_window',  # Action type to open a new window
+            'target': 'new',  # Open in a modal ('new' window)
+            'context': {
+                'default_sale_order_id': self.id  # Pass the current sale order ID
+            }
+        }
+        
+        

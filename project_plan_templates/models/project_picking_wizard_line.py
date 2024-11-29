@@ -6,6 +6,7 @@ class ProjectPickingWizardLine(models.TransientModel):
 
     wizard_creation_id = fields.Many2one('project.creation.wizard')
 
+    name = fields.Char(string="Name")
     product_id = fields.Many2one('product.product', string="Product", required=True)
     quantity = fields.Float(string="Quantity", required=True)
     location_id = fields.Many2one('stock.location', string="Location")
@@ -16,6 +17,15 @@ class ProjectPickingWizardLine(models.TransientModel):
     standard_price = fields.Float(string="Price", compute='_compute_standard_price')
     subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal")
     total_cost = fields.Float(string="Total cost")
+
+    display_type = fields.Selection(
+        [
+            ('line_section', 'Section'),
+            ('line_note', 'Note'),
+        ]
+    )
+    code = fields.Char(string="Code")
+    sequence = fields.Integer()
 
     @api.depends('product_id')
     def _compute_standard_price(self):
