@@ -21,13 +21,14 @@ class ProductTemplate(models.Model):
 
     @api.model
     def write(self, vals):
+        project = self.project_plan_id
+        result = super(ProductTemplate, self).write(vals)
         if 'project_plan_id' in vals and vals['project_plan_id']:
             plan = self.env['project.plan'].browse(vals['project_plan_id'])
             if plan:
                 plan.write({'product_template_id': self.id})
         else:
-            if self.project_plan_id.product_template_id:
-                self.project_plan_id.product_template_id = False 
-                self.project_plan_id = False  # Elimina la referencia
-        result = super(ProductTemplate, self).write(vals)
+            if project.product_template_id:
+                project.product_template_id = False 
+        
         return result
