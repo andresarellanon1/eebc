@@ -74,7 +74,7 @@ class SaleOrder(models.Model):
                             'standard_price': False,
                             'subtotal': False
                         }))
-                        
+
                     else:
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             plan_lines.append((0, 0, {
@@ -83,7 +83,7 @@ class SaleOrder(models.Model):
                                 'use_project_task': True,
                                 'planned_date_begin': False,
                                 'planned_date_end': False,
-                                'partner_id': [(6, 0. plan.partner_id.ids)],
+                                'partner_id': [(6, 0, plan.partner_id.ids)],
                                 'task_timesheet_id': plan.task_timesheet_id.id,
                                 'display_type': False
                             }))
