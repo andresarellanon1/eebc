@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- Define an action to open project plan templates -->
         <record id="plan_template_action" model="ir.actions.act_window">
-            <field name="name">Plantillas de planes de proyecto</field> <!-- Name of the action -->
-            <field name="res_model">project.plan</field> <!-- Model associated with the action (project.plan) -->
-            <field name="view_mode">tree,form</field> <!-- Views for displaying the action (tree and form views) -->
+            <field name="name">Plantillas de planes de proyecto</field>
+            <field name="res_model">project.plan</field>
+            <field name="view_mode">tree,form</field> 
         </record>
 
-        <!-- Define an action to open inventory operation templates -->
         <record id="plan_picking_templates_action" model="ir.actions.act_window">
-            <field name="name">Plantillas de operaciones de inventario</field> <!-- Name of the action -->
-            <field name="res_model">project.plan.pickings</field> <!-- Model associated with the action (project.plan.pickings) -->
-            <field name="view_mode">tree,form</field> <!-- Views for displaying the action (tree and form views) -->
+            <field name="name">Plantillas de operaciones de inventario</field>
+            <field name="res_model">project.plan.pickings</field> 
+            <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- Define an action to open timesheet templates -->
         <record id="plan_timesheet_templates_action" model="ir.actions.act_window">
-            <field name="name">Plantillas de hojas de horas</field> <!-- Name of the action -->
-            <field name="res_model">task.timesheet</field> <!-- Model associated with the action (task.timesheet) -->
-            <field name="view_mode">tree,form</field> <!-- Views for displaying the action (tree and form views) -->
+            <field name="name">Plantillas de hojas de horas</field> 
+            <field name="res_model">task.timesheet</field> 
+            <field name="view_mode">tree,form</field> 
         </record>
 
-        <!-- Define a new menu item for project configuration -->
         <record id="menu_project_config" model="ir.ui.menu">
-            <field name="name">Plantillas</field> <!-- Name of the menu -->
-            <field name="parent_id" ref="project.menu_main_pm" /> <!-- Parent menu item to place it under the main project menu -->
-            <field name="sequence" eval="20" /> <!-- Position of the menu item relative to other items -->
+            <field name="name">Plantillas</field> 
+            <field name="parent_id" ref="project.menu_main_pm" /> 
+            <field name="sequence" eval="20" /> 
         </record>
 
-        <!-- Add a menu item for project plan templates under the 'Plantillas' menu -->
         <menuitem
             id="menu_project_config_new_option"
             name="Plantillas de planes de proyecto"
@@ -38,7 +33,6 @@
             sequence="20" 
         />
 
-        <!-- Add a menu item for inventory operation templates under the 'Plantillas' menu -->
         <menuitem
             id="project_picking_option"
             name="Plantillas de operaciones de inventario"
@@ -47,7 +41,6 @@
             sequence="20" 
         />
 
-        <!-- Add a menu item for timesheet templates under the 'Plantillas' menu -->
         <menuitem 
             id="timesheet_option"
             name="Plantillas de hojas de horas"
