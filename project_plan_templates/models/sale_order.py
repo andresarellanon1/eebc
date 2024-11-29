@@ -9,6 +9,7 @@ class SaleOrder(models.Model):
 
     is_project = fields.Boolean(string="Is project?", default=False)
     project_name = fields.Char(string="Project title")
+    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
 
     state = fields.Selection(
         selection_add=[
@@ -25,7 +26,11 @@ class SaleOrder(models.Model):
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
     
-            
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+
     @api.onchange('is_project')
     def _onchange_is_project(self):
         for record in self:
@@ -89,13 +94,13 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         return {
-            'name': 'Projects creation',  # Wizard title
-            'view_mode': 'form',  # Display mode for the wizard
-            'res_model': 'project.creation.wizard',  # Model for the wizard
-            'type': 'ir.actions.act_window',  # Action type to open a new window
-            'target': 'new',  # Open in a modal ('new' window)
+            'name': 'Projects creation',  
+            'view_mode': 'form',  
+            'res_model': 'project.creation.wizard',  
+            'type': 'ir.actions.act_window',  
+            'target': 'new',  
             'context': {
-                'default_sale_order_id': self.id  # Pass the current sale order ID
+                'default_sale_order_id': self.id 
             }
         }
         

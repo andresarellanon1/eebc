@@ -9,13 +9,11 @@ class ProjectTask(models.Model):
         string="stock"
     )
 
-    # Defining a method to open an inventory wizard
-    # (a form to create an inventory related to the task).
+
     def action_open_task_inventory_wizard(self):
         self.ensure_one()
         
-        # Returns a dictionary representing an action
-        # to open a new window with a specific form view.
+
         return {
             'name': 'Create inventory', 
             'view_mode': 'form',

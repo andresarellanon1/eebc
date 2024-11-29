@@ -78,12 +78,7 @@ class ProjectCreation(models.TransientModel):
             record.wizard_plan_lines = plan_lines
             record.wizard_picking_lines = picking_lines
 
-    # The `action_confirm_create_project` method creates a complete project based on the template.
-    # It prepares the data for project tasks and inventory items by filtering lines with 
-    # 'use_project_task' enabled and gathers the necessary details for each line.
-    # It then creates the project with tasks, timesheets, and inventory items,
-    # and opens the new project in a form view.
-
+    
     def action_confirm_create_project(self):
         self.ensure_one()
 
@@ -141,10 +136,7 @@ class ProjectCreation(models.TransientModel):
                 'target': 'current',
             }
 
-    # The `create_project_tasks` method generates tasks for the project using only 
-    # the filtered lines with 'use_project_task' enabled. It fetches associated 
-    # timesheets and organizes tasks into stages based on `stage_id`. If a line 
-    # doesn’t have a `stage_id`, it assigns the task to a default "Extras" stage.
+    
 
     def create_project_tasks(self, project):
         current_task_type = None
@@ -172,10 +164,7 @@ class ProjectCreation(models.TransientModel):
                     'timesheet_ids': timesheet_data,
                 })
 
-    # The `get_or_create_task_type` method retrieves or creates a task stage 
-    # (task type) based on the `stage_id` provided. If the stage doesn't exist,
-    # it creates a new one and links it to the project. If the stage already exists, 
-    # it simply assigns the task to this existing stage.
+    
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
