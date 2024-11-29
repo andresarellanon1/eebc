@@ -27,6 +27,7 @@ class Notices(models.Model):
     )
     
 
+
     
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
@@ -122,8 +123,10 @@ class Notices(models.Model):
                         invoice_set.add(invoice.id)
             notice.sale_invoice_ids = [(6, 0, list(invoice_set))]
 
-    @api.depends('history_ids.quantity')
+    @api.depends( 'history_ids.state')
     def _compute_quantity(self):
+        _logger.warning('Entramos a compute de quantity')
+        
         for record in self:
             approved_history = record.history_ids.filtered(lambda h: h.state == 'approved')
             _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')

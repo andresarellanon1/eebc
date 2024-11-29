@@ -10,7 +10,7 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale" invisible="is_project != False"/>
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="after">
-                <button name="action_create_project" string="Create project" invisible="state != 'estimation'"/>
+                <button name="action_open_create_project_wizard" type="object" string="Create project" invisible="state != 'estimation'"/>
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="replace">
                 <button name="action_cancel" type="object" string="Cancel" invisible="state not in ['draft', 'sent', 'sale', 'estimation'] or not id or locked" data-hotkey="x"/>
@@ -52,7 +52,14 @@
                             <field name="subtotal"/>
                         </tree>
                     </field>
-                    <!-- Este es el lugar adecuado para usar el <group> fuera del <tree> -->
+                    <group>
+                        <group colspan="4">
+                            <field colspan="2" name="note" nolabel="1"/>  <!-- 'note' field for additional information -->
+                        </group>
+                        <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                            <field name="plan_total_cost"/>  <!-- Display the 'plan_total_cost' field -->
+                        </group>
+                    </group>
             </page>
 
             </xpath>
