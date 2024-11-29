@@ -58,11 +58,11 @@ class SelectNoticeWizard(models.TransientModel):
                         })]
                     })
         
-        bool_notice_selected = self.env['stock.move'].search([('id','=',self.stock_move_id)])
+        # bool_notice_selected = self.env['stock.move'].search([('id','=',self.stock_move_id)])
         
-        if bool_notice_selected:
-            _logger.warning(f'Se cumple if de bool_notice_selected, valor: {bool_notice_selected}')
-            bool_notice_selected = True
+        # if bool_notice_selected:
+        #     _logger.warning(f'Se cumple if de bool_notice_selected, valor: {bool_notice_selected}')
+        #     bool_notice_selected = True
             
 
         return {'type': 'ir.actions.act_window_close'}

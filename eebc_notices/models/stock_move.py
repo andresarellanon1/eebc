@@ -21,13 +21,13 @@ class StockMove(models.Model):
         compute='_compute_aviso_button_flags',
     )
     
-    notice_established = fields.Boolean(string = 'Aviso establecido', 
-    default=False
-    )
+    # notice_established = fields.Boolean(string = 'Aviso establecido', 
+    # default=False
+    # )
     
-    notice_selected = fields.Boolean(string = 'Aviso seleccionado', 
-    default=False
-    )
+    # notice_selected = fields.Boolean(string = 'Aviso seleccionado', 
+    # default=False
+    # )
 
     @api.depends('product_id.attribute_line_ids', 'picking_type_id.code', 'product_id')
     def _compute_aviso_button_flags(self):
