@@ -45,13 +45,21 @@ class ProjectCreation(models.TransientModel):
                         'name': line.name,
                         'display_type': line.display_type,
                         'description': False,
+                        'use_project_task': True,
+                        'planned_date_begin': False,
+                        'planned_date_end': False,
+                        'partner_id': False,
                         'task_timesheet_id': False,
                     }))
                 else:
                     plan_lines.append((0, 0, {
                         'name': line.name,
-                        'description': line.description,
-                        'task_timesheet_id': line.task_timesheet_id.id,
+                        'description': plan.description,
+                        'use_project_task': True,
+                        'planned_date_begin': False,
+                        'planned_date_end': False,
+                        'partner_id': [(6, 0, plan.partner_id.ids)],
+                        'task_timesheet_id': plan.task_timesheet_id.id,
                         'display_type': False
                     }))
 
