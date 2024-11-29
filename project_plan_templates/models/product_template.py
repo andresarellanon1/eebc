@@ -29,6 +29,6 @@ class ProductTemplate(models.Model):
         result = super(ProductTemplate, self).write(vals)
 
         if self.project_plan_id.product_template_id:
-            self.project_plan_id.product_template_id = False s
+            self.project_plan_id.product_template_id = False
         
         return result
