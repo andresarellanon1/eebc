@@ -19,8 +19,14 @@ class StockPicking(models.Model):
             # Obtener los `stock_move_id` de las líneas de `move_ids_without_package`
             move_ids = picking.move_ids_without_package.mapped('id')
 
+            _logger.warning('move_ids: %s', move_ids)
+
+
             # Filtrar los historiales relacionados y actualizar su estado
             histories = self.env['notices.history'].search([('stock_move_id', 'in', move_ids)])
+
+            _logger.warning('histories: %s', histories)
+
             histories.write({'state': 'approved'})  # Cambia a tu estado deseado
 
         return res
