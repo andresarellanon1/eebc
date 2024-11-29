@@ -9,6 +9,7 @@ class SaleOrder(models.Model):
 
     is_project = fields.Boolean(string="Is project?", default=False)
     project_name = fields.Char(string="Project title")
+    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
 
     state = fields.Selection(
         selection_add=[
@@ -25,12 +26,15 @@ class SaleOrder(models.Model):
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
     
-            
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+
     @api.onchange('is_project')
     def _onchange_is_project(self):
         for record in self:
             record.order_line = None
-
 
     def action_confirm(self):
         self.ensure_one()
@@ -61,7 +65,6 @@ class SaleOrder(models.Model):
                             'subtotal': False
                         }))
                     else:
-                        plan_pickings.append
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             plan_lines.append((0, 0, {
                                 'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
@@ -87,7 +90,18 @@ class SaleOrder(models.Model):
             else:
                 return super(SaleOrder, self).action_confirm()
 
-    def action_create_project(self):
+    def action_open_create_project_wizard(self):
         self.ensure_one()
-        for sale in self:
-            sale.state == 'budget'
+
+        return {
+            'name': 'Projects creation',  # Wizard title
+            'view_mode': 'form',  # Display mode for the wizard
+            'res_model': 'project.creation.wizard',  # Model for the wizard
+            'type': 'ir.actions.act_window',  # Action type to open a new window
+            'target': 'new',  # Open in a modal ('new' window)
+            'context': {
+                'default_sale_order_id': self.id  # Pass the current sale order ID
+            }
+        }
+        
+        
