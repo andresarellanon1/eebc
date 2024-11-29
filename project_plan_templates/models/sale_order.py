@@ -74,6 +74,7 @@ class SaleOrder(models.Model):
                             'standard_price': False,
                             'subtotal': False
                         }))
+                        
                     else:
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             plan_lines.append((0, 0, {
