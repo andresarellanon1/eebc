@@ -1,21 +1,19 @@
 from odoo import fields, models, api
 from datetime import datetime
 
-# Model for managing project plan lines. Each line represents a potential 
-# task that can be created in a project, containing all necessary information 
-# like scheduling, assignees, descriptions and time tracking configurations.
+
 class ProjectLines(models.Model):
    _name = 'project.plan.line'
    _description = 'Project plan lines'
 
-   # Basic information fields
+   
    name = fields.Char(string="Name")
    chapter = fields.Char(string="Chapter")
    clave = fields.Integer(string="Task id")
    description = fields.Char(string="Description")
    use_project_task = fields.Boolean(default=True, string="Use task")
 
-   # Relation fields
+   
    project_plan_id = fields.Many2one('project.plan', string="Project plan")
    origin_project_id = fields.Many2one('project.project', string="Project")
    stage_id = fields.Many2one(
@@ -26,7 +24,7 @@ class ProjectLines(models.Model):
    task_timesheet_id = fields.Many2one('task.timesheet', string="Timesheet")
    sale_order_id = fields.Many2one('sale.order', string="Origin")
 
-   # Scheduling fields
+  
    planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Begin date")
    planned_date_end = fields.Datetime(default=fields.Date.context_today, string="End date")
 
@@ -39,14 +37,7 @@ class ProjectLines(models.Model):
    code = fields.Char(string="Code")
    sequence = fields.Integer()
 
-   # This method creates a temporary task preview for the current line.
-   # It generates a task with the line's configuration including:
-   # - Task name and description
-   # - Assigned users
-   # - Planned start and end dates
-   # The preview is shown in a modal form view without being permanently
-   # saved to the project, allowing users to visualize how the task
-   # will appear before actual creation.
+   
    def action_preview_task(self):
        user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
 

@@ -94,13 +94,13 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         return {
-            'name': 'Projects creation',  # Wizard title
-            'view_mode': 'form',  # Display mode for the wizard
-            'res_model': 'project.creation.wizard',  # Model for the wizard
-            'type': 'ir.actions.act_window',  # Action type to open a new window
-            'target': 'new',  # Open in a modal ('new' window)
+            'name': 'Projects creation',  
+            'view_mode': 'form',  
+            'res_model': 'project.creation.wizard',  
+            'type': 'ir.actions.act_window',  
+            'target': 'new',  
             'context': {
-                'default_sale_order_id': self.id  # Pass the current sale order ID
+                'default_sale_order_id': self.id 
             }
         }
         
