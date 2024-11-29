@@ -117,9 +117,8 @@ class ProjectPlan(models.Model):
             if product_template and product_template.project_plan_id != self:
                 product_template.write({'project_plan_id': self.id})
         else:
-            # Eliminar la relación en el product_template
-            self.product_template_id.write({'project_plan_id': False})
-            self.product_template_id = False  # Elimina la referencia
-
+            if self.product_template_id.project_plan_id:
+                self.product_template_id.write({'project_plan_id': False})
+                self.product_template_id = False  # Elimina la referencia
         result = super(ProjectPlan, self).write(vals)
         return result
