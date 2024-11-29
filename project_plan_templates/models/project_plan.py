@@ -118,7 +118,7 @@ class ProjectPlan(models.Model):
                 product_template.write({'project_plan_id': self.id})
         else:
             if self.product_template_id.project_plan_id:
-                self.product_template_id.write({'project_plan_id': False})
-                self.product_template_id = False  # Elimina la referencia
+                self.product_template_id.project_plan_id = False
+                self.product_template_id = False
         result = super(ProjectPlan, self).write(vals)
         return result
