@@ -40,28 +40,29 @@ class ProjectCreation(models.TransientModel):
             plan_lines = []
             picking_lines = []
             for line in record.sale_order_id.project_plan_lines:
-                if line.display_type == 'line_section':
-                    plan_lines.append((0, 0, {
-                        'name': line.name,
-                        'display_type': line.display_type,
-                        'description': False,
-                        'use_project_task': True,
-                        'planned_date_begin': False,
-                        'planned_date_end': False,
-                        'partner_id': False,
-                        'task_timesheet_id': False,
-                    }))
-                else:
-                    plan_lines.append((0, 0, {
-                        'name': line.name,
-                        'description': line.description,
-                        'use_project_task': True,
-                        'planned_date_begin': False,
-                        'planned_date_end': False,
-                        'partner_id': [(6, 0, line.partner_id.ids)],
-                        'task_timesheet_id': line.task_timesheet_id.id,
-                        'display_type': False
-                    }))
+                if line.use_project_task:
+                    if line.display_type == 'line_section':
+                        plan_lines.append((0, 0, {
+                            'name': line.name,
+                            'display_type': line.display_type,
+                            'description': False,
+                            'use_project_task': True,
+                            'planned_date_begin': False,
+                            'planned_date_end': False,
+                            'partner_id': False,
+                            'task_timesheet_id': False,
+                        }))
+                    else:
+                        plan_lines.append((0, 0, {
+                            'name': line.name,
+                            'description': line.description,
+                            'use_project_task': True,
+                            'planned_date_begin': line.panned_date.begin,
+                            'planned_date_end': line.planned_date_end,
+                            'partner_id': [(6, 0, line.partner_id.ids)],
+                            'task_timesheet_id': line.task_timesheet_id.id,
+                            'display_type': False
+                        }))
 
             for line in record.sale_order_id.project_picking_lines:
                 if line.display_type == 'line_section':
