@@ -17,7 +17,9 @@ class StockPicking(models.Model):
         # Iterar sobre los pickings validados
         for picking in self:
             # Obtener los `stock_move_id` de las líneas de `move_ids_without_package`
-            move_ids = picking.move_ids_without_package.mapped('id')
+            move_ids = (line.move_id for line in picking.move_ids_without_package)
+            
+            # picking.move_ids_without_package.mapped('id')
 
             _logger.warning('move_ids: %s', move_ids)
 
