@@ -65,7 +65,7 @@ class SelectNoticeWizard(models.TransientModel):
                                 'product_id': wizard.stock_move_id.product_id.id,
                                 'purchase_order_id': self._context.get('purchase_order_id'),
                                 'state': 'draft',
-                                'stock_move_id': wizard.stock_move_id,
+                                'stock_move_id': self._context['stock_move_id'],
 
                             })]
                         })
