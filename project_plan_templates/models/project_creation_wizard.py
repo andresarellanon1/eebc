@@ -65,8 +65,8 @@ class ProjectCreation(models.TransientModel):
         #     'quantity': line.quantity,
         # }) for line in self.wizard_picking_lines]
 
-        project_plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
-        picking_line_vals = self.prep_picking_lines(record.sale_order_id.project_picking_line)
+        project_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+        picking_line_vals = self.prep_picking_lines(self.sale_order_id.project_picking_line)
 
         project_vals = {
             'name': self.project_name,
