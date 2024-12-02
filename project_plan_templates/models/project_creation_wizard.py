@@ -12,6 +12,7 @@ class ProjectCreation(models.TransientModel):
     description = fields.Html(string="Description")
     is_sale_order = fields.Boolean(default=False)
     sale_order_id = fields.Many2one('sale.order', string="Sale order")
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
     
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
@@ -48,22 +49,6 @@ class ProjectCreation(models.TransientModel):
     
     def action_confirm_create_project(self):
         self.ensure_one()
-
-        # project_plan_lines_vals = [(0, 0, {
-        #     'name': line.name,
-        #     'chapter': line.chapter,
-        #     'description': line.description,
-        #     'use_project_task': line.use_project_task,
-        #     'planned_date_begin': line.planned_date_begin,
-        #     'planned_date_end': line.planned_date_end,
-        #     'task_timesheet_id': line.task_timesheet_id.id,
-        #     'partner_id': [(6, 0, line.partner_id.ids)]
-        # }) for line in self.wizard_plan_lines if line.use_project_task]
-
-        # picking_lines_vals = [(0, 0, {
-        #     'product_id': line.product_id.id,
-        #     'quantity': line.quantity,
-        # }) for line in self.wizard_picking_lines]
 
         project_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
         picking_line_vals = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
@@ -109,10 +94,11 @@ class ProjectCreation(models.TransientModel):
         for line in self.wizard_plan_lines:
             if line.display_type:
                 current_task_type = self.get_or_create_task_type(line.name, project)
-            else:
-                current_task_type = self.get_or_create_task_type('Extras', project)
 
             if line.use_project_task and not line.display_type:
+                if not current_task_type:
+                    current_task_type = self.get_or_create_task_type('Extras', project)
+
                 timesheet_lines = self.env['task.time.lines'].search([
                     ('task_timesheet_id', '=', line.task_timesheet_id.id)
                 ])
