@@ -57,7 +57,7 @@ class SaleOrder(models.Model):
                 plan_lines = self.prep_plan_lines(sale.project_plan_lines)
                 picking_lines = self.prep_picking_lines(sale.project_picking_lines)
                 
-                for project_picking in line.product_id.project_plan_id.project_plan_pickings:
+                for project_picking in sale.order_line.product_id.project_plan_id.project_plan_pickings:
                     plan_pickings.append((4, project_picking.id))
 
                 sale.project_plan_pickings = plan_pickings
