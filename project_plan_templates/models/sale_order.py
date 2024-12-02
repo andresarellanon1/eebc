@@ -54,8 +54,12 @@ class SaleOrder(models.Model):
 
                 sale.state = 'estimation'
                 plan_pickings = []
-                plan_lines = self.prep_plan_lines(sale.project_plan_lines)
-                picking_lines = self.prep_picking_lines(sale.project_picking_lines)
+                plan_lines = []
+                picking_lines = []
+
+                for plan in sale.order_line:
+                    plan_lines.append(self.prep_plan_lines(plan.product_id.project_plan_id.project_plan_lines))
+                    picking_lines.append(self.prep_picking_lines(plan.product_id.project_plan_id.picking_lines))
                 
                 for project_picking in sale.order_line.product_id.project_plan_id.project_plan_pickings:
                     plan_pickings.append((4, project_picking.id))
