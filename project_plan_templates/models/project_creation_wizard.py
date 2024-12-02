@@ -143,6 +143,7 @@ class ProjectCreation(models.TransientModel):
         return task_type
 
     def prep_plan_lines(self, plan):
+        plan_lines = []
         for line in plan:
             if line.use_project_task:
                 if line.display_type == 'line_section':
@@ -170,6 +171,7 @@ class ProjectCreation(models.TransientModel):
         return plan_lines
 
         def prep_picking_lines(self, picking):
+            picking_lines = []
             for line in picking:
                 if line.display_type == 'line_section':
                     picking_lines.append((0, 0, {
@@ -189,6 +191,7 @@ class ProjectCreation(models.TransientModel):
                         'subtotal': line.subtotal,
                         'display_type': False
                     }))
+            return picking_lines
 
     @api.depends('wizard_picking_lines.subtotal')
     def _compute_total_cost(self):
