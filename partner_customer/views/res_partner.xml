@@ -17,7 +17,6 @@
             <xpath expr="//field[@name='lang']" position="after">
                 <field name="commercial_name" readonly="parent_id" />
                 <field name="customer_number_reference" readonly="1" invisible="not is_customer" />
-                <field name="social_security_number"/>
             </xpath>
 
             <xpath expr="//group[@name='sale']" position="attributes">
