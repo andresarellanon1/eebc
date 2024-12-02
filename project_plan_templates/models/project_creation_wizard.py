@@ -59,12 +59,8 @@ class ProjectCreation(models.TransientModel):
             'project_picking_lines': picking_line_vals,
         }
 
-        logger.warning(f"project_vals")
-
         project = self.env['project.project'].create(project_vals)
         self.create_project_tasks(project)
-
-        logger.warning(f"create_project_task")
 
         self.sale_order_id.state = 'budget'
 
