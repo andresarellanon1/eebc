@@ -74,30 +74,55 @@ class SaleOrder(models.Model):
                 return super(SaleOrder, self).action_confirm()
 
     def prep_plan_lines(self, plan):
-        return [
-            (0, 0, {
-                'name': line.name,
-                'display_type': line.display_type,
-                'description': line.description if line.display_type != 'line_section' else False,
-                'use_project_task': True,
-                'planned_date_begin': line.planned_date_begin if line.display_type != 'line_section' else False,
-                'planned_date_end': line.planned_date_end if line.display_type != 'line_section' else False,
-                'partner_id': [(6, 0, line.partner_id.ids)] if line.display_type != 'line_section' else False,
-                'task_timesheet_id': line.task_timesheet_id.id if line.display_type != 'line_section' else False,
-            }) for line in plan if line.use_project_task
-        ]
+        plan_lines = []
+        for line in plan:
+            if line.use_project_task:
+                if line.display_type == 'line_section':
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'display_type': line.display_type,
+                        'description': False,
+                        'use_project_task': True,
+                        'planned_date_begin': False,
+                        'planned_date_end': False,
+                        'partner_id': False,
+                        'task_timesheet_id': False,
+                    }))
+                else:
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': True,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'partner_id': [(6, 0, line.partner_id.ids)],
+                        'task_timesheet_id': line.task_timesheet_id.id,
+                        'display_type': False
+                    }))
+        return plan_lines
 
     def prep_picking_lines(self, picking):
-        return [
-            (0, 0, {
-                'name': line.name if line.display_type == 'line_section' else line.product_id.name,
-                'display_type': line.display_type,
-                'product_id': line.product_id.id if line.display_type != 'line_section' else False,
-                'quantity': line.quantity if line.display_type != 'line_section' else False,
-                'standard_price': line.standard_price if line.display_type != 'line_section' else False,
-                'subtotal': line.subtotal if line.display_type != 'line_section' else False,
-            }) for line in picking
-        ]
+        picking_lines = []
+        for line in picking:
+            if line.display_type == 'line_section':
+                picking_lines.append((0, 0, {
+                    'name': line.name,
+                    'display_type': line.display_type,
+                    'product_id': False,
+                    'quantity': False,
+                    'standard_price': False,
+                    'subtotal': False
+                }))
+            else:
+                picking_lines.append((0, 0, {
+                    'name': line.product_id.name,
+                    'product_id': line.product_id.id,
+                    'quantity': line.quantity,
+                    'standard_price': line.standard_price,
+                    'subtotal': line.subtotal,
+                    'display_type': False
+                }))
+        return picking_lines
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
