@@ -48,78 +48,56 @@ class SaleOrder(models.Model):
                     raise ValidationError(
                         f"Project name needed."
                     )
-                sale.project_plan_pickings = [(5, 0, 0)]
-                sale.project_plan_lines = [(5, 0, 0)]
-                sale.project_picking_lines = [(5, 0, 0)]
-
-                sale.state = 'estimation'
-                plan_pickings = []
-                plan_lines = []
-                picking_lines = []
-
-                for plan in sale.order_line:
-                    plan_lines.append(self.prep_plan_lines(plan.product_id.project_plan_id.project_plan_lines))
-                    picking_lines.append(self.prep_picking_lines(plan.product_id.project_plan_id.picking_lines))
                 
-                for project_picking in sale.order_line.product_id.project_plan_id.project_plan_pickings:
-                    plan_pickings.append((4, project_picking.id))
+                sale.write({
+                    'project_plan_pickings': [(5, 0, 0)],
+                    'project_plan_lines': [(5, 0, 0)],
+                    'project_picking_lines': [(5, 0, 0)],
+                    'state': 'estimation',
+                })
 
-                sale.project_plan_pickings = plan_pickings
-                sale.project_plan_lines = plan_lines
-                sale.project_picking_lines = picking_lines
+                # Preparar nuevas líneas
+                plan_pickings = [
+                    (4, project_picking.id)
+                    for project_picking in sale.order_line.product_id.project_plan_id.project_plan_pickings
+                ]
+                plan_lines = self.prep_plan_lines(sale.order_line.product_id.project_plan_id.project_plan_lines)
+                picking_lines = self.prep_picking_lines(sale.order_line.product_id.project_plan_id.picking_lines)
+
+                # Asignar nuevas líneas
+                sale.write({
+                    'project_plan_pickings': plan_pickings,
+                    'project_plan_lines': plan_lines,
+                    'project_picking_lines': picking_lines,
+                })
             else:
                 return super(SaleOrder, self).action_confirm()
 
     def prep_plan_lines(self, plan):
-        plan_lines = []
-        for line in plan:
-            if line.use_project_task:
-                if line.display_type == 'line_section':
-                    plan_lines.append((0, 0, {
-                        'name': line.name,
-                        'display_type': line.display_type,
-                        'description': False,
-                        'use_project_task': True,
-                        'planned_date_begin': False,
-                        'planned_date_end': False,
-                        'partner_id': False,
-                        'task_timesheet_id': False,
-                    }))
-                else:
-                    plan_lines.append((0, 0, {
-                        'name': line.name,
-                        'description': line.description,
-                        'use_project_task': True,
-                        'planned_date_begin': line.planned_date_begin,
-                        'planned_date_end': line.planned_date_end,
-                        'partner_id': [(6, 0, line.partner_id.ids)],
-                        'task_timesheet_id': line.task_timesheet_id.id,
-                        'display_type': False
-                    }))
-        return plan_lines
+        return [
+            (0, 0, {
+                'name': line.name,
+                'display_type': line.display_type,
+                'description': line.description if line.display_type != 'line_section' else False,
+                'use_project_task': True,
+                'planned_date_begin': line.planned_date_begin if line.display_type != 'line_section' else False,
+                'planned_date_end': line.planned_date_end if line.display_type != 'line_section' else False,
+                'partner_id': [(6, 0, line.partner_id.ids)] if line.display_type != 'line_section' else False,
+                'task_timesheet_id': line.task_timesheet_id.id if line.display_type != 'line_section' else False,
+            }) for line in plan if line.use_project_task
+        ]
 
     def prep_picking_lines(self, picking):
-        picking_lines = []
-        for line in picking:
-            if line.display_type == 'line_section':
-                picking_lines.append((0, 0, {
-                    'name': line.name,
-                    'display_type': line.display_type,
-                    'product_id': False,
-                    'quantity': False,
-                    'standard_price': False,
-                    'subtotal': False
-                }))
-            else:
-                picking_lines.append((0, 0, {
-                    'name': line.product_id.name,
-                    'product_id': line.product_id.id,
-                    'quantity': line.quantity,
-                    'standard_price': line.standard_price,
-                    'subtotal': line.subtotal,
-                    'display_type': False
-                }))
-        return picking_lines
+        return [
+            (0, 0, {
+                'name': line.name if line.display_type == 'line_section' else line.product_id.name,
+                'display_type': line.display_type,
+                'product_id': line.product_id.id if line.display_type != 'line_section' else False,
+                'quantity': line.quantity if line.display_type != 'line_section' else False,
+                'standard_price': line.standard_price if line.display_type != 'line_section' else False,
+                'subtotal': line.subtotal if line.display_type != 'line_section' else False,
+            }) for line in picking
+        ]
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
