@@ -63,6 +63,7 @@ class ProjectCreation(models.TransientModel):
         self.create_project_tasks(project)
 
         self.sale_order_id.state = 'budget'
+        self.sale_order_id.project_id = project.id
 
         return {
             'type': 'ir.actions.act_window',
