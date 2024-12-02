@@ -40,7 +40,7 @@ class ProjectCreation(models.TransientModel):
             record.wizard_plan_lines = [(5, 0, 0)]
 
             plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
-            picking_lines = self.prep_picking_lines(record.sale_order_id.picking_lines)
+            picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
                 
 
             record.wizard_plan_lines = plan_lines
