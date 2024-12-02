@@ -36,6 +36,10 @@
                             <field name="display_type" column_invisible="True"/>
                             <field name="name"/>
                             <field name="description"/>
+                            <field name="use_project_task"/>
+                            <field name="planned_date_begin" widget="daterange"/>
+                            <field name="planned_date_end" widget="daterange"/>
+                            <field name="partner_id" widget="many2many_avatar_user"/>
                             <field name="task_timesheet_id" options="{'create': True}"/>
                         </tree>
                     </field>
@@ -54,10 +58,10 @@
                     </field>
                     <group>
                         <group colspan="4">
-                            <field colspan="2" name="note" nolabel="1"/>  <!-- 'note' field for additional information -->
+                            <field colspan="2" name="note" nolabel="1"/>  
                         </group>
                         <group class="oe_subtotal_footer" colspan="2" name="sale_total">
-                            <field name="plan_total_cost"/>  <!-- Display the 'plan_total_cost' field -->
+                            <field name="plan_total_cost"/> 
                         </group>
                     </group>
             </page>

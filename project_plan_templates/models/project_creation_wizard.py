@@ -1,4 +1,6 @@
 from odoo import models, fields, api
+import logging
+logger = logging.getLogger(__name__)
 
 class ProjectCreation(models.TransientModel):
     _name = 'project.creation.wizard'
@@ -40,20 +42,29 @@ class ProjectCreation(models.TransientModel):
             plan_lines = []
             picking_lines = []
             for line in record.sale_order_id.project_plan_lines:
-                if line.display_type == 'line_section':
-                    plan_lines.append((0, 0, {
-                        'name': line.name,
-                        'display_type': line.display_type,
-                        'description': False,
-                        'task_timesheet_id': False,
-                    }))
-                else:
-                    plan_lines.append((0, 0, {
-                        'name': line.name,
-                        'description': line.description,
-                        'task_timesheet_id': line.task_timesheet_id.id,
-                        'display_type': False
-                    }))
+                if line.use_project_task:
+                    if line.display_type == 'line_section':
+                        plan_lines.append((0, 0, {
+                            'name': line.name,
+                            'display_type': line.display_type,
+                            'description': False,
+                            'use_project_task': True,
+                            'planned_date_begin': False,
+                            'planned_date_end': False,
+                            'partner_id': False,
+                            'task_timesheet_id': False,
+                        }))
+                    else:
+                        plan_lines.append((0, 0, {
+                            'name': line.name,
+                            'description': line.description,
+                            'use_project_task': True,
+                            'planned_date_begin': line.planned_date_begin,
+                            'planned_date_end': line.planned_date_end,
+                            'partner_id': [(6, 0, line.partner_id.ids)],
+                            'task_timesheet_id': line.task_timesheet_id.id,
+                            'display_type': False
+                        }))
 
             for line in record.sale_order_id.project_picking_lines:
                 if line.display_type == 'line_section':
@@ -82,29 +93,27 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
-        project_plan_lines_vals = [(0, 0, {
-            'name': line.name,
-            'chapter': line.chapter,
-            'description': line.description,
-            'use_project_task': line.use_project_task,
-            'planned_date_begin': line.planned_date_begin,
-            'planned_date_end': line.planned_date_end,
-            'task_timesheet_id': line.task_timesheet_id.id,
-            'partner_id': [(6, 0, line.partner_id.ids)]
-        }) for line in self.wizard_plan_lines if line.use_project_task]
+        # project_plan_lines_vals = [(0, 0, {
+        #     'name': line.name,
+        #     'chapter': line.chapter,
+        #     'description': line.description,
+        #     'use_project_task': line.use_project_task,
+        #     'planned_date_begin': line.planned_date_begin,
+        #     'planned_date_end': line.planned_date_end,
+        #     'task_timesheet_id': line.task_timesheet_id.id,
+        #     'partner_id': [(6, 0, line.partner_id.ids)]
+        # }) for line in self.wizard_plan_lines if line.use_project_task]
 
-        picking_lines_vals = [(0, 0, {
-            'product_id': line.product_id.id,
-            'quantity': line.quantity,
-        }) for line in self.wizard_picking_lines]
-
-        logger.warning(f"picking_line")
+        # picking_lines_vals = [(0, 0, {
+        #     'product_id': line.product_id.id,
+        #     'quantity': line.quantity,
+        # }) for line in self.wizard_picking_lines]
 
         project_vals = {
             'name': self.project_name,
             'description': self.description,
-            'project_plan_lines': project_plan_lines_vals,
-            'project_picking_lines': picking_lines_vals,
+            'project_plan_lines': [(6, 0, self.wizard_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, self.wizard_picking_lines.ids)],
         }
 
         logger.warning(f"project_vals")
@@ -140,9 +149,9 @@ class ProjectCreation(models.TransientModel):
 
     def create_project_tasks(self, project):
         current_task_type = None
-        for line in self.project_plan_lines:
-            if line.stage_id:
-                current_task_type = self.get_or_create_task_type(line.stage_id, project)
+        for line in self.wizard_plan_lines:
+            if line.display_type:
+                current_task_type = self.get_or_create_task_type(line.name, project)
             else:
                 current_task_type = self.get_or_create_task_type('Extras', project)
 

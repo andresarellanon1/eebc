@@ -38,34 +38,53 @@ class SelectNoticeWizard(models.TransientModel):
     
 
     def action_get_products(self):
-        for wizard in self:
-            _logger.warning('first for')
-            self._check_quantities()
-            for line in wizard.notice_ids:
-                for notice in line.notice_id:
-                    notice.write({
-                        'history_ids': [(0, 0, {
-                            'location_id': wizard.stock_move_id.picking_id.location_id.id,
-                            'location_dest': wizard.stock_move_id.picking_id.location_dest_id.id,
-                            'quantity': line.quantity * (-1),
-                            'picking_code': wizard.stock_move_id.picking_id.picking_type_code,
-                            'origin': wizard.stock_move_id.picking_id.sale_id.name,
-                            'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id,
-                            'product_id': wizard.stock_move_id.product_id.id,
-                            # 'folio': notice.folio, ¿que sucedera con el folio?
-                            'purchase_order_id':self._context['purchase_order_id'],
-                            'state': 'draft'
-                        })]
-                    })
-        
-        bool_notice_selected = self.env['stock.move'].search([('id','=',self.stock_move_id)])
-        
-        if bool_notice_selected:
-            _logger.warning(f'Se cumple if de bool_notice_selected, valor: {bool_notice_selected}')
-            bool_notice_selected = True
-            
+        try:
+            for wizard in self:
+                _logger.warning('Inicio del proceso en wizard.')
 
-        return {'type': 'ir.actions.act_window_close'}
+                # Validar cantidades (puede lanzar un ValidationError)
+                self._check_quantities()
+
+                # Iterar sobre notice_ids
+                for line in wizard.notice_ids:
+                    for notice in line.notice_id:
+                        # Validar datos necesarios antes de proceder
+                        if not wizard.stock_move_id or not wizard.stock_move_id.picking_id:
+                            _logger.error("El campo stock_move_id o picking_id no está definido.")
+                            raise ValueError("Faltan datos necesarios en stock_move_id o picking_id.")
+
+                        # Escribir el historial
+                        notice.write({
+                            'history_ids': [(0, 0, {
+                                'location_id': wizard.stock_move_id.picking_id.location_id.id,
+                                'location_dest': wizard.stock_move_id.picking_id.location_dest_id.id,
+                                'quantity': line.quantity * (-1),
+                                'picking_code': wizard.stock_move_id.picking_id.picking_type_code,
+                                'origin': wizard.stock_move_id.picking_id.sale_id.name,
+                                'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id,
+                                'product_id': wizard.stock_move_id.product_id.id,
+                                'purchase_order_id': self._context.get('purchase_order_id'),
+                                'state': 'draft',
+                                'stock_move_id': self._context['stock_move_id'],
+
+                            })]
+                        })
+
+                _logger.warning('Se procesaron todas las líneas de notice_ids.')
+            
+            # Retornar para cerrar la ventana
+            return {'type': 'ir.actions.act_window_close'}
+
+        except ValidationError as e:
+            # Registrar el mensaje de error para depuración
+            _logger.error(f"ValidationError detectado: {e}")
+            raise  # Propaga el ValidationError para que se muestre en la interfaz del usuario
+
+        except Exception as e:
+            # Manejar otros errores inesperados
+            _logger.error(f"Error en action_get_products: {e}")
+            raise  # Propaga otros errores si es necesario
+
 
 
    

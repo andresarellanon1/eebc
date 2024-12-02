@@ -23,8 +23,9 @@
                                     <div style="100%">
                                         <field name="wizard_plan_lines" nolabel="1">
                                             <tree editable="bottom" style="width: 100%;">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="display_type" column_invisible="True"/>
                                                 <field name="name"/>
-                                                <field name="chapter"/>
                                                 <field name="description"/>
                                                 <field name="use_project_task"/>
                                                 <field name="planned_date_begin" widget="daterange"/>
@@ -41,19 +42,21 @@
                                     </group>
                                     <div>
                                         <field name="wizard_picking_lines">
-                                            <tree editable="editable_bottom" style="width: 100%;">  <!-- Display a tree of picking lines -->
-                                                <field name="product_id"/>  <!-- Display the 'product_id' field in the picking line -->
-                                                <field name="quantity"/>  <!-- Display the 'quantity' field in the picking line -->
-                                                <field name="standard_price"/>  <!-- Display the 'standard_price' field -->
-                                                <field name="subtotal"/>  <!-- Display the 'subtotal' field -->
+                                            <tree editable="editable_bottom" style="width: 100%;">  
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="display_type" column_invisible="True"/>
+                                                <field name="product_id"/>  
+                                                <field name="quantity"/>  
+                                                <field name="standard_price"/> 
+                                                <field name="subtotal"/>  
                                             </tree>
                                         </field>
                                         <group>
                                             <group colspan="4">
-                                                <field colspan="2" name="note" nolabel="1"/>  <!-- 'note' field for additional information -->
+                                                <field colspan="2" name="note" nolabel="1"/>  
                                             </group>
                                             <group class="oe_subtotal_footer" colspan="2" name="sale_total">
-                                                <field name="plan_total_cost"/>  <!-- Display the 'plan_total_cost' field -->
+                                                <field name="plan_total_cost"/> 
                                             </group>
                                         </group>
                                     </div>
