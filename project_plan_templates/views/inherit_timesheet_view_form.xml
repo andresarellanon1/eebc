@@ -41,9 +41,6 @@
                             </tree>
                         </field>
                         <group>
-                            <group colspan="4">
-                                <field colspan="2" name="note" nolabel="1"/>  
-                            </group>
                             <group class="oe_subtotal_footer" colspan="2" name="sale_total">
                                 <field name="plan_total_cost"/> 
                             </group>
