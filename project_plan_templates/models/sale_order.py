@@ -14,12 +14,12 @@ class SaleOrder(models.Model):
 
     state = fields.Selection(
         selection_add=[
-            ('process', 'In process'),
-            ('budget', 'Budget')
+            ('budget', 'Budget'),
+            ('process', 'In process')
         ],
         ondelete={
-            'process': 'set default',
-            'budget': 'set default'
+            'budget': 'set default',
+            'process': 'set default'
         }
     )
 
