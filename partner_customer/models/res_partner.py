@@ -16,6 +16,8 @@ class ResPartner(models.Model):
 
     customer_number_reference = fields.Char(string="Referencia del cliente.")
 
+    social_security_number = fields.Char(string="Número de Seguro Social")
+
     @api.onchange('parent_id')
     def _compute_commercial_name_parent_commercial_name(self):
         for partner in self:
