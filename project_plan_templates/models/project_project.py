@@ -11,6 +11,8 @@ class ProjectProject(models.Model):
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Stock picking")
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
 
+    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+
 
     def create_project_tasks(self):
         for project in self:
