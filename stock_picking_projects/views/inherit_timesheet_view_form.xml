@@ -10,6 +10,7 @@
                 <field name="site_supervisor_id" widget="many2one_avatar_user"/>
                 <field name="subcontractor_id" widget="many2one_avatar_user"/>
                 <field name="subcontractor_id" widget="many2one_avatar_user"/>
+                <field name="is_subcontractor" widget="checkbox" string="Subcontratista"/>
                 <field name="taxes_id" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//notebook" position="inside">
