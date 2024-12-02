@@ -170,28 +170,28 @@ class ProjectCreation(models.TransientModel):
                     }))
         return plan_lines
 
-        def prep_picking_lines(self, picking):
-            picking_lines = []
-            for line in picking:
-                if line.display_type == 'line_section':
-                    picking_lines.append((0, 0, {
-                        'name': line.name,
-                        'display_type': line.display_type,
-                        'product_id': False,
-                        'quantity': False,
-                        'standard_price': False,
-                        'subtotal': False
-                    }))
-                else:
-                    picking_lines.append((0, 0, {
-                        'name': line.product_id.name,
-                        'product_id': line.product_id.id,
-                        'quantity': line.quantity,
-                        'standard_price': line.standard_price,
-                        'subtotal': line.subtotal,
-                        'display_type': False
-                    }))
-            return picking_lines
+    def prep_picking_lines(self, picking):
+        picking_lines = []
+        for line in picking:
+            if line.display_type == 'line_section':
+                picking_lines.append((0, 0, {
+                    'name': line.name,
+                    'display_type': line.display_type,
+                    'product_id': False,
+                    'quantity': False,
+                    'standard_price': False,
+                    'subtotal': False
+                }))
+            else:
+                picking_lines.append((0, 0, {
+                    'name': line.product_id.name,
+                    'product_id': line.product_id.id,
+                    'quantity': line.quantity,
+                    'standard_price': line.standard_price,
+                    'subtotal': line.subtotal,
+                    'display_type': False
+                }))
+        return picking_lines
 
     @api.depends('wizard_picking_lines.subtotal')
     def _compute_total_cost(self):
