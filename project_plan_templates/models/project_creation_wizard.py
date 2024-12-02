@@ -67,7 +67,7 @@ class ProjectCreation(models.TransientModel):
         logger.warning(f"create_project_task")
 
         self.sale_order_id.state = 'budget'
-        self.sale_order_id.project.id
+        self.sale_order_id.project_id = project.id
 
         return {
             'type': 'ir.actions.act_window',
