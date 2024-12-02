@@ -1,4 +1,6 @@
 from odoo import models, fields, api
+import logging
+logger = logging.getLogger(__name__)
 
 class ProjectCreation(models.TransientModel):
     _name = 'project.creation.wizard'
