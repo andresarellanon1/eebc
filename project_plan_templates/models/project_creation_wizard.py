@@ -39,8 +39,8 @@ class ProjectCreation(models.TransientModel):
             record.wizard_picking_lines = [(5, 0, 0)]
             record.wizard_plan_lines = [(5, 0, 0)]
 
-            plan_lines = self.sale_order_id.prep_plan_lines(record.sale_order_id.project_plan_lines)
-            picking_lines = self.sale_order_id.prep_picking_lines(record.sale_order_id.project_picking_lines)
+            plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
+            picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
 
             record.wizard_plan_lines = plan_lines
             record.wizard_picking_lines = picking_lines
@@ -49,8 +49,8 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
-        project_plan_lines = self.sale_order_id.prep_plan_lines(self.sale_order_id.project_plan_lines)
-        picking_line_vals = self.sale_order_id.prep_picking_lines(self.sale_order_id.project_picking_lines)
+        project_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+        picking_line_vals = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
         project_vals = {
             'name': self.project_name,
@@ -59,11 +59,15 @@ class ProjectCreation(models.TransientModel):
             'project_picking_lines': picking_line_vals,
         }
 
+        logger.warning(f"project_vals")
+
         project = self.env['project.project'].create(project_vals)
         self.create_project_tasks(project)
 
-        self.sale_order_id.state = 'budget'
-        self.sale_order_id.project_id = project.id
+        logger.warning(f"create_project_task")
+
+        self.sale_order_id.state == 'budget'
+        self.sale_order_id.project_id
 
         return {
             'type': 'ir.actions.act_window',
@@ -113,6 +117,57 @@ class ProjectCreation(models.TransientModel):
             })
             
         return task_type
+
+    def prep_plan_lines(self, plan):
+        plan_lines = []
+        for line in plan:
+            if line.use_project_task:
+                if line.display_type == 'line_section':
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'display_type': line.display_type,
+                        'description': False,
+                        'use_project_task': True,
+                        'planned_date_begin': False,
+                        'planned_date_end': False,
+                        'partner_id': False,
+                        'task_timesheet_id': False,
+                    }))
+                else:
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': True,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'partner_id': [(6, 0, line.partner_id.ids)],
+                        'task_timesheet_id': line.task_timesheet_id.id,
+                        'display_type': False
+                    }))
+        return plan_lines
+
+    def prep_picking_lines(self, picking):
+        picking_lines = []
+        for line in picking:
+            if line.display_type == 'line_section':
+                picking_lines.append((0, 0, {
+                    'name': line.name,
+                    'display_type': line.display_type,
+                    'product_id': False,
+                    'quantity': False,
+                    'standard_price': False,
+                    'subtotal': False
+                }))
+            else:
+                picking_lines.append((0, 0, {
+                    'name': line.product_id.name,
+                    'product_id': line.product_id.id,
+                    'quantity': line.quantity,
+                    'standard_price': line.standard_price,
+                    'subtotal': line.subtotal,
+                    'display_type': False
+                }))
+        return picking_lines
 
     @api.depends('wizard_picking_lines.subtotal')
     def _compute_total_cost(self):
