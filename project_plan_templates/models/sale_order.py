@@ -80,7 +80,7 @@ class SaleOrder(models.Model):
                     else:
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             plan_lines.append((0, 0, {
-                                'name': f"{plan.code}-{line.product_template_id.name}-{plan.name}",
+                                'name': f"{line.code}-{line.product_template_id.name}-{plan.name}",
                                 'description': plan.description,
                                 'use_project_task': True,
                                 'planned_date_begin': fields.Datetime.now(),
