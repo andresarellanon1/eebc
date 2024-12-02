@@ -41,7 +41,6 @@ class ProjectCreation(models.TransientModel):
 
             plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
             picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
-                
 
             record.wizard_plan_lines = plan_lines
             record.wizard_picking_lines = picking_lines
@@ -66,11 +65,14 @@ class ProjectCreation(models.TransientModel):
         #     'quantity': line.quantity,
         # }) for line in self.wizard_picking_lines]
 
+        project_plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
+        picking_line_vals = self.prep_picking_lines(record.sale_order_id.project_picking_line)
+
         project_vals = {
             'name': self.project_name,
             'description': self.description,
-            'project_plan_lines': [(6, 0, self.wizard_plan_lines.ids)],
-            'project_picking_lines': [(6, 0, self.wizard_picking_lines.ids)],
+            'project_plan_lines': project_plan_lines,
+            'project_picking_lines': picking_line_vals,
         }
 
         logger.warning(f"project_vals")
