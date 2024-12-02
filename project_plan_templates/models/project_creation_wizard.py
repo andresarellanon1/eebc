@@ -66,16 +66,14 @@ class ProjectCreation(models.TransientModel):
 
         logger.warning(f"create_project_task")
 
-        self.sale_order_id.state == 'budget'
+        self.sale_order_id.state = 'budget'
 
         return {
             'type': 'ir.actions.act_window',
-            'res_model': 'sale.order',
-            'res_id': self.sale_order_id.id,
-            'view_type': 'form',
+            'res_model': 'project.project',
+            'res_id': project.id,
             'view_mode': 'form',
             'target': 'current',
-            'context': self.env.context
         }
 
     def create_project_tasks(self, project):
