@@ -7,8 +7,8 @@ class ProjectPickingWizardLine(models.TransientModel):
     wizard_creation_id = fields.Many2one('project.creation.wizard')
 
     name = fields.Char(string="Name")
-    product_id = fields.Many2one('product.product', string="Product", required=True)
-    quantity = fields.Float(string="Quantity", required=True)
+    product_id = fields.Many2one('product.product', string="Product")
+    quantity = fields.Float(string="Quantity")
     location_id = fields.Many2one('stock.location', string="Location")
     picking_name = fields.Char(string="Picking Name")
     project_plan_id = fields.Many2one('project.plan', string="Project plan")

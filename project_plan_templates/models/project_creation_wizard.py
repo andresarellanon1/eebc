@@ -102,10 +102,10 @@ class ProjectCreation(models.TransientModel):
         #     'partner_id': [(6, 0, line.partner_id.ids)]
         # }) for line in self.wizard_plan_lines if line.use_project_task]
 
-        picking_lines_vals = [(0, 0, {
-            'product_id': line.product_id.id,
-            'quantity': line.quantity,
-        }) for line in self.wizard_picking_lines]
+        # picking_lines_vals = [(0, 0, {
+        #     'product_id': line.product_id.id,
+        #     'quantity': line.quantity,
+        # }) for line in self.wizard_picking_lines]
 
         project_vals = {
             'name': self.project_name,
