@@ -14,11 +14,11 @@ class SaleOrder(models.Model):
 
     state = fields.Selection(
         selection_add=[
-            ('estimation', 'Estimation'),
+            ('process', 'In process'),
             ('budget', 'Budget')
         ],
         ondelete={
-            'estimation': 'set default',
+            'process': 'set default',
             'budget': 'set default'
         }
     )
@@ -39,9 +39,9 @@ class SaleOrder(models.Model):
         for record in self:
             record.order_line = None
 
-    def action_confirm(self):
+    def action_open_create_project_wizard(self):
         self.ensure_one()
-        
+
         for sale in self:
             if sale.is_project:
                 if not sale.project_name:
@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
                 sale.project_plan_lines = [(5, 0, 0)]
                 sale.project_picking_lines = [(5, 0, 0)]
 
-                sale.state = 'estimation'
+                sale.state = 'budget'
                 plan_pickings = []
                 plan_lines = []
                 picking_lines = []
@@ -104,22 +104,5 @@ class SaleOrder(models.Model):
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
                 sale.project_picking_lines = picking_lines
-            else:
-                return super(SaleOrder, self).action_confirm()
-
-    def action_open_create_project_wizard(self):
-        self.ensure_one()
-
-        return {
-            'name': 'Projects creation',  
-            'view_mode': 'form',  
-            'res_model': 'project.creation.wizard',  
-            'type': 'ir.actions.act_window',  
-            'target': 'new',  
-            'context': {
-                'default_sale_order_id': self.id,
-                'default_project_name': self.project_name
-            }
-        }
         
         
