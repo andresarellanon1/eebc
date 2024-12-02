@@ -39,9 +39,9 @@ class SaleOrder(models.Model):
         for record in self:
             record.order_line = None
 
-    def action_open_create_project_wizard(self):
+    def action_confirm(self):
         self.ensure_one()
-
+        
         for sale in self:
             if sale.is_project:
                 if not sale.project_name:
@@ -104,5 +104,22 @@ class SaleOrder(models.Model):
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
                 sale.project_picking_lines = picking_lines
+            else:
+                return super(SaleOrder, self).action_confirm()
+
+    def action_open_create_project_wizard(self):
+        self.ensure_one()
+
+        return {
+            'name': 'Projects creation',  
+            'view_mode': 'form',  
+            'res_model': 'project.creation.wizard',  
+            'type': 'ir.actions.act_window',  
+            'target': 'new',  
+            'context': {
+                'default_sale_order_id': self.id,
+                'default_project_name': self.project_name
+            }
+        }
         
         
