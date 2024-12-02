@@ -112,7 +112,7 @@ class ProjectCreation(models.TransientModel):
             else:
                 current_task_type = self.get_or_create_task_type('Extras', project)
 
-            if line.use_project_task:
+            if line.use_project_task and not line.display_type:
                 timesheet_lines = self.env['task.time.lines'].search([
                     ('task_timesheet_id', '=', line.task_timesheet_id.id)
                 ])
