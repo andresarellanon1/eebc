@@ -83,8 +83,8 @@ class SaleOrder(models.Model):
                                 'name': f"{plan.code}-{line.product_template_id.name}-{plan.name}",
                                 'description': plan.description,
                                 'use_project_task': True,
-                                'planned_date_begin': False,
-                                'planned_date_end': False,
+                                'planned_date_begin': fields.Datetime.now(),
+                                'planned_date_end': fields.Datetime.now(),
                                 'partner_id': [(6, 0, plan.partner_id.ids)],
                                 'task_timesheet_id': plan.task_timesheet_id.id,
                                 'display_type': False
