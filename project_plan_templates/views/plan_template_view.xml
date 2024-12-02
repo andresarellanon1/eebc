@@ -18,10 +18,6 @@
             <field name="model">project.plan</field>  
             <field name="arch" type="xml">
                 <form string="Project plan template">
-                    
-                    <header>
-                        <button name="action_open_create_project_wizard" type="object" class="oe_highlight" string="Create project"/>
-                    </header>
                     <sheet>
                         <div class="oe_title">
                             <label for="name"/>  
