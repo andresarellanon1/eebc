@@ -149,9 +149,9 @@ class ProjectCreation(models.TransientModel):
 
     def create_project_tasks(self, project):
         current_task_type = None
-        for line in self.project_plan_lines:
-            if line.stage_id:
-                current_task_type = self.get_or_create_task_type(line.stage_id, project)
+        for line in self.wizard_plan_lines:
+            if line.display_type:
+                current_task_type = self.get_or_create_task_type(line.name, project)
             else:
                 current_task_type = self.get_or_create_task_type('Extras', project)
 
