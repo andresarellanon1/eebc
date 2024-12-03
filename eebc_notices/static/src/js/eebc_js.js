@@ -3,11 +3,16 @@ odoo.define('eebc_notices.TabChangeHandler', ['@web/views/form/form_controller']
     
     'use strict';
 
-    const FormController = require('web.FormController');
+    const FormController = require('@web/views/form_controller');
 
     // const core = require('web.core');
 
     FormController.include({
+        setup() {
+            this._super(...arguments); // Llama al método original del controlador
+            this.onTabChanged = this._onTabChanged.bind(this);
+        },
+
         events: _.extend({}, FormController.prototype.events, {
             'click .o_notebook .nav-link': '_onTabChanged', // Detectar cambio de pestaña
         }),
