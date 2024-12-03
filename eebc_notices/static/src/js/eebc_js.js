@@ -1,6 +1,6 @@
 odoo.define('eebc_notices.TabChangeHandler', [
-    '@web/core/utils/patch', // Para extender componentes con patch
-    '@web/views/form/form_controller', // FormController para formularios
+    '@web/core/utils/patch', // Para aplicar parches a componentes OWL
+    '@web/views/form/form_controller', // FormController para manejar formularios
 ], function (require) {
     'use strict';
 
@@ -13,9 +13,10 @@ odoo.define('eebc_notices.TabChangeHandler', [
          * Configuración inicial al cargar el controlador
          */
         setup() {
-            this._super(...arguments);
+            // Llamar directamente al setup del componente base
+            FormController.prototype.setup.call(this, ...arguments);
 
-            // Inicializar variable para la pestaña activa
+            // Inicializar la pestaña activa en el entorno
             this.env.activeTab = 'assign'; // Valor predeterminado
         },
 
@@ -44,7 +45,7 @@ odoo.define('eebc_notices.TabChangeHandler', [
          * Agregar evento personalizado al cargar el DOM
          */
         async start() {
-            await this._super(...arguments);
+            await FormController.prototype.start.call(this, ...arguments);
 
             // Agregar evento click a las pestañas del notebook
             this.el.querySelectorAll('.o_notebook .nav-link').forEach((element) => {
