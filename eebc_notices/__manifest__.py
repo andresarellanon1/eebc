@@ -25,7 +25,7 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'eebc_notices/static/src/js/eebc_js.js',
+            'eebc_notices/static/src/js/tab_change_handler.js',
         ],
     },
     "application": True,
