@@ -1,6 +1,6 @@
 {
     'name': "EBBC NOTICES",
-    'version': '17.0.1.74',
+    'version': '17.0.1.75',
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
@@ -25,7 +25,7 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'eebc_notices/static/js/eebc_js.js',
+            'eebc_notices/static/src/js/eebc_js.js',
         ],
     },
     "application": True,
