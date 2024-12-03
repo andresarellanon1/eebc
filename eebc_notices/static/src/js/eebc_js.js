@@ -3,45 +3,35 @@ odoo.define('eebc_notices.TabChangeHandler', ['@web/views/form/form_controller']
     
     'use strict';
 
-    const FormController = require('@web/views/form_controller');
-    const { patch } = require('web.utils');
-
+    const {FormController}  = require('@web/views/form_controller');
+    
 
     // const core = require('web.core');
 
-   // Extender FormController utilizando patch
-   patch(FormController.prototype, 'eebc_notices.TabChangeHandler', {
-    setup() {
-        this._super(...arguments);
-        this.onTabChanged = this._onTabChanged.bind(this); // Vincular método al controlador
-    },
+    FormController.include({
+        setup() {
+            this._super(...arguments); // Llama al método original del controlador
+            this.onTabChanged = this._onTabChanged.bind(this);
+        },
 
-    /**
-     * Detectar el cambio de pestaña dentro del notebook
-     */
-    _onTabChanged(event) {
-        const tab = event.currentTarget.getAttribute('aria-controls');
-        const tabName = tab === 'assign_tab' ? 'assign' : 'create';
+        events: _.extend({}, FormController.prototype.events, {
+            'click .o_notebook .nav-link': '_onTabChanged', // Detectar cambio de pestaña
+        }),
 
-        // Enviar el cambio al backend
-        this.trigger_up('field_changed', {
-            dataPointID: this.props.dataPointID,
-            changes: { active_tab: tabName },
-        });
+        /**
+         * Detectar el cambio de pestaña dentro del notebook
+         */
+        _onTabChanged: function (event) {
+            const tab = $(event.target).attr('aria-controls');
+            const tabName = tab === 'assign_tab' ? 'assign' : 'create';
 
-        console.log('Pestaña activa: ', tabName); // Depuración
-    },
+            // Enviar el cambio al backend
+            this.trigger_up('field_changed', {
+                dataPointID: this.handle,
+                changes: { active_tab: tabName },
+            });
 
-    /**
-     * Añadir evento personalizado al notebook
-     */
-    async start() {
-        await this._super(...arguments);
-        this.el.addEventListener('click', (event) => {
-            if (event.target.classList.contains('nav-link')) {
-                this._onTabChanged(event);
-            }
-        });
-    },
-});
+            console.log('Pestaña activa: ', tabName); // Mensaje de depuración
+        },
+    });
 });
