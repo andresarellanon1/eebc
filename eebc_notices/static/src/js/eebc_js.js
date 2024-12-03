@@ -1,7 +1,6 @@
-odoo.define('eebc_notices.TabChangeHandler', [
-    'web.FormController', // Para manejar eventos en el formulario
-           // Para usar utilidades y traducciones
-], function (require) {
+import { FormController } from "@web/views/form/form_controller";
+
+odoo.define('eebc_notices.TabChangeHandler', [], function (require) {
     
     'use strict';
 
