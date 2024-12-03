@@ -1,15 +1,15 @@
 odoo.define('eebc_notices.TabChangeHandler', [
-    'web.FormController', // Dependencia obligatoria para extender FormController
-    'web.core'            // Dependencia obligatoria para usar core
+    'web.AbstractAction',
+    'web.core'
 ], function (require) {
     'use strict';
 
-    const FormController = require('web.FormController');
+    const AbstractAction = require('web.AbstractAction');
     const core = require('web.core');
     const _t = core._t;
 
-    FormController.include({
-        events: _.extend({}, FormController.prototype.events, {
+    AbstractAction.include({
+        events: _.extend({}, AbstractAction.prototype.events, {
             'click .o_notebook .nav-link': '_onTabChanged', // Evento para detectar cambio de pestaña
         }),
 
