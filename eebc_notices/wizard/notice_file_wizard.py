@@ -23,6 +23,12 @@ class NoticeFileWizard(models.TransientModel):
     _name = "notice.file.wizard"
     _description = "Wizard to recover data from xlsx file"
     
+    notice_ids = fields.One2many(
+        'wizard.selection.line',
+        'wizard_id',
+        string='Avisos',
+         
+    )
     quantity = fields.Float(string="Cantidad", readonly=True,)
     message = fields.Text(string="Mensaje de Error", readonly=True)  # Campo para el mensaje de error
     notice = fields.Char(string='Aviso')
@@ -47,6 +53,9 @@ class NoticeFileWizard(models.TransientModel):
             res['account_move_invoice_ids'] = self._context['invoices']
         if 'default_message' in self._context:
             res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
+        if 'lines' in self._context:
+            res['notice_ids'] = self._context['lines']
+        _logger.warning('vALORDE LINEASS RES : %s',res)
         _logger.warning('VALOR DE RES1: %s', res)
         return res
 
