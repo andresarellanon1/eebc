@@ -1,4 +1,7 @@
-odoo.define('eebc_notices.TabChangeHandler', function (require) {
+odoo.define('eebc_notices.TabChangeHandler', [
+    'web.FormController', // Dependencia obligatoria para extender FormController
+    'web.core'            // Dependencia obligatoria para usar core
+], function (require) {
     'use strict';
 
     const FormController = require('web.FormController');
@@ -7,7 +10,7 @@ odoo.define('eebc_notices.TabChangeHandler', function (require) {
 
     FormController.include({
         events: _.extend({}, FormController.prototype.events, {
-            'click .o_notebook .nav-link': '_onTabChanged',
+            'click .o_notebook .nav-link': '_onTabChanged', // Evento para detectar cambio de pestaña
         }),
 
         _onTabChanged: function (event) {
@@ -18,6 +21,8 @@ odoo.define('eebc_notices.TabChangeHandler', function (require) {
                 dataPointID: this.handle,
                 changes: { active_tab: tabName },
             });
+
+            console.log('Pestaña activa: ', tabName); // Depuración
         },
     });
 });
