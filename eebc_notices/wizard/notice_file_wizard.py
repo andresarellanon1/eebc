@@ -25,7 +25,7 @@ class NoticeFileWizard(models.TransientModel):
     
     notice_ids = fields.One2many(
         'wizard.selection.line',
-        'wizard_id',
+        'wizard_crud_id',
         string='Avisos',
          
     )
