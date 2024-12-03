@@ -1,11 +1,12 @@
-import { FormController } from "@web/views/form/form_controller";
 odoo.define('eebc_notices.TabChangeHandler', [
     'web.FormController', // Para manejar eventos en el formulario
            // Para usar utilidades y traducciones
 ], function (require) {
+    
     'use strict';
 
     const FormController = require('web.FormController');
+
     // const core = require('web.core');
 
     FormController.include({
