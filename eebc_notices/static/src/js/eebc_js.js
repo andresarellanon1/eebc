@@ -1,6 +1,5 @@
-import { FormController } from "@web/views/form/form_controller";
 
-odoo.define('eebc_notices.TabChangeHandler', [], function (require) {
+odoo.define('eebc_notices.TabChangeHandler', ['@web/views/form/form_controller'], function (require) {
     
     'use strict';
 
