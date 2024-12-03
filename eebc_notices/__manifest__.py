@@ -1,6 +1,6 @@
 {
     'name': "EBBC NOTICES",
-    'version': '17.0.1.88',
+    'version': '17.0.1.89',
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
@@ -23,11 +23,11 @@
 
         
     ],
-    # 'assets': {
-    #     'web.assets_backend': [
-    #         'eebc_notices/static/src/js/eebc_js.js',
-    #     ],
-    # },
+    'assets': {
+        'web.assets_backend': [
+            'eebc_notices/static/src/js/eebc_js.js',
+        ],
+    },
     "application": True,
     "installable": True,
     "license": "LGPL-3",
