@@ -1,37 +1,55 @@
-
-odoo.define('eebc_notices.TabChangeHandler', ['@web/views/form/form_controller'], function (require) {
-    
+odoo.define('eebc_notices.TabChangeHandler', [
+    '@web/core/utils/patch', // Para extender el controlador con patch
+    '@web/views/form/form_controller', // Para extender FormController
+], function (require) {
     'use strict';
 
-    const {FormController}  = require('@web/views/form_controller');
-    
+    const { patch } = require('@web/core/utils/patch');
+    const { FormController } = require('@web/views/form/form_controller');
 
-    // const core = require('web.core');
-
-    FormController.include({
+    // Aplicar patch al prototipo de FormController
+    patch(FormController.prototype, 'eebc_notices.TabChangeHandler', {
+        /**
+         * Configuración inicial al cargar el controlador
+         */
         setup() {
-            this._super(...arguments); // Llama al método original del controlador
-            this.onTabChanged = this._onTabChanged.bind(this);
+            // Llamar al método original
+            this._super(...arguments);
+
+            // Agregar un entorno adicional si es necesario
+            this.env.activeTab = 'assign'; // Valor predeterminado
         },
 
-        events: _.extend({}, FormController.prototype.events, {
-            'click .o_notebook .nav-link': '_onTabChanged', // Detectar cambio de pestaña
-        }),
-
         /**
-         * Detectar el cambio de pestaña dentro del notebook
+         * Detectar el cambio de pestaña
+         * @param {Event} event
          */
-        _onTabChanged: function (event) {
-            const tab = $(event.target).attr('aria-controls');
+        _onTabChanged(event) {
+            const tab = event.currentTarget.getAttribute('aria-controls');
             const tabName = tab === 'assign_tab' ? 'assign' : 'create';
+
+            // Actualizar el entorno con la pestaña activa
+            this.env.activeTab = tabName;
+
+            // Depuración en la consola
+            console.log('Pestaña activa:', tabName);
 
             // Enviar el cambio al backend
             this.trigger_up('field_changed', {
-                dataPointID: this.handle,
+                dataPointID: this.props.dataPointID,
                 changes: { active_tab: tabName },
             });
+        },
 
-            console.log('Pestaña activa: ', tabName); // Mensaje de depuración
+        /**
+         * Agregar evento personalizado al cargar el DOM
+         */
+        async start() {
+            await this._super(...arguments);
+            // Agregar el listener para detectar el cambio de pestañas
+            this.el.querySelectorAll('.o_notebook .nav-link').forEach((element) => {
+                element.addEventListener('click', this._onTabChanged.bind(this));
+            });
         },
     });
 });
