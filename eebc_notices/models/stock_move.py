@@ -58,6 +58,8 @@ class StockMove(models.Model):
         proveedor_id = self.picking_id.partner_id.id if self.picking_id.partner_id else False
         purchase_order_id = order.id if order else False
         product_description = self.description_picking if self.description_picking else "Sin descripción"
+        notice_lines_to_wizard =self._create_line_ids()
+
         return {
             'type': 'ir.actions.act_window',
             'name': 'Wizard File Upload',
@@ -81,6 +83,7 @@ class StockMove(models.Model):
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
+                'lines':notice_lines_to_wizard,
                 'stock_move_id':self.id
                 
             }
