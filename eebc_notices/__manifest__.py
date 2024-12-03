@@ -23,6 +23,11 @@
 
         
     ],
+    'assets': {
+        'web.assets_backend': [
+            'eebc_notices/static/js/eebc_js.js',
+        ],
+    },
     "application": True,
     "installable": True,
     "license": "LGPL-3",

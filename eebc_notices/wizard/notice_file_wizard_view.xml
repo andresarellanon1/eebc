@@ -7,7 +7,7 @@
             <form string="Analisar archivo">
              <sheet>
                 <notebook>
-                    <page string="Crear nuevo aviso">
+                    <page string="Crear nuevo aviso" name="create_tab">
 
                         <group>
                         
@@ -23,7 +23,7 @@
                     </page>
 
 
-                    <page string="Asignar cantidades a los avisos">
+                    <page string="Asignar cantidades a los avisos" name="assign_tab">
 
                          <group>
                             <field name="quantity" readonly="1"/>
