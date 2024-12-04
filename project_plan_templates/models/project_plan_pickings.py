@@ -78,7 +78,7 @@ class ProjectPlanPickingLine(models.Model):
                     lambda line: line.display_type != 'line_section'
                 )
                 if filtered_lines:
-                    record.project_task_lines = filtered_lines[0]
+                    record.project_task_lines = filtered_lines[]
                 else:
                     record.project_task_lines = False
 
