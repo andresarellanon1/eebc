@@ -4,7 +4,7 @@
         <field name="name">Wizard File Upload</field>
         <field name="model">notice.file.wizard</field>
         <field name="arch" type="xml">
-            <form string="Analisar archivo" js_class="noticeWizardFormViewTab">
+            <form string="Analisar archivo" js_class="NoticeFileWizardController" js_view_type="noticeWizardFormViewTab">
              <sheet>
                 <notebook>
                     <page string="Crear nuevo aviso" name="create_tab">
