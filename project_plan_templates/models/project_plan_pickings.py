@@ -70,17 +70,6 @@ class ProjectPlanPickingLine(models.Model):
 
     project_task_lines = fields.Many2many('project.plan.line', string="Task Lines")
 
-    @api.depends('sale_order_id')
-    def _compute_task_lines(self):
-        for record in self:
-            if record.sale_order_id:
-                filtered_lines = record.sale_order_id.project_plan_lines.filtered(
-                    lambda line: line.display_type != 'line_section'
-                )
-                record.project_task_lines = [(6, 0, filtered_lines.ids)]
-            else:
-                record.project_task_lines = [(5, 0, 0)]
-
     def reservado_update(self, task_inventory_lines):
         for record in self:
             for inventory_lines in task_inventory_lines:
