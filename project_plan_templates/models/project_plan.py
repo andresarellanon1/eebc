@@ -46,6 +46,7 @@ class ProjectPlan(models.Model):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
 
+    @api.depends('project_plan_lines.project_plan_pickings')
     def update_pickings_from_lines(self):
         for record in self:
             selected_lines = record.project_plan_lines.filtered(
