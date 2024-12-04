@@ -12,29 +12,6 @@
                 <field name="is_subcontractor" widget="checkbox" string="Subcontratista"/>
                 <field name="taxes_id" widget="many2many_tags"/>
             </xpath>
-            <xpath expr="//notebook" position="inside">
-                <page name="Products" string="Productos">
-                    <group name="used_materials">
-                        <field name="product_ids">
-                            <tree editable="bottom">
-                                <field name="product_tmpl_id" string="Producto"/>
-                                <field name="quantity"/>
-                                <field name="reserved_qty"/>
-                                <field name="display_supplier_cost" readonly="1"/>
-                                <field name="display_total_cost" readonly="1"/>
-                                <field name="name" column_invisible="true"/> 
-                            </tree>
-                        </field>
-                    </group>
-
-                    <separator string="Costo total" colspan="4" style="margin-top: 10px; border-top: 1px solid #000;"/>
-
-                    <group col="2" align="left" style="margin-top: 10px;">
-                        <field name="display_costo_total_final" readonly="1"/>
-                    </group>
-
-                </page>
-            </xpath>
             <xpath expr="//group//field[@name='date']" position="after">
                 <field name="bid_code"/>
             </xpath>
