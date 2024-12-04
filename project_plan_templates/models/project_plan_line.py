@@ -59,10 +59,10 @@ class ProjectLines(models.Model):
        }
     
     @api.constrains('planned_date_begin', 'planned_date_end')
-    def _check_dates(self):
-        for record in self:
-            if record.planned_date_end and record.planned_date_begin:
-                if record.planned_date_end < record.planned_date_begin:
-                    raise ValidationError(
-                        "La Fecha de finalización no puede ser anterior a la Fecha de inicio."
-                    )
+        def _check_dates(self):
+            for record in self:
+                if record.planned_date_end and record.planned_date_begin:
+                    if record.planned_date_end < record.planned_date_begin:
+                        raise ValidationError(
+                            "La Fecha de finalización no puede ser anterior a la Fecha de inicio."
+                        )
