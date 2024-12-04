@@ -21,13 +21,13 @@ class StockMove(models.Model):
         compute='_compute_aviso_button_flags',
     )
     
-    notice_established = fields.Boolean(string = 'Aviso establecido', 
-    default=False
-    )
+    # notice_established = fields.Boolean(string = 'Aviso establecido', 
+    # default=False
+    # )
     
-    notice_selected = fields.Boolean(string = 'Aviso seleccionado', 
-    default=False
-    )
+    # notice_selected = fields.Boolean(string = 'Aviso seleccionado', 
+    # default=False
+    # )
 
     @api.depends('product_id.attribute_line_ids', 'picking_type_id.code', 'product_id')
     def _compute_aviso_button_flags(self):
@@ -58,6 +58,8 @@ class StockMove(models.Model):
         proveedor_id = self.picking_id.partner_id.id if self.picking_id.partner_id else False
         purchase_order_id = order.id if order else False
         product_description = self.description_picking if self.description_picking else "Sin descripción"
+        notice_lines_to_wizard =self._create_line_ids()
+
         return {
             'type': 'ir.actions.act_window',
             'name': 'Wizard File Upload',
@@ -81,6 +83,7 @@ class StockMove(models.Model):
                 'date_aprovee': order.date_approve,
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
+                'lines':notice_lines_to_wizard,
                 'stock_move_id':self.id
                 
             }

@@ -68,6 +68,7 @@
                                 </group>
                             </page>
                             <page string="Note" name="note">
+                                <field name="note" placeholder="Escribe tus notas aquí..."/>
                             </page>
                         </notebook>
                         <footer>

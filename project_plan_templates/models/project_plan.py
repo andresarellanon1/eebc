@@ -68,15 +68,10 @@ class ProjectPlan(models.Model):
 
     @api.model
     def write(self, vals):
+        result = super(ProjectPlan, self).write(vals)
         if 'product_template_id' in vals and vals['product_template_id']:
             product_template = self.env['product.template'].browse(vals['product_template_id'])
             if product_template and product_template.project_plan_id != self:
                 product_template.write({'project_plan_id': self.id})
-                
-        result = super(ProjectPlan, self).write(vals)
-
-        # if not 'product_template_id' in vals and vals['product_template_id']:
-        #     if self.product_template_id.project_plan_id:
-        #         self.product_template_id.project_plan_id = False
 
         return result

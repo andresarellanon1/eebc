@@ -30,9 +30,6 @@
                 </page>
                 
                 <page name="Stock" string="Stock">
-                    <group name="stock_container">
-                        <field name="project_picking_ids" widget="many2many_tags"/>  
-                    </group>
                     
                     <div name="stock_lines" nolabel="1">
                         <field name="project_picking_lines" style="width: 100%;"> 
@@ -43,6 +40,11 @@
                                 <field name="location_id"/>  
                             </tree>
                         </field>
+                        <group>
+                            <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                                <field name="plan_total_cost"/> 
+                            </group>
+                        </group>
                     </div>
                 </page>
             </xpath>
