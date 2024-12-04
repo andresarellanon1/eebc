@@ -39,14 +39,6 @@ class SaleOrder(models.Model):
         for record in self:
             record.order_line = None
 
-    @api.onchange('project_plan_lines')
-    def _onchange_plan_lines(self):
-        for record in self:
-            filtered_lines = record.project_plan_lines.filtered(
-                lambda line: line.display_type != 'line_section'
-            )
-            record.project_picking_lines.project_task_lines = [(6, 0, filtered_lines.ids)]
-
     def action_confirm(self):
         self.ensure_one()
         
