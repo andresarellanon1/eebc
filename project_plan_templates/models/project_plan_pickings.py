@@ -67,7 +67,21 @@ class ProjectPlanPickingLine(models.Model):
         ]
     )
     sequence = fields.Integer()
-    
+
+    project_task_lines = fields.Many2one('project.plan.line', string="Task Lines", compute="_compute_task_lines", store=True)
+
+    @api.depends('sale_order_id')
+    def _compute_task_lines(self):
+        for record in self:
+            if record.sale_order_id:
+                filtered_lines = record.sale_order_id.project_plan_lines.filtered(
+                    lambda line: line.display_type != 'line_section'
+                )
+                if filtered_lines:
+                    record.project_task_lines = filtered_lines[0]
+                else:
+                    record.project_task_lines = False
+
     def reservado_update(self, task_inventory_lines):
         for record in self:
             for inventory_lines in task_inventory_lines:
