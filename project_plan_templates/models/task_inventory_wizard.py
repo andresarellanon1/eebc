@@ -21,6 +21,7 @@ class ProjectCreation(models.TransientModel):
     task_id_char = fields.Char(string='Tarea origen', compute="_compute_task_id")
     user_id = fields.Many2one('res.users', string='Contacto')
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
+    note = fields.Text(string="Note")
 
     carrier_id = fields.Many2one('delivery.carrier')
     carrier_tracking_ref = fields.Char(string="Referencia de rastreo")
