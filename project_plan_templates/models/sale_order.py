@@ -65,6 +65,7 @@ class SaleOrder(models.Model):
                             'planned_date_begin': False,
                             'planned_date_end': False,
                             'partner_id': False,
+                            'project_plan_pickings': False,
                             'task_timesheet_id': False,
                         }))
                         picking_lines.append((0, 0, {
@@ -85,18 +86,19 @@ class SaleOrder(models.Model):
                                 'planned_date_begin': fields.Datetime.now(),
                                 'planned_date_end': fields.Datetime.now(),
                                 'partner_id': [(6, 0, plan.partner_id.ids)],
+                                'project_plan_pickings': plan.project_plan_pickings.id,
                                 'task_timesheet_id': plan.task_timesheet_id.id,
                                 'display_type': False
                             }))
-                        for picking in line.product_id.project_plan_id.picking_lines:
-                            picking_lines.append((0, 0, {
-                                'name': picking.product_id.name,
-                                'product_id': picking.product_id.id,
-                                'quantity': picking.quantity,
-                                'standard_price': picking.standard_price,
-                                'subtotal': picking.subtotal,
-                                'display_type': False
-                            }))
+                            for picking in plan.project_plan_pickings.project_picking_lines:
+                                picking_lines.append((0, 0, {
+                                    'name': picking.product_id.name,
+                                    'product_id': picking.product_id.id,
+                                    'quantity': picking.quantity,
+                                    'standard_price': picking.standard_price,
+                                    'subtotal': picking.subtotal,
+                                    'display_type': False
+                                }))
                         for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                             plan_pickings.append((4, project_picking.id))
 
