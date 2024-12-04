@@ -114,6 +114,7 @@ class ProjectCreation(models.TransientModel):
                 'long_origin': self.long_origin,
                 'lat_dest': self.lat_dest,
                 'long_dest': self.long_dest,
+                'note': self.note,
             }
 
             stock_picking = self.env['stock.picking'].create(stock_picking_vals)
