@@ -7,7 +7,7 @@
             <form string="Analisar archivo" js_class="NoticeFileWizardController" js_view_type="noticeWizardFormViewTab">
              <sheet>
                 <notebook>
-                    <page string="Crear nuevo aviso" name="create_tab">
+                    <page string="Crear nuevo aviso" name="create_tab" attrs="{'invisible': [('show_create_tab', '=', False)]}">
 
                         <group>
                         
