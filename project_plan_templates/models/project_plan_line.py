@@ -38,14 +38,6 @@ class ProjectLines(models.Model):
     code = fields.Char(string="Code")
     sequence = fields.Integer()
     project_plan_pickings = fields.Many2one('project.plan.pickings', string="Picking Templates")
-    
-    @api.onchange('project_plan_pickings')
-    def onchange_picking_lines(self):
-        for record in self:
-            lines = self.env['project.picking.lines']
-            for picking in record.project_plan_pickings:
-                lines |= picking.project_picking_lines
-            record.picking_lines = lines
 
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []

@@ -46,6 +46,18 @@ class ProjectPlan(models.Model):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
 
+    def update_pickings_from_lines(self):
+        for record in self:
+            selected_lines = record.project_plan_lines.filtered(
+                lambda line: line.project_plan_pickings
+            )
+
+            pickings = selected_lines.mapped('project_plan_pickings')
+
+            if pickings:
+                record.project_plan_pickings = [(6, 0, pickings.ids)]
+            else:
+                record.project_plan_pickings = [(5, 0, 0)]
 
     @api.onchange('project_plan_pickings')
     def onchange_picking_lines(self):
