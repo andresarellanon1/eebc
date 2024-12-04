@@ -1,9 +1,13 @@
 odoo.define('eebc_notices.NoticeFileWizardController', [
-    '@web/views/form/form_controller', '@web/views/form/form_view'
+    '@web/views/form/form_controller', '@web/views/form/form_view', '@web/core/registry'
 ], function (require) {
     'use strict';
 
     const { FormController } = require('@web/views/form/form_controller');
+    const { FormView } = require('@web/views/form/form_view');
+    const { registry } = require('@web/core/registry');
+
+
 
     class NoticeFileWizardController extends FormController {
         setup() {
@@ -11,6 +15,20 @@ odoo.define('eebc_notices.NoticeFileWizardController', [
 
             super.setup();
         }
+    }
+
+
+        const noticeWizardFormView ={
+            ...FormView,
+            Controller:NoticeFileWizardController,
+
+        }
+
+        registry.category("views").add("noticeWizardFormViewTab",noticeWizardFormView)
+    
+
+
+
 
         // async start() {
         //     await super.start();
@@ -32,7 +50,6 @@ odoo.define('eebc_notices.NoticeFileWizardController', [
         //         changes: { active_tab: tabName },
         //     });
         // }
-    }
+   
 
-    return { NoticeFileWizardController };
 });
