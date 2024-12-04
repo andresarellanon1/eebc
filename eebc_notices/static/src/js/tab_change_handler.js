@@ -1,5 +1,5 @@
 odoo.define('eebc_notices.NoticeFileWizardController', [
-    '@web/views/form/form_controller',
+    '@web/views/form/form_controller', '@web/views/form/form_view'
 ], function (require) {
     'use strict';
 
@@ -7,30 +7,31 @@ odoo.define('eebc_notices.NoticeFileWizardController', [
 
     class NoticeFileWizardController extends FormController {
         setup() {
-            super.setup(...arguments);
             console.log('Notice File Wizard Controller iniciado');
+
+            super.setup();
         }
 
-        async start() {
-            await super.start();
-            console.log('Vista de modelo transitorio cargada correctamente');
-            this.el.querySelectorAll('.o_notebook .nav-link').forEach((element) => {
-                element.addEventListener('click', this._onTabChanged.bind(this));
-            });
-        }
+        // async start() {
+        //     await super.start();
+        //     console.log('Vista de modelo transitorio cargada correctamente');
+        //     this.el.querySelectorAll('.o_notebook .nav-link').forEach((element) => {
+        //         element.addEventListener('click', this._onTabChanged.bind(this));
+        //     });
+        // }
 
-        _onTabChanged(event) {
-            const tab = event.currentTarget.getAttribute('aria-controls');
-            const tabName = tab === 'assign_tab' ? 'assign' : 'create';
+        // _onTabChanged(event) {
+        //     const tab = event.currentTarget.getAttribute('aria-controls');
+        //     const tabName = tab === 'assign_tab' ? 'assign' : 'create';
 
-            console.log('Pestaña activa:', tabName);
+        //     console.log('Pestaña activa:', tabName);
 
-            // Actualiza el backend con la pestaña activa
-            this.trigger_up('field_changed', {
-                dataPointID: this.props.dataPointID,
-                changes: { active_tab: tabName },
-            });
-        }
+        //     // Actualiza el backend con la pestaña activa
+        //     this.trigger_up('field_changed', {
+        //         dataPointID: this.props.dataPointID,
+        //         changes: { active_tab: tabName },
+        //     });
+        // }
     }
 
     return { NoticeFileWizardController };
