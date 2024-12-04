@@ -23,11 +23,11 @@
 
         
     ],
-    'assets': {
-        'web.assets_backend': [
-            'eebc_notices/static/src/components/tab_change_handler.js',
-        ],
-    },
+    # 'assets': {
+    #     'web.assets_backend': [
+    #         'eebc_notices/static/src/components/tab_change_handler.js',
+    #     ],
+    # },
     "application": True,
     "installable": True,
     "license": "LGPL-3",
