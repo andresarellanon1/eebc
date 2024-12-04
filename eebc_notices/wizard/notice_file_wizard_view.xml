@@ -7,7 +7,7 @@
             <form string="Analisar archivo">
              <sheet>
                 <notebook>
-                    <page string="Crear nuevo aviso" name="create_tab" attrs="{'invisible': [('show_create_tab', '=', False)]}">
+                    <page string="Crear nuevo aviso" name="create_tab" >
 
                         <group>
                         
