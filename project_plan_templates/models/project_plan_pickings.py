@@ -67,14 +67,13 @@ class ProjectPlanPickingLine(models.Model):
         ]
     )
     sequence = fields.Integer()
-    
+
     def reservado_update(self, task_inventory_lines):
         for record in self:
             for inventory_lines in task_inventory_lines:
                 if record.product_id.id == inventory_lines.product_id.id:
                     if record.quantity >= (record.reservado + inventory_lines.quantity):
                         record.reservado += inventory_lines.quantity
-
 
     @api.depends('product_id')
     def _compute_standard_price(self):
