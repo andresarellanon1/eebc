@@ -55,24 +55,6 @@ class ProjectPlan(models.Model):
                 lines |= picking.project_picking_lines
             record.picking_lines = lines
 
-
-    def action_open_create_project_wizard(self):
-        self.ensure_one()
-        return {
-            'name': 'Create Project',
-            'view_mode': 'form',
-            'res_model': 'project.creation.wizard',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': {
-                'default_project_plan_id': self.id,
-                'default_project_plan_pickings': [(6, 0, self.project_plan_pickings.ids)],
-                'default_picking_lines': [(6, 0, self.picking_lines.ids)],
-                'default_description': self.description,
-            }
-        }
-
-
     @api.depends('product_template_id')
     def _compute_service_project_domain(self):
         for record in self:

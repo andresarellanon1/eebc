@@ -7,7 +7,7 @@ class ProjectLines(models.Model):
    _description = 'Project plan lines'
 
    
-   name = fields.Char(string="Name")
+   name = fields.Char(string="Name", default=False)
    chapter = fields.Char(string="Chapter")
    clave = fields.Integer(string="Task id")
    description = fields.Char(string="Description")

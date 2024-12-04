@@ -10,8 +10,8 @@ class ProjectCreation(models.TransientModel):
     project_name = fields.Char(string="Project Name", required=True)
     user_id = fields.Many2one('res.users', string="Project manager")
     description = fields.Html(string="Description")
-    is_sale_order = fields.Boolean(default=False)
     sale_order_id = fields.Many2one('sale.order', string="Sale order")
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
     
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
@@ -39,52 +39,8 @@ class ProjectCreation(models.TransientModel):
             record.wizard_picking_lines = [(5, 0, 0)]
             record.wizard_plan_lines = [(5, 0, 0)]
 
-            plan_lines = []
-            picking_lines = []
-            for line in record.sale_order_id.project_plan_lines:
-                if line.use_project_task:
-                    if line.display_type == 'line_section':
-                        plan_lines.append((0, 0, {
-                            'name': line.name,
-                            'display_type': line.display_type,
-                            'description': False,
-                            'use_project_task': True,
-                            'planned_date_begin': False,
-                            'planned_date_end': False,
-                            'partner_id': False,
-                            'task_timesheet_id': False,
-                        }))
-                    else:
-                        plan_lines.append((0, 0, {
-                            'name': line.name,
-                            'description': line.description,
-                            'use_project_task': True,
-                            'planned_date_begin': line.planned_date_begin,
-                            'planned_date_end': line.planned_date_end,
-                            'partner_id': [(6, 0, line.partner_id.ids)],
-                            'task_timesheet_id': line.task_timesheet_id.id,
-                            'display_type': False
-                        }))
-
-            for line in record.sale_order_id.project_picking_lines:
-                if line.display_type == 'line_section':
-                    picking_lines.append((0, 0, {
-                        'name': line.name,
-                        'display_type': line.display_type,
-                        'product_id': False,
-                        'quantity': False,
-                        'standard_price': False,
-                        'subtotal': False
-                    }))
-                else:
-                    picking_lines.append((0, 0, {
-                        'name': line.product_id.name,
-                        'product_id': line.product_id.id,
-                        'quantity': line.quantity,
-                        'standard_price': line.standard_price,
-                        'subtotal': line.subtotal,
-                        'display_type': False
-                    }))
+            plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
+            picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
 
             record.wizard_plan_lines = plan_lines
             record.wizard_picking_lines = picking_lines
@@ -93,27 +49,14 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
-        # project_plan_lines_vals = [(0, 0, {
-        #     'name': line.name,
-        #     'chapter': line.chapter,
-        #     'description': line.description,
-        #     'use_project_task': line.use_project_task,
-        #     'planned_date_begin': line.planned_date_begin,
-        #     'planned_date_end': line.planned_date_end,
-        #     'task_timesheet_id': line.task_timesheet_id.id,
-        #     'partner_id': [(6, 0, line.partner_id.ids)]
-        # }) for line in self.wizard_plan_lines if line.use_project_task]
-
-        # picking_lines_vals = [(0, 0, {
-        #     'product_id': line.product_id.id,
-        #     'quantity': line.quantity,
-        # }) for line in self.wizard_picking_lines]
+        project_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+        picking_line_vals = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
         project_vals = {
             'name': self.project_name,
             'description': self.description,
-            'project_plan_lines': [(6, 0, self.wizard_plan_lines.ids)],
-            'project_picking_lines': [(6, 0, self.wizard_picking_lines.ids)],
+            'project_plan_lines': project_plan_lines,
+            'project_picking_lines': picking_line_vals,
         }
 
         logger.warning(f"project_vals")
@@ -123,39 +66,27 @@ class ProjectCreation(models.TransientModel):
 
         logger.warning(f"create_project_task")
 
-        self.project_plan_id.project_name = False
+        self.sale_order_id.state = 'budget'
+        self.sale_order_id.project_id = project.id
 
-        if self.is_sale_order:
-
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'sale.order',
-                'res_id': self.sale_order_id.id,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'target': 'current',
-                'context': self.env.context
-            }
-        else:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'project.project',
-                'res_id': project.id,
-                'view_mode': 'form',
-                'target': 'current',
-            }
-
-    
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
 
     def create_project_tasks(self, project):
         current_task_type = None
         for line in self.wizard_plan_lines:
             if line.display_type:
                 current_task_type = self.get_or_create_task_type(line.name, project)
-            else:
-                current_task_type = self.get_or_create_task_type('Extras', project)
 
-            if line.use_project_task:
+            if line.use_project_task and not line.display_type:
+                if not current_task_type:
+                    current_task_type = self.get_or_create_task_type('Extras', project)
+
                 timesheet_lines = self.env['task.time.lines'].search([
                     ('task_timesheet_id', '=', line.task_timesheet_id.id)
                 ])
@@ -173,8 +104,6 @@ class ProjectCreation(models.TransientModel):
                     'timesheet_ids': timesheet_data,
                 })
 
-    
-
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
             ('name', '=', stage_id),
@@ -188,6 +117,57 @@ class ProjectCreation(models.TransientModel):
             })
             
         return task_type
+
+    def prep_plan_lines(self, plan):
+        plan_lines = []
+        for line in plan:
+            if line.use_project_task:
+                if line.display_type == 'line_section':
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'display_type': line.display_type,
+                        'description': False,
+                        'use_project_task': True,
+                        'planned_date_begin': False,
+                        'planned_date_end': False,
+                        'partner_id': False,
+                        'task_timesheet_id': False,
+                    }))
+                else:
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': True,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'partner_id': [(6, 0, line.partner_id.ids)],
+                        'task_timesheet_id': line.task_timesheet_id.id,
+                        'display_type': False
+                    }))
+        return plan_lines
+
+    def prep_picking_lines(self, picking):
+        picking_lines = []
+        for line in picking:
+            if line.display_type == 'line_section':
+                picking_lines.append((0, 0, {
+                    'name': line.name,
+                    'display_type': line.display_type,
+                    'product_id': False,
+                    'quantity': False,
+                    'standard_price': False,
+                    'subtotal': False
+                }))
+            else:
+                picking_lines.append((0, 0, {
+                    'name': line.product_id.name,
+                    'product_id': line.product_id.id,
+                    'quantity': line.quantity,
+                    'standard_price': line.standard_price,
+                    'subtotal': line.subtotal,
+                    'display_type': False
+                }))
+        return picking_lines
 
     @api.depends('wizard_picking_lines.subtotal')
     def _compute_total_cost(self):

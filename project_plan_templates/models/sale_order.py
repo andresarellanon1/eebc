@@ -14,18 +14,20 @@ class SaleOrder(models.Model):
 
     state = fields.Selection(
         selection_add=[
-            ('estimation', 'Estimation'),
-            ('budget', 'Budget')
+            ('budget', 'Budget'),
+            ('process', 'In process')
         ],
         ondelete={
-            'estimation': 'set default',
-            'budget': 'set default'
+            'budget': 'set default',
+            'process': 'set default'
         }
     )
 
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
+
+    project_id = fields.Many2one('project.project', string="Project")
     
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
@@ -39,7 +41,6 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         self.ensure_one()
-
         
         for sale in self:
             if sale.is_project:
@@ -51,7 +52,6 @@ class SaleOrder(models.Model):
                 sale.project_plan_lines = [(5, 0, 0)]
                 sale.project_picking_lines = [(5, 0, 0)]
 
-                sale.state = 'estimation'
                 plan_pickings = []
                 plan_lines = []
                 picking_lines = []
@@ -79,11 +79,11 @@ class SaleOrder(models.Model):
                     else:
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             plan_lines.append((0, 0, {
-                                'name': f"{line.product_id.default_code}-{line.product_template_id.name}-{plan.name}",
+                                'name': f"{line.code}-{line.product_template_id.name}-{plan.name}",
                                 'description': plan.description,
                                 'use_project_task': True,
-                                'planned_date_begin': False,
-                                'planned_date_end': False,
+                                'planned_date_begin': fields.Datetime.now(),
+                                'planned_date_end': fields.Datetime.now(),
                                 'partner_id': [(6, 0, plan.partner_id.ids)],
                                 'task_timesheet_id': plan.task_timesheet_id.id,
                                 'display_type': False
@@ -103,8 +103,7 @@ class SaleOrder(models.Model):
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
                 sale.project_picking_lines = picking_lines
-            else:
-                return super(SaleOrder, self).action_confirm()
+            return super(SaleOrder, self).action_confirm()
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
