@@ -4,58 +4,64 @@ from odoo.exceptions import ValidationError
 
 
 class ProjectLines(models.Model):
-   _name = 'project.plan.line'
-   _description = 'Project plan lines'
+    _name = 'project.plan.line'
+    _description = 'Project plan lines'
 
-   
-   name = fields.Char(string="Name", default=False)
-   chapter = fields.Char(string="Chapter")
-   clave = fields.Integer(string="Task id")
-   description = fields.Char(string="Description")
-   use_project_task = fields.Boolean(default=True, string="Use task")
+    
+    name = fields.Char(string="Name", default=False)
+    chapter = fields.Char(string="Chapter")
+    clave = fields.Integer(string="Task id")
+    description = fields.Char(string="Description")
+    use_project_task = fields.Boolean(default=True, string="Use task")
 
-   
-   project_plan_id = fields.Many2one('project.plan', string="Project plan")
-   origin_project_id = fields.Many2one('project.project', string="Project")
-   stage_id = fields.Many2one(
-       'project.task.type',
-       string="Stage",
-   )
-   partner_id = fields.Many2many('res.users', string="Assigned user")
-   task_timesheet_id = fields.Many2one('task.timesheet', string="Timesheet")
-   sale_order_id = fields.Many2one('sale.order', string="Origin")
+    
+    project_plan_id = fields.Many2one('project.plan', string="Project plan")
+    origin_project_id = fields.Many2one('project.project', string="Project")
+    stage_id = fields.Many2one(
+        'project.task.type',
+        string="Stage",
+    )
+    partner_id = fields.Many2many('res.users', string="Assigned user")
+    task_timesheet_id = fields.Many2one('task.timesheet', string="Timesheet")
+    sale_order_id = fields.Many2one('sale.order', string="Origin")
 
-  
-   planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Begin date")
-   planned_date_end = fields.Datetime(default=fields.Date.context_today, string="End date")
+    
+    planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Begin date")
+    planned_date_end = fields.Datetime(default=fields.Date.context_today, string="End date")
 
-   display_type = fields.Selection(
-        [
+    display_type = fields.Selection(
+            [
             ('line_section', 'Section'),
             ('line_note', 'Note'),
         ]
-   )
-   code = fields.Char(string="Code")
-   sequence = fields.Integer()
-
-   
-   def action_preview_task(self):
-       user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
-
-       task_vals = {
-           'name': self.name,
-           'user_ids': [(6, 0, user_ids)] if user_ids else False,
-           'description': self.description,
-           'planned_date_begin': self.planned_date_begin,
-           'date_deadline': self.planned_date_end,
-       }
-       task = self.env['project.task'].create(task_vals)
-       return {
-           'type': 'ir.actions.act_window',
-           'res_model': 'project.task',
-           'res_id': task.id,
-           'view_mode': 'form',
-           'target': 'new',
-       }
+    )
+    code = fields.Char(string="Code")
+    sequence = fields.Integer()
+    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Picking Templates")
     
-    
+    @api.onchange('project_plan_pickings')
+    def onchange_picking_lines(self):
+        for record in self:
+            lines = self.env['project.picking.lines']
+            for picking in record.project_plan_pickings:
+                lines |= picking.project_picking_lines
+            record.picking_lines = lines
+
+    def action_preview_task(self):
+        user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
+
+        task_vals = {
+            'name': self.name,
+            'user_ids': [(6, 0, user_ids)] if user_ids else False,
+            'description': self.description,
+            'planned_date_begin': self.planned_date_begin,
+            'date_deadline': self.planned_date_end,
+        }
+        task = self.env['project.task'].create(task_vals)
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.task',
+            'res_id': task.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
