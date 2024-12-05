@@ -42,7 +42,8 @@
                                     </group>
                                     <div>
                                         <field name="wizard_picking_lines">
-                                            <tree editable="editable_bottom" style="width: 100%;">  
+                                            <tree editable="editable_bottom" style="width: 100%;">
+                                                <field name="company_id" invisible="1"/>  
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="display_type" column_invisible="True"/>
                                                 <field name="product_id"/>  
