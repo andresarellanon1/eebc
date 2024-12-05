@@ -7,7 +7,7 @@
             <form string="Analisar archivo">
              <sheet>
                 <notebook>
-                    <page string="Crear nuevo aviso" name="create_tab" >
+                    <page string="Crear nuevo aviso" name="create_page_tab"  invisible="create_tab">
 
                         <group>
                         
@@ -46,6 +46,9 @@
                 <footer>
                     <button name="create_notice" type="object" string="Crear aviso" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    <field name="create_tab"/>
+                    <field name="update_tab"/>
+
                 </footer>
             </form>
         </field>
