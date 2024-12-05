@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_timesheet_view_form" model="ir.ui.view">
+        <field name="name">inherit.timesheet.view.form</field>  
+        <field name="model">project.project</field>  
+        <field name="inherit_id" ref="project.edit_project"/>  
+        
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                
+                <page name="Planeacion" string="Planeación">
+                    <group name="planning_container">
+                        <field name="project_plan_id"/>  
+                    </group>
+                    
+                    <div name="planning_lines">
+                        <field name="project_plan_lines" nolabel="1">
+                            <tree editable="editable_bottom" style="width: 100%;"> 
+                                <field name="name"/> 
+                                <field name="description"/>  
+                                <field name="planned_date_begin" widget="daterange"/> 
+                                <field name="planned_date_end" widget="daterange"/> 
+                                <field name="partner_id" widget="many2many_avatar_user"/>  
+                                <field name="task_timesheet_id" options="{'create': True}"/> 
+                                <button name="action_preview_task" type="object" class="oe_highlight"
+                                        string="Preview task"/>
+                            </tree>
+                        </field>
+                    </div>
+                </page>
+                
+                <page name="Stock" string="Stock">
+                    
+                    <div name="stock_lines" nolabel="1">
+                        <field name="project_picking_lines" style="width: 100%;"> 
+                            <tree editable="editable_bottom">
+                                <field name="product_id"/> 
+                                <field name="quantity"/> 
+                                <field name="reservado"/>  
+                                <field name="location_id"/>  
+                            </tree>
+                        </field>
+                        <group>
+                            <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                                <field name="plan_total_cost"/> 
+                            </group>
+                        </group>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -21,7 +21,8 @@
     """,
     "data": [
         "views/res_partner.xml",
-        "views/sale_order_views.xml"
+        "views/sale_order_views.xml",
+        "views/res_country_views.xml",
     ],
     "application": False,
     "installable": True,

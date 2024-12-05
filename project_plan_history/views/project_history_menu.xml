@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="project_history_action" model="ir.actions.act_window">
+            <field name="name">Historial</field>
+            <field name="res_model">project.version</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="wizard_history_action" model="ir.actions.act_window">
+            <field name="name">Wizard</field>
+            <field name="res_model">change.reason.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_change_reason_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="menu_project_history" model="ir.ui.menu">
+            <field name="name">Historial de Proyectos</field>
+            <field name="parent_id" ref="project.menu_main_pm" />
+            <field name="action" ref="project_history_action"/>
+        </record>
+
+        <menuitem
+            id="project_history_action_option"
+            name="Historial"
+            action="project_history_action"
+            parent="menu_project_history"
+            sequence="23" />
+
+        <menuitem
+            id="wizard_history_action_option"
+            name="Wizard"
+            action="wizard_history_action"
+            parent="menu_project_history"
+            sequence="24" />
+    </data>
+</odoo>

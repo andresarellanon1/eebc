@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="out_saleorder_template_custom">
+            <t t-foreach="docs" t-as="venta">
+                <t t-call="web.html_container">
+                    <t t-call="report_configs.external_layout_invoice_custom">
+                        <t t-call="report_configs.report_styles"/>
+                        <div class="page">
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0;">
+                                <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 26px; padding: 2px important!">
+                                    <tr>
+                                        <th style="width: 53%;"/>
+                                        <th style="width: 30%; background-color: white; font-weight: 900">
+                                    C O T I Z A C I Ó N
+                                        </th>
+                                        <th style="width: 17%; font-weight: 900">
+                                    76254
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="container m-1">
+                                <div class="row">
+                                    <div class="col-auto col_tags">
+                                        <span>Cliente:</span>                                        
+                                        <br/>
+                                        <span>Nombre:</span>
+                                        <br/>
+                                        <span>R.F.C:</span>
+                                        <br/>
+                                        <span>C. Postal:</span>
+                                        <br/>
+                                        <span>Contacto:</span>
+                                        <br/>
+                                        <span>Email:</span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_fields" style="padding-right:15px">
+                                        <span>13663</span>
+                                        <br/>
+                                        <span>MAQUINARIA Y VALORES INDUSTRIALES</span>
+                                        <br/>
+                                        <span>MVI140730V38</span>
+                                        <br/>
+                                        <span>21360</span>
+                                        <br/>
+                                        <span>YANIN ROMERO RIVERA</span>
+                                        <br/>
+                                        <span>yanin.romerorivera@fevisa.com</span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_tags">
+                                        <span>Fecha:</span>
+                                        <br/>
+                                        <span>Almacen:</span>
+                                        <br/>
+                                        <span>Condiciones:</span>
+                                        <br/>
+                                        <span>L.A.B.:</span>
+                                        <br/>
+                                        <span>Teléfono:</span>
+                                        <br/>
+                                        <span>Celular:</span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_fields" style="background-color:#ededed;">
+                                        <span>06/06/2022</span>
+                                        <br/>
+                                        <span>MEXICALI</span>
+                                        <br/>
+                                        <span>CREDITO</span>
+                                        <br/>
+                                        <span><div style="height: 5px;"></div></span>
+                                        <br/>
+                                        <span>686-904-54-00 EXT2297</span>
+                                        <br/>
+                                        <br/>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table-borderless" style="width: 100%; font-size: 13px;">
+                                <thead>
+                                    <tr id="encabezados-tabla" style="background-color: rgb(0, 56, 108); color: white; padding: 10px;">
+                                        <th style="width: 5%; padding: 7px 0;">Pda.</th>
+                                        <th style="width: 5%;"/>
+                                        <th style="width: 46%;">Descripción</th>
+                                        <th style="width: 15%;">Tiempo de Entrega</th>
+                                        <th style="width: 7%;">Cantidad</th>
+                                        <th style="width: 5%;">U.M.</th>
+                                        <th style="width: 10%;">P. Unitario</th>
+                                        <th style="width: 10%; text-align: right; padding-right: 5px;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center;">
+                                    <t t-set="contador_productos" t-value="0"/>
+                                    <t t-set="total_importe" t-value="0"/>
+                                    <t t-foreach="venta.order_line" t-as="linea">
+                                        <t t-if="linea.display_type == 'line_section'">
+                                            <tr>
+                                                <td colspan="8" style="font-weight: bold; background-color: #f5f5f5; text-align: center;">
+                                                    <span t-field="linea.name"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-elif="linea.display_type == 'line_note'">
+                                            <tr>
+                                                <td colspan="8" style="font-style: italic; background-color: #fafafa;">
+                                                    <span t-field="linea.name"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-set="contador_productos" t-value="contador_productos + 1"/>
+                                            <tr>
+                                                <td>
+                                                    <t t-esc="contador_productos"/>
+                                                </td>
+                                                <td>
+                                                    <span>4270</span>
+                                                </td>
+                                                <td style="text-align: left;">
+                                                    <span t-field="linea.product_id.name"/>
+                                                </td>
+                                                <td>
+                                                    INMEDIATO
+                                                </td>
+                                                <td>
+                                                    <span t-field="linea.product_uom_qty"/>
+                                                </td>
+                                                <td>
+                                                    <span t-field="linea.product_uom.name"/>
+                                                </td>
+                                                <td>
+                                                    <span t-field="linea.price_unit"/>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <t t-set="importe" t-value="(linea.price_unit or 0) * (linea.product_uom_qty or 0)"/>
+                                                    <t t-esc="importe"/>
+                                                    <t t-set="total_importe" t-value="total_importe + importe"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <table class="table-borderless" style="width: 100%; font-size: 13px;">
+                                <tbody>                                    
+                                    <tr>
+                                        <td style="width: 75%;"/>
+                                        <td style="width: 5%; text-align: right; border-top: 1px solid black; color: rgb(0, 56, 108);">
+                                            <strong>SUBTOTAL $ :</strong>
+                                        </td>
+                                        <td style="width: 20%; text-align: right; border-top: 1px solid black; ">
+                                            <t t-set="iva" t-value="total_importe * 0.08"/>
+                                            <t t-set="total" t-value="total_importe + iva"/>
+                                            <t t-esc="total_importe"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 70%;"/>
+                                        <td style="width: 15%; text-align: right; color: rgb(0, 56, 108);">
+                                            <strong>IVA 8% $ :</strong>
+                                        </td>
+                                        <td style="width: 15%; text-align: right;">
+                                            <t t-esc="iva"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 70%;"/>
+                                        <td style="width: 15%; text-align: right; background-color: rgb(255, 204, 0); color: rgb(0, 56, 108);">
+                                            <strong>TOTAL $ :</strong>
+                                        </td>
+                                        <td style="width: 15%; text-align: right; background-color: rgb(255, 204, 0);">
+                                            <t t-esc="total"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <div style="width: 100%; font-size: 13px; background-color: white; background-color: rgba(255, 255, 255, 0); margin-top: 20px;">
+                                <span style="text-align: left;">www.eebc.com.mx</span>
+                                <table class="table-borderless" style="width: 100%; table-layout: fixed; border-bottom: 3px solid rgb(0,58,112); border-top: 3px solid rgb(0,58,112);">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50%; font-weight: bold; text-align: left;  border-right: 3px solid rgb(0,58,112);">
+                                                <strong>Precios válidos hasta el día: 06/Jul/2022</strong>
+                                            </th>
+                                            <th style="width: 50%; border-top: 3px solid rgb(0,58,112);"/>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="text-align: left; width: 50%; border-right: 3px solid rgb(0,58,112);">
+                                                <table style="width: 100%;">
+                                                    <tbody>
+                                                        <br/>
+                                                        <br/>
+                                                        <br/>
+                                                        <tr>
+                                                            <td style="text-align: right; width: 20%; padding-right: 4px;">
+                                                                <strong>Vendedor : </strong>
+                                                            </td>
+                                                            <td style="text-align: left; width: 80%;">MIGUEL ARCANGEL BRAMASCO TAMAYO</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: right; padding-right: 4px;">
+                                                                <strong>Teléfono : </strong>
+                                                            </td>
+                                                            <td style="text-align: left;">(686) 561-5255</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: right; padding-right: 4px;">
+                                                                <strong>Celular : </strong>
+                                                            </td>
+                                                            <td style="text-align: left;">(686) 273-6077</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: right; padding-right: 4px; ">
+                                                                <strong>Correo : </strong>
+                                                            </td>
+                                                            <td style="text-align: left; ">arcangel.bramasco@eebc.com.mx</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td style="text-align: right; width: 50%; ">
+                                                <table style="width: 100%;">
+                                                    <br/>
+                                                    <br/>
+                                                    <br/>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>EQUIPOS ELECTRICOS DE BAJA CALIFORNIA</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>CALLE URBANO VASQUEZ NUM. 1988</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>COL. PLUTARCO ELIAS CALLES, CP 21376, MEXICALI, B.C.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>R.F.C EEB8111231Q4, Teléfono: (686) 561-5200 FAX 561-5206</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

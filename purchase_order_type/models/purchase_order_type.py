@@ -1,4 +1,5 @@
-from odoo import _, fields, models
+from odoo import _, fields, models, api
+import logging
 import logging
 
 logger = logging.getLogger(__name__)
@@ -8,5 +9,5 @@ class PurchaseOrderType(models.Model):
     _description = "Tipo de orden de compra"
 
     name = fields.Char('Nombre', required=True)
-    location_id = fields.Many2one('stock.location', string='Ubicación', required=True)
-    sequence_id = fields.Many2one('ir.sequence', string='Secuencia')
+    picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación')
+    company_id = fields.Many2one('res.company', string='Empresa')

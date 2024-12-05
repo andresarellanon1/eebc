@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_edit_project_view" model="ir.ui.view">
+        <field name="name">inherit.edit.project.view</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group//field[@name='date']" position="after">
+                <field name="bid_code"/>
+            </xpath>
+            <xpath expr="//group//field[@name='user_id']" position="after">
+                <field name="default_picking_type_id"/>
+                <field name="currency_id" readonly="0"/>
+                <field name="exchange_rate"/>
+                <field name="creation_date"/>
+                <field name="submission_date"/>
+                <field name="publication_date"/>
+                <field name="site_supervisor_id"/>
+                <field name="subcontractor_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

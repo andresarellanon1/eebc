@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_out_material_quadro" model="ir.actions.report">
+        <field name="name">Reporte de factura de clientes Quadro</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">report_configs.out_material_template</field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="wizard_select_line_view" model="ir.ui.view">
+        <field name="name">Wizard Selection Line</field>
+        <field name="model">wizard.selection.line</field>
+        <field name="arch" type="xml">
+             <form string="Select Products">
+
+                <sheet>
+                    <group>
+                    <field name="notice_id" readonly="1" options="{'no_open': True}" />
+                    <field name="quantity" />
+                    <field name="quantity_available" readonly="1" />
+
+
+
+                    </group>
+                </sheet>
+             </form>
+        </field>
+    </record>
+</odoo>

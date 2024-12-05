@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    
+    <record id="inherit_project_task_inventory_view_form" model="ir.ui.view">
+        <field name="name">inherit.project.task.view.form</field> 
+        <field name="model">project.task</field> 
+        <field name="inherit_id" ref="project.view_task_form2"/> 
+
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='extra_info']" position="after">
+                <page name="material" string="Material">
+                    <button name="action_open_task_inventory_wizard" type="object" string="Crear Inventario" class="oe_highlight"/>
+                    <field name="stock_ids" widget="One2many_list" readonly="1">
+                        <tree editable="false">
+                            <field name="name"/> 
+                            <field name="state"/> 
+                            <field name="new_selection"/>  
+                            <field name="scheduled_date"/> 
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

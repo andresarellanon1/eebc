@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="model_purchase_order_type_project" model="purchase.order.type">
+            <field name="name">Proyecto</field>
+            <field name="location_id" ref="purchase_order_type.model_purchase_order_type_location_project"/>
+            <field name="sequence_id" ref="purchase_order_type.seq_purchase_order_type_project"/>
+        </record>
+
+        <record id="model_purchase_order_type_sale" model="purchase.order.type">
+            <field name="name">Venta</field>
+            <field name="location_id" ref="purchase_order_type.model_purchase_order_type_location_sale"/>
+            <field name="sequence_id" ref="purchase_order_type.seq_purchase_order_type_sale"/>
+        </record>
+    </data>
+</odoo>

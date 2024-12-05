@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_pickin_form_view" model="ir.ui.view">
+        <field name="name">inherit.pickin.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group//field[@name='origin']" position="after">
+                <field name="task_id" readonly="1" string="Tarea de origen"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

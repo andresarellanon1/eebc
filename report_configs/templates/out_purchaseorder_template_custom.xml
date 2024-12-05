@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="out_purchaseorder_template_custom">
+            <t t-foreach="docs" t-as="compra">
+                <t t-call="web.html_container">
+                    <t t-call="report_configs.external_layout_invoice_custom">
+                        <div class="page" style="display:flex; flex-direction: column; justify-content:space-between;height: 100%;">
+                            <div class="container">
+                                <hr style="border: 1px solid black"/>
+                                <table class="table" style="font-size: 8px;border-collapse: collapse;">
+                                <tbody>
+                                    <tr style="border: none;">
+                                        <td scope="row" style="padding:0; font-size:14px; font-weight: bold; border: none;">
+                                            
+                                        </td>
+                                        <td rowspan="2" style="font-size: 15px;font-weight: bold;text-align:right;padding:0;border: none;" class="col-3">
+                                            <span class="span-n">
+                                                Orden de Compra
+                                            </span>
+                                            <br/>
+                                            <span class="span-n">
+                                                No.-MXL30378
+                                            </span>
+                                            <br/>
+                                            <span class="span-n" style="padding-bottom:0; font-size:12px; font-weight:bold; color:#ff0505;">
+                                                No. de Modificación: 1 ORIGINAL
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr style="border: none;">
+                                        <td scope="row" style="padding:0;font-size:11px; border: none;">
+                                            <span class="span-n" style="font-weight: bold;">
+                                                FACTURADO A:
+                                            </span>
+                                            <br/>
+                                            <span class="span-n">
+                                                CALLE URBANO VASQUEZ NUM. 1988 COL. PLUTARCO ELÍAS CALLES, C.P. 21376, MEXICALI BCN. R.F.C. EEB8111231Q4, Télefono: (686) 561-5200 FAX 561-5206
+                                            </span>
+                                            <br/>
+                                            <span> </span>
+                                            <br/>
+                                            <span class="span-n" style="font-weight: bold;">
+                                                ENTREGADO EN:
+                                            </span>
+                                            <br/>
+                                            <span class="span-n">
+                                                CUAUHTEMOC / GUILLERMO PRIETO E IGNACIO RAMIREZ NUM. S/N COL. PUEBLO NUEVO, C.P. 23060, LA PAZ BCS. R.F.C. EEB8111231Q4, Télefono: (612) 128-84-40
+                                            </span>
+                                            <br/>
+                                            <br/>
+                                        </td>
+                                    </tr>
+                                    <tr style="border: none;">
+                                        <td scope="row" colspan="2" style="padding:0;font-size:10px; border: none;">
+                                            
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                                <div class="row" style="font-size: 12px;">
+                                    <div class="col-auto col_tags">
+                                        <span class="span-n" style="font-weight:bold;">Almacen:</span>
+                                        <br/>
+
+                                        <span class="span-n">Proveedor:</span>
+                                        <br/>
+
+                                        <span class="span-n">Domicilio:</span>
+                                        <br/>
+
+                                        <span class="span-n">FOB:</span>
+                                        <br/>
+
+                                        <span class="span-n">Modo de envio:</span>
+                                        <br/>
+
+                                    </div>
+                                    <div class="col-auto col_fields" style="padding-right:16px">
+                                        <span class="span-n" style="font-weight:bold;">001 MEXICALI</span>
+                                        <br/>
+
+                                        <span class="span-n">0904 ALIANZA ELECTRICA DEL PACIFICO SA DE CV</span>
+                                        <br/>
+
+                                        <span class="span-n">LOPEZ DEL CASTILLO ENTRE CAMELIA Y DE LAS TORRES 942</span>
+                                        <br/>
+
+                                        <span class="span-n">ALAMCEN LA PAZ BCS</span>
+                                        <br/>
+                                        
+                                        <span class="span-n">PROPIO</span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_tags">
+                                        <span class="span-n" style="font-weight:bold;">Fecha Entrega:</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">Tiempo Entrega:</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">Terminos:</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">Referencia:</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">Moneda:</span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_fields">
+                                        <span class="span-n" style="font-weight:bold;">28/08/2024</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">INMEDIATO</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">CREDITO 30 DIAS</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">REQUISICION LPZ-184</span>
+                                        <br/>
+
+                                        <span class="span-n" style="font-weight:bold;">PESOS MEXICANOS</span>
+                                        <br/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-size:13px; page-break-inside: avoid">
+                                <table class="table">
+                                    <thead id="encabezados-tabla" style="color: #000000;">
+                                        <th style="width: 5%;">Pda.</th>
+                                        <th style="width: 9%;">Cantidad</th>
+                                        <th style="width: 9%;">Unidad</th>
+                                        <th style="width: 9%;">Articulo/Descripción</th>
+                                        <th style="width: 39%;">Fec. Entrega</th>
+                                        <th style="width: 9%;">Sem.</th>
+                                        <th style="width: 10%;">P. Unitario</th>
+                                        <th style="width: 10%;">Importe</th>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="contador_productos" t-value="0"/>
+                                        <t t-set="total_importe" t-value="0"/>
+                                        <t t-foreach="compra.order_line" t-as="linea" t-index="i">
+                                            <t t-if="linea.display_type == 'product'">
+                                                <t t-set="contador_productos" t-value="contador_productos + 1"/>
+                                            </t>
+                                            <t t-if="linea.display_type == 'line_section'">
+                                                <tr>
+                                                    <td colspan="8" style="font-weight: bold; background-color: #f5f5f5; text-align: center;">
+                                                        <t t-esc="linea.name"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="linea.display_type == 'line_note'">
+                                                <tr>
+                                                    <td colspan="8" style="font-style: italic; background-color: #fafafa;">
+                                                        <t t-esc="linea.name"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="linea.display_type == 'product'">
+
+                                                <tr>
+
+                                                    <td>
+                                                        <t t-esc="contador_productos"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_id.default_code or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.quantity or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_uom_id.name or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_id.name or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.tax_ids and ', '.join([tax.name for tax in linea.tax_ids]) or ''"/>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <t t-esc="linea.price_unit or ''"/>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <t t-set="importe" t-value="(linea.price_unit or 0) * (linea.quantity or 0)"/>
+                                                        <t t-esc="importe"/>
+                                                        <t t-set="total_importe" t-value="total_importe + importe"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <span class="span-n" style="font-weight:bold;">Observaciones:</span>
+                                <hr/>
+                            </div>
+                            <table class="table" style="font-size: 9px;">
+                                <tbody>
+                                    <tr style="border: none;">
+                                        <td scope="row" style="font-size:11px; font-weight:bold;border: none;">
+                                            <span class="span-n" style="font-size:10px">
+                                                MATERIAL SOLICITADO POR FABIOLA GARCIA R., PARA VENTA.
+                                            </span>
+                                            <br/>
+                                            <span class="span-n" style="font-size:11px">
+                                                SE REQUIERE AVISO DE PRUEBA C.F.E. (SIGLA 03)
+                                            </span>
+                                            <br/>
+                                            <span class="span-n" style="font-size:10px">
+                                                COTIZACION # 115623, POR ILSE COTA.
+                                            </span>
+                                            <br/>
+                                            <br/>
+                                            <span class="span-n" style="font-size:13px">
+                                                MATERIAL SOLICITADO CON AVISO DE PRUEBA, EN LO QUE APLIQUE, FAVOR DE REALIZAR LA
+                                                TRANSFERENCIA EN SIGLA 03 A LA CUENTA 43639
+                                            </span>
+                                        </td>
+                                        <td rowspan="2" style="font-size: 10px;border: none;" class="col-3">
+                                            <p style="display: flex; justify-content: space-between;">
+                                                Sub Total :
+                                                <span>$
+                                                    <t t-esc="total_importe"/>
+                                                </span>
+                                            </p>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                IVA 16% :
+                                                <span>$</span>
+                                            </p>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                Otros Imp. :
+                                                <span>$</span>
+                                            </p>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                Otras Ret. :
+                                                <span>$</span>
+                                            </p>
+                                            <p style="display: flex; justify-content: space-between;">
+                                                Total :
+                                                <span>$</span>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="position: absolute;height:100%;width:100%;">
+                            
+                            <div style="width:100%;height:100%; display:flex; flex-direction: column; justify-content:space-between;">
+                                <div style="font-size:12px; margin-bottom:20px">
+                                    <ol>
+                                        <li>Favor de anexar una copia de la orden de compra junto con su factura.</li>
+                                        <li>Confirmar la recepción de esta orden de compra.</li>
+                                        <li>Los importes están expresados en pesos mexicanos.</li>
+                                        <li>Enviar el número de folio a: cvillagrana@eebc.com.mx</li>
+                                    </ol>
+                                </div>
+                                <div style="font-size:12px; width:100%;margin-bottom:100%">
+                                    <div class="row justify-content-evenly; text-align:center">
+                                        <div class="col-4" style="text-align:center;padding-left:2%;padding-right:2%">
+                                            <span style="font-size:10px">
+                                                FABIOLA GARCÍA ROJAS
+                                            </span>
+                                            <hr style="border: 1px solid black;margin:1px;"/>
+                                            <span style="font-size:10px">
+                                                SOLICITO
+                                            </span>
+                                        </div>
+                                        <div class="col-4" style="text-align:center;padding-left:2%;padding-right:2%">
+                                            <span style="font-size:10px;">
+                                                FABIOLA GARCÍA ROJAS
+                                            </span>
+                                            <hr style="border: 1px solid black;margin:1px;"/>
+                                            <span style="font-size:10px">
+                                                ELABORO
+                                            </span>
+                                        </div> 
+                                        <div class="col-4" style="text-align:center;padding-left:2%;padding-right:2%">
+                                            <span style="font-size:10px">
+                                                FABIOLA GARCÍA ROJAS
+                                            </span>
+                                            <hr style="border: 1px solid black;margin:1px"/>
+                                            <span style="font-size:10px">
+                                                GERENTE/JEFE DE AREA
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_project_creation_wizard_form" model="ir.ui.view">
+            <field name="name">project.creation.wizard.form</field>
+            <field name="model">project.creation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Confirm Project Creation">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="project_name" />
+                            </h1>
+                        </div>
+                            <group>
+                                <group>
+                                    <field name="partner_id"/>
+                                    <field name="sale_order_id" invisible="1"/>
+                                    <field name="picking_type_id"/>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
+                                </group>
+                                <group>
+                                    <field name="scheduled_date"/>
+                                </group>
+                            </group>
+                            <notebook>
+                                <page name="description" string="Description">
+                                    <field name="description" />
+                                </page>
+                                <page name="planning" string="Planning">
+                                    <group>
+                                        <field name="project_plan_id" invisible="1"/>
+                                    </group>
+                                    <div style="100%">
+                                        <field name="wizard_plan_lines" nolabel="1">
+                                            <tree editable="bottom" style="width: 100%;">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="display_type" column_invisible="True"/>
+                                                <field name="name"/>
+                                                <field name="description"/>
+                                                <field name="use_project_task"/>
+                                                <field name="planned_date_begin" widget="daterange"/>
+                                                <field name="planned_date_end" widget="daterange"/>
+                                                <field name="partner_id" widget="many2many_avatar_user"/>
+                                                <field name="task_timesheet_id" options="{'create': True}"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+                                </page>
+                                <page name="Stock" string="Stock">
+                                    <group name="stock_container">
+                                        <field name="project_plan_pickings" widget="many2many_tags"/>
+                                    </group>
+                                    <div>
+                                        <field name="wizard_picking_lines">
+                                            <tree editable="editable_bottom" style="width: 100%;">
+                                                <field name="company_id" column_invisible="1"/> 
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="display_type" column_invisible="True"/>
+                                                <field name="product_id"/>  
+                                                <field name="product_uom"/>
+                                                <field name="product_packaging_id"/>
+                                                <field name="quantity"/>  
+                                                <field name="standard_price"/> 
+                                                <field name="subtotal"/>  
+                                            </tree>
+                                        </field>
+                                        <group>
+                                            <group colspan="4">
+                                                <field colspan="2" name="note" nolabel="1"/>  
+                                            </group>
+                                            <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                                                <field name="plan_total_cost"/> 
+                                            </group>
+                                        </group>
+                                    </div>
+                                </page>
+                            </notebook>
+                        <footer>
+                            <button name="action_confirm_create_project" string="Create Project"
+                                type="object" class="btn-primary" />
+                            <button string="Cancel" class="btn-secondary" special="cancel" />
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

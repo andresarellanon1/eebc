@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_out_saleorder_quadro" model="ir.actions.report">
+        <field name="name">Reporte de cotización de clientes Quadro</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">report_configs.out_saleorder_template_custom</field>
+    </record>
+</odoo>
