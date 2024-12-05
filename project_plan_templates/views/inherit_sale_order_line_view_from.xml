@@ -5,10 +5,13 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_add_from_catalog']" position="attributes">
-                <attribute name="modifiers">
-                    {"invisible": [["is_project", "=", True]]}
-                </attribute>
+            <xpath expr="//button[@name='action_add_from_catalog']" position="replace">
+                <button name="action_add_from_catalog" 
+                        string="Catalog" 
+                        type="object" 
+                        class="px-4 btn-link" 
+                        invisible="[('is_project', '=', True)]"
+                        context="{'order_id': parent.id}"/>
             </xpath>
         </field>
     </record>
