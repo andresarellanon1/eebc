@@ -12,7 +12,6 @@
                                 <field name="project_name" />
                             </h1>
                         </div>
-                        <group>
                             <group>
                                 <group>
                                     <field name="partner_id"/>
@@ -78,8 +77,6 @@
                                     </div>
                                 </page>
                             </notebook>
-                        </group>
-    
                         <footer>
                             <button name="action_confirm_create_project" string="Create Project"
                                 type="object" class="btn-primary" />
