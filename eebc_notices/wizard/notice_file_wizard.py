@@ -10,9 +10,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-# TODO: 
-# Falta agregar los campos recurso, serie y fecha
-# Agregar a la vista del wizard la cantidad de la linea de la orden de compra y la cantidad que esta en el excel del respectivo producto al cual se le desea crear aviso. - LISTO (?)
 
 class NoticeFileWizard(models.TransientModel):
     """
@@ -29,13 +26,12 @@ class NoticeFileWizard(models.TransientModel):
         string='Avisos',
          
     )
-    
-    # Campo para rastrear la pestaña activa
-    active_tab = fields.Selection(
-        [('assign', 'Asignar Cantidades'), ('create', 'Crear Nuevo Aviso')],
-        default='assign',
-        string="Pestaña Activa"
-    )
+
+    create_tab = fields.Boolean(string="Crear", default=False)
+    update_tab = fields.Boolean(string="Actualizar", default=False)
+
+
+   
     quantity = fields.Float(string="Cantidad", readonly=True,)
     message = fields.Text(string="Mensaje de Error", readonly=True)  # Campo para el mensaje de error
     notice = fields.Char(string='Aviso')
@@ -68,10 +64,7 @@ class NoticeFileWizard(models.TransientModel):
 
     def create_notice(self):
         """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
-        if self.active_tab == 'assign':
-            _logger.warning('andamos asignando')
-        elif self.active_tab == 'create':
-            _logger.warning('andamos creando')
+        pass
             
 
         # notice_id = self.env['notices.notices'].search([('notice', '=', self.notice)])

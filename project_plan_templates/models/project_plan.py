@@ -46,7 +46,6 @@ class ProjectPlan(models.Model):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
 
-
     @api.onchange('project_plan_pickings')
     def onchange_picking_lines(self):
         for record in self:
