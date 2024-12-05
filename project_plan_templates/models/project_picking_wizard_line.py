@@ -27,6 +27,10 @@ class ProjectPickingWizardLine(models.TransientModel):
     code = fields.Char(string="Code")
     sequence = fields.Integer()
 
+    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
+    product_uom = fields.Many2one('uom.uom', string='Unidad de medida')
+    company_id = fields.Many2one('res.company', string="Empresa")
+
     @api.depends('product_id')
     def _compute_standard_price(self):
         for record in self:
