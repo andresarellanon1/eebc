@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_add_from_catalog']" position="attributes">
-                <attribute name="invisible">True</attribute>
+                <attribute name="invisible">[('is_project', '=', True)]</attribute>
             </xpath>
         </field>
     </record>
