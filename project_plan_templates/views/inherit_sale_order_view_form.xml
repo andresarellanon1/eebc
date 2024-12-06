@@ -17,7 +17,7 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="before">
                 <field name="is_project" invisible="state in ('sale', 'budget', 'process')"/>
-                <field name="project_name" invisible="is_project != True"/>
+                <field name="project_name" invisible="is_project != True or state in ('budget', 'process')"/>
                 <field name="project_id" invisible="state not in ('budget', 'process')" readonly="1"/>
             </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="replace">

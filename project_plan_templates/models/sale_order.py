@@ -80,6 +80,17 @@ class SaleOrder(models.Model):
                         }))
 
                     else:
+                        if line.product_id.project_plan_id:
+                            picking_lines.append((0, 0, {
+                                'name': line.name,
+                                'display_type': line.display_type,
+                                'product_id': False,
+                                'product_packaging_id': False,
+                                'product_uom_qty': False,
+                                'quantity': False,
+                                'standard_price': False,
+                                'subtotal': False
+                            }))
                         for plan in line.product_id.project_plan_id.project_plan_lines:
                             plan_lines.append((0, 0, {
                                 'name': f"{line.product_template_id.name}-{plan.name}",
