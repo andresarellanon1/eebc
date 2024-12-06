@@ -20,6 +20,9 @@
                 <field name="project_name" invisible="is_project != True"/>
                 <field name="project_id" invisible="state not in ('budget', 'process')"/>
             </xpath>
+            <xpath expr="//button[@name='action_add_from_catalog']" position="before">
+                <button name="action_add_from_catalog" invisible="is_project != True"/>
+            </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="replace">
                 <field name="code"/>
                 <field name="products_project_domain" column_invisible="1"/>
