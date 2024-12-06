@@ -77,7 +77,7 @@ class SaleOrder(models.Model):
     def prep_picking_section_line(self, line):
         return (0, 0, {
             'name': line.name,
-            'display_type': line.display_type,
+            'display_type': line.display_type or 'line_section',
             'product_id': False,
             'product_uom': False,
             'product_packaging_id': False,
@@ -90,7 +90,7 @@ class SaleOrder(models.Model):
     def prep_plan_section_line(self, line):
         return (0, 0, {
             'name': line.name,
-            'display_type': line.display_type,
+            'display_type': line.display_type or 'line_section',
             'description': False,
             'use_project_task': True,
             'planned_date_begin': False,
