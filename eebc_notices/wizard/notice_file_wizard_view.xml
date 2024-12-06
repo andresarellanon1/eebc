@@ -23,7 +23,12 @@
 
                         </group>
                     </page>
-
+ <page string="Configuraciones">
+        <group>
+            <field name="create_tab" string="Crear aviso"/>
+            <field name="update_tab" string="Actualizar aviso"/>
+        </group>
+    </page>
 
                     <page string="Asignar cantidades a los avisos" name="assign_tab">
 
