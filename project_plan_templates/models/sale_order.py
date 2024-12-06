@@ -57,11 +57,12 @@ class SaleOrder(models.Model):
                 picking_lines = []
                 for line in sale.order_line:
                     if line.display_type == 'line_section':
-                        plan_lines.append(self.prep_section_line(line))
-                        picking_lines.append(self.prep_section_line(line))
+                        plan_lines.append(self.prep_plan_section_line(line))
+                        picking_lines.append(self.prep_picking_section_line(line))
                     else:
                         if line.product_id.project_plan_id:
-                            plan_lines.append(self.prep_section_line(line))
+                            plan_lines.append(self.prep_plan_section_line(line))
+                            picking_line.append(self.prep_picking_section_line(line))
                             plan_lines += self.prep_plan_lines(line)
                             picking_lines += self.prep_picking_lines(line)
 
@@ -73,7 +74,7 @@ class SaleOrder(models.Model):
                 sale.project_picking_lines = picking_lines
             return super(SaleOrder, self).action_confirm()
     
-    def prep_section_line(self, line):
+    def prep_picking_section_line(self, line):
         return (0, 0, {
             'name': line.name,
             'display_type': line.display_type,
@@ -84,6 +85,19 @@ class SaleOrder(models.Model):
             'quantity': False,
             'standard_price': False,
             'subtotal': False
+        })
+    
+    def prep_plan_section_line(self, line):
+        return (0, 0, {
+            'name': line.name,
+            'display_type': line.display_type,
+            'description': False,
+            'use_project_task': True,
+            'planned_date_begin': False,
+            'planned_date_end': False,
+            'partner_id': False,
+            'project_plan_pickings': False,
+            'task_timesheet_id': False,
         })
 
     def prep_plan_lines(self, line):
