@@ -72,6 +72,8 @@ class SaleOrder(models.Model):
                             'name': line.name,
                             'display_type': line.display_type,
                             'product_id': False,
+                            'product_packaging_id': False,
+                            'product_uom_qty': False,
                             'quantity': False,
                             'standard_price': False,
                             'subtotal': False
@@ -94,6 +96,8 @@ class SaleOrder(models.Model):
                                 picking_lines.append((0, 0, {
                                     'name': picking.product_id.name,
                                     'product_id': picking.product_id.id,
+                                    'product_packaging_id': picking.product_packaging_id.id,
+                                    'product_uom_qty': picking.product_uom_qty,
                                     'quantity': picking.quantity,
                                     'standard_price': picking.standard_price,
                                     'subtotal': picking.subtotal,

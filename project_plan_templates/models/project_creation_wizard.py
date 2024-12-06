@@ -37,6 +37,7 @@ class ProjectCreation(models.TransientModel):
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
     partner_id = fields.Many2one('res.partner', string='Contacto')
+    date_start = fields.Datetime(string="Planned Start Date")
 
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
@@ -63,6 +64,9 @@ class ProjectCreation(models.TransientModel):
             'description': self.description,
             'project_plan_lines': project_plan_lines,
             'project_picking_lines': picking_line_vals,
+            'default_picking_type_id': self.picking_type_id,
+            'publication_date': fields.Datetime.now(),
+            'date_start': self.date_start,
         }
 
         logger.warning(f"project_vals")
