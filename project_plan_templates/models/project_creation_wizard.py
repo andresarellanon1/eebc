@@ -32,6 +32,13 @@ class ProjectCreation(models.TransientModel):
 
     plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
+    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
+    location_id = fields.Many2one('stock.location', string='Ubicación de origen')
+    location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
+    scheduled_date = fields.Datetime(string='Fecha programada')
+    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
+    partner_id = fields.Many2one('res.partner', string='Contacto')
+
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
         for record in self:

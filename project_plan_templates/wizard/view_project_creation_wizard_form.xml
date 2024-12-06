@@ -7,10 +7,22 @@
             <field name="arch" type="xml">
                 <form string="Confirm Project Creation">
                     <sheet>
-                        <group>
-                            <group>
+                        <div class="oe_title">
+                            <h1>
                                 <field name="project_name" />
-                                <field name="sale_order_id" invisible="1"/>
+                            </h1>
+                        </div>
+                            <group>
+                                <group>
+                                    <field name="partner_id"/>
+                                    <field name="sale_order_id" invisible="1"/>
+                                    <field name="picking_type_id"/>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
+                                </group>
+                                <group>
+                                    <field name="scheduled_date"/>
+                                </group>
                             </group>
                             <notebook>
                                 <page name="description" string="Description">
@@ -42,10 +54,13 @@
                                     </group>
                                     <div>
                                         <field name="wizard_picking_lines">
-                                            <tree editable="editable_bottom" style="width: 100%;">  
+                                            <tree editable="editable_bottom" style="width: 100%;">
+                                                <field name="company_id" column_invisible="1"/> 
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="display_type" column_invisible="True"/>
                                                 <field name="product_id"/>  
+                                                <field name="product_uom"/>
+                                                <field name="product_packaging_id"/>
                                                 <field name="quantity"/>  
                                                 <field name="standard_price"/> 
                                                 <field name="subtotal"/>  
@@ -62,8 +77,6 @@
                                     </div>
                                 </page>
                             </notebook>
-                        </group>
-    
                         <footer>
                             <button name="action_confirm_create_project" string="Create Project"
                                 type="object" class="btn-primary" />
