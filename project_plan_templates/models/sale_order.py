@@ -57,63 +57,14 @@ class SaleOrder(models.Model):
                 picking_lines = []
                 for line in sale.order_line:
                     if line.display_type == 'line_section':
-                        plan_lines.append((0, 0, {
-                            'name': line.name,
-                            'display_type': line.display_type,
-                            'description': False,
-                            'use_project_task': True,
-                            'planned_date_begin': False,
-                            'planned_date_end': False,
-                            'partner_id': False,
-                            'project_plan_pickings': False,
-                            'task_timesheet_id': False,
-                        }))
-                        picking_lines.append((0, 0, {
-                            'name': line.name,
-                            'display_type': line.display_type,
-                            'product_id': False,
-                            'product_packaging_id': False,
-                            'product_uom_qty': False,
-                            'quantity': False,
-                            'standard_price': False,
-                            'subtotal': False
-                        }))
-
+                        plan_lines.append(self.prep_section_lines(line))
+                        picking_lines.append(self.prep_section_line(line))
                     else:
                         if line.product_id.project_plan_id:
-                            picking_lines.append((0, 0, {
-                                'name': line.name,
-                                'display_type': line.display_type,
-                                'product_id': False,
-                                'product_packaging_id': False,
-                                'product_uom_qty': False,
-                                'quantity': False,
-                                'standard_price': False,
-                                'subtotal': False
-                            }))
-                        for plan in line.product_id.project_plan_id.project_plan_lines:
-                            plan_lines.append((0, 0, {
-                                'name': f"{line.product_template_id.name}-{plan.name}",
-                                'description': plan.description,
-                                'use_project_task': True,
-                                'planned_date_begin': fields.Datetime.now(),
-                                'planned_date_end': fields.Datetime.now(),
-                                'partner_id': [(6, 0, plan.partner_id.ids)],
-                                'project_plan_pickings': plan.project_plan_pickings.id,
-                                'task_timesheet_id': plan.task_timesheet_id.id,
-                                'display_type': False
-                            }))
-                            for picking in plan.project_plan_pickings.project_picking_lines:
-                                picking_lines.append((0, 0, {
-                                    'name': picking.product_id.name,
-                                    'product_id': picking.product_id.id,
-                                    'product_packaging_id': picking.product_packaging_id.id,
-                                    'product_uom_qty': picking.product_uom_qty,
-                                    'quantity': picking.quantity,
-                                    'standard_price': picking.standard_price,
-                                    'subtotal': picking.subtotal,
-                                    'display_type': False
-                                }))
+                            plan_lines.append(self.prep_section_line)
+                            plan_lines += self.prep_plan_lines(line)
+                            picking_lines += self.prep_picking_lines(line)
+
                         for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                             plan_pickings.append((4, project_picking.id))
 
@@ -121,6 +72,51 @@ class SaleOrder(models.Model):
                 sale.project_plan_lines = plan_lines
                 sale.project_picking_lines = picking_lines
             return super(SaleOrder, self).action_confirm()
+    
+    def prep_section_line(self, line):
+        return (0, 0, {
+            'name': line.name,
+            'display_type': line.display_type,
+            'product_id': False,
+            'product_uom': False,
+            'product_packaging_id': False,
+            'product_uom_qty': False,
+            'quantity': False,
+            'standard_price': False,
+            'subtotal': False
+        })
+
+    def prep_plan_lines(self, line):
+        plan_lines = []
+        for plan in line.product_id.project_plan_id.project_plan_lines:
+            plan_lines.append((0, 0, {
+                'name': f"{line.product_template_id.name}-{plan.name}",
+                'description': plan.description,
+                'use_project_task': True,
+                'planned_date_begin': fields.Datetime.now(),
+                'planned_date_end': fields.Datetime.now(),
+                'partner_id': [(6, 0, plan.partner_id.ids)],
+                'project_plan_pickings': plan.project_plan_pickings.id,
+                'task_timesheet_id': plan.task_timesheet_id.id,
+                'display_type': False
+            }))
+        return plan_lines
+
+    def prep_picking_lines(self, line):
+        picking_lines = []
+        for picking in line.product_id.project_plan_id.project_plan_pickings.project_picking_lines:
+            picking_lines.append((0, 0, {
+                'name': picking.product_id.name,
+                'product_id': picking.product_id.id,
+                'product_uom': picking.product_uom.id,
+                'product_packaging_id': picking.product_packaging_id.id,
+                'product_uom_qty': picking.product_uom_qty,
+                'quantity': picking.quantity,
+                'standard_price': picking.standard_price,
+                'subtotal': picking.subtotal,
+                'display_type': False
+            }))
+        return picking_lines
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
