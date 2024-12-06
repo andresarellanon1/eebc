@@ -66,7 +66,7 @@ class NoticeFileWizard(models.TransientModel):
    
     @api.onchange('create_tab', 'update_tab')
     def _onchange_create_tab_update_tab(self):
-
+        _logger.warning('entramos al onchange')
         self.notice = False
         self.folio = False
         # Recorre las líneas en notice_ids y establece quantity en 0

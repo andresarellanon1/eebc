@@ -16,7 +16,7 @@
                 </header>
                 <notebook>
                
-                    <page string="Crear nuevo aviso" name="create_page_tab"  invisible="create_tab">
+                    <page string="Crear nuevo aviso" name="create_page_tab"  invisible="not create_tab">
 
                         <group>
                         
@@ -32,7 +32,7 @@
                     </page>
 
 
-                    <page string="Asignar cantidades a los avisos" name="assign_tab">
+                    <page string="Asignar cantidades a los avisos" name="assign_tab"  invisible="not create_tab">
 
                          <group>
                             <field name="quantity" readonly="1"/>
