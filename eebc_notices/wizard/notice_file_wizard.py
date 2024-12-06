@@ -64,7 +64,7 @@ class NoticeFileWizard(models.TransientModel):
 
 
    
-    @api.onchange('create_tab')
+    @api.depends('create_tab')
     def _onchange_create_tab_update_tab(self):
         _logger.warning('entramos al onchange')
         for wizard in self:
