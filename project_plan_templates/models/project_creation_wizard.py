@@ -98,7 +98,7 @@ class ProjectCreation(models.TransientModel):
         stock_picking_vals = {
             'name': task_id.name,
             'partner_id': self.partner_id.id,
-            'picking_type_id': self.picking_type_id,
+            'picking_type_id': self.picking_type_id.id,
             'location_id': self.location_id.id,
             'scheduled_date': self.scheduled_date,
             'origin': task_id.name,
