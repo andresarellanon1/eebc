@@ -8,10 +8,10 @@
              <sheet>
                 <header> 
                     <group>
-                        <field name="create_tab" widget="boolean_toggle" />
+                        <field name="create_tab"/>
                     </group>
                     <group>
-                        <field name="update_tab" widget="boolean_toggle" />
+                        <field name="update_tab"/>
                     </group>
                 </header>
                 <notebook>

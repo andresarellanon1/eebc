@@ -64,14 +64,17 @@ class NoticeFileWizard(models.TransientModel):
 
 
    
-    @api.onchange('create_tab')
+    @api.onchange('create_tab','update_tab')
     def onchange_create_tab_update_tab(self):
         _logger.warning('entramos al onchange')
-        for wizard in self:
-            wizard.notice = ''
-            wizard.folio = ''
-            wizard.notice_ids.update({'quantity': 0})
-    
+        self.write({
+       'notice': '',
+       'folio': ''
+   })
+
+        if self.notice_ids:
+                self.notice_ids = [(1, line.id, {'quantity': 0}) for line in self.notice_ids]
+        
     # @api.onchange('update_tab')
     # def _onchange_update_tab(self):
     #     pass
