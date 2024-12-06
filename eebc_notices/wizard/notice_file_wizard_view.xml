@@ -7,10 +7,8 @@
             <form string="Analisar archivo">
              <sheet>
                 <notebook>
-                    <div>
-                        <field name="create_tab" widget="boolean_toggle" options="{'label': 'Crear aviso'}"/>
-                        <field name="update_tab" widget="boolean_toggle" options="{'label': 'Actualizar aviso'}"/>
-                    </div>
+                        <field name="create_tab" widget="boolean_toggle"/>
+                        <field name="update_tab" widget="boolean_toggle"/>
                     <page string="Crear nuevo aviso" name="create_page_tab"  invisible="create_tab">
 
                         <group>
