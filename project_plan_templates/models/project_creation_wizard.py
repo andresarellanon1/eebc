@@ -177,6 +177,7 @@ class ProjectCreation(models.TransientModel):
                         'planned_date_begin': False,
                         'planned_date_end': False,
                         'partner_id': False,
+                        'project_plan_pickings': False,
                         'task_timesheet_id': False,
                     }))
                 else:
@@ -187,6 +188,7 @@ class ProjectCreation(models.TransientModel):
                         'planned_date_begin': line.planned_date_begin,
                         'planned_date_end': line.planned_date_end,
                         'partner_id': [(6, 0, line.partner_id.ids)],
+                        'project_plan_pickings' line.project_plan_pickings.id,
                         'task_timesheet_id': line.task_timesheet_id.id,
                         'display_type': False
                     }))
