@@ -46,8 +46,10 @@
                 <footer>
                     <button name="create_notice" type="object" string="Crear aviso" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
-                    <field name="create_tab"  string="Crear aviso"/>
-                    <field name="update_tab"  string="Actualizar aviso"/>
+                    <div>
+                        <field name="create_tab" widget="boolean_toggle" options="{'label': 'Crear aviso'}"/>
+                        <field name="update_tab" widget="boolean_toggle" options="{'label': 'Actualizar aviso'}"/>
+                    </div>
 
                 </footer>
             </form>
