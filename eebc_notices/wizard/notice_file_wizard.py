@@ -84,9 +84,7 @@ class NoticeFileWizard(models.TransientModel):
         
 
     def create_notice(self):
-        """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
-        pass
-            
+        """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""            
 
         notice_id = self.env['notices.notices'].search([('notice', '=', self.notice)])
         
