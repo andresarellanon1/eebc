@@ -1,5 +1,5 @@
 from odoo import fields, models, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class ProjectPlanPickings(models.Model):
@@ -23,8 +23,7 @@ class ProjectPlanPickings(models.Model):
     @api.model
     def create(self, vals):
         if not vals.get('name') or not vals.get('project_id'):
-            self.env.user.notify_info(message="No es posible guardar, faltan llenar campos obligatorios.", title="Advertencia", sticky=True)
-            return False
+            raise ValidationError(_("No es posible guardar, faltan llenar campos obligatorios."))
         record = super(ProjectPlanPickings, self).create(vals)
         return record
 
