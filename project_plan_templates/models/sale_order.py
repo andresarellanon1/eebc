@@ -57,11 +57,11 @@ class SaleOrder(models.Model):
                 picking_lines = []
                 for line in sale.order_line:
                     if line.display_type == 'line_section':
-                        plan_lines.append(self.prep_section_lines(line))
+                        plan_lines.append(self.prep_section_line(line))
                         picking_lines.append(self.prep_section_line(line))
                     else:
                         if line.product_id.project_plan_id:
-                            plan_lines.append(self.prep_section_line)
+                            plan_lines.append(self.prep_section_line(line))
                             plan_lines += self.prep_plan_lines(line)
                             picking_lines += self.prep_picking_lines(line)
 
