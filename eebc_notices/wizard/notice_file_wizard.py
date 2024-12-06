@@ -215,7 +215,7 @@ class NoticeFileWizard(models.TransientModel):
 
 
 
-    @api.constrains('notice_ids')  # Decorador que valida automáticamente
+    # @api.constrains('notice_ids')  # Decorador que valida automáticamente
     def _check_quantities(self):
         for wizard in self:
             total = sum(line.quantity for line in wizard.notice_ids)
