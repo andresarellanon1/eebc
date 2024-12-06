@@ -104,7 +104,8 @@ class SaleOrder(models.Model):
         plan_lines = []
         for plan in line.product_id.project_plan_id.project_plan_lines:
             plan_lines.append((0, 0, {
-                'name': f"{line.product_template_id.name}-{plan.name}",
+                #'name': f"{line.product_template_id.name}-{plan.name}",
+                'name': plan.name,
                 'description': plan.description,
                 'use_project_task': True,
                 'planned_date_begin': fields.Datetime.now(),
