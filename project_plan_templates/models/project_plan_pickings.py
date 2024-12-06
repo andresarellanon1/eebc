@@ -70,6 +70,7 @@ class ProjectPlanPickingLine(models.Model):
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     product_uom = fields.Many2one('uom.uom', string='Unidad de medida')
     company_id = fields.Many2one('res.company', string="Empresa")
+    product_uom_qty = fields.Float(string="Demanda")
 
     def reservado_update(self, task_inventory_lines):
         for record in self:
