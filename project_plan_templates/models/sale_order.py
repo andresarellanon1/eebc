@@ -62,7 +62,7 @@ class SaleOrder(models.Model):
                     else:
                         if line.product_id.project_plan_id:
                             plan_lines.append(self.prep_plan_section_line(line))
-                            picking_line.append(self.prep_picking_section_line(line))
+                            picking_lines.append(self.prep_picking_section_line(line))
                             plan_lines += self.prep_plan_lines(line)
                             picking_lines += self.prep_picking_lines(line)
 
