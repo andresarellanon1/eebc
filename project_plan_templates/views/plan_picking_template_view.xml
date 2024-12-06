@@ -38,7 +38,8 @@
                             </page>
                             <page name="picking_lines" string="Pickings">  
                                 <field name="project_picking_lines" nolabel="1">  
-                                    <tree editable="editable_bottom" style="width: 100%;">  
+                                    <tree editable="editable_bottom" style="width: 100%;">
+                                        <field name="company_id" column_invisible="1"/>   
                                         <field name="product_id"/> 
                                         <field name="quantity"/>
                                         <field name="product_uom"/>
