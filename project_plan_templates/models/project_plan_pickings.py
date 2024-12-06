@@ -71,6 +71,11 @@ class ProjectPlanPickingLine(models.Model):
     product_uom = fields.Many2one('uom.uom', string='Unidad de medida')
     company_id = fields.Many2one('res.company', string="Empresa")
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.product_uom = self.product_id.uom_id
+
     def reservado_update(self, task_inventory_lines):
         for record in self:
             for inventory_lines in task_inventory_lines:
@@ -82,7 +87,7 @@ class ProjectPlanPickingLine(models.Model):
     def _compute_standard_price(self):
         for record in self:
             record.standard_price = record.product_id.standard_price
-
+            
 
     @api.depends('quantity')
     def _compute_subtotal(self):
