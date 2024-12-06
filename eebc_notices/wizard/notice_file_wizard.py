@@ -27,8 +27,8 @@ class NoticeFileWizard(models.TransientModel):
          
     )
 
-    create_tab = fields.Boolean( default=False)
-    update_tab = fields.Boolean( default=False)
+    create_tab = fields.Boolean(string="Crear aviso", default=False)
+    update_tab = fields.Boolean(string="Actualizar aviso", default=False)
 
 
    
