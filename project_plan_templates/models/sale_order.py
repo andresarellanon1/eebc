@@ -11,6 +11,7 @@ class SaleOrder(models.Model):
     is_project = fields.Boolean(string="Is project?", tracking=True, default=False)
     project_name = fields.Char(string="Project title")
     plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
+    hide_button = fields.Boolean(compute='_compute_hide_button', store=False)
 
     state = fields.Selection(
         selection_add=[
@@ -28,6 +29,11 @@ class SaleOrder(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
 
     project_id = fields.Many2one('project.project', string="Project")
+
+    @api.depends('is_project')
+    def _compute_hide_button(self):
+        for record in self:
+            record.hide_button = record.is_project
     
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
