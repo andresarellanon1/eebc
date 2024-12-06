@@ -62,6 +62,28 @@ class NoticeFileWizard(models.TransientModel):
         _logger.warning('VALOR DE RES1: %s', res)
         return res
 
+
+   
+    @api.onchange('create_tab', 'update_tab')
+    def _onchange_create_tab_update_tab(self):
+
+        self.notice = False
+        self.folio = False
+        # Recorre las líneas en notice_ids y establece quantity en 0
+        for line in self.notice_ids:
+            line.quantity = 0
+            _logger.info(f"Línea actualizada: {line.id}, cantidad: {line.quantity}")
+
+
+    
+    # @api.onchange('update_tab')
+    # def _onchange_update_tab(self):
+    #     pass
+        
+    
+    
+    
+
     def create_notice(self):
         """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""
         pass
