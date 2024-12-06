@@ -114,7 +114,7 @@ class ProjectCreation(models.TransientModel):
             'custom_document_identification': False,
             'lat_origin': False,
             'long_origin': False,
-            'lat_det': False,
+            'lat_dest': False,
             'long_dest': False,
             'note': False
         }
