@@ -28,10 +28,6 @@ class SaleOrder(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
 
     project_id = fields.Many2one('project.project', string="Project")
-
-    @api.onchange('is_project') 
-    def _onchange_is_project(self): 
-        pass
     
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
