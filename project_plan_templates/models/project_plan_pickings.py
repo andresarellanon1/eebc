@@ -21,11 +21,9 @@ class ProjectPlanPickings(models.Model):
     
     @api.model
     def create(self, vals):
-        if not vals.get('name') or not vals.get('project_id'):
-            raise UserError(_("No es posible guardar, faltan llenar campos obligatorios."))
         record = super(ProjectPlanPickings, self).create(vals)
         return record
-    
+
     def toggle_active(self):
         for record in self:
             record.active = not record.active
