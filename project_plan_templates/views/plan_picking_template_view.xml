@@ -41,9 +41,9 @@
                                     <tree editable="editable_bottom" style="width: 100%;">
                                         <field name="company_id" column_invisible="1"/>   
                                         <field name="product_id"/> 
-                                        <field name="quantity"/>
                                         <field name="product_uom"/>
-                                        <field name="product_packaging_id"/>  
+                                        <field name="product_packaging_id"/> 
+                                        <field name="quantity"/> 
                                         <field name="standard_price"/>  
                                         <field name="subtotal"/>  
                                     </tree>
