@@ -88,8 +88,11 @@ class NoticeFileWizard(models.TransientModel):
 
         notice_id = self.env['notices.notices'].search([('notice', '=', self.notice)])
         
+
+        if self.update_tab and self.create_tab:
+            raise ValidationError("Debe eleguir una sola tarea a ejecutar entre crear o actualizar aviso")
         
-        if self.create_tab:
+        elif self.create_tab:
             if not self.notice or not self.folio:
                 raise ValidationError('No a llenado los campos necesarios para crear un nuevo aviso')
             _logger.warning('Creamos')
@@ -204,8 +207,6 @@ class NoticeFileWizard(models.TransientModel):
                 _logger.error(f"Error en action_get_products: {e}")
                 raise  # Propaga otros errores si es necesario
         
-        elif self.update_tab and self.create_tab:
-            raise ValidationError("Debe eleguir una sola tarea a ejecutar entre crear o actualizar aviso")
 
         
         else:
