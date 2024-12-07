@@ -90,6 +90,8 @@ class NoticeFileWizard(models.TransientModel):
         
         
         if self.create_tab:
+            if not self.notice or not self.folio:
+                raise ValidationError('No a llenado los campos necesarios para crear un nuevo aviso')
             _logger.warning('Creamos')
             if notice_id:
                 history_match = notice_id.history_ids.filtered(lambda h: int(h.folio) == self.folio)
@@ -201,6 +203,11 @@ class NoticeFileWizard(models.TransientModel):
                 # Manejar otros errores inesperados
                 _logger.error(f"Error en action_get_products: {e}")
                 raise  # Propaga otros errores si es necesario
+        
+        elif self.update_tab and self.create_tab:
+            raise ValidationError("Debe eleguir una sola tarea a ejecutar entre crear o actualizar aviso")
+
+        
         else:
             raise ValidationError("Debe marcar una casilla")
             
