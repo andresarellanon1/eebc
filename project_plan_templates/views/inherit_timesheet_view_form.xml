@@ -1,34 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Define a view that inherits the form view of the 'project.project' model -->
     <record id="inherit_timesheet_view_form" model="ir.ui.view">
-        <field name="name">inherit.timesheet.view.form</field>  <!-- Internal name of the view -->
-        <field name="model">project.project</field>  <!-- The model this view belongs to -->
-        <field name="inherit_id" ref="project.edit_project"/>  <!-- Inherits from the project edit view in the 'project' module -->
-        
+        <field name="name">inherit.timesheet.view.form</field>  
+        <field name="model">project.project</field>  
+        <field name="inherit_id" ref="project.edit_project"/>  
         <field name="arch" type="xml">
-            <!-- Add a new section to the form within the 'notebook' tab -->
             <xpath expr="//notebook" position="inside">
                 
-                <!-- 'Planeación' tab (Planning) -->
                 <page name="Planeacion" string="Planeación">
-                    <group name="planning_container">
-                        <field name="project_plan_id"/>  <!-- Field to select the project plan -->
-                    </group>
-                    
-                    <!-- Section for the project planning lines -->
                     <div name="planning_lines">
                         <field name="project_plan_lines" nolabel="1">
-                            <tree editable="editable_bottom" style="width: 100%;">  <!-- Editable tree view for the planning lines -->
-                                <field name="name"/>  <!-- Name of the planning line -->
-                                <field name="chapter"/>  <!-- Chapter of the planning -->
-                                <field name="description"/>  <!-- Description of the task in the planning -->
-                                <field name="planned_date_begin" widget="daterange"/>  <!-- Planned start date -->
-                                <field name="planned_date_end" widget="daterange"/>  <!-- Planned end date -->
-                                <field name="partner_id" widget="many2many_avatar_user"/>  <!-- Responsible user associated -->
-                                <field name="task_timesheet_id" options="{'create': True}"/>  <!-- Related timesheet task, with option to create -->
-                                <field name="stage_id"/>  <!-- Stage of the task -->
-                                <!-- Button to preview the task -->
+                            <tree editable="editable_bottom" style="width: 100%;"> 
+                                <field name="name"/> 
+                                <field name="description"/>  
+                                <field name="planned_date_begin" widget="daterange"/> 
+                                <field name="planned_date_end" widget="daterange"/> 
+                                <field name="partner_id" widget="many2many_avatar_user"/>  
+                                <field name="task_timesheet_id" options="{'create': True}"/> 
                                 <button name="action_preview_task" type="object" class="oe_highlight"
                                         string="Preview task"/>
                             </tree>
@@ -36,22 +24,24 @@
                     </div>
                 </page>
                 
-                <!-- 'Stock' tab -->
                 <page name="Stock" string="Stock">
-                    <group name="stock_container">
-                        <field name="project_picking_ids" widget="many2many_tags"/>  <!-- Field for associated products to the project -->
-                    </group>
-                    
-                    <!-- Section for the project stock lines -->
                     <div name="stock_lines" nolabel="1">
-                        <field name="project_picking_lines" style="width: 100%;">  <!-- Editable tree view for stock lines -->
+                        <field name="project_picking_lines" style="width: 100%;"> 
                             <tree editable="editable_bottom">
-                                <field name="product_id"/>  <!-- Product associated with the project -->
-                                <field name="quantity"/>  <!-- Quantity of the product -->
-                                <field name="reservado"/>  <!-- Reserved quantity of the product -->
-                                <field name="location_id"/>  <!-- Location of the product in inventory -->
+                                <field name="company_id" column_invisible="1"/> 
+                                <field name="product_id"/>
+                                <field name="name"/>
+                                <field name="product_uom"/>
+                                <field name="product_packaging_id"/>
+                                <field name="quantity"/> 
+                                <field name="reservado"/>
                             </tree>
                         </field>
+                        <group>
+                            <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                                <field name="plan_total_cost"/> 
+                            </group>
+                        </group>
                     </div>
                 </page>
             </xpath>

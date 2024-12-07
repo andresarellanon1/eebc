@@ -7,7 +7,6 @@ eebc.access_project_creation_wizard,project_creation_wizard,project_plan_templat
 eebc.access_task_timesheet,task_timesheet,project_plan_templates.model_task_timesheet,,1,1,1,1
 eebc.access_task_time_lines,task_time_lines,project_plan_templates.model_task_time_lines,,1,1,1,1
 eebc.access_task_inventory_wizard,task_inventory_wizard,project_plan_templates.model_task_inventory_wizard,,1,1,1,1
-eebc.access_project_sale_creation_wizard,project_sale_creation_wizard,project_plan_templates.model_project_sale_creation_wizard,,1,1,1,1
 eebc.access_task_inventory_line,task_inventory_line,project_plan_templates.model_task_inventory_line,,1,1,1,1
 eebc.access_project_plan_wizard_line,project_plan_wizard_line,project_plan_templates.model_project_plan_wizard_line,,1,1,1,1
 eebc.access_project_picking_wizard_line,project_picking_wizard_line,project_plan_templates.model_project_picking_wizard_line,,1,1,1,1

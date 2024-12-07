@@ -1,4 +1,8 @@
 from odoo import fields, models, api
+from odoo.exceptions import UserError, ValidationError
+import json
+import logging
+logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
 
@@ -6,59 +10,141 @@ class SaleOrder(models.Model):
 
     is_project = fields.Boolean(string="Is project?", default=False)
     project_name = fields.Char(string="Project title")
+    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
+
     state = fields.Selection(
         selection_add=[
-            ('estimation', 'Estimation')
+            ('budget', 'Budget'),
+            ('process', 'In process')
         ],
         ondelete={
-            'estimation': 'set default'
+            'budget': 'set default',
+            'process': 'set default'
         }
     )
-    product_template_ids = fields.Binary(string="products_domain")
 
-    # @api.onchange('is_project')
-    # def _onchange_is_project(self):
-    #     for record in self:
-    #         if(record.is_project):
-    #             record.
-                
+    project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
+    project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
+    project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
+
+    project_id = fields.Many2one('project.project', string="Project")
+    
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+
+    @api.onchange('is_project')
+    def _onchange_is_project(self):
+        for record in self:
+            record.order_line = None
 
     def action_confirm(self):
         self.ensure_one()
-         # Initialize empty lists to separate service products and other products
-        services_ids = []
-        products_ids = []
+        
+        for sale in self:
+            if sale.is_project:
+                if not sale.project_name:
+                    raise ValidationError(
+                        f"Project name needed."
+                    )
+                sale.project_plan_pickings = [(5, 0, 0)]
+                sale.project_plan_lines = [(5, 0, 0)]
+                sale.project_picking_lines = [(5, 0, 0)]
 
-        # Loop through each line in the sales order
-        for line in self.order_line:
-            # Check if the product type is 'service'
-            if line.product_template_id.detailed_type == 'service':
-                # Check if the service requires a project (tracking mode is 'project_only')
-                if line.product_template_id.service_tracking == 'project_only':
-                    # Ensure the service product has a project plan associated with it
-                    if line.product_template_id.project_plan_id:
-                        # Add the service product template ID to the services list
-                        services_ids.append(line.product_template_id.id)
-            else:
-                # If not a service or doesn't meet the conditions, add to products list
-                products_ids.append(line.product_template_id.id)
+                plan_pickings = []
+                plan_lines = []
+                picking_lines = []
+                for line in sale.order_line:
+                    if line.display_type == 'line_section':
+                        plan_lines.append(self.prep_plan_section_line(line))
+                        picking_lines.append(self.prep_picking_section_line(line))
+                    else:
+                        if line.product_id.project_plan_id:
+                            plan_lines.append(self.prep_plan_section_line(line))
+                            picking_lines.append(self.prep_picking_section_line(line))
+                            plan_lines += self.prep_plan_lines(line)
+                            picking_lines += self.prep_picking_lines(line)
 
-        # If there are any service products that require a project
-        if services_ids:
-            # Open the project creation wizard and pass the necessary context
-            return {
-                'name': 'Projects creation',  # Wizard title
-                'view_mode': 'form',  # Display mode for the wizard
-                'res_model': 'project.sale.creation.wizard',  # Model for the wizard
-                'type': 'ir.actions.act_window',  # Action type to open a new window
-                'target': 'new',  # Open in a modal ('new' window)
-                'context': {
-                    'default_services_ids': [(6, 0, services_ids)],  # Pass service IDs to wizard
-                    'default_products_ids': [(6, 0, products_ids)],  # Pass other product IDs
-                    'default_sale_order_id': self.id  # Pass the current sale order ID
-                }
-            }
-        else:
-            # If no service products require a project, proceed with the default action
+                        for project_picking in line.product_id.project_plan_id.project_plan_pickings:
+                            plan_pickings.append((4, project_picking.id))
+
+                sale.project_plan_pickings = plan_pickings
+                sale.project_plan_lines = plan_lines
+                sale.project_picking_lines = picking_lines
             return super(SaleOrder, self).action_confirm()
-            
+    
+    def prep_picking_section_line(self, line):
+        return (0, 0, {
+            'name': line.name,
+            'display_type': line.display_type or 'line_section',
+            'product_id': False,
+            'product_uom': False,
+            'product_packaging_id': False,
+            'product_uom_qty': False,
+            'quantity': False,
+            'standard_price': False,
+            'subtotal': False
+        })
+    
+    def prep_plan_section_line(self, line):
+        return (0, 0, {
+            'name': line.name,
+            'display_type': line.display_type or 'line_section',
+            'description': False,
+            'use_project_task': True,
+            'planned_date_begin': False,
+            'planned_date_end': False,
+            'partner_id': False,
+            'project_plan_pickings': False,
+            'task_timesheet_id': False,
+        })
+
+    def prep_plan_lines(self, line):
+        plan_lines = []
+        for plan in line.product_id.project_plan_id.project_plan_lines:
+            plan_lines.append((0, 0, {
+                'name': f"{line.product_template_id.name}-{plan.name}",
+                'description': plan.description,
+                'use_project_task': True,
+                'planned_date_begin': fields.Datetime.now(),
+                'planned_date_end': fields.Datetime.now(),
+                'partner_id': [(6, 0, plan.partner_id.ids)],
+                'project_plan_pickings': plan.project_plan_pickings.id,
+                'task_timesheet_id': plan.task_timesheet_id.id,
+                'display_type': False
+            }))
+        return plan_lines
+
+    def prep_picking_lines(self, line):
+        picking_lines = []
+        for picking in line.product_id.project_plan_id.project_plan_pickings.project_picking_lines:
+            picking_lines.append((0, 0, {
+                'name': picking.product_id.name,
+                'product_id': picking.product_id.id,
+                'product_uom': picking.product_uom.id,
+                'product_packaging_id': picking.product_packaging_id.id,
+                'product_uom_qty': picking.product_uom_qty,
+                'quantity': picking.quantity,
+                'standard_price': picking.standard_price,
+                'subtotal': picking.subtotal,
+                'display_type': False
+            }))
+        return picking_lines
+
+    def action_open_create_project_wizard(self):
+        self.ensure_one()
+
+        return {
+            'name': 'Projects creation',  
+            'view_mode': 'form',  
+            'res_model': 'project.creation.wizard',  
+            'type': 'ir.actions.act_window',  
+            'target': 'new',  
+            'context': {
+                'default_sale_order_id': self.id,
+                'default_project_name': self.project_name
+            }
+        }
+        
+        

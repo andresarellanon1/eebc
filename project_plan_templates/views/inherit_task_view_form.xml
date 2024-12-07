@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Define a new view that inherits from the 'project.task' form view -->
     <record id="inherit_task_view_form" model="ir.ui.view">
-        <field name="name">inherit.task.view.form</field>  <!-- Name of the new inherited view -->
-        <field name="model">project.task</field>  <!-- The model that this view will be applied to (project.task) -->
-        <field name="inherit_id" ref="project.view_task_form2"/>  <!-- Reference to the existing view that is being inherited (view_task_form2) -->
+        <field name="name">inherit.task.view.form</field>  
+        <field name="model">project.task</field> 
+        <field name="inherit_id" ref="project.view_task_form2"/>  
 
         <field name="arch" type="xml">
-            <!-- XPath expression to locate the 'date_deadline' field label -->
             <xpath expr="//label[@for='date_deadline']" position="before">
                 <field name="planned_date_begin"/>  
             </xpath>

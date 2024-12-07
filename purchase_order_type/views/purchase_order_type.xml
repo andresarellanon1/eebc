@@ -7,8 +7,6 @@
             <tree string="Tipo de orden de compra">
                 <field name="name" readonly="1"/>
                 <field name="picking_type_id" readonly="1"/>
-                <field name="location_id" readonly="1"/>
-                <field name="sequence_id" readonly="1"/>
             </tree>
         </field>
     </record>
@@ -20,8 +18,6 @@
             <search string="Buscar tipo de orden de compra">
                 <field name="name"/>
                 <field name="picking_type_id"/>
-                <field name="location_id"/>
-                <field name="sequence_id"/>
             </search>
         </field>
     </record>
@@ -53,11 +49,8 @@
                         <field name="name"/>
                     </group>
                     <group>
-                        <field name="is_picking_type_setting_enabled" invisible="True" readonly="True"/>
-                        <field name="company_id" invisible="True" readonly="True"/>
-                        <field name="picking_type_id" invisible="not is_picking_type_setting_enabled" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                        <field name="location_id" invisible="is_picking_type_setting_enabled"/>
-                        <field name="sequence_id"/>
+                        <field name="company_id"/>
+                        <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}"/>
                     </group>
                 </sheet>
             </form>

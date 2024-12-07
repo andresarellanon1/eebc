@@ -1,36 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="seq_purchase_order_type_project" model="ir.sequence">
-            <field name="name">Secuencia de compras tipo Projecto</field>
-            <field name="code">purchase.order.type.project</field>
-            <field name="prefix">TP</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-
-        <record id="seq_purchase_order_type_sale" model="ir.sequence">
-            <field name="name">Secuencia de compras tipo Venta</field>
-            <field name="code">purchase.order.type.sale</field>
-            <field name="prefix">TV</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-
-        <record id="model_purchase_order_type_location_project" model="stock.location">
-            <field name="name">Projectos</field>
-            <field name="usage">view</field>
-            <field name="company_id" ref="False"/>
-        </record>
-
-        <record id="model_purchase_order_type_location_sale" model="stock.location">
-            <field name="name">Ventas</field>
-            <field name="usage">view</field>
-            <field name="company_id" ref="False"/>
-        </record>
-
         <record id="model_purchase_order_type_project" model="purchase.order.type">
-            <field name="name">Projecto</field>
+            <field name="name">Proyecto</field>
             <field name="location_id" ref="purchase_order_type.model_purchase_order_type_location_project"/>
             <field name="sequence_id" ref="purchase_order_type.seq_purchase_order_type_project"/>
         </record>

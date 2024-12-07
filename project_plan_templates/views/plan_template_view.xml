@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- Define a new tree view for the 'project.plan' model -->
+
         <record id="plan_template_view_tree" model="ir.ui.view">
-            <field name="name">plan.template.tree</field>  <!-- Name of the tree view -->
-            <field name="model">project.plan</field>  <!-- The model to which the view is applied -->
+            <field name="name">plan.template.tree</field>  
+            <field name="model">project.plan</field> 
             <field name="arch" type="xml">
                 <tree>  
                     <field name="name"/>  
@@ -13,38 +13,31 @@
             </field>    
         </record>
 
-        <!-- Define a new form view for the 'project.plan' model -->
         <record id="plan_template_view_form" model="ir.ui.view">
-            <field name="name">plan.template.view.form</field>  <!-- Name of the form view -->
-            <field name="model">project.plan</field>  <!-- The model to which the view is applied -->
+            <field name="name">plan.template.view.form</field> 
+            <field name="model">project.plan</field>  
             <field name="arch" type="xml">
                 <form string="Project plan template">
-                    
-                    <header>
-                        <!-- Button to trigger the creation of a new project -->
-                        <button name="action_open_create_project_wizard" type="object" class="oe_highlight" string="Create project"/>
-                    </header>
                     <sheet>
                         <div class="oe_title">
                             <label for="name"/>  
                             <h1><field name="name" class="w-100" required="1"/></h1>
+                            <field name="product_template_id" string="Servicios" domain="[('id', 'in', service_project_domain)]"/>
+                            <field name="service_project_domain" invisible="1"/>
                         </div>
-                        <notebook>  <!-- Tabbed sections within the form -->
+                        <notebook>  
 
-                            <!-- Description Tab -->
                             <page name="description" string="Description">
-                                <field name="description" options="{'resizable': false}"/>  <!-- 'description' field -->
+                                <field name="description" options="{'resizable': false}"/>  
                             </page>
 
-                            <!-- Tasks Tab -->
                             <page name="tasks" string="Tasks">
                                 <field name="project_plan_lines" nolabel="1">
-                                    <tree editable="editable_bottom" style="width: 100%;">  
-                                        <field name="chapter"/>  <!-- Display the 'chapter' field for the task -->
-                                        <field name="name"/>  <!-- Display the 'name' field for the task -->
-                                        <field name="description"/>  <!-- Display the 'description' field for the task -->
-                                        <field name="task_timesheet_id" options="{'create': True}"/>  <!-- Allow creation of task timesheet -->
-                                        <field name="stage_id"/>  <!-- Display the 'stage_id' field for the task -->
+                                    <tree editable="editable_bottom" style="width: 100%;">
+                                        <field name="name"/>  
+                                        <field name="description"/>
+                                        <field name="project_plan_pickings"/>  
+                                        <field name="task_timesheet_id" options="{'create': True}"/> 
                                     </tree>
                                 </field>
                             </page>
@@ -56,19 +49,22 @@
                                 </group>
                                 <div>
                                     <field name="picking_lines" nolabel="1">
-                                        <tree editable="editable_bottom" style="width: 100%;">  <!-- Display a tree of picking lines -->
-                                            <field name="product_id"/>  <!-- Display the 'product_id' field in the picking line -->
-                                            <field name="quantity"/>  <!-- Display the 'quantity' field in the picking line -->
-                                            <field name="standard_price"/>  <!-- Display the 'standard_price' field -->
-                                            <field name="subtotal"/>  <!-- Display the 'subtotal' field -->
+                                        <tree editable="editable_bottom" style="width: 100%;">
+                                            <field name="company_id" column_invisible="1"/>  
+                                            <field name="product_id"/>
+                                            <field name="product_uom"/>
+                                            <field name="product_packaging_id"/>  
+                                            <field name="quantity"/> 
+                                            <field name="standard_price"/>  
+                                            <field name="subtotal"/> 
                                         </tree>
                                     </field>
                                     <group>
                                         <group colspan="4">
-                                            <field colspan="2" name="note" nolabel="1"/>  <!-- 'note' field for additional information -->
+                                            <field colspan="2" name="note" nolabel="1"/>  
                                         </group>
                                         <group class="oe_subtotal_footer" colspan="2" name="sale_total">
-                                            <field name="plan_total_cost"/>  <!-- Display the 'plan_total_cost' field -->
+                                            <field name="plan_total_cost"/>  
                                         </group>
                                     </group>
                                 </div>

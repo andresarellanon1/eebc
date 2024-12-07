@@ -15,7 +15,6 @@ class PurchaseOrderLine(models.Model):
             if partner:
                 supplier_products = self.env['product.supplierinfo'].search([('partner_id', '=', partner.id)]).mapped('product_tmpl_id')
                 line.supplier_products_ids = [(6, 0, supplier_products.ids)]
-                logger.warning(f'Supplier products for partner {partner.id}: {supplier_products.ids}')
             else:
                 line.supplier_products_ids = [(5, 0, 0)]
 
