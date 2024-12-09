@@ -21,32 +21,10 @@ class ProjectPlanPickings(models.Model):
 
     @api.model
     def create(self, vals):
-        required_fields = ['name', 'project_id']
-        missing_fields = [
-            field for field in required_fields 
-            if not vals.get(field)
-        ]
-        if missing_fields:
-            raise ValidationError(
-                _("No es posible guardar. Faltan llenar los campos obligatorios: %s") 
-                % ", ".join(missing_fields)
-            )
-
-        if 'project_picking_lines' in vals:
-            for line in vals['project_picking_lines']:
-                _, _, line_vals = line  
-                line_required_fields = ['product_id', 'product_uom', 'quantity']
-                line_missing_fields = [
-                    field for field in line_required_fields 
-                    if not line_vals.get(field)
-                ]
-                if line_missing_fields:
-                    raise ValidationError(
-                        _("No es posible guardar. Una línea tiene campos obligatorios faltantes: %s") 
-                        % ", ".join(line_missing_fields)
-                    )
-
-        return super(ProjectPlanPickings, self).create(vals)
+        if not vals.get('name') or not vals.get('project_id'):
+            raise ValidationError(_("No es posible guardar, faltan llenar campos obligatorios."))
+        record = super(ProjectPlanPickings, self).create(vals)
+        return record
 
     def toggle_active(self):
         for record in self:
