@@ -23,23 +23,13 @@ class WizardSelectionLine(models.TransientModel):
     
 
     value_text_in_or_out = fields.Char(
-        string='valor',
+        string='valor', store=False
     )
 
     
     test_name = fields.Char(
         string='Nombre',
     )
-    
-  
-    @api.model_create_multi
-    def create(self, vals_list):
-        _logger.warning(vals_list)
-        
-        wizards = super(WizardSelectionLine, self).create(vals_list)
-        for wizard in wizards:
-            wizard.value_text_in_or_out = vals_list['value_text_in_or_out']
-        return wizards
 
     @api.depends('value_text_in_or_out')
     def _compute_value_text_in_or_out(self):
