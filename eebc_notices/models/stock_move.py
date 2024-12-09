@@ -58,7 +58,7 @@ class StockMove(models.Model):
         proveedor_id = self.picking_id.partner_id.id if self.picking_id.partner_id else False
         purchase_order_id = order.id if order else False
         product_description = self.description_picking if self.description_picking else "Sin descripción"
-        in_or_out = 'in'
+        in_or_out = "in"
         notice_lines_to_wizard =self._create_line_ids(in_or_out)
         # aqui va variable para saber que haremos entrada y pasarla a la llave in_or_out
 
@@ -93,7 +93,7 @@ class StockMove(models.Model):
         
     def action_show_outgoing(self):
         _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
-        in_or_out = 'out'
+        in_or_out = "out"
         notice_lines_to_wizard =self._create_line_ids(in_or_out)
         _logger.warning('Valor de las lineas : %s', notice_lines_to_wizard)
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
