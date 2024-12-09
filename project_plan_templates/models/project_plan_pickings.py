@@ -19,12 +19,6 @@ class ProjectPlanPickings(models.Model):
 
     plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
-    @api.constrains('product_id')
-    def _check_product_id(self):
-        for record in self:
-            if not record.product_id:
-                raise ValidationError("El campo 'Product' es obligatorio. No se puede guardar un registro sin este campo.")
-
     def toggle_active(self):
         for record in self:
             record.active = not record.active
@@ -71,6 +65,12 @@ class ProjectPlanPickingLine(models.Model):
     product_uom = fields.Many2one('uom.uom', string='Unidad de medida')
     company_id = fields.Many2one('res.company', string="Empresa")
     product_uom_qty = fields.Float(string="Demanda")
+
+    @api.constrains('product_id')
+    def _check_product_id(self):
+        for record in self:
+            if not record.product_id:
+                raise ValidationError("El campo 'Product' es obligatorio. No se puede guardar un registro sin este campo.")
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
