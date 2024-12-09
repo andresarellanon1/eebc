@@ -22,9 +22,19 @@ class ProjectPlanPickings(models.Model):
     
     @api.model
     def create(self, vals):
-        if not vals.get('name'):
-            raise ValidationError(_("No es posible guardar, faltan llenar campos obligatorios."))
-        record = super(ProjectPlanPickings, self).create(vals)
+        required_fields = [
+            'name', 
+            'product_id', 
+            'product_uom', 
+            'product_packaging_id', 
+            'quantity', 
+            'standard_price', 
+            'subtotal'
+        ]
+            missing_fields = [field for field in required_fields if not vals.get(field)]
+        if missing_fields:
+            raise ValidationError(_("No es posible guardar. Faltan llenar los campos obligatorios: %s") % ", ".join(missing_fields))
+        return super(ProjectPlanPickings, self).create(vals)
         return record
 
     def toggle_active(self):
