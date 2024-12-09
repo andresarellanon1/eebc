@@ -51,8 +51,7 @@ class ProjecVersionLines(models.Model):
             plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
 
     has_previous_version = fields.Boolean(
-        string="Has Previous Version",
-        compute='_compute_previous_version_lines',
+        string="Has Previous Version",,
         store=True
     )
 
@@ -68,7 +67,6 @@ class ProjecVersionLines(models.Model):
             else:
                 record.version_number = "V0"
 
-    @api.depends('project_id')
     def _compute_previous_version_lines(self):
         for record in self:
             record.project_name = record.project_id.name
