@@ -21,8 +21,8 @@ class ProjectPlanPickings(models.Model):
 
     @api.model
     def create(self, vals):
-        if not vals.get('name') or not vals.get('project_id'):
-            raise ValidationError(_("No es posible guardar, faltan llenar campos obligatorios."))
+        if not vals.get('name'):
+            raise ValidationError(_("No es posible guardar, el campo 'Name' es obligatorio."))
         record = super(ProjectPlanPickings, self).create(vals)
         return record
 
