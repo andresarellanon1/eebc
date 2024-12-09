@@ -65,7 +65,7 @@ class ProjectCreation(models.TransientModel):
             'description': self.description,
             'project_plan_lines': project_plan_lines,
             'project_picking_lines': picking_line_vals,
-            'default_picking_type_id': self.picking_type_id,
+            'default_picking_type_id': self.picking_type_id.id,
             'publication_date': fields.Datetime.now(),
             'date_start': self.date_start,
         }
