@@ -19,11 +19,11 @@ class ProjectPlanPickings(models.Model):
 
     plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
-    @api.constrains('name')
-    def _check_name(self):
-        for record in self:
-            if not record.name:
-                raise ValidationError("El campo 'Name' es obligatorio. No se puede guardar un registro sin este campo.")
+    @api.model
+    def create(self, vals):
+        if not vals.get('name'):
+            raise ValidationError("El campo 'Name' es obligatorio. No se puede guardar un registro sin este campo.")
+        return super(ProjectPlanPickings, self).create(vals)
 
     def toggle_active(self):
         for record in self:
