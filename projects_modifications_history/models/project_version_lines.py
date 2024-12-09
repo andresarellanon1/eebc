@@ -51,7 +51,7 @@ class ProjecVersionLines(models.Model):
             plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
 
     has_previous_version = fields.Boolean(
-        string="Has Previous Version",,
+        string="Has Previous Version",
         store=True
     )
 
