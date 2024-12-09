@@ -46,6 +46,7 @@
                                     <div>
                                         <field name="previous_version_plan_lines" nolabel="1" readonly="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none" invisible="not previous_version_plan_lines">
                                             <tree style="width: 100%" editable="bottom">
+                                                <field name="display_type" column_invisible="True"/>
                                                 <field name="name" readonly="1"/>
                                                 <field name="description" readonly="1"/>
                                                 <field name="planned_date_begin" widget="daterange" readonly="1"/>
@@ -61,6 +62,7 @@
                                     <div>
                                         <field name="project_plan_lines" nolabel="1" readonly="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none" invisible="not project_plan_lines">
                                             <tree style="width: 100%" editable="bottom">
+                                            <field name="display_type" column_invisible="True"/>
                                                 <field name="name" readonly="1"/>
                                                 <field name="description" readonly="1"/>
                                                 <field name="planned_date_begin" widget="daterange" readonly="1"/>
