@@ -87,17 +87,17 @@ class StockMove(models.Model):
                 'invoices': invoice_names , # Pasar los nombres de las facturas
                 'lines':notice_lines_to_wizard,
                 'stock_move_id':self.id,
-                'in_or_out': 'in'
                 
             }
         }
         
     def action_show_outgoing(self):
         _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
-
-        notice_lines_to_wizard =self._create_line_ids()
+        in_or_out = 'out'
+        notice_lines_to_wizard =self._create_line_ids(in_or_out)
         _logger.warning('Valor de las lineas : %s', notice_lines_to_wizard)
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
+
         # aqui va variable para saber que haremos salida y pasarla a la llave in_or_out
 
         return {
