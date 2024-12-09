@@ -11,7 +11,7 @@
                     <field name="notice_id" readonly="1" options="{'no_open': True}" />
                     <field name="in_or_out" invisible="1"/>
                     <field name="quantity" />
-                    <field name="quantity_available" readonly="1" invisible="in_or_out"/>
+                    <field name="quantity_available" readonly="1" invisible="in_or_out == 'True'"/>
 
 
 
