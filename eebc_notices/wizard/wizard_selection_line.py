@@ -34,8 +34,13 @@ class WizardSelectionLine(models.TransientModel):
   
     @api.depends('value_text_in_or_out')
     def _compute_value_text_in_or_out(self):
+        _logger.warning('entramos _compute_value_text_in_or_out')
         for record in self:
+            _logger.warning('valor de texto in or out: %s', record.value_text_in_or_out)
+
             if record.value_text_in_or_out == 'in':
+                _logger.warning('Se cumple')
+
 
                 record.in_or_out = True
     
