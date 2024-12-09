@@ -7,7 +7,7 @@ class ProjectPlanPickings(models.Model):
     _description = 'Project plan pickings'
 
     
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(string="Name")
     description = fields.Html(string="Description")
     creation_date = fields.Date(string="Created on", default=fields.Date.context_today, readonly=True)
     creator_id = fields.Many2one('res.users', string="Created by", default=lambda self: self.env.user)
@@ -42,13 +42,13 @@ class ProjectPlanPickingLine(models.Model):
 
     name = fields.Char(required=True)
     
-    project_id = fields.Many2one('project.project', string="Project Plan", required=True)
+    project_id = fields.Many2one('project.project', string="Project Plan")
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
-    product_id = fields.Many2one('product.product', string="Product", required=True)
+    product_id = fields.Many2one('product.product', string="Product")
     sale_order_id = fields.Many2one('sale.order')
     
    
-    quantity = fields.Float(string="Quantity", required=True)
+    quantity = fields.Float(string="Quantity")
     location_id = fields.Many2one('stock.location', string="Location")
     reservado = fields.Float(string='Reservado')
     
@@ -58,8 +58,8 @@ class ProjectPlanPickingLine(models.Model):
     stock_move_id = fields.Many2one('stock.move', string='Project Stock')
     
     standard_price = fields.Float(string="Price", compute='_compute_standard_price')
-    subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal", required=True)
-    total_cost = fields.Float(string="Total cost" , required=True)
+    subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal")
+    total_cost = fields.Float(string="Total cost")
 
     display_type = fields.Selection(
         [
@@ -68,8 +68,8 @@ class ProjectPlanPickingLine(models.Model):
         ]
     )
     sequence = fields.Integer()
-    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True, required=True)
-    product_uom = fields.Many2one('uom.uom', string='Unidad de medida', required=True)
+    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
+    product_uom = fields.Many2one('uom.uom', string='Unidad de medida')
     company_id = fields.Many2one('res.company', string="Empresa")
     product_uom_qty = fields.Float(string="Demanda")
 
