@@ -98,13 +98,14 @@ class ProjecVersionLines(models.Model):
             if previous_version:
                 # Assign the previous version's project plan lines to the current record's previous_version_plan_lines
                 record.previous_version_plan_lines = previous_version.project_plan_lines
-
+                _logger.warning(f'La version previa es: {previous_version.project_plan_lines}')
                 # Assign the previous version's project picking lines to the current record's previous_version_picking_lines
                 record.previous_version_picking_lines = previous_version.project_picking_lines
 
                 # Mark that this record has a previous version
                 record.has_previous_version = True
             else:
+                _logger.warning('No tiene version previa')
                 # If no previous version is found (no earlier project with that id exists),
                 # we assign empty values to the plan and picking lines
                 record.previous_version_plan_lines = [(5, 0, 0)]  # (5, 0, 0) is the syntax for clearing lines
