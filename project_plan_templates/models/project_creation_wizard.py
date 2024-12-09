@@ -180,7 +180,7 @@ class ProjectCreation(models.TransientModel):
                 if line.display_type == 'line_section':
                     plan_lines.append((0, 0, {
                         'name': line.name,
-                        'display_type': line.display_type,
+                        'display_type': 'line_section',
                         'description': False,
                         'use_project_task': True,
                         'planned_date_begin': False,
@@ -209,7 +209,7 @@ class ProjectCreation(models.TransientModel):
             if line.display_type == 'line_section':
                 picking_lines.append((0, 0, {
                     'name': line.name,
-                    'display_type': line.display_type,
+                    'display_type': 'line_section',
                     'product_id': False,
                     'quantity': False,
                     'standard_price': False,
