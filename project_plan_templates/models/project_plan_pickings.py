@@ -66,6 +66,12 @@ class ProjectPlanPickingLine(models.Model):
     company_id = fields.Many2one('res.company', string="Empresa")
     product_uom_qty = fields.Float(string="Demanda")
 
+    @api.constrains('project_picking_lines')
+    def _check_picking_lines(self):
+        for record in self:
+            if not record.project_picking_lines:
+                raise ValidationError("Debe haber al menos una línea en la pestaña 'Pickings'.")
+
     @api.constrains('product_id')
     def _check_product_id(self):
         for record in self:
