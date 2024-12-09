@@ -32,15 +32,39 @@ class ProjectPlanPickings(models.Model):
             'subtotal'
         ]
 
-        missing_fields = [field for field in required_fields if not vals.get(field)]
+        missing_fields = [
+            field for field in required_fields 
+            if field not in vals or not vals.get(field)
+        ]
+
         if missing_fields:
             raise ValidationError(
                 _("No es posible guardar. Faltan llenar los campos obligatorios: %s") 
                 % ", ".join(missing_fields)
             )
-        
+
         record = super(ProjectPlanPickings, self).create(vals)
         return record
+
+    def write(self, vals):
+        required_fields = [
+            'name', 
+            'product_id', 
+            'product_uom', 
+            'product_packaging_id', 
+            'quantity', 
+            'standard_price', 
+            'subtotal'
+        ]
+
+        for field in required_fields:
+            if field in vals and not vals[field]:
+                raise ValidationError(
+                    _("No es posible actualizar. El campo '%s' no puede estar vacío.") 
+                    % field
+                )
+
+        return super(ProjectPlanPickings, self).write(vals)
 
     def toggle_active(self):
         for record in self:
