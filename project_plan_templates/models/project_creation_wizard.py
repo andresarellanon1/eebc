@@ -154,7 +154,7 @@ class ProjectCreation(models.TransientModel):
                     'user_ids': line.partner_id.ids,
                     'timesheet_ids': timesheet_data,
                     'planned_date_begin': line.planned_date_begin,
-                    'date_deadline': line.date_deadline
+                    'date_deadline': line.planned_date_end
                 })
 
                 self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
