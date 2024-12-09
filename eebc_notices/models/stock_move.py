@@ -119,6 +119,7 @@ class StockMove(models.Model):
             }
         }
 
+
     def _create_line_ids(self, in_or_out):
         for move in self:
             _logger.warning('id del producto :%s',move.product_id.id)
