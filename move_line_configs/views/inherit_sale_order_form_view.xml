@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='partner_details']/field[@name='partner_shipping_id']" position="after">
-                <field name="use_large_description"/>
+                <field name="use_large_description" invisible="state in ('estimation', 'budget')"/>
             </xpath>
             <xpath expr="//tree//field[@name='name']" position="before">
                 <field name="use_large_description" column_invisible="1"/>

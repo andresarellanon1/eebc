@@ -7,10 +7,27 @@
             <field name="arch" type="xml">
                 <form string="Confirm Project Creation">
                     <sheet>
-                        <group>
-                            <group>
+                        <div class="oe_title">
+                            <h1>
                                 <field name="project_name" />
-                                <field name="sale_order_id" invisible="1"/>
+                            </h1>
+                        </div>
+                            <group>
+                                <group>
+                                    <field name="partner_id"/>
+                                    <field name="sale_order_id" invisible="1"/>
+                                    <field name="picking_type_id"/>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
+                                </group>
+                                <group>
+                                    <field name="scheduled_date"/>
+                                    <field name="date_start" string="Planned Date" 
+                                        widget="daterange" 
+                                        options="{&quot;end_date_field&quot;: &quot;date&quot;, &quot;always_range&quot;: &quot;1&quot;}" 
+                                        required="date_start or date"/>
+                                    <field name="date" invisible="1" required="date_start"/>
+                                </group>
                             </group>
                             <notebook>
                                 <page name="description" string="Description">
@@ -23,13 +40,14 @@
                                     <div style="100%">
                                         <field name="wizard_plan_lines" nolabel="1">
                                             <tree editable="bottom" style="width: 100%;">
+                                                <field name="display_type" column_invisible="True"/>
                                                 <field name="name"/>
-                                                <field name="chapter"/>
                                                 <field name="description"/>
                                                 <field name="use_project_task"/>
                                                 <field name="planned_date_begin" widget="daterange"/>
                                                 <field name="planned_date_end" widget="daterange"/>
                                                 <field name="partner_id" widget="many2many_avatar_user"/>
+                                                <field name="project_plan_pickings" options="{'create': True}"/>
                                                 <field name="task_timesheet_id" options="{'create': True}"/>
                                             </tree>
                                         </field>
@@ -41,8 +59,14 @@
                                     </group>
                                     <div>
                                         <field name="wizard_picking_lines">
-                                            <tree editable="editable_bottom" style="width: 100%;">  
-                                                <field name="product_id"/>  
+                                            <tree editable="editable_bottom" style="width: 100%;">
+                                                <field name="company_id" column_invisible="1"/> 
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="display_type" column_invisible="True"/>
+                                                <field name="product_id"/>
+                                                <field name="name"/>  
+                                                <field name="product_uom"/>
+                                                <field name="product_packaging_id"/>
                                                 <field name="quantity"/>  
                                                 <field name="standard_price"/> 
                                                 <field name="subtotal"/>  
@@ -59,8 +83,6 @@
                                     </div>
                                 </page>
                             </notebook>
-                        </group>
-    
                         <footer>
                             <button name="action_confirm_create_project" string="Create Project"
                                 type="object" class="btn-primary" />

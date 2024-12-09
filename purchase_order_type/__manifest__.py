@@ -1,6 +1,6 @@
 {
     'name': "Purchase Order Type",
-    'version': '17.0.0.18',
+    'version': '17.0.0.19',
     'depends': [
         "purchase_stock"
     ],

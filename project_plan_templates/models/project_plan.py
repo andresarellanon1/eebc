@@ -46,7 +46,6 @@ class ProjectPlan(models.Model):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
 
-
     @api.onchange('project_plan_pickings')
     def onchange_picking_lines(self):
         for record in self:
@@ -54,24 +53,6 @@ class ProjectPlan(models.Model):
             for picking in record.project_plan_pickings:
                 lines |= picking.project_picking_lines
             record.picking_lines = lines
-
-
-    def action_open_create_project_wizard(self):
-        self.ensure_one()
-        return {
-            'name': 'Create Project',
-            'view_mode': 'form',
-            'res_model': 'project.creation.wizard',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': {
-                'default_project_plan_id': self.id,
-                'default_project_plan_pickings': [(6, 0, self.project_plan_pickings.ids)],
-                'default_picking_lines': [(6, 0, self.picking_lines.ids)],
-                'default_description': self.description,
-            }
-        }
-
 
     @api.depends('product_template_id')
     def _compute_service_project_domain(self):
@@ -86,13 +67,10 @@ class ProjectPlan(models.Model):
 
     @api.model
     def write(self, vals):
+        result = super(ProjectPlan, self).write(vals)
         if 'product_template_id' in vals and vals['product_template_id']:
             product_template = self.env['product.template'].browse(vals['product_template_id'])
             if product_template and product_template.project_plan_id != self:
                 product_template.write({'project_plan_id': self.id})
-        else:
-            if self.product_template_id.project_plan_id:
-                self.product_template_id.project_plan_id = False
-                self.product_template_id = False
-        result = super(ProjectPlan, self).write(vals)
+
         return result

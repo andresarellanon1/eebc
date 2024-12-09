@@ -1,14 +1,15 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
-
+# Extends the product.template model to include project plan template association
+# and implements unique project plan validation for service products.
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     project_plan_id = fields.Many2one(
         'project.plan',
         string="Plantilla de proyecto",
-        ondelete='restrict',  
+        ondelete='restrict',  # Evita borrar accidentalmente el proyecto
     )
 
     @api.constrains('project_plan_id')
@@ -21,13 +22,9 @@ class ProductTemplate(models.Model):
 
     @api.model
     def write(self, vals):
+        result = super(ProductTemplate, self).write(vals)
         if 'project_plan_id' in vals and vals['project_plan_id']:
             plan = self.env['project.plan'].browse(vals['project_plan_id'])
             if plan:
                 plan.write({'product_template_id': self.id})
-        else:
-            if self.project_plan_id.product_template_id:
-                self.project_plan_id.product_template_id = False 
-                self.project_plan_id = False  # Elimina la referencia
-        result = super(ProductTemplate, self).write(vals)
         return result

@@ -1,4 +1,5 @@
-from odoo import fields, models, api
+from odoo import fields, models, api, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class ProjectPlanPickings(models.Model):
@@ -18,13 +19,12 @@ class ProjectPlanPickings(models.Model):
 
     plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
-    
     @api.model
     def create(self, vals):
-        record = super(ProjectPlanPickings, self).create(vals)
-        return record
+        if not vals.get('name'):
+            raise ValidationError("El campo 'Name' es obligatorio. No se puede guardar un registro sin este campo.")
+        return super(ProjectPlanPickings, self).create(vals)
 
-    
     def toggle_active(self):
         for record in self:
             record.active = not record.active
@@ -39,7 +39,7 @@ class ProjectPlanPickingLine(models.Model):
     _name = 'project.picking.lines'
     _description = 'Project picking lines'
 
-    name = fields.Char()
+    name = fields.Char(required=True)
     
     project_id = fields.Many2one('project.project', string="Project Plan")
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
@@ -67,7 +67,16 @@ class ProjectPlanPickingLine(models.Model):
         ]
     )
     sequence = fields.Integer()
-    
+    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
+    product_uom = fields.Many2one('uom.uom', string='Unidad de medida')
+    company_id = fields.Many2one('res.company', string="Empresa")
+    product_uom_qty = fields.Float(string="Demanda")
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.product_uom = self.product_id.uom_id
+
     def reservado_update(self, task_inventory_lines):
         for record in self:
             for inventory_lines in task_inventory_lines:
@@ -75,12 +84,11 @@ class ProjectPlanPickingLine(models.Model):
                     if record.quantity >= (record.reservado + inventory_lines.quantity):
                         record.reservado += inventory_lines.quantity
 
-
     @api.depends('product_id')
     def _compute_standard_price(self):
         for record in self:
             record.standard_price = record.product_id.standard_price
-
+            
 
     @api.depends('quantity')
     def _compute_subtotal(self):
