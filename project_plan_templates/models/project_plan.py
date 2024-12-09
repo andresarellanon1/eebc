@@ -32,6 +32,14 @@ class ProjectPlan(models.Model):
 
     service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
 
+    @api.constrains('project_plan_lines', 'picking_lines')
+    def _check_lines_existence(self):
+        for record in self:
+            if not record.project_plan_lines:
+                raise ValidationError("Debe agregar al menos una línea en la pestaña 'Tasks'.")
+            if not record.picking_lines:
+                raise ValidationError("Debe agregar al menos una línea en la pestaña 'Stock'.")
+
     @api.constrains('product_template_id')
     def _check_unique_product_template(self):
         for record in self:

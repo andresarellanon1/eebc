@@ -4,10 +4,19 @@
         <field name="name">Wizard File Upload</field>
         <field name="model">notice.file.wizard</field>
         <field name="arch" type="xml">
-            <form string="Analisar archivo" js_class="NoticeFileWizardController" js_view_type="noticeWizardFormViewTab">
+            <form string="Analisar archivo">
              <sheet>
+                <header> 
+                    <group>
+                        <field name="create_tab"/>
+                    </group>
+                    <group>
+                        <field name="update_tab"/>
+                    </group>
+                </header>
                 <notebook>
-                    <page string="Crear nuevo aviso" name="create_tab">
+               
+                    <page string="Crear nuevo aviso" name="create_page_tab"  invisible="not create_tab">
 
                         <group>
                         
@@ -23,7 +32,7 @@
                     </page>
 
 
-                    <page string="Asignar cantidades a los avisos" name="assign_tab">
+                    <page string="Asignar cantidades a los avisos" name="assign_tab"  invisible="not update_tab">
 
                          <group>
                             <field name="quantity" readonly="1"/>
@@ -44,8 +53,11 @@
             </sheet>
                
                 <footer>
-                    <button name="create_notice" type="object" string="Crear aviso" class="btn-primary"/>
+                
+                    <button name="create_notice" type="object" string="Confirmar" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    
+
                 </footer>
             </form>
         </field>

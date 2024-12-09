@@ -58,6 +58,18 @@ class ProjectLines(models.Model):
             'target': 'new',
         }
     
+    @api.constrains('task_timesheet_id')
+    def _check_required_fields(self):
+        for record in self:
+            if not record.task_timesheet_id:
+                raise ValidationError("El campo 'Task Timesheet' es obligatorio y no puede estar vacío.")
+
+    @api.constrains('project_plan_pickings')
+    def _check_required_fields(self):
+        for record in self:
+            if not record.project_plan_pickings:
+                raise ValidationError("Debe seleccionar al menos un elemento en 'Picking Templates'.")
+
     # @api.constrains('planned_date_begin', 'planned_date_end')
     # def _check_dates(self):
     #     for record in self:

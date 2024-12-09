@@ -1,4 +1,5 @@
-from odoo import fields, models, api
+from odoo import fields, models, api, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class ProjectPlanPickings(models.Model):
@@ -18,13 +19,6 @@ class ProjectPlanPickings(models.Model):
 
     plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
-    
-    @api.model
-    def create(self, vals):
-        record = super(ProjectPlanPickings, self).create(vals)
-        return record
-
-    
     def toggle_active(self):
         for record in self:
             record.active = not record.active
@@ -33,13 +27,19 @@ class ProjectPlanPickings(models.Model):
     def _compute_total_cost(self):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+        
+    @api.constrains('project_picking_lines')
+    def _check_picking_lines(self):
+        for record in self:
+            if not record.project_picking_lines:
+                raise ValidationError("Debe agregar al menos una línea en la pestaña 'Pickings'.")
 
 
 class ProjectPlanPickingLine(models.Model):
     _name = 'project.picking.lines'
     _description = 'Project picking lines'
 
-    name = fields.Char()
+    name = fields.Char(required=True)
     
     project_id = fields.Many2one('project.project', string="Project Plan")
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
@@ -72,6 +72,23 @@ class ProjectPlanPickingLine(models.Model):
     company_id = fields.Many2one('res.company', string="Empresa")
     product_uom_qty = fields.Float(string="Demanda")
 
+    @api.constrains('product_id')
+    def _check_product_id(self):
+        for record in self:
+            if not record.product_id:
+                raise ValidationError("El campo 'Product' es obligatorio. No se puede guardar un registro sin este campo.")
+                
+    @api.constrains('product_packaging_id')
+    def _check_product_packaging_id(self):
+        for record in self:
+            if not record.product_packaging_id:
+                raise ValidationError("El campo 'Packaging' es obligatorio. No se puede guardar una línea sin este campo.") 
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.product_uom = self.product_id.uom_id
+
     def reservado_update(self, task_inventory_lines):
         for record in self:
             for inventory_lines in task_inventory_lines:
@@ -83,7 +100,7 @@ class ProjectPlanPickingLine(models.Model):
     def _compute_standard_price(self):
         for record in self:
             record.standard_price = record.product_id.standard_price
-
+            
 
     @api.depends('quantity')
     def _compute_subtotal(self):

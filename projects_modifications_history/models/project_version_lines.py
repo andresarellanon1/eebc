@@ -14,6 +14,7 @@ class ProjecVersionLines(models.Model):
     modification_motive = fields.Html(string='Motive of adjustment')
     project_name = fields.Char(string='Project name')
     project_version_history_id = fields.Many2one('project.version.history', string="Project history")
+    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
     #Relación que obtiene los valores de el project_plan_lines en la versión actual
     project_plan_lines = fields.Many2many(
@@ -50,6 +51,11 @@ class ProjecVersionLines(models.Model):
         store=True #Indica que el valor se almacena en la base de datos
     )
 
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+
     #Boleano que indica si tiene versión previa
     has_previous_version = fields.Boolean(
         string="Has Previous Version",
@@ -83,22 +89,25 @@ class ProjecVersionLines(models.Model):
 
             # Search for the previous version of the project (if it exists) for the specific record.
             # We search for records with the same project_id and an id smaller than the current one.
+            _logger.warning(f"Buscando versiones previas para record ID {record.id}, project_id {record.project_id.id}")
             previous_version = self.search([
                 ('project_id', '=', record.project_id.id),  # Same project_id
                 ('id', '<', record.id)  # Search for records with smaller ids (previous versions)
             ], order="id desc", limit=1)  # Order by id descending to get the most recent previous version
-
+            _logger.warning(f"Resultado de búsqueda: {previous_version}")
+            
             # If a previous version is found (i.e., previous_version is not None)
             if previous_version:
                 # Assign the previous version's project plan lines to the current record's previous_version_plan_lines
                 record.previous_version_plan_lines = previous_version.project_plan_lines
-
+                _logger.warning(f'La version previa es: {previous_version.project_plan_lines}')
                 # Assign the previous version's project picking lines to the current record's previous_version_picking_lines
                 record.previous_version_picking_lines = previous_version.project_picking_lines
 
                 # Mark that this record has a previous version
                 record.has_previous_version = True
             else:
+                _logger.warning('No tiene version previa')
                 # If no previous version is found (no earlier project with that id exists),
                 # we assign empty values to the plan and picking lines
                 record.previous_version_plan_lines = [(5, 0, 0)]  # (5, 0, 0) is the syntax for clearing lines
