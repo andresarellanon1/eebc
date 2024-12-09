@@ -11,12 +11,16 @@
                     <div name="planning_lines">
                         <field name="project_plan_lines" nolabel="1">
                             <tree editable="editable_bottom" style="width: 100%;"> 
-                                <field name="name"/> 
-                                <field name="description"/>  
-                                <field name="planned_date_begin" widget="daterange"/> 
-                                <field name="planned_date_end" widget="daterange"/> 
-                                <field name="partner_id" widget="many2many_avatar_user"/>  
-                                <field name="task_timesheet_id" options="{'create': True}"/> 
+                                <field name="sequence" widget="handle"/>
+                                <field name="display_type" column_invisible="True"/>
+                                <field name="name"/>
+                                <field name="description"/>
+                                <field name="use_project_task"/>
+                                <field name="planned_date_begin" widget="daterange"/>
+                                <field name="planned_date_end" widget="daterange"/>
+                                <field name="partner_id" widget="many2many_avatar_user"/>
+                                <field name="project_plan_pickings" options="{'create': True}"/> 
+                                <field name="task_timesheet_id" options="{'create': True}"/>
                                 <button name="action_preview_task" type="object" class="oe_highlight"
                                         string="Preview task"/>
                             </tree>
@@ -29,12 +33,16 @@
                         <field name="project_picking_lines" style="width: 100%;"> 
                             <tree editable="editable_bottom">
                                 <field name="company_id" column_invisible="1"/> 
-                                <field name="product_id"/>
+                                <field name="sequence" widget="handle"/>
+                                <field name="display_type" column_invisible="True"/>
                                 <field name="name"/>
+                                <field name="product_id"/>
                                 <field name="product_uom"/>
                                 <field name="product_packaging_id"/>
-                                <field name="quantity"/> 
+                                <field name="quantity"/>
                                 <field name="reservado"/>
+                                <field name="standard_price"/>
+                                <field name="subtotal"/>
                             </tree>
                         </field>
                         <group>
