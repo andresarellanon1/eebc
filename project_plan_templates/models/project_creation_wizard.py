@@ -47,29 +47,18 @@ class ProjectCreation(models.TransientModel):
             record.wizard_picking_lines = [(5, 0, 0)]
             record.wizard_plan_lines = [(5, 0, 0)]
 
-            plan_lines = []
-            picking_lines = []
+            plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
+            picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
 
-            for line in record.sale_order_id.project_plan_lines:
-                if line.display_type == 'line_section':
-                    plan_lines.append(self.sale_order_id.prep_plan_section_line(line))
-                else:
-                    plan_lines.append(self.sale_order_id.prep_plan_section_line(line))
-                    plan_lines += self.sale_order_id.prep_plan_lines(line)
-            
-            for line in record.sale_order_id.project_picking_lines:
-                if line.display_type == 'line_section':
-                    picking_lines.append(self.sale_order_id.prep_picking_section_line(line))
-                else:
-                    picking_lines.append(self.sale_order_id.prep_picking_section_line(line))
-                    picking_lines += self.sale_order_id.prep_picking_lines(line)
-            
             record.wizard_plan_lines = plan_lines
             record.wizard_picking_lines = picking_lines
 
     
     def action_confirm_create_project(self):
         self.ensure_one()
+
+        project_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+        picking_line_vals = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
         project_vals = {
             'name': self.project_name,
