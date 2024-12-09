@@ -39,7 +39,15 @@ class ProjectPlan(models.Model):
                 raise ValidationError("Debe agregar al menos una línea en la pestaña 'Tasks'.")
             if not record.picking_lines:
                 raise ValidationError("Debe agregar al menos una línea en la pestaña 'Stock'.")
-                
+
+    @api.constrains('project_plan_pickings', 'task_timesheet_id')
+    def _check_required_fields(self):
+        for record in self:
+            if not record.project_plan_pickings:
+                raise ValidationError("Debe seleccionar al menos un elemento en 'Picking Templates'.")
+            if not record.task_timesheet_id:
+                raise ValidationError("El campo 'Task Timesheet' es obligatorio y no puede estar vacío.")
+
     @api.constrains('product_template_id')
     def _check_unique_product_template(self):
         for record in self:
