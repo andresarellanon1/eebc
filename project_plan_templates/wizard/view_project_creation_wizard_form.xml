@@ -54,17 +54,13 @@
                                     </div>
                                 </page>
                                 <page name="Stock" string="Stock">
-                                    <group name="stock_container">
-                                        <field name="project_plan_pickings" widget="many2many_tags"/>
-                                    </group>
                                     <div>
                                         <field name="wizard_picking_lines">
                                             <tree editable="editable_bottom" style="width: 100%;">
-                                                <field name="company_id" column_invisible="1"/> 
-                                                <field name="sequence" widget="handle"/>
+                                                <field name="company_id" column_invisible="1"/>
                                                 <field name="display_type" column_invisible="True"/>
+                                                <field name="name"/>
                                                 <field name="product_id"/>
-                                                <field name="name"/>  
                                                 <field name="product_uom"/>
                                                 <field name="product_packaging_id"/>
                                                 <field name="quantity"/>  
