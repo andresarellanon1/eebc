@@ -19,7 +19,10 @@ class ProjectPlanPickings(models.Model):
 
     plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
-    
+    @api.model
+    def create(self, vals):
+        raise ValidationError(_("Este es un error de prueba"))
+
     @api.model
     def create(self, vals):
         required_fields = [
