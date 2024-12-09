@@ -27,6 +27,12 @@ class ProjectPlanPickings(models.Model):
     def _compute_total_cost(self):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+        
+    @api.constrains('project_picking_lines')
+    def _check_picking_lines(self):
+        for record in self:
+            if not record.project_picking_lines:
+                raise ValidationError("Debe agregar al menos una línea en la pestaña 'Pickings'.")
 
 
 class ProjectPlanPickingLine(models.Model):
