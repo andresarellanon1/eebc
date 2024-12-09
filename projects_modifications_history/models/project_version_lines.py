@@ -73,6 +73,7 @@ class ProjecVersionLines(models.Model):
         for record in self:
             record.project_name = record.project_id.name
             _logger.warning(f"Buscando versiones previas para record ID {record.id}, project_id {record.project_id.id}")
+
             previous_version = self.search([
                 ('project_id', '=', record.project_id.id),
                 ('id', '<', record.id)
