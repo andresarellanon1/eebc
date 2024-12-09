@@ -139,6 +139,8 @@ class StockMove(models.Model):
 
             notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids),('quantity', '>', 0)])
             lines = [(0,0,{'notice_id':notice.id,'quantity': 0, 'quantity_available': notice.quantity,'test_name':notice.display_name, 'in_or_out': True if in_or_out == 'in' else False}) for notice in notice_ids]
+            _logger.warning(f'Líneas creadas: {lines}')
+
             return lines
 
            
