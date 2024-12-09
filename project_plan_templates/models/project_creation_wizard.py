@@ -220,14 +220,14 @@ class ProjectCreation(models.TransientModel):
                 }))
             else:
                 picking_lines.append((0, 0, {
-                    'name': picking.product_id.name,
-                    'product_id': picking.product_id.id,
-                    'product_uom': picking.product_uom.id,
-                    'product_packaging_id': picking.product_packaging_id.id,
-                    'product_uom_qty': picking.product_uom_qty,
-                    'quantity': picking.quantity,
-                    'standard_price': picking.standard_price,
-                    'subtotal': picking.subtotal,
+                    'name': line.product_id.name,
+                    'product_id': line.product_id.id,
+                    'product_uom': line.product_uom.id,
+                    'product_packaging_id': line.product_packaging_id.id,
+                    'product_uom_qty': line.product_uom_qty,
+                    'quantity': line.quantity,
+                    'standard_price': line.standard_price,
+                    'subtotal': line.subtotal,
                     'display_type': False
                 }))
         return picking_lines
