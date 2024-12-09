@@ -19,8 +19,9 @@
                                 </page>
                                 <page name="tasks" string="Tasks">
                                     <div style="width: 100%;">
-                                        <field name="project_plan_lines" nolabel="1" readonly="1" style="pointer-events:none">
+                                        <field name="project_plan_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" readonly="1" style="pointer-events:none">
                                             <tree style="width: 100%;" readonly="1" editable="bottom">
+                                                <field name="display_type" column_invisible="True"/>
                                                 <field name="name" readonly="1"/>
                                                 <field name="description" readonly="1"/>
                                                 <field name="use_project_task" readonly="1"/>
@@ -35,7 +36,7 @@
                                 </page>
                                 <page name="stock" string="Stock">
                                     <div>
-                                        <field name="project_picking_lines" nolabel="1" readonly="1" style="pointer-events:none">
+                                        <field name="project_picking_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" readonly="1" style="pointer-events:none">
                                             <tree style="width: 100%;" readonly="1" editable="bottom">
                                                 <field name="company_id" column_invisible="1" readonly="1"/>
                                                 <field name="display_type" column_invisible="True" readonly="1"/>
