@@ -114,7 +114,6 @@ class StockMove(models.Model):
                 'stock_move_id': self.id,
                 'lines':notice_lines_to_wizard,
                 'purchase_order_id': order.id,
-                'in_or_out': 'out'
 
             }
         }
