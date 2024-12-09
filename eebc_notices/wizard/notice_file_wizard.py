@@ -180,7 +180,7 @@ class NoticeFileWizard(models.TransientModel):
                                 'history_ids': [(0, 0, {
                                     'location_id': wizard.stock_move_id.picking_id.location_id.id,
                                     'location_dest': wizard.stock_move_id.picking_id.location_dest_id.id,
-                                    'quantity': line.quantity * (-1),
+                                    'quantity': line.quantity,
                                     'picking_code': wizard.stock_move_id.picking_id.picking_type_code,
                                     'origin': wizard.stock_move_id.picking_id.sale_id.name,
                                     'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id,
