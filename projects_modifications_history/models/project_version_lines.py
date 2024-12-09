@@ -52,7 +52,6 @@ class ProjecVersionLines(models.Model):
 
     has_previous_version = fields.Boolean(
         string="Has Previous Version",
-        compute='_compute_previous_version_lines',
         store=True
     )
 
@@ -68,7 +67,6 @@ class ProjecVersionLines(models.Model):
             else:
                 record.version_number = "V0"
 
-    @api.depends('project_id')
     def _compute_previous_version_lines(self):
         for record in self:
             record.project_name = record.project_id.name
