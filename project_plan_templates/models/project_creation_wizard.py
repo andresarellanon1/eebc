@@ -68,6 +68,8 @@ class ProjectCreation(models.TransientModel):
             'default_picking_type_id': self.picking_type_id.id,
             'publication_date': fields.Datetime.now(),
             'date_start': self.date_start,
+            'date': self.date,
+            'sale_order_id': self.sale_order_id.id
         }
 
         logger.warning(f"project_vals")
@@ -151,6 +153,8 @@ class ProjectCreation(models.TransientModel):
                     'stage_id': current_task_type.id,
                     'user_ids': line.partner_id.ids,
                     'timesheet_ids': timesheet_data,
+                    'planned_date_begin': line.planned_date_begin,
+                    'date_deadline': line.date_deadline
                 })
 
                 self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
