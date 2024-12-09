@@ -14,6 +14,16 @@ class WizardSelectionLine(models.TransientModel):
 
     in_or_out = fields.Boolean(
         string='Entrada o Salida',
+        compute='_compute_value_text_in_or_out'
+    )
+
+    
+    
+   
+    
+
+    value_text_in_or_out = fields.Char(
+        string='Nombre',
     )
 
     
@@ -22,3 +32,11 @@ class WizardSelectionLine(models.TransientModel):
     )
     
   
+    @api.depends('value_text_in_or_out')
+    def _compute_value_text_in_or_out(self):
+        for record in self:
+            if record.value_text_in_or_out == 'in':
+
+                record.in_or_out = True
+    
+    
