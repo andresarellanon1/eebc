@@ -12,6 +12,10 @@ class WizardSelectionLine(models.TransientModel):
     quantity = fields.Float(string='Cantidad asignada', default=0, required=True)
     quantity_available = fields.Float(string='Cantidad disponible')
 
+    in_or_out = fields.Boolean(
+        string='Entrada o Salida',
+    )
+
     
     test_name = fields.Char(
         string='Nombre',

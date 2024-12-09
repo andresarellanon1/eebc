@@ -51,10 +51,10 @@
                     <!-- Pestaña de Información General -->
                     <page string="Información General">
                         <group>
-                            <field name="product_id"/>
-                            <field name="partner_id"/>
-                            <field name="notice"/>
-                            <field name="description"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="notice" readonly="1"/>
+                            <field name="description" readonly="1"/>
                             <field name="quantity" string="Cantidad"/>
                         </group>
                     </page>

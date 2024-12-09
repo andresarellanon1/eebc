@@ -58,7 +58,9 @@ class StockMove(models.Model):
         proveedor_id = self.picking_id.partner_id.id if self.picking_id.partner_id else False
         purchase_order_id = order.id if order else False
         product_description = self.description_picking if self.description_picking else "Sin descripción"
-        notice_lines_to_wizard =self._create_line_ids()
+        in_or_out = 'in'
+        notice_lines_to_wizard =self._create_line_ids(in_or_out)
+        # aqui va variable para saber que haremos entrada y pasarla a la llave in_or_out
 
         return {
             'type': 'ir.actions.act_window',
@@ -84,17 +86,19 @@ class StockMove(models.Model):
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
                 'lines':notice_lines_to_wizard,
-                'stock_move_id':self.id
+                'stock_move_id':self.id,
                 
             }
         }
         
     def action_show_outgoing(self):
         _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
-
-        notice_lines_to_wizard =self._create_line_ids()
+        in_or_out = 'out'
+        notice_lines_to_wizard =self._create_line_ids(in_or_out)
         _logger.warning('Valor de las lineas : %s', notice_lines_to_wizard)
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
+
+        # aqui va variable para saber que haremos salida y pasarla a la llave in_or_out
 
         return {
             'type': 'ir.actions.act_window',
@@ -109,12 +113,13 @@ class StockMove(models.Model):
                 'location_id': self.picking_id.location_id.id,
                 'stock_move_id': self.id,
                 'lines':notice_lines_to_wizard,
-                'purchase_order_id': order.id
+                'purchase_order_id': order.id,
+                'in_or_out': 'out'
 
             }
         }
 
-    def _create_line_ids(self):
+    def _create_line_ids(self, in_or_out):
         for move in self:
             _logger.warning('id del producto :%s',move.product_id.id)
             _logger.warning('id del location_id :%s',move.location_id.id)
@@ -133,7 +138,7 @@ class StockMove(models.Model):
             _logger.warning('lineas de hiostorial :%s',notice_history_ids)
 
             notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids),('quantity', '>', 0)])
-            lines = [(0,0,{'notice_id':notice.id,'quantity': 0, 'quantity_available': notice.quantity,'test_name':notice.display_name}) for notice in notice_ids]
+            lines = [(0,0,{'notice_id':notice.id,'quantity': 0, 'quantity_available': notice.quantity,'test_name':notice.display_name, 'in_or_out': True if in_or_out == 'in' else False}) for notice in notice_ids]
             return lines
 
            
