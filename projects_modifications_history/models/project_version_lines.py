@@ -123,4 +123,4 @@ class ProjecVersionLines(models.Model):
                 record.previous_version_picking_lines = [(5, 0, 0)]
 
                 # Mark that there is no previous version
-                record.has_previous_version = False
+                
