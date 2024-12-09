@@ -23,7 +23,7 @@ class WizardSelectionLine(models.TransientModel):
     
 
     value_text_in_or_out = fields.Char(
-        string='Nombre',
+        string='valor',
     )
 
     
