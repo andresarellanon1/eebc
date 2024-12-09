@@ -72,6 +72,7 @@ class ProjectPlanPickingLine(models.Model):
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True, required=True)
     product_uom = fields.Many2one('uom.uom', string='Unidad de medida', required=True)
     company_id = fields.Many2one('res.company', string="Empresa")
+    product_uom_qty = fields.Float(string="Demanda")
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
