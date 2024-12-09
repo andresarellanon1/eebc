@@ -14,6 +14,7 @@ class ProjecVersionLines(models.Model):
     modification_motive = fields.Html(string='Motive of adjustment')
     project_name = fields.Char(string='Project name')
     project_version_history_id = fields.Many2one('project.version.history', string="Project history")
+    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
     #Relación que obtiene los valores de el project_plan_lines en la versión actual
     project_plan_lines = fields.Many2many(
@@ -49,6 +50,11 @@ class ProjecVersionLines(models.Model):
         compute='_compute_version_number',
         store=True #Indica que el valor se almacena en la base de datos
     )
+
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
 
     #Boleano que indica si tiene versión previa
     has_previous_version = fields.Boolean(
