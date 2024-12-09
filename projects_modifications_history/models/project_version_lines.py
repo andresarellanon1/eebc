@@ -89,11 +89,13 @@ class ProjecVersionLines(models.Model):
 
             # Search for the previous version of the project (if it exists) for the specific record.
             # We search for records with the same project_id and an id smaller than the current one.
+            _logger.warning(f"Buscando versiones previas para record ID {record.id}, project_id {record.project_id.id}")
             previous_version = self.search([
                 ('project_id', '=', record.project_id.id),  # Same project_id
                 ('id', '<', record.id)  # Search for records with smaller ids (previous versions)
             ], order="id desc", limit=1)  # Order by id descending to get the most recent previous version
-
+            _logger.warning(f"Resultado de búsqueda: {previous_version}")
+            
             # If a previous version is found (i.e., previous_version is not None)
             if previous_version:
                 # Assign the previous version's project plan lines to the current record's previous_version_plan_lines
