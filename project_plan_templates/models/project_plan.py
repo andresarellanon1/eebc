@@ -16,7 +16,7 @@ class ProjectPlan(models.Model):
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     picking_lines = fields.One2many(
         'project.picking.lines',
-        'project_plan_id',
+        'project_plan_id',  
         string="Picking Lines"
     )
 
@@ -81,4 +81,22 @@ class ProjectPlan(models.Model):
             if product_template and product_template.project_plan_id != self:
                 product_template.write({'project_plan_id': self.id})
 
+        if 'project_plan_pickings' in vals:
+            self._sync_picking_lines()
+
         return result
+
+    def _sync_picking_lines(self):
+        for record in self:
+            picking_lines = []
+            for picking in record.project_plan_pickings:
+                for product in picking.product_ids:
+                    picking_lines.append((0, 0, {
+                        'product_id': product.id,
+                        'product_uom': product.uom_id.id,
+                        'quantity': product.quantity,
+                        'standard_price': product.standard_price,
+                        'subtotal': product.standard_price * product.quantity,
+                        'name': product.name,
+                    }))
+            record.picking_lines = picking_lines
