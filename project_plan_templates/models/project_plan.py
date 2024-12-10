@@ -109,7 +109,6 @@ class ProjectPlan(models.Model):
         record._sync_picking_lines()
         return record
 
-    @api.multi
     def write(self, vals):
         result = super(ProjectPlan, self).write(vals)
         if 'project_plan_pickings' in vals:
