@@ -89,10 +89,10 @@ class ProjectPlan(models.Model):
 
     def _sync_picking_lines(self):
         for record in self:
-            picking_lines = []
+            stock_lines = []
             for picking in record.project_plan_pickings:
-                for line in picking.project_picking_lines: 
-                    picking_lines.append((0, 0, {
+                for line in picking.project_picking_lines:
+                    stock_lines.append((0, 0, {
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
                         'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
@@ -101,7 +101,7 @@ class ProjectPlan(models.Model):
                         'subtotal': line.subtotal,
                         'company_id': line.company_id.id,
                     }))
-            record.picking_lines = picking_lines
+            record.picking_lines = stock_lines
 
     @api.model
     def create(self, vals):
@@ -113,4 +113,8 @@ class ProjectPlan(models.Model):
         result = super(ProjectPlan, self).write(vals)
         if 'project_plan_pickings' in vals:
             self._sync_picking_lines()
+        if 'product_template_id' in vals and vals['product_template_id']:
+            product_template = self.env['product.template'].browse(vals['product_template_id'])
+            if product_template and product_template.project_plan_id != self:
+                product_template.write({'project_plan_id': self.id})
         return result
