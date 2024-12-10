@@ -113,8 +113,4 @@ class ProjectPlan(models.Model):
         result = super(ProjectPlan, self).write(vals)
         if 'project_plan_pickings' in vals:
             self._sync_picking_lines()
-        if 'product_template_id' in vals and vals['product_template_id']:
-            product_template = self.env['product.template'].browse(vals['product_template_id'])
-            if product_template and product_template.project_plan_id != self:
-                product_template.write({'project_plan_id': self.id})
         return result
