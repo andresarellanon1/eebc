@@ -81,22 +81,38 @@ class ProjectPlan(models.Model):
             if product_template and product_template.project_plan_id != self:
                 product_template.write({'project_plan_id': self.id})
 
-        if 'project_plan_pickings' in vals:
-            self._sync_picking_lines()
-
         return result
 
     def _sync_picking_lines(self):
         for record in self:
             picking_lines = []
             for picking in record.project_plan_pickings:
-                for product in picking.product_ids:
+                for line in picking.project_picking_lines:
                     picking_lines.append((0, 0, {
-                        'product_id': product.id,
-                        'product_uom': product.uom_id.id,
-                        'quantity': product.quantity,
-                        'standard_price': product.standard_price,
-                        'subtotal': product.standard_price * product.quantity,
-                        'name': product.name,
+                        'product_id': line.product_id.id,
+                        'product_uom': line.product_uom.id,
+                        'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
+                        'quantity': line.quantity,
+                        'standard_price': line.standard_price,
+                        'subtotal': line.subtotal,
+                        'company_id': line.company_id.id,
                     }))
             record.picking_lines = picking_lines
+
+    @api.onchange('project_plan_pickings')
+    def _onchange_project_plan_pickings(self):
+        self._sync_picking_lines()
+
+    @api.model
+    def create(self, vals):
+        record = super(ProjectPlan, self).create(vals)
+        if 'project_plan_pickings' in vals:
+            record._sync_picking_lines()
+        return record
+
+    @api.model
+    def write(self, vals):
+        result = super(ProjectPlan, self).write(vals)
+        if 'project_plan_pickings' in vals:
+            self._sync_picking_lines()
+        return result
