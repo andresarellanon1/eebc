@@ -9,6 +9,7 @@ class ProjectVersionWizard(models.TransientModel):
     modification_date = fields.Datetime(string='Modification date')
     modification_motive = fields.Html(string='Motive of adjustment')
     modified_by = fields.Many2one('res.users', string='Modified by', required=True)
+    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
 
     project_plan_lines = fields.Many2many(
         'project.plan.line',
@@ -27,6 +28,11 @@ class ProjectVersionWizard(models.TransientModel):
     # The method generates tasks for the project using `create_project_tasks` from the `project.project` model.
     # Afterward, it creates a new entry in the version history with the current modification details.
     # Finally, it saves the updated project information and closes the wizard window.
+
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
 
     def action_confirm_version_history(self):
         self.ensure_one()  # Ensure that only one record is being processed.
