@@ -92,10 +92,8 @@ class StockMove(models.Model):
         }
         
     def action_show_outgoing(self):
-        _logger.warning('valor del pickinf id: %s', self.picking_id.location_id.id)
         in_or_out = "out"
         notice_lines_to_wizard =self._create_line_ids(in_or_out)
-        _logger.warning('Valor de las lineas : %s', notice_lines_to_wizard)
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
 
         # aqui va variable para saber que haremos salida y pasarla a la llave in_or_out
@@ -123,26 +121,15 @@ class StockMove(models.Model):
 
     def _create_line_ids(self, in_or_out):
         for move in self:
-            _logger.warning('id del producto :%s',move.product_id.id)
-            _logger.warning('id del location_id :%s',move.location_id.id)
-            _logger.warning('id del move :%s',move.id)
-
-
             if not move.id:
-                _logger.warning('entra if')
-
-                continue  # No asignar nada si no hay stock_move_id
-
+                continue 
             notice_history_ids = self.env['notices.history'].search([
                 ('product_id', '=', move.product_id.id),
                 ('location_id', '=', move.location_id.id)
             ])
-            _logger.warning('lineas de hiostorial :%s',notice_history_ids)
-
             notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids),('quantity', '>', 0)])
-            lines = [(0,0,{'notice_id':notice.id,'quantity': 0, 'quantity_available': notice.quantity,'test_name':notice.display_name, 'value_text_in_or_out': "in", }) for notice in notice_ids]
+            lines = [(0,0,{'notice_id':notice.id,'quantity': 0, 'quantity_available': notice.quantity,'test_name':notice.display_name, 'value_text_in_or_out': in_or_out, }) for notice in notice_ids]
             _logger.warning(f'Líneas creadas: {lines}')
-
             return lines
 
            
