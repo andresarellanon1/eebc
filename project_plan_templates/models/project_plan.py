@@ -83,11 +83,15 @@ class ProjectPlan(models.Model):
 
         return result
 
+    @api.onchange('project_plan_pickings')
+    def _onchange_project_plan_pickings(self):
+        self._sync_picking_lines()
+
     def _sync_picking_lines(self):
         for record in self:
             picking_lines = []
             for picking in record.project_plan_pickings:
-                for line in picking.project_picking_lines:
+                for line in picking.project_picking_lines: 
                     picking_lines.append((0, 0, {
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
@@ -99,18 +103,13 @@ class ProjectPlan(models.Model):
                     }))
             record.picking_lines = picking_lines
 
-    @api.onchange('project_plan_pickings')
-    def _onchange_project_plan_pickings(self):
-        self._sync_picking_lines()
-
     @api.model
     def create(self, vals):
         record = super(ProjectPlan, self).create(vals)
-        if 'project_plan_pickings' in vals:
-            record._sync_picking_lines()
+        record._sync_picking_lines()
         return record
 
-    @api.model
+    @api.multi
     def write(self, vals):
         result = super(ProjectPlan, self).write(vals)
         if 'project_plan_pickings' in vals:
