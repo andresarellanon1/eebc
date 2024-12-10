@@ -235,7 +235,7 @@ class NoticeFileWizard(models.TransientModel):
             for line in wizard.notice_ids:        
                 if line.quantity > line.quantity_available:
                     notices_list.append({
-                        'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
+                        'name': line.aviso_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
                         'available': line.quantity_available,
                         'established': line.quantity
                     })            
