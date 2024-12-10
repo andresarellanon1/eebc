@@ -63,11 +63,13 @@ class ProjectCreation(models.TransientModel):
         project_vals = {
             'name': self.project_name,
             'description': self.description,
-            'project_plan_lines': project_plan_lines,
-            'project_picking_lines': picking_line_vals,
-            'default_picking_type_id': self.picking_type_id,
+            'project_plan_lines': self.wizard_plan_lines,
+            'project_picking_lines': self.wizard_picking_lines,
+            'default_picking_type_id': self.picking_type_id.id,
             'publication_date': fields.Datetime.now(),
             'date_start': self.date_start,
+            'date': self.date,
+            'sale_order_id': self.sale_order_id.id
         }
 
         logger.warning(f"project_vals")
@@ -151,6 +153,8 @@ class ProjectCreation(models.TransientModel):
                     'stage_id': current_task_type.id,
                     'user_ids': line.partner_id.ids,
                     'timesheet_ids': timesheet_data,
+                    'planned_date_begin': line.planned_date_begin,
+                    'date_deadline': line.planned_date_end
                 })
 
                 self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
@@ -176,7 +180,7 @@ class ProjectCreation(models.TransientModel):
                 if line.display_type == 'line_section':
                     plan_lines.append((0, 0, {
                         'name': line.name,
-                        'display_type': line.display_type,
+                        'display_type':  line.display_type or 'line_section',
                         'description': False,
                         'use_project_task': True,
                         'planned_date_begin': False,
@@ -205,8 +209,11 @@ class ProjectCreation(models.TransientModel):
             if line.display_type == 'line_section':
                 picking_lines.append((0, 0, {
                     'name': line.name,
-                    'display_type': line.display_type,
+                    'display_type': line.display_type or 'line_section',
                     'product_id': False,
+                    'product_uom': False,
+                    'product_packaging_id': False,
+                    'product_uom_qty': False,
                     'quantity': False,
                     'standard_price': False,
                     'subtotal': False
@@ -215,6 +222,9 @@ class ProjectCreation(models.TransientModel):
                 picking_lines.append((0, 0, {
                     'name': line.product_id.name,
                     'product_id': line.product_id.id,
+                    'product_uom': line.product_uom.id,
+                    'product_packaging_id': line.product_packaging_id.id,
+                    'product_uom_qty': line.product_uom_qty,
                     'quantity': line.quantity,
                     'standard_price': line.standard_price,
                     'subtotal': line.subtotal,

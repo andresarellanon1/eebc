@@ -180,7 +180,7 @@ class NoticeFileWizard(models.TransientModel):
                                 'history_ids': [(0, 0, {
                                     'location_id': wizard.stock_move_id.picking_id.location_id.id,
                                     'location_dest': wizard.stock_move_id.picking_id.location_dest_id.id,
-                                    'quantity': line.quantity * (-1),
+                                    'quantity': line.quantity,
                                     'picking_code': wizard.stock_move_id.picking_id.picking_type_code,
                                     'origin': wizard.stock_move_id.picking_id.sale_id.name,
                                     'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id,
@@ -235,7 +235,7 @@ class NoticeFileWizard(models.TransientModel):
             for line in wizard.notice_ids:        
                 if line.quantity > line.quantity_available:
                     notices_list.append({
-                        'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
+                        'name': line.aviso_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
                         'available': line.quantity_available,
                         'established': line.quantity
                     })            
