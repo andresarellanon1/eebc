@@ -85,7 +85,8 @@ class ProjectPlan(models.Model):
 
     @api.onchange('project_plan_pickings')
     def _onchange_project_plan_pickings(self):
-        self._sync_picking_lines()
+        if self.project_plan_pickings:
+            self._sync_picking_lines()
 
     def _sync_picking_lines(self):
         for record in self:
@@ -106,7 +107,8 @@ class ProjectPlan(models.Model):
     @api.model
     def create(self, vals):
         record = super(ProjectPlan, self).create(vals)
-        record._sync_picking_lines()
+        if 'project_plan_pickings' in vals:
+            record._sync_picking_lines()
         return record
 
     def write(self, vals):
