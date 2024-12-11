@@ -66,7 +66,6 @@ class SaleOrder(models.Model):
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
-                sale.project_picking_lines = picking_lines
             return super(SaleOrder, self).action_confirm()
     
     def prep_picking_section_line(self, line):
@@ -128,7 +127,7 @@ class SaleOrder(models.Model):
             }))
         return picking_lines
 
-    @api.depends('project_plan_lines')
+    @api.depends('project_plan_lines.project_plan_pickings')
     def _compute_picking_lines(self):
         self.project_picking_lines = [(5, 0, 0)]
         
