@@ -149,3 +149,32 @@ class SaleOrder(models.Model):
         }
         
         
+    def compute_custom_picking_lines(self):
+    for sale in self:
+        if not sale.is_project:
+            continue
+
+        picking_lines = []
+        for plan_line in sale.project_plan_lines:
+            if plan_line.project_plan_pickings:
+                for picking_template in plan_line.project_plan_pickings:
+                    for line in picking_template.project_picking_lines:
+                        picking_lines.append((0, 0, {
+                            'name': line.product_id.name,
+                            'product_id': line.product_id.id,
+                            'product_uom': line.product_uom.id,
+                            'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
+                            'product_uom_qty': line.product_uom_qty,
+                            'quantity': line.quantity,
+                            'standard_price': line.standard_price,
+                            'subtotal': line.subtotal,
+                            'display_type': False
+                        }))
+        sale.project_picking_lines = [(5, 0, 0)] + picking_lines
+
+    def action_confirm(self):
+    result = super(SaleOrder, self).action_confirm()
+    for sale in self:
+        if sale.is_project:
+            sale.compute_custom_picking_lines() 
+    return result
