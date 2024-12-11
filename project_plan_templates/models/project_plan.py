@@ -82,37 +82,3 @@ class ProjectPlan(models.Model):
                 product_template.write({'project_plan_id': self.id})
 
         return result
-
-    @api.onchange('project_plan_pickings')
-    def _onchange_project_plan_pickings(self):
-        if self.project_plan_pickings:
-            self._sync_picking_lines()
-
-    def _sync_picking_lines(self):
-        for record in self:
-            stock_lines = []
-            for picking in record.project_plan_pickings:
-                for line in picking.project_picking_lines:
-                    stock_lines.append((0, 0, {
-                        'product_id': line.product_id.id,
-                        'product_uom': line.product_uom.id,
-                        'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
-                        'quantity': line.quantity,
-                        'standard_price': line.standard_price,
-                        'subtotal': line.subtotal,
-                        'company_id': line.company_id.id,
-                    }))
-            record.picking_lines = stock_lines
-
-    @api.model
-    def create(self, vals):
-        record = super(ProjectPlan, self).create(vals)
-        if 'project_plan_pickings' in vals:
-            record._sync_picking_lines()
-        return record
-
-    def write(self, vals):
-        result = super(ProjectPlan, self).write(vals)
-        if 'project_plan_pickings' in vals:
-            self._sync_picking_lines()
-        return result
