@@ -173,7 +173,22 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         result = super(SaleOrder, self).action_confirm()
+
         for sale in self:
-            if sale.is_project:
-                sale.compute_custom_picking_lines() 
+            if sale.is_project and sale.picking_ids:
+                for picking in sale.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel')):
+                    stock_move_lines = []
+                    for plan_picking in sale.project_plan_pickings:
+                        for line in plan_picking.project_picking_lines:
+                            stock_move_lines.append((0, 0, {
+                                'product_id': line.product_id.id,
+                                'name': line.product_id.name,
+                                'product_uom_qty': line.quantity,
+                                'product_uom': line.product_uom.id,
+                                'location_id': picking.location_id.id,
+                                'location_dest_id': picking.location_dest_id.id,
+                                'picking_id': picking.id,
+                            }))
+                    picking.move_lines = [(5, 0, 0)] + stock_move_lines
+
         return result
