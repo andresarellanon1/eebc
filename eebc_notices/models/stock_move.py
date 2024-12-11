@@ -1,8 +1,119 @@
 from odoo import api, fields, models
 import logging
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+
+
+
+class StockQuant(models.Model):
+    _inherit = 'stock.quant'
+
+
+
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """ Override to handle the "inventory mode" and create a quant as
+        superuser the conditions are met.
+        """
+        quants = self.env['stock.quant']
+        is_inventory_mode = self._is_inventory_mode()
+        allowed_fields = self._get_inventory_fields_create()
+
+        _logger.warning('valor de vals list para crear stock.quant: %s', vals_list)
+
+        for vals in vals_list:
+            if is_inventory_mode and any(f in vals for f in ['inventory_quantity', 'inventory_quantity_auto_apply']):
+                if any(field for field in vals.keys() if field not in allowed_fields):
+                    raise UserError(_("Quant's creation is restricted, you can't do this operation."))
+                auto_apply = 'inventory_quantity_auto_apply' in vals
+                inventory_quantity = vals.pop('inventory_quantity_auto_apply', False) or vals.pop(
+                    'inventory_quantity', False) or 0
+                # Create an empty quant or write on a similar one.
+                product = self.env['product.product'].browse(vals['product_id'])
+                location = self.env['stock.location'].browse(vals['location_id'])
+                lot_id = self.env['stock.lot'].browse(vals.get('lot_id'))
+                package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
+                owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
+                quant = self.env['stock.quant']
+                if not self.env.context.get('import_file'):
+                    # Merge quants later, to make sure one line = one record during batch import
+                    quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+                if lot_id:
+                    if self.env.context.get('import_file') and lot_id.product_id != product:
+                        lot_name = lot_id.name
+                        lot_id = self.env['stock.lot'].search([('product_id', '=', product.id), ('name', '=', lot_name)], limit=1)
+                        if not lot_id:
+                            company_id = location.company_id or self.env.company
+                            lot_id = self.env['stock.lot'].create({'name': lot_name, 'product_id': product.id, 'company_id': company_id.id})
+                        vals['lot_id'] = lot_id.id
+                    quant = quant.filtered(lambda q: q.lot_id)
+                if quant:
+                    quant = quant[0].sudo()
+                else:
+                    quant = self.sudo().create(vals)
+                    if 'quants_cache' in self.env.context:
+                        self.env.context['quants_cache'][
+                            quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                        ] |= quant
+                if auto_apply:
+                    quant.write({'inventory_quantity_auto_apply': inventory_quantity})
+                else:
+                    # Set the `inventory_quantity` field to create the necessary move.
+                    quant.inventory_quantity = inventory_quantity
+                    quant.user_id = vals.get('user_id', self.env.user.id)
+                    quant.inventory_date = fields.Date.today()
+                quants |= quant
+            else:
+                quant = super().create(vals)
+                if 'quants_cache' in self.env.context:
+                    self.env.context['quants_cache'][
+                        quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                    ] |= quant
+                quants |= quant
+                if self._is_inventory_mode():
+                    quant._check_company()
+        return quants
+
+
+
+
+class StockLot(models.Model):
+    _inherit = 'stock.lot'
+
+
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        _logger.warning('valor de vals list para crear stock.lot: %s', vals_list)
+
+        self._check_create()
+        return super(StockLot, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+
+
+
+
+
+class StockMoveLine(models.Model):
+    _inherit = 'stock.move.line'
+
+
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        _logger.warning('valor de vals list para crear stock.move.line: %s', vals_list)
+
+        for vals in vals_list:
+            if vals.get('move_id'):
+                vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
+            elif vals.get('picking_id'):
+                vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
+            if vals.get('move_id') and 'picked' not in vals:
+                vals['picked'] = self.env['stock.move'].browse(vals['move_id']).picked
+            if vals.get('quant_id'):
+                vals.update(self._copy_quant_info(vals))
 
 
 class StockMove(models.Model):
