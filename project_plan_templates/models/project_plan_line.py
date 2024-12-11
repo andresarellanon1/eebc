@@ -58,11 +58,11 @@ class ProjectLines(models.Model):
             'target': 'new',
         }
     
-    @api.constrains('task_timesheet_id')
-    def _check_required_fields(self):
-        for record in self:
-            if not record.task_timesheet_id:
-                raise ValidationError("El campo 'Task Timesheet' es obligatorio y no puede estar vacío.")
+    # @api.constrains('task_timesheet_id')
+    # def _check_required_fields(self):
+    #     for record in self:
+    #         if not record.task_timesheet_id:
+    #             raise ValidationError("El campo 'Task Timesheet' es obligatorio y no puede estar vacío.")
 
     # @api.constrains('project_plan_pickings')
     # def _check_required_fields(self):
