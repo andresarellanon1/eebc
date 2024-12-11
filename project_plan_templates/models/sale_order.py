@@ -134,7 +134,7 @@ class SaleOrder(models.Model):
         
         picking_lines = []
 
-        for line in sale.project_plan_lines:
+        for line in self.project_plan_lines:
             if line.display_type == 'line_section':
                 picking_lines.append(self.prep_picking_section_line(line))
             else:
