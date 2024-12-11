@@ -143,7 +143,7 @@ class SaleOrder(models.Model):
                 picking_lines.append(self.prep_picking_section_line(picking))
                 picking_lines += self.prep_picking_lines(picking)
                 
-            return picking_lines
+        return picking_lines
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
