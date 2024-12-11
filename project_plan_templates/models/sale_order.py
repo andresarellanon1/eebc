@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
 
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
-    project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id', compute="_compute_picking_lines")
+    project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id', compute="_compute_picking_lines", store=True)
 
     project_id = fields.Many2one('project.project', string="Project")
     
