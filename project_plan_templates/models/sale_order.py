@@ -129,20 +129,22 @@ class SaleOrder(models.Model):
 
     @api.depends('project_plan_lines')
     def _compute_picking_lines(self):
-        for sale in self:
+        
+        self.project_picking_lines = self.get_picking_lines(self.project_plan_lines)
 
-            sale.project_picking_lines = [(5, 0, 0)]
+    def get_picking_lines(self, line):
+        for picking in line:
+
+            picking.project_picking_lines = [(5, 0, 0)]
             picking_lines = []
 
-            for line in sale.project_plan_lines:
-                if line.display_type == 'line_section':
-                    picking_lines.append(sale.prep_picking_section_line(line))
-                else:
-                    picking_lines.append(sale.prep_picking_section_line(line))
-                    picking_lines += sale.prep_picking_lines(line)
-                    
-            logger.warning(f"Computed sales: {picking_lines}")
-            sale.project_picking_lines = picking_lines
+            if picking.display_type == 'line_section':
+                picking_lines.append(self.prep_picking_section_line(picking))
+            else:
+                picking_lines.append(self.prep_picking_section_line(picking))
+                picking_lines += self.prep_picking_lines(picking)
+                
+            return picking_lines
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
