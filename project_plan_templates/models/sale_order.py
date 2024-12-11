@@ -129,12 +129,11 @@ class SaleOrder(models.Model):
 
     @api.depends('project_plan_lines')
     def _compute_picking_lines(self):
-        
-        self.project_picking_lines = self.get_picking_lines(self.id, self.project_plan_lines)
+        for record in self:
+            record.project_picking_lines = [(5, 0, 0)]
+            record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
 
-    def get_picking_lines(self, identifier, line):
-
-        identifier.project_picking_lines = [(5, 0, 0)]
+    def get_picking_lines(self, line):
         picking_lines = []
 
         for picking in line:
