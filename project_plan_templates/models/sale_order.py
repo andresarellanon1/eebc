@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
 
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
-    project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
+    project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id', compute="_compute_picking_lines")
 
     project_id = fields.Many2one('project.project', string="Project")
     
@@ -50,21 +50,16 @@ class SaleOrder(models.Model):
                     )
                 sale.project_plan_pickings = [(5, 0, 0)]
                 sale.project_plan_lines = [(5, 0, 0)]
-                sale.project_picking_lines = [(5, 0, 0)]
 
                 plan_pickings = []
                 plan_lines = []
-                picking_lines = []
                 for line in sale.order_line:
                     if line.display_type == 'line_section':
                         plan_lines.append(self.prep_plan_section_line(line))
-                        picking_lines.append(self.prep_picking_section_line(line))
                     else:
                         if line.product_id.project_plan_id:
                             plan_lines.append(self.prep_plan_section_line(line))
-                            picking_lines.append(self.prep_picking_section_line(line))
                             plan_lines += self.prep_plan_lines(line)
-                            picking_lines += self.prep_picking_lines(line)
 
                         for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                             plan_pickings.append((4, project_picking.id))
@@ -132,6 +127,21 @@ class SaleOrder(models.Model):
                 'display_type': False
             }))
         return picking_lines
+
+    @api.depends('project_plan_lines')
+    def _compute_picking_lines(self):
+        self.project_picking_lines = [(5, 0, 0)]
+        
+        picking_lines = []
+
+        for line in sale.project_plan_lines:
+            if line.display_type == 'line_section':
+                picking_lines.append(self.prep_picking_section_line(line))
+            else:
+                picking_lines.append(self.prep_picking_section_line(line))
+                picking_lines += self.prep_picking_lines(line)
+
+        sale.project_picking_lines = picking_lines
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
