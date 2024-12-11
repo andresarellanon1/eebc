@@ -147,4 +147,3 @@ class SaleOrder(models.Model):
                 'default_project_name': self.project_name
             }
         }
-        
