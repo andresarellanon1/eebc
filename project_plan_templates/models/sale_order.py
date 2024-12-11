@@ -127,16 +127,18 @@ class SaleOrder(models.Model):
             }))
         return picking_lines
 
-    @api.depends('project_plan_lines.project_plan_pickings')
+    @api.depends('project_plan_lines')
     def _compute_picking_lines(self):
         self.project_picking_lines = [(5, 0, 0)]
-        
+        logger.warning(f"Entre el compute")
         picking_lines = []
 
         for line in self.project_plan_lines:
             if line.display_type == 'line_section':
+                logger.warning(f"Es seccion")
                 picking_lines.append(self.prep_picking_section_line(line))
             else:
+                logger.warning(f"Mistake")
                 picking_lines.append(self.prep_picking_section_line(line))
                 picking_lines += self.prep_picking_lines(line)
 
