@@ -31,6 +31,7 @@ class NoticeFileWizard(models.TransientModel):
     create_tab = fields.Boolean(string="Crear aviso", default=False)
     update_tab = fields.Boolean(string="Actualizar aviso", default=False)
 
+    stock_move_id = fields.Many2one('stock.move', string='Traslado')
 
    
     quantity = fields.Float(string="Cantidad", readonly=True,)
@@ -57,6 +58,8 @@ class NoticeFileWizard(models.TransientModel):
             res['account_move_invoice_ids'] = self._context['invoices']
         if 'default_message' in self._context:
             res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
+        if 'stock_move_id' in self._context:
+            res['stock_move_id'] = self._context['stock_move_id']
         if 'lines' in self._context:
             res['notice_ids'] = self._context['lines']
         _logger.warning('vALORDE LINEASS RES : %s',res)
@@ -235,7 +238,7 @@ class NoticeFileWizard(models.TransientModel):
             for line in wizard.notice_ids:        
                 if line.quantity > line.quantity_available:
                     notices_list.append({
-                        'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
+                        'name': line.aviso_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
                         'available': line.quantity_available,
                         'established': line.quantity
                     })            

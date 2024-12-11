@@ -16,7 +16,7 @@
                                 <field name="notice_id"  options="{'no_open': True}"/>
                                 <field name="quantity"/>
                                 <field name="quantity_available" column_invisible="1" />
-                                <field name="test_name" column_invisible="1" invisible="1"/>
+                                <field name="aviso_name" column_invisible="1" invisible="1"/>
 
 
                             </tree>
