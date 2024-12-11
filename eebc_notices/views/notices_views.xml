@@ -57,6 +57,11 @@
                             <field name="description" readonly="1"/>
                             <field name="quantity" string="Cantidad"/>
                         </group>
+
+                        <group>
+                         <field name="lot_ids" string="Lotes" />
+                            
+                        </group>
                     </page>
                     
                     <!-- Pestaña de Historial -->

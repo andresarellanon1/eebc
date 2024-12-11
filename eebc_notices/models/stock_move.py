@@ -86,7 +86,6 @@ class StockMove(models.Model):
                 'product_description':product_description,
                 'invoices': invoice_names , # Pasar los nombres de las facturas
                 'lines':notice_lines_to_wizard,
-                'stock_move_id':self.id,
                 
             }
         }
