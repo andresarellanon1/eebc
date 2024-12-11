@@ -130,14 +130,14 @@ class SaleOrder(models.Model):
     @api.depends('project_plan_lines')
     def _compute_picking_lines(self):
         
-        self.project_picking_lines = self.get_picking_lines(self.project_plan_lines)
+        self.project_picking_lines = self.get_picking_lines(self.id, self.project_plan_lines)
 
-    def get_picking_lines(self, line):
+    def get_picking_lines(self, identifier, line):
+
+        identifier.project_picking_lines = [(5, 0, 0)]
+        picking_lines = []
+
         for picking in line:
-
-            picking.project_picking_lines = [(5, 0, 0)]
-            picking_lines = []
-
             if picking.display_type == 'line_section':
                 picking_lines.append(self.prep_picking_section_line(picking))
             else:
