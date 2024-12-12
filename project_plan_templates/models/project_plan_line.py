@@ -58,6 +58,12 @@ class ProjectLines(models.Model):
             'target': 'new',
         }
     
+    @api.constrains('name')
+    def _check_name(self):
+        for record in self:
+            if not record.name:
+                raise ValidationError("El campo 'Name' es obligatorio y no puede estar vacío.")
+                
     @api.constrains('task_timesheet_id')
     def _check_task_timesheet_id(self):
         for record in self:
