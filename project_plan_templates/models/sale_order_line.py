@@ -15,7 +15,6 @@ class SaleOrderLine(models.Model):
 
                 products = self.env['product.template'].search([
                     ('detailed_type', '=', 'service'),
-                    ('service_tracking', '=', 'project_only'),
                     ('project_plan_id', '!=', False),
                     ('sale_ok', '=', True),
                 ])
