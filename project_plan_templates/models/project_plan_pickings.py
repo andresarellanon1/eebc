@@ -40,7 +40,6 @@ class ProjectPlanPickingLine(models.Model):
     _description = 'Project picking lines'
 
     name = fields.Char(required=True)
-    from_project_plan = fields.Boolean(string="From Project Plan", default=False)
     
     project_id = fields.Many2one('project.project', string="Project Plan")
     picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
@@ -76,8 +75,6 @@ class ProjectPlanPickingLine(models.Model):
     @api.constrains('product_id')
     def _check_product_id(self):
         for record in self:
-            if record.from_project_plan:
-                continue
             if not record.product_id:
                 raise ValidationError("El campo 'Product' es obligatorio. No se puede guardar un registro sin este campo.")
                 
