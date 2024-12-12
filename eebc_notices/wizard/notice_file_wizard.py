@@ -173,7 +173,7 @@ class NoticeFileWizard(models.TransientModel):
                     _logger.warning('Inicio del proceso en wizard.')
 
                     # Validar cantidades (puede lanzar un ValidationError)
-                    self._check_quantities()
+                    # self._check_quantities()
 
                     # Iterar sobre notice_ids
                     for line in wizard.notice_ids:
