@@ -198,7 +198,13 @@ class NoticeFileWizard(models.TransientModel):
                     _logger.warning('Se procesaron todas las líneas de notice_ids.')
                 
                 # Retornar para cerrar la ventana
-                return {'type': 'ir.actions.act_window_close'}
+                    return {
+                        'type': 'ir.actions.act_window',
+                        'view_mode': 'form',
+                        'res_model': 'notice.file.wizard',
+                        'target': 'new',
+                        'res_id': self.id,
+                    }
 
             except ValidationError as e:
                 # Registrar el mensaje de error para depuración

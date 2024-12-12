@@ -131,6 +131,8 @@ class StockMove(models.Model):
         string="Mostrar botón de salida",
         compute='_compute_aviso_button_flags',
     )
+
+    # agregar campo notices
     
     # notice_established = fields.Boolean(string = 'Aviso establecido', 
     # default=False
