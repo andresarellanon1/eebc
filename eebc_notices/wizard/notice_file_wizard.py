@@ -161,6 +161,15 @@ class NoticeFileWizard(models.TransientModel):
             self = self.with_context(
                 lot_ids=False
             )
+
+
+            return {
+                        'type': 'ir.actions.act_window',
+                        'view_mode': 'form',
+                        'res_model': 'notice.file.wizard',
+                        'target': 'new',
+                        'res_id': self.id,
+                    }
         elif self.update_tab:
             _logger.warning('Actualizamos')
             try:
