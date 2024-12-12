@@ -74,6 +74,12 @@ class Notices(models.Model):
         comodel_name='notices.history',
         inverse_name='notice_id',
     )
+    
+    stock_move_id = fields.Many2one(
+        string='Movimiento de inventario',
+        comodel_name='stock.move',
+    )
+    
 
     # @api.depends('history_ids')
     # def _compute_location_origin_id(self):
