@@ -100,7 +100,7 @@ class ProjectCreation(models.TransientModel):
         }) for line in pickings]
 
         stock_picking_vals = {
-            'name': task_id.name,
+            'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
             'partner_id': self.partner_id.id,
             'picking_type_id': self.picking_type_id.id,
             'location_id': self.location_id.id,
