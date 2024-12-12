@@ -66,6 +66,7 @@
                                 <field name="name"/>
                                 <field name="product_id"/>
                                 <field name="create_date"/>
+                            </tree>
                          </field>
                             
                         </group>
