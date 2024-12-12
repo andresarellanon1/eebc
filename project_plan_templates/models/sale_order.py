@@ -120,7 +120,7 @@ class SaleOrder(models.Model):
 
     def prep_picking_lines(self, line):
         picking_lines = []
-        for picking in line.project_plan_pickings.project_picking_lines:
+        for picking in line.product_id.project_plan_id.project_plan_pickings.project_picking_lines:
             picking_lines.append((0, 0, {
                 'name': picking.product_id.name,
                 'product_id': picking.product_id.id,
