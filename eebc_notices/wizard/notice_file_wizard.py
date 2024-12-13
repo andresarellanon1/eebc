@@ -136,21 +136,21 @@ class NoticeFileWizard(models.TransientModel):
                     'partner_id': self._context['proveedor_id'],
                     'notice': self.notice,
                 })
-                # self.env['notices.history'].create({
-                #     'location_id': self._context['location_id'],
-                #     'location_dest': self._context['location_dest_id'],
-                #     'product_id': self._context['product_id'],
-                #     'quantity': self.quantity,
-                #     'picking_code': self._context['type'],
-                #     'notice_id': notice.id,
-                #     'folio': self.folio,
-                #     'origin': self._context['origin'],
-                #     'purchase_order_id':self._context['purchase_order_id'],
-                #     'sale_order_id':self._context['sale_ids'],
-                #     'stock_move_id':self._context['stock_move_id'],
-                #     'state': 'draft',
+                self.env['notices.history'].create({
+                    'location_id': self._context['location_id'],
+                    'location_dest': self._context['location_dest_id'],
+                    'product_id': self._context['product_id'],
+                    'quantity': 0,
+                    'picking_code': self._context['type'],
+                    'notice_id': notice.id,
+                    'folio': self.folio,
+                    'origin': self._context['origin'],
+                    'purchase_order_id':self._context['purchase_order_id'],
+                    'sale_order_id':self._context['sale_ids'],
+                    'stock_move_id':self._context['stock_move_id'],
+                    'state': 'draft',
                     
-                # })
+                })
                 
                 # bool_notice_established = self.env['stock.move'].search([('id','=', self._context['stock_move_id'])]).notice_established
                 # if bool_notice_established:
