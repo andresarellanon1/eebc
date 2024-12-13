@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 class ProjectLines(models.Model):
     _name = 'project.plan.line'
     _description = 'Project plan lines'
-
+    _order = 'sequence'
     
     name = fields.Char(string="Name", default=False)
     chapter = fields.Char(string="Chapter")
