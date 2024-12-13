@@ -14,7 +14,7 @@ class WizardSelectionLine(models.TransientModel):
 
 
     lot_line_ids = fields.One2many(
-    'wizard.selection.lot.line', 'line_id', string='Lotes Asignados', domain="[('lot_id', 'in', notice_id.lot_ids)]"
+    'wizard.selection.lot.line', 'line_id', string='Lotes Asignados', 
         )
 
     
