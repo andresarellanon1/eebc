@@ -5,10 +5,10 @@ from odoo.exceptions import UserError
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
-    project_plan_id = fields.Many2one('project.plan', string="Project template", readonly="True")
+    project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly="True")
     project_plan_lines = fields.One2many('project.plan.line', 'origin_project_id', string="Project plan lines")
     
-    project_picking_ids = fields.Many2many('project.plan.pickings', string="Stock picking")
+    project_picking_ids = fields.Many2many('project.plan.pickings', string="Movimientos de inventario")
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines", compute="_compute_picking_lines", store=True)
 
     plan_total_cost = fields.Float(string="Total cost", default=0.0)

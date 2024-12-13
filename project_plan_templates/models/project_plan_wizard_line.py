@@ -6,17 +6,17 @@ class ProjectPlanWizardLine(models.TransientModel):
     _description = 'Project plan wizard line'
 
     wizard_id = fields.Many2one('project.creation.wizard', string="Wizard")
-    partner_id = fields.Many2many('res.users', string="Assigned user")
-    task_timesheet_id = fields.Many2one('task.timesheet', string="Timesheet Task")
+    partner_id = fields.Many2many('res.users', string="Usuarios asignados")
+    task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
 
-    name = fields.Char(string="Name")
+    name = fields.Char(string="Tarea")
     chapter = fields.Char(string="Chapter")
     clave = fields.Integer(string="Task id")
-    description = fields.Char(string="Description")
-    use_project_task = fields.Boolean(string="Use Project Task")
+    description = fields.Char(string="Descripción")
+    use_project_task = fields.Boolean(string="Usar tarea")
 
-    planned_date_begin = fields.Datetime(string="Planned Start Date")
-    planned_date_end = fields.Datetime(string="Planned End Date")
+    planned_date_begin = fields.Datetime(string="Fecha de incio")
+    planned_date_end = fields.Datetime(string="Fecha de finalización")
 
     display_type = fields.Selection(
         [
@@ -26,4 +26,4 @@ class ProjectPlanWizardLine(models.TransientModel):
     )
     code = fields.Char(string="Code")
     sequence = fields.Integer()
-    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Picking Templates")
+    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario")

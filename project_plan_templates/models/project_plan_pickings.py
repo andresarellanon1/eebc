@@ -41,24 +41,24 @@ class ProjectPlanPickingLine(models.Model):
 
     name = fields.Char(required=True)
     
-    project_id = fields.Many2one('project.project', string="Project Plan")
-    picking_id = fields.Many2one('project.plan.pickings', string="Picking Template")
-    product_id = fields.Many2one('product.product', string="Product")
+    project_id = fields.Many2one('project.project', string="Proyecto")
+    picking_id = fields.Many2one('project.plan.pickings', string="Plantilla de proyecto")
+    product_id = fields.Many2one('product.product', string="Producto")
     sale_order_id = fields.Many2one('sale.order')
     
    
-    quantity = fields.Float(string="Quantity")
-    location_id = fields.Many2one('stock.location', string="Location")
+    quantity = fields.Float(string="Cantidad")
+    location_id = fields.Many2one('stock.location', string="Localización")
     reservado = fields.Float(string='Reservado')
     
    
-    picking_name = fields.Char(string="Picking Name")
-    project_plan_id = fields.Many2one('project.plan', string="Project plan")
-    stock_move_id = fields.Many2one('stock.move', string='Project Stock')
+    picking_name = fields.Char(string="Inventario")
+    project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas")
+    stock_move_id = fields.Many2one('stock.move', string='Inventario')
     
-    standard_price = fields.Float(string="Price", compute='_compute_standard_price')
+    standard_price = fields.Float(string="Precio", compute='_compute_standard_price')
     subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal")
-    total_cost = fields.Float(string="Total cost")
+    total_cost = fields.Float(string="Costo total")
 
     display_type = fields.Selection(
         [

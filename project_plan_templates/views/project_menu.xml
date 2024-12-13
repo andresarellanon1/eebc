@@ -2,13 +2,13 @@
 <odoo>
     <data>
         <record id="plan_template_action" model="ir.actions.act_window">
-            <field name="name">Plantillas de planes de proyecto</field>
+            <field name="name">Plantillas de tareas</field>
             <field name="res_model">project.plan</field>
             <field name="view_mode">tree,form</field> 
         </record>
 
         <record id="plan_picking_templates_action" model="ir.actions.act_window">
-            <field name="name">Plantillas de operaciones de inventario</field>
+            <field name="name">Plantillas de movimientos de inventario</field>
             <field name="res_model">project.plan.pickings</field> 
             <field name="view_mode">tree,form</field>
         </record>
