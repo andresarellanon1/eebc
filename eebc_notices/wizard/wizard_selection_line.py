@@ -13,12 +13,12 @@ class WizardSelectionLine(models.TransientModel):
 
 
     
-    lot_ids = fields.Many2many(
-        comodel_name='stock.lot',
-        related='notice_id.lot_ids',
-        string='Series',
+    lot_line_ids = fields.One2many(
+        'wizard.selection.lot.line',
+        'wizard_line_id',
+        string='Detalles de Lotes'
     )
-    
+
     
     quantity = fields.Float(string='Cantidad asignada', default=0, required=True)
     quantity_available = fields.Float(string='Cantidad disponible')
