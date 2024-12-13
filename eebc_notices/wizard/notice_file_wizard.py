@@ -112,22 +112,22 @@ class NoticeFileWizard(models.TransientModel):
                             'default_message': f"El folio del archivo ({self.folio}) ya existe en el folio ({notice_id}).",
                         }
                     }
-                # else:
-                #     notice_id.write({
-                #         'history_ids': [(0, 0, {
-                #             'location_dest': self._context['location_dest_id'],
-                #             'location_id': self._context['location_id'],
-                #             'product_id': self._context['product_id'],
-                #             'quantity': self.quantity,
-                #             'folio': self.folio,
-                #             'picking_code': self._context['type'],
-                #             'origin': self._context['origin'],
-                #             'purchase_order_id':self._context['purchase_order_id'],
-                #             'sale_order_id':self._context['sale_ids'],
-                #             'state': 'draft',
+                else:
+                    notice_id.write({
+                        'history_ids': [(0, 0, {
+                            'location_dest': self._context['location_dest_id'],
+                            'location_id': self._context['location_id'],
+                            'product_id': self._context['product_id'],
+                            'quantity': self.quantity,
+                            'folio': self.folio,
+                            'picking_code': self._context['type'],
+                            'origin': self._context['origin'],
+                            'purchase_order_id':self._context['purchase_order_id'],
+                            'sale_order_id':self._context['sale_ids'],
+                            'state': 'draft',
 
-                #         })]
-                #     })
+                        })]
+                    })
             else:
                 notice = self.env['notices.notices'].create({
                     'product_id': self._context['product_id'],
@@ -135,6 +135,7 @@ class NoticeFileWizard(models.TransientModel):
                     'description': self.description,
                     'partner_id': self._context['proveedor_id'],
                     'notice': self.notice,
+                    'stock_move_id':self.stock_move_id.id
                 })
                 # self.env['notices.history'].create({
                 #     'location_id': self._context['location_id'],
@@ -202,13 +203,7 @@ class NoticeFileWizard(models.TransientModel):
                     _logger.warning('Se procesaron todas las líneas de notice_ids.')
                 
                 # Retornar para cerrar la ventana
-                    return {
-                        'type': 'ir.actions.act_window',
-                        'view_mode': 'form',
-                        'res_model': 'notice.file.wizard',
-                        'target': 'new',
-                        'res_id': self.id,
-                    }
+                return self.stock_move_id.action_show_incoming()
 
             except ValidationError as e:
                 # Registrar el mensaje de error para depuración
@@ -244,19 +239,6 @@ class NoticeFileWizard(models.TransientModel):
                 raise ValidationError(
                     f"La cantidad y la demanda deben coincidir. Cantidad total asignada: {total} / Demanda: {wizard.quantity}"
                 )
-            notices_list = []
-            for line in wizard.notice_ids:        
-                if line.quantity > line.quantity_available:
-                    notices_list.append({
-                        'name': line.aviso_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
-                        'available': line.quantity_available,
-                        'established': line.quantity
-                    })            
-            if notices_list:
-                message = "Los siguientes avisos tienen cantidades que exceden las disponibles:\n"
-                for notice in notices_list:
-                    message += f"- {notice['name']}: {notice['available']} disponibles / {notice['established']} establecidos\n"
-                
-                raise ValidationError(message)
+            
 
 
