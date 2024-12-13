@@ -12,10 +12,10 @@ class ProjectVersionHistory(models.Model):
         default="Historial de Modificación", 
         required=True
     )
-    project_id = fields.Many2one('project.project', string='Project')
-    modified_by = fields.Many2one('res.users', string='Modified by')
-    modification_motive = fields.Html(string='Motive of adjustment')
+    project_id = fields.Many2one('project.project', string='Proyecto')
+    modified_by = fields.Many2one('res.users', string='Modificado por')
+    modification_motive = fields.Html(string='Motivo de los cambios')
 
-    project_name = fields.Char(string='Project name')
+    project_name = fields.Char(string='Nombre del proyecto')
 
     project_versions_lines = fields.One2many('project.version.lines','project_version_history_id', string="Versions")

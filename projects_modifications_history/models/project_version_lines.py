@@ -7,13 +7,13 @@ class ProjecVersionLines(models.Model):
     _name = 'project.version.lines'
     _description = 'Project versions history'
 
-    modification_date = fields.Datetime(string='Modification date')
-    project_id = fields.Many2one('project.project', string='Project')
-    modified_by = fields.Many2one('res.users', string='Modified by')
-    modification_motive = fields.Html(string='Motive of adjustment')
-    project_name = fields.Char(string='Project name')
-    project_version_history_id = fields.Many2one('project.version.history', string="Project history")
-    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
+    modification_date = fields.Datetime(string='Fecha de modificación')
+    project_id = fields.Many2one('project.project', string='Proyecto')
+    modified_by = fields.Many2one('res.users', string='Modificado por')
+    modification_motive = fields.Html(string='Motivo de los cambios')
+    project_name = fields.Char(string='Nombre del proyecto')
+    project_version_history_id = fields.Many2one('project.version.history', string="Historial del proyecto")
+    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
     project_plan_lines = fields.Many2many(
         'project.plan.line',
@@ -23,7 +23,7 @@ class ProjecVersionLines(models.Model):
 
     project_picking_lines = fields.Many2many(
         'project.picking.lines',
-        string='Stock',
+        string='Inventario',
         relation='project_version_lines_picking_lines_rel'
     )
 

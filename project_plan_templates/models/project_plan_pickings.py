@@ -39,7 +39,7 @@ class ProjectPlanPickingLine(models.Model):
     _name = 'project.picking.lines'
     _description = 'Project picking lines'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, string="Nombre")
     
     project_id = fields.Many2one('project.project', string="Proyecto")
     picking_id = fields.Many2one('project.plan.pickings', string="Plantilla de proyecto")
