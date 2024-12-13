@@ -7,17 +7,17 @@ class ProjectPlanPickings(models.Model):
     _description = 'Project plan pickings'
 
     
-    name = fields.Char(string="Name")
-    description = fields.Html(string="Description")
-    creation_date = fields.Date(string="Created on", default=fields.Date.context_today, readonly=True)
+    name = fields.Char(string="Nombre")
+    description = fields.Html(string="Descripción")
+    creation_date = fields.Date(string="Creado el", default=fields.Date.context_today, readonly=True)
     creator_id = fields.Many2one('res.users', string="Created by", default=lambda self: self.env.user)
     
     
-    project_picking_lines = fields.One2many('project.picking.lines', 'picking_id', string="Products")
-    active = fields.Boolean(string="Active", default=True)
-    project_id = fields.Many2one('project.project', string="Project")
+    project_picking_lines = fields.One2many('project.picking.lines', 'picking_id', string="Productos")
+    active = fields.Boolean(string="Activo", default=True)
+    project_id = fields.Many2one('project.project', string="Proyecto")
 
-    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Costo total",  compute='_compute_total_cost', default=0.0)
 
     def toggle_active(self):
         for record in self:
