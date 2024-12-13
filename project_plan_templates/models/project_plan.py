@@ -6,14 +6,14 @@ class ProjectPlan(models.Model):
     _name = 'project.plan'
     _description = 'Templates for project plans'
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(string="Nombre", required=True)
     project_name = fields.Char(string="Project name")
-    description = fields.Html(string="Description")
+    description = fields.Html(string="Descripción")
     note = fields.Char()
 
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
-    project_id = fields.Many2one('project.project', string="Project")
-    project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
+    project_id = fields.Many2one('project.project', string="Proyecto")
+    project_plan_pickings = fields.Many2many('project.plan.pickings', string="Movimientos de inventario")
     picking_lines = fields.One2many(
         'project.picking.lines',
         'project_plan_id',  

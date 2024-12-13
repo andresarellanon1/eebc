@@ -27,11 +27,11 @@
                         </div>
                         <notebook>  
 
-                            <page name="description" string="Description">
+                            <page name="description" string="Descripción">
                                 <field name="description" options="{'resizable': false}"/>  
                             </page>
 
-                            <page name="tasks" string="Tasks">
+                            <page name="tasks" string="Tareas">
                                 <field name="project_plan_lines" nolabel="1">
                                     <tree editable="editable_bottom" style="width: 100%;">
                                         <field name="name"/>  
@@ -43,7 +43,7 @@
                             </page>
 
                             <!-- Stock Tab -->
-                            <page name="stock" string="Stock">
+                            <page name="stock" string="Inventario">
                                 <group name="stock_container">
                                     <field name="project_plan_pickings" widget="many2many_tags"/>
                                 </group>

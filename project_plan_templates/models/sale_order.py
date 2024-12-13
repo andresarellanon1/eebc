@@ -8,9 +8,9 @@ class SaleOrder(models.Model):
 
     _inherit = 'sale.order'
 
-    is_project = fields.Boolean(string="Is project?", default=False)
-    project_name = fields.Char(string="Project title")
-    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
+    is_project = fields.Boolean(string="Es proyecto?", default=False)
+    project_name = fields.Char(string="Titulo de proyecto")
+    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
     state = fields.Selection(
         selection_add=[
@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id', compute="_compute_picking_lines", store=True)
 
-    project_id = fields.Many2one('project.project', string="Project")
+    project_id = fields.Many2one('project.project', string="Proyecto")
     
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
