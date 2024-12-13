@@ -15,7 +15,6 @@
             <field name="name">timesheet.view.form</field>  
             <field name="model">task.timesheet</field>  
             <field name="arch" type="xml">
-                
                 <form string="Plantilla de hoja de horas"> 
                     <sheet>
 
