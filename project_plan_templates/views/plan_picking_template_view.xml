@@ -18,7 +18,7 @@
             <field name="name">plan.picking.template.view.from</field> 
             <field name="model">project.plan.pickings</field>  
             <field name="arch" type="xml">
-                <form string="Project plan picking template">  
+                <form string="Plantillas de movimientos de inventario">  
                     <sheet>
                         <div class="oe_title">  
                             <label for="name"/>  

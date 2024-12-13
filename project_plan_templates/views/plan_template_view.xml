@@ -17,7 +17,7 @@
             <field name="name">plan.template.view.form</field> 
             <field name="model">project.plan</field>  
             <field name="arch" type="xml">
-                <form string="Project plan template">
+                <form string="Plantilla de tareas de proyecto">
                     <sheet>
                         <div class="oe_title">
                             <label for="name"/>  
