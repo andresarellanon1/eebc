@@ -10,6 +10,16 @@ class WizardSelectionLine(models.TransientModel):
     wizard_crud_id = fields.Many2one('notice.file.wizard', string='Wizard')
 
     notice_id = fields.Many2one('notices.notices', string='Avisos')
+
+
+    
+    lot_ids = fields.Many2many(
+        comodel_name='stock.lot',
+        related='notice_id.lot_ids',
+        string='Series',
+    )
+    
+    
     quantity = fields.Float(string='Cantidad asignada', default=0, required=True)
     quantity_available = fields.Float(string='Cantidad disponible')
 
