@@ -12,10 +12,10 @@ class WizardSelectionLine(models.TransientModel):
     notice_id = fields.Many2one('notices.notices', string='Avisos')
 
 
-    
+
     lot_line_ids = fields.One2many(
-        'wizard.selection.lot.line', 'line_id', string='Lotes Asignados'
-    )
+    'wizard.selection.lot.line', 'line_id', string='Lotes Asignados'
+        )
 
     
     quantity = fields.Float(string='Cantidad asignada', default=0, required=True)
@@ -32,9 +32,6 @@ class WizardSelectionLine(models.TransientModel):
         
     )
 
-
-    def some_method(self):
-        from . import wizard_selection_lot_line
 
     @api.onchange('quantity')
     def _check_quantity_non_negative(self):
