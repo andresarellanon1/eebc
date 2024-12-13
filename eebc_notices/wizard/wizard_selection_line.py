@@ -14,9 +14,7 @@ class WizardSelectionLine(models.TransientModel):
 
     
     lot_line_ids = fields.One2many(
-        'wizard.selection.lot.line',
-        'wizard_line_id',
-        string='Detalles de Lotes'
+        'wizard.selection.lot.line', 'line_id', string='Lotes Asignados'
     )
 
     
@@ -34,6 +32,9 @@ class WizardSelectionLine(models.TransientModel):
         
     )
 
+
+    def some_method(self):
+        from . import wizard_selection_lot_line
 
     @api.onchange('quantity')
     def _check_quantity_non_negative(self):
