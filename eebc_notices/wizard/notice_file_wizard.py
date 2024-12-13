@@ -135,7 +135,6 @@ class NoticeFileWizard(models.TransientModel):
                     'description': self.description,
                     'partner_id': self._context['proveedor_id'],
                     'notice': self.notice,
-                    'stock_move_id':self.stock_move_id.id
                 })
                 # self.env['notices.history'].create({
                 #     'location_id': self._context['location_id'],
