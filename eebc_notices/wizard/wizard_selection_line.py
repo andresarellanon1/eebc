@@ -25,8 +25,8 @@ class WizardSelectionLine(models.TransientModel):
     )
 
 
-    @api.onchange('quantity')
-    def _check_quantity_non_negative(self):
-        for record in self:
-            if record.quantity < 0:
-                raise ValidationError('La cantidad no puede ser negativa.')
+    # @api.onchange('quantity')
+    # def _check_quantity_non_negative(self):
+    #     for record in self:
+    #         if record.quantity < 0:
+    #             raise ValidationError('La cantidad no puede ser negativa.')
