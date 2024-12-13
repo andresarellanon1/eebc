@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 import logging
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 class WizardSelectionLine(models.TransientModel):
@@ -20,4 +21,12 @@ class WizardSelectionLine(models.TransientModel):
     
     aviso_name = fields.Char(
         string='Nombre',
+        
     )
+
+
+    @api.constrains('quantity')
+    def _check_quantity_non_negative(self):
+        for record in self:
+            if record.quantity < 0:
+                raise ValidationError('La cantidad no puede ser negativa.')
