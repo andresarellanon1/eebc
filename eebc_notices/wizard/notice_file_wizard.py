@@ -118,7 +118,7 @@ class NoticeFileWizard(models.TransientModel):
                             'location_dest': self._context['location_dest_id'],
                             'location_id': self._context['location_id'],
                             'product_id': self._context['product_id'],
-                            'quantity': self.quantity,
+                            'quantity': 0,
                             'folio': self.folio,
                             'picking_code': self._context['type'],
                             'origin': self._context['origin'],
