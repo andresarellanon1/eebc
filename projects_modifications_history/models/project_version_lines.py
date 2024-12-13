@@ -40,7 +40,7 @@ class ProjecVersionLines(models.Model):
     )
 
     version_number = fields.Char(
-        string='Version Number',
+        string='Numero de versión',
         compute='_compute_version_number',
         store=True
     )

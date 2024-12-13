@@ -42,7 +42,7 @@
                             </page>
                             <page name="tasks" string="Cambios en las tareas">
                                 <div invisible="not previous_version_plan_lines and not project_plan_lines">
-                                    <h1 style="padding-bottom: 10px">Tasks before modification</h1>
+                                    <h1 style="padding-bottom: 10px">Tareas antes de los cambios</h1>
                                     <div>
                                         <field name="previous_version_plan_lines" nolabel="1" readonly="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none" invisible="not previous_version_plan_lines">
                                             <tree style="width: 100%" editable="bottom">
@@ -58,7 +58,7 @@
                                         </field>
                                         <p invisible="previous_version_plan_lines">No existen cambios previos</p>
                                     </div>
-                                    <h1 style="padding-bottom: 10px">Tareas antes de los cambios</h1>
+                                    <h1 style="padding-bottom: 10px">Tareas despues de los cambios</h1>
                                     <div>
                                         <field name="project_plan_lines" nolabel="1" readonly="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none" invisible="not project_plan_lines">
                                             <tree style="width: 100%" editable="bottom">
