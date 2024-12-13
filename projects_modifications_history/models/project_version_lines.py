@@ -81,10 +81,104 @@ class ProjecVersionLines(models.Model):
             _logger.warning(f"Resultado de búsqueda: {previous_version}")
             
             if previous_version:
-                record.previous_version_plan_lines = previous_version.project_plan_lines
-                _logger.warning(f'La version previa es: {previous_version.project_plan_lines}')
-                record.previous_version_picking_lines = previous_version.project_picking_lines
-                record.has_previous_version = True
+                record.previous_version_plan_lines = [(5, 0, 0)]
+                record.previous_version_plan_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': line.use_project_task,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'partner_id': line.partner_id,
+                        'project_plan_pickings': line.project_plan_pickings.id,
+                        'task_timesheet_id': line.task_timesheet_id,
+                    })
+                    for line in previous_version.project_plan_lines
+                ]
+
+                aux_previous_project_plan_lines =  record.previous_version_plan_lines
+
+                previous_version.project_plan_lines = [(5, 0, 0)]
+                previous_version.project_plan_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': line.use_project_task,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'partner_id': line.partner_id,
+                        'project_plan_pickings': line.project_plan_pickings.id,
+                        'task_timesheet_id': line.task_timesheet_id,
+                    })
+                    for line in aux_previous_project_plan_lines
+                ]
+
+                aux_project_plan_lines =  record.project_plan_lines
+
+                record.project_plan_lines = [(5, 0, 0)]
+                record.project_plan_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': line.use_project_task,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'partner_id': line.partner_id,
+                        'project_plan_pickings': line.project_plan_pickings.id,
+                        'task_timesheet_id': line.task_timesheet_id,
+                    })
+                    for line in aux_project_plan_lines
+                ]
+
+              
+                
+                record.previous_version_picking_lines = [(5, 0, 0)]
+                record.previous_version_picking_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'product_id': line.product_id,
+                        'product_uom': line.product_uom,
+                        'product_packaging_id': line.product_packaging_id,
+                        'quantity': line.quantity,
+                        'reservado': line.reservado,
+                        'standard_price': line.standard_price,
+                        'subtotal': line.subtotal,
+                    })
+                    for line in previous_version.project_picking_lines
+                ]
+
+                aux_previous_project_pickings_lines =  record.previous_version_picking_lines
+                previous_version.project_picking_lines = [(5, 0, 0)]
+                previous_version.project_picking_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'product_id': line.product_id,
+                        'product_uom': line.product_uom,
+                        'product_packaging_id': line.product_packaging_id,
+                        'quantity': line.quantity,
+                        'reservado': line.reservado,
+                        'standard_price': line.standard_price,
+                        'subtotal': line.subtotal,
+                    })
+                    for line in aux_previous_project_pickings_lines
+                ]
+
+                aux_project_picking_lines =  record.project_picking_lines
+                record.project_picking_lines = [(5, 0, 0)]
+                record.project_picking_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'product_id': line.product_id,
+                        'product_uom': line.product_uom,
+                        'product_packaging_id': line.product_packaging_id,
+                        'quantity': line.quantity,
+                        'reservado': line.reservado,
+                        'standard_price': line.standard_price,
+                        'subtotal': line.subtotal,
+                    })
+                    for line in aux_project_picking_lines
+                ]
+
             else:
                 _logger.warning('No tiene version previa')
                 record.previous_version_plan_lines = [(5, 0, 0)]

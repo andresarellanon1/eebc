@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 class ProjectLines(models.Model):
     _name = 'project.plan.line'
     _description = 'Project plan lines'
-
+    _order = 'sequence'
     
     name = fields.Char(string="Tarea", default=False)
     chapter = fields.Char(string="Chapter")
@@ -58,14 +58,20 @@ class ProjectLines(models.Model):
             'target': 'new',
         }
     
+    # @api.constrains('name')
+    # def _check_name(self):
+    #     for record in self:
+    #         if not record.name:
+    #             raise ValidationError("El campo 'Name' es obligatorio y no puede estar vacío.")
+
     # @api.constrains('task_timesheet_id')
-    # def _check_required_fields(self):
+    # def _check_task_timesheet_id(self):
     #     for record in self:
     #         if not record.task_timesheet_id:
     #             raise ValidationError("El campo 'Task Timesheet' es obligatorio y no puede estar vacío.")
 
     # @api.constrains('project_plan_pickings')
-    # def _check_required_fields(self):
+    # def _check_project_plan_pickings(self):
     #     for record in self:
     #         if not record.project_plan_pickings:
     #             raise ValidationError("Debe seleccionar al menos un elemento en 'Picking Templates'.")

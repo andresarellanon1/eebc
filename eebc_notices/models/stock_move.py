@@ -251,12 +251,20 @@ class StockMove(models.Model):
         for move in self:
             if not move.id:
                 continue 
-            notice_history_ids = self.env['notices.history'].search([
-                ('product_id', '=', move.product_id.id),
-                ('location_id', '=', move.location_id.id)
-            ])
-            notice_ids = self.env['notices.notices'].search([('history_ids', 'in', notice_history_ids.ids),('quantity', '>', 0)])
-            lines = [(0,0,{'notice_id':notice.id,'quantity': 0, 'quantity_available': notice.quantity,'aviso_name':notice.display_name, 'in_or_out': in_or_out, }) for notice in notice_ids]
+           
+            notice_ids = self.env['notices.notices'].search([('product_id', '=', self.product_id.id),('quantity', '>=', 0)])
+            lines = [(0,0,{
+                'notice_id':notice.id,
+                'quantity': 0, 
+                'quantity_available': notice.quantity,
+                'aviso_name':notice.display_name, 
+                'in_or_out': in_or_out, 
+                'lot_line_ids': [
+                    (0, 0, {
+                        'lot_id': lot.id, 
+                        'quantity': 0}) 
+                        for lot in notice.lot_ids],}) 
+                for notice in notice_ids]
             _logger.warning(f'Líneas creadas: {lines}')
             return lines
 
