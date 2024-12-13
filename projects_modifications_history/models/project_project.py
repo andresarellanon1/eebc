@@ -13,7 +13,7 @@ class ProjectProject(models.Model):
     
     version_history_id = fields.Many2one(
         'project.version.history',
-        string='Version History',
+        string='Historial de versiones',
         compute='_compute_version_history_id',
         store=True
     )
