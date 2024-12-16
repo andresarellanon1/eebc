@@ -132,7 +132,7 @@ class ProjectCreation(models.TransientModel):
                 if line.display_type:
                     current_task_type = self.get_or_create_task_type(line.name, project)
 
-                if line.use_project_taskand not line.display_type:
+                if line.use_project_task and not line.display_type:
                     if not current_task_type:
                         current_task_type = self.get_or_create_task_type('Extras', project)
 
