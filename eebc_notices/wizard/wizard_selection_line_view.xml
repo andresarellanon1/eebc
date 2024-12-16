@@ -9,11 +9,23 @@
                 <sheet>
                     <group>
                     <field name="notice_id" readonly="1" options="{'no_open': True}" />
-                    <field name="quantity" />
-                    <field name="quantity_available" readonly="1" />
+                    <field name="in_or_out" invisible="1"/>
+                    <field name="aviso_name" invisible="1"/>
+                    <field name="quantity"/>
+                    <field name="quantity_available" readonly="1" invisible="in_or_out"/>
 
 
 
+
+                    </group>
+    
+                    <group  string="Lotes Asignados">
+                        <field name="lot_line_ids">
+                            <tree  editable="bottom">
+                                <field name="lot_id" options="{'no_create': True}"/>
+                                <field name="quantity"/>
+                            </tree>
+                        </field>
                     </group>
                 </sheet>
              </form>

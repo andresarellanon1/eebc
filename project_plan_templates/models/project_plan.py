@@ -6,21 +6,21 @@ class ProjectPlan(models.Model):
     _name = 'project.plan'
     _description = 'Templates for project plans'
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(string="Nombre", required=True)
     project_name = fields.Char(string="Project name")
-    description = fields.Html(string="Description")
+    description = fields.Html(string="Descripción")
     note = fields.Char()
 
     project_plan_lines = fields.One2many('project.plan.line', 'project_plan_id', string="Project plan lines")
-    project_id = fields.Many2one('project.project', string="Project")
-    project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
+    project_id = fields.Many2one('project.project', string="Proyecto")
+    project_plan_pickings = fields.Many2many('project.plan.pickings', string="Movimientos de inventario")
     picking_lines = fields.One2many(
         'project.picking.lines',
-        'project_plan_id',
+        'project_plan_id',  
         string="Picking Lines"
     )
 
-    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
 
     product_template_id = fields.Many2one(
@@ -31,6 +31,14 @@ class ProjectPlan(models.Model):
     )
 
     service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
+
+    @api.constrains('project_plan_lines', 'picking_lines')
+    def _check_lines_existence(self):
+        for record in self:
+            if not record.project_plan_lines:
+                raise ValidationError("Debe agregar al menos una línea en la pestaña 'Tasks'.")
+            if not record.picking_lines:
+                raise ValidationError("Debe agregar al menos una línea en la pestaña 'Stock'.")
 
     @api.constrains('product_template_id')
     def _check_unique_product_template(self):

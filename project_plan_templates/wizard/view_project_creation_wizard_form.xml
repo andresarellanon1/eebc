@@ -30,16 +30,20 @@
                                 </group>
                             </group>
                             <notebook>
-                                <page name="description" string="Description">
+                                <page name="description" string="Descripción">
                                     <field name="description" />
                                 </page>
-                                <page name="planning" string="Planning">
+                                <page name="planning" string="Tareas del proyecto">
                                     <group>
                                         <field name="project_plan_id" invisible="1"/>
                                     </group>
                                     <div style="100%">
-                                        <field name="wizard_plan_lines" nolabel="1">
+                                        <field name="wizard_plan_lines" widget="section_and_note_one2many" mode="tree,kanban" nolabel="1">
                                             <tree editable="bottom" style="width: 100%;">
+                                                <control>
+                                                    <create name="add_product_control" string="Add a product"/>
+                                                    <create name="add_section_control" string="Añadir sección" context="{'default_display_type': 'line_section'}"/>
+                                                </control>
                                                 <field name="display_type" column_invisible="True"/>
                                                 <field name="name"/>
                                                 <field name="description"/>
@@ -53,18 +57,14 @@
                                         </field>
                                     </div>
                                 </page>
-                                <page name="Stock" string="Stock">
-                                    <group name="stock_container">
-                                        <field name="project_plan_pickings" widget="many2many_tags"/>
-                                    </group>
+                                <page name="Stock" string="Inventario">
                                     <div>
-                                        <field name="wizard_picking_lines">
+                                        <field name="wizard_picking_lines" widget="section_and_note_one2many" mode="tree,kanban">
                                             <tree editable="editable_bottom" style="width: 100%;">
-                                                <field name="company_id" column_invisible="1"/> 
-                                                <field name="sequence" widget="handle"/>
+                                                <field name="company_id" column_invisible="1"/>
                                                 <field name="display_type" column_invisible="True"/>
+                                                <field name="name"/>
                                                 <field name="product_id"/>
-                                                <field name="name"/>  
                                                 <field name="product_uom"/>
                                                 <field name="product_packaging_id"/>
                                                 <field name="quantity"/>  

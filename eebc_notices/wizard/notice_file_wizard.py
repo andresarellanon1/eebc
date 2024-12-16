@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 
 
 
+
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -31,6 +32,7 @@ class NoticeFileWizard(models.TransientModel):
     create_tab = fields.Boolean(string="Crear aviso", default=False)
     update_tab = fields.Boolean(string="Actualizar aviso", default=False)
 
+    stock_move_id = fields.Many2one('stock.move', string='Traslado')
 
    
     quantity = fields.Float(string="Cantidad", readonly=True,)
@@ -57,6 +59,8 @@ class NoticeFileWizard(models.TransientModel):
             res['account_move_invoice_ids'] = self._context['invoices']
         if 'default_message' in self._context:
             res['message'] = self._context['default_message']  # Asignar el mensaje de error desde el contexto
+        if 'stock_move_id' in self._context:
+            res['stock_move_id'] = self._context['stock_move_id']
         if 'lines' in self._context:
             res['notice_ids'] = self._context['lines']
         _logger.warning('vALORDE LINEASS RES : %s',res)
@@ -109,22 +113,22 @@ class NoticeFileWizard(models.TransientModel):
                             'default_message': f"El folio del archivo ({self.folio}) ya existe en el folio ({notice_id}).",
                         }
                     }
-                else:
-                    notice_id.write({
-                        'history_ids': [(0, 0, {
-                            'location_dest': self._context['location_dest_id'],
-                            'location_id': self._context['location_id'],
-                            'product_id': self._context['product_id'],
-                            'quantity': self.quantity,
-                            'folio': self.folio,
-                            'picking_code': self._context['type'],
-                            'origin': self._context['origin'],
-                            'purchase_order_id':self._context['purchase_order_id'],
-                            'sale_order_id':self._context['sale_ids'],
-                            'state': 'draft',
+                # else:
+                #     notice_id.write({
+                #         'history_ids': [(0, 0, {
+                #             'location_dest': self._context['location_dest_id'],
+                #             'location_id': self._context['location_id'],
+                #             'product_id': self._context['product_id'],
+                #             'quantity': 0,
+                #             'folio': self.folio,
+                #             'picking_code': self._context['type'],
+                #             'origin': self._context['origin'],
+                #             'purchase_order_id':self._context['purchase_order_id'],
+                #             'sale_order_id':self._context['sale_ids'],
+                #             'state': 'draft',
 
-                        })]
-                    })
+                #         })]
+                #     })
             else:
                 notice = self.env['notices.notices'].create({
                     'product_id': self._context['product_id'],
@@ -133,21 +137,21 @@ class NoticeFileWizard(models.TransientModel):
                     'partner_id': self._context['proveedor_id'],
                     'notice': self.notice,
                 })
-                self.env['notices.history'].create({
-                    'location_id': self._context['location_id'],
-                    'location_dest': self._context['location_dest_id'],
-                    'product_id': self._context['product_id'],
-                    'quantity': self.quantity,
-                    'picking_code': self._context['type'],
-                    'notice_id': notice.id,
-                    'folio': self.folio,
-                    'origin': self._context['origin'],
-                    'purchase_order_id':self._context['purchase_order_id'],
-                    'sale_order_id':self._context['sale_ids'],
-                    'stock_move_id':self._context['stock_move_id'],
-                    'state': 'draft',
+                # self.env['notices.history'].create({
+                #     'location_id': self._context['location_id'],
+                #     'location_dest': self._context['location_dest_id'],
+                #     'product_id': self._context['product_id'],
+                #     'quantity': 0,
+                #     'picking_code': self._context['type'],
+                #     'notice_id': notice.id,
+                #     'folio': self.folio,
+                #     'origin': self._context['origin'],
+                #     'purchase_order_id':self._context['purchase_order_id'],
+                #     'sale_order_id':self._context['sale_ids'],
+                #     'stock_move_id':self._context['stock_move_id'],
+                #     'state': 'draft',
                     
-                })
+                # })
                 
                 # bool_notice_established = self.env['stock.move'].search([('id','=', self._context['stock_move_id'])]).notice_established
                 # if bool_notice_established:
@@ -158,6 +162,10 @@ class NoticeFileWizard(models.TransientModel):
             self = self.with_context(
                 lot_ids=False
             )
+            return self.stock_move_id.action_show_incoming()
+          
+
+            
         elif self.update_tab:
             _logger.warning('Actualizamos')
             try:
@@ -180,7 +188,7 @@ class NoticeFileWizard(models.TransientModel):
                                 'history_ids': [(0, 0, {
                                     'location_id': wizard.stock_move_id.picking_id.location_id.id,
                                     'location_dest': wizard.stock_move_id.picking_id.location_dest_id.id,
-                                    'quantity': line.quantity * (-1),
+                                    'quantity': line.quantity,
                                     'picking_code': wizard.stock_move_id.picking_id.picking_type_code,
                                     'origin': wizard.stock_move_id.picking_id.sale_id.name,
                                     'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id,
@@ -195,7 +203,7 @@ class NoticeFileWizard(models.TransientModel):
                     _logger.warning('Se procesaron todas las líneas de notice_ids.')
                 
                 # Retornar para cerrar la ventana
-                return {'type': 'ir.actions.act_window_close'}
+                return self.stock_move_id.action_show_incoming()
 
             except ValidationError as e:
                 # Registrar el mensaje de error para depuración
@@ -231,19 +239,6 @@ class NoticeFileWizard(models.TransientModel):
                 raise ValidationError(
                     f"La cantidad y la demanda deben coincidir. Cantidad total asignada: {total} / Demanda: {wizard.quantity}"
                 )
-            notices_list = []
-            for line in wizard.notice_ids:        
-                if line.quantity > line.quantity_available:
-                    notices_list.append({
-                        'name': line.test_name,  # Ajusta 'name' al campo que contiene el nombre del aviso
-                        'available': line.quantity_available,
-                        'established': line.quantity
-                    })            
-            if notices_list:
-                message = "Los siguientes avisos tienen cantidades que exceden las disponibles:\n"
-                for notice in notices_list:
-                    message += f"- {notice['name']}: {notice['available']} disponibles / {notice['established']} establecidos\n"
-                
-                raise ValidationError(message)
+            
 
 

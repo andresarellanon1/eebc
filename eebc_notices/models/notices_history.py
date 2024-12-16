@@ -39,7 +39,7 @@ class NoticesHistory(models.Model):
 
     state = fields.Selection(
         string='state',
-        selection=[('draft', 'Borrador'), ('approved', 'Aprovado'), ('canceled', 'Cancelado')]
+        selection=[('draft', 'Borrador'), ('approved', 'Aprobado'), ('canceled', 'Cancelado')]
     )
     
 

@@ -5,14 +5,12 @@ from odoo.exceptions import UserError
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
-    project_plan_id = fields.Many2one('project.plan', string="Project template", readonly="True")
+    project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly="True")
     project_plan_lines = fields.One2many('project.plan.line', 'origin_project_id', string="Project plan lines")
     
-    project_picking_ids = fields.Many2many('project.plan.pickings', string="Stock picking")
-    project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
-
-    plan_total_cost = fields.Float(string="Total cost", default=0.0)
-
+    project_picking_ids = fields.Many2many('project.plan.pickings', string="Movimientos de inventario")
+    project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines", compute="_compute_picking_lines", store=True)
+    plan_total_cost = fields.Float(string="Costo total", default=0.0)
 
     def create_project_tasks(self):
         for project in self:
@@ -45,6 +43,12 @@ class ProjectProject(models.Model):
                             'stage_id': current_task_type.id,
                             'timesheet_ids': timesheet_data,
                         })
+
+    @api.depends('project_plan_lines')
+    def _compute_picking_lines(self):
+        for record in self:
+            record.project_picking_lines = [(5, 0, 0)]
+            record.project_picking_lines = record.sale_order_id.get_picking_lines(record.project_plan_lines)
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([

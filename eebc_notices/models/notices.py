@@ -74,6 +74,8 @@ class Notices(models.Model):
         comodel_name='notices.history',
         inverse_name='notice_id',
     )
+    
+
 
     # @api.depends('history_ids')
     # def _compute_location_origin_id(self):
@@ -128,7 +130,7 @@ class Notices(models.Model):
         _logger.warning('Entramos a compute de quantity')
         
         for record in self:
-            approved_history = record.history_ids.filtered(lambda h: h.state == 'approved')
+            approved_history = record.history_ids.filtered(lambda h: h.state == 'draft')
             _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')
             record.quantity = sum(approved_history.mapped('quantity'))
 

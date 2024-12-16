@@ -8,7 +8,7 @@ class ProductTemplate(models.Model):
 
     project_plan_id = fields.Many2one(
         'project.plan',
-        string="Plantilla de proyecto",
+        string="Plantilla de tareas",
         ondelete='restrict',  # Evita borrar accidentalmente el proyecto
     )
 
