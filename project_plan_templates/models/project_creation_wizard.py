@@ -128,10 +128,10 @@ class ProjectCreation(models.TransientModel):
     def create_project_tasks(self, project):
         current_task_type = None
         for line in self.wizard_plan_lines:
-            if line.display_type:
+            if line.display_type and line.for_create:
                 current_task_type = self.get_or_create_task_type(line.name, project)
 
-            if line.use_project_task and not line.display_type:
+            if line.use_project_task and line.for_create:
                 if not current_task_type:
                     current_task_type = self.get_or_create_task_type('Extras', project)
 
@@ -173,7 +173,7 @@ class ProjectCreation(models.TransientModel):
     def prep_plan_lines(self, plan):
         plan_lines = []
         for line in plan:
-            if line.use_project_task and line.for_create:
+            if line.use_project_task:
                 if line.display_type == 'line_section':
                     plan_lines.append((0, 0, {
                         'name': line.name,
