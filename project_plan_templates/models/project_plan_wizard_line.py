@@ -27,3 +27,4 @@ class ProjectPlanWizardLine(models.TransientModel):
     code = fields.Char(string="Code")
     sequence = fields.Integer()
     project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario")
+    for_create = fields.Boolean()
