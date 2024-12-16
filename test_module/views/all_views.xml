@@ -1,0 +1,100 @@
+<odoo>
+    <record id="view_paciente_tree" model="ir.ui.view">
+        <field name="name">paciente.tree</field>
+        <field name="model">sanatorio.quiroz.paciente</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nombre"/>
+                <field name="apellido_paterno"/>
+                <field name="apellido_materno"/>
+                <field name="fecha_nacimiento"/>
+                <field name="edad"/>
+                <field name="sexo"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_paciente_form" model="ir.ui.view">
+        <field name="name">paciente.form</field>
+        <field name="model">sanatorio.quiroz.paciente</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nombre"/>
+                        <field name="apellido_paterno"/>
+                        <field name="apellido_materno"/>
+                        <field name="fecha_nacimiento"/>
+                        <field name="edad"/>
+                        <field name="sexo"/>
+                    </group>
+                    <group>
+                        <field name="contacto_id"/>
+                        <field name="historial_medico_id"/>
+                        <field name="historial_administrativo_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_paciente" model="ir.actions.act_window">
+        <field name="name">Pacientes</field>
+        <field name="res_model">sanatorio.quiroz.paciente</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_paciente_tree"/>
+    </record>
+
+    <menuitem id="menu_sanatorio" name="Sanatorio Quiroz"/>
+    <menuitem id="menu_paciente" name="Pacientes" parent="menu_sanatorio" action="action_paciente"/>
+
+
+
+
+<record id="view_historial_medico_tree" model="ir.ui.view">
+        <field name="name">historial.medico.tree</field>
+        <field name="model">sanatorio.quiroz.historial.medico</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="hx_familiar_id"/>
+                <field name="hx_personal_id"/>
+                <field name="hx_alergias_ids"/>
+                <field name="hx_clinico_ids"/>
+                <field name="hx_quirurgico_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_historial_medico_form" model="ir.ui.view">
+        <field name="name">historial.medico.form</field>
+        <field name="model">sanatorio.quiroz.historial.medico</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="hx_familiar_id"/>
+                        <field name="hx_personal_id"/>
+                    </group>
+                    <group>
+                        <field name="hx_alergias_ids"/>
+                        <field name="hx_clinico_ids"/>
+                        <field name="hx_quirurgico_ids"/>
+                        <field name="evolucion_ids"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_historial_medico" model="ir.actions.act_window">
+        <field name="name">Historial Médico</field>
+        <field name="res_model">sanatorio.quiroz.historial.medico</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_historial_medico_tree"/>
+    </record>
+
+    <menuitem id="menu_historial_medico" name="Historial Médico" parent="menu_sanatorio" action="action_historial_medico"/>
+
+
+
+</odoo>
