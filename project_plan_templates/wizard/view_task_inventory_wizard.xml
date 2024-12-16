@@ -4,7 +4,7 @@
             <field name="name">task.inventory.wizard</field>
             <field name="model">task.inventory.wizard</field>
             <field name="arch" type="xml">
-                <form string="Create inventory">
+                <form string="Crear movimiento de inventario">
                     <sheet>
                         <div class="oe_title">
                             <h1>
