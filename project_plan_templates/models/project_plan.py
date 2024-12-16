@@ -20,7 +20,7 @@ class ProjectPlan(models.Model):
         string="Picking Lines"
     )
 
-    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
 
     product_template_id = fields.Many2one(

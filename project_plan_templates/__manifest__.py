@@ -1,5 +1,5 @@
 {
-    'name': 'Plantillas para planeacion de proyectos',
+    'name': 'Planeación de proyectos',
     'description': """
             Este modulo comprende las configuraciones para la generacion de plantillas de proyectos.
     """,
