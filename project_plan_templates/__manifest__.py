@@ -7,7 +7,7 @@
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [
-                'project', 'product', 'sale'
+                'project', 'product', 'sale', 'sale_project'
                ],
     'data': [
         "views/project_menu.xml",
@@ -24,6 +24,7 @@
         "views/inherit_project_task_inventory_view_form.xml",
         "views/task_picking_line.xml",
         "views/inherit_sale_order_view_form.xml",
+        "views/inherit_sale_project_view.xml"
     ],
     "license": "LGPL-3",
     'installable': True,
