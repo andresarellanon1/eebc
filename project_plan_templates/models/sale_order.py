@@ -8,9 +8,9 @@ class SaleOrder(models.Model):
 
     _inherit = 'sale.order'
 
-    is_project = fields.Boolean(string="Is project?", default=False)
-    project_name = fields.Char(string="Project title")
-    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
+    is_project = fields.Boolean(string="Es proyecto?", default=False)
+    project_name = fields.Char(string="Titulo de proyecto")
+    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
     state = fields.Selection(
         selection_add=[
@@ -25,9 +25,9 @@ class SaleOrder(models.Model):
 
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
-    project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
+    project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id', compute="_compute_picking_lines", store=True)
 
-    project_id = fields.Many2one('project.project', string="Project")
+    project_id = fields.Many2one('project.project', string="Proyecto")
     
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
@@ -50,28 +50,22 @@ class SaleOrder(models.Model):
                     )
                 sale.project_plan_pickings = [(5, 0, 0)]
                 sale.project_plan_lines = [(5, 0, 0)]
-                sale.project_picking_lines = [(5, 0, 0)]
 
                 plan_pickings = []
                 plan_lines = []
-                picking_lines = []
                 for line in sale.order_line:
                     if line.display_type == 'line_section':
                         plan_lines.append(self.prep_plan_section_line(line))
-                        picking_lines.append(self.prep_picking_section_line(line))
                     else:
                         if line.product_id.project_plan_id:
                             plan_lines.append(self.prep_plan_section_line(line))
-                            picking_lines.append(self.prep_picking_section_line(line))
                             plan_lines += self.prep_plan_lines(line)
-                            picking_lines += self.prep_picking_lines(line)
 
                         for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                             plan_pickings.append((4, project_picking.id))
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
-                sale.project_picking_lines = picking_lines
             return super(SaleOrder, self).action_confirm()
     
     def prep_picking_section_line(self, line):
@@ -119,7 +113,7 @@ class SaleOrder(models.Model):
 
     def prep_picking_lines(self, line):
         picking_lines = []
-        for picking in line.product_id.project_plan_id.project_plan_pickings.project_picking_lines:
+        for picking in line.project_plan_pickings.project_picking_lines:
             picking_lines.append((0, 0, {
                 'name': picking.product_id.name,
                 'product_id': picking.product_id.id,
@@ -131,6 +125,24 @@ class SaleOrder(models.Model):
                 'subtotal': picking.subtotal,
                 'display_type': False
             }))
+        return picking_lines
+
+    @api.depends('project_plan_lines')
+    def _compute_picking_lines(self):
+        for record in self:
+            record.project_picking_lines = [(5, 0, 0)]
+            record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
+
+    def get_picking_lines(self, line):
+        picking_lines = []
+
+        for picking in line:
+            if picking.display_type == 'line_section':
+                picking_lines.append(self.prep_picking_section_line(picking))
+            else:
+                picking_lines.append(self.prep_picking_section_line(picking))
+                picking_lines += self.prep_picking_lines(picking)
+                
         return picking_lines
 
     def action_open_create_project_wizard(self):
@@ -147,5 +159,3 @@ class SaleOrder(models.Model):
                 'default_project_name': self.project_name
             }
         }
-        
-        

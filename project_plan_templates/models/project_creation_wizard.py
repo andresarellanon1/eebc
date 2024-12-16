@@ -6,16 +6,16 @@ class ProjectCreation(models.TransientModel):
     _name = 'project.creation.wizard'
     _description = 'Wizard to confirm project creation'
 
-    project_plan_id = fields.Many2one('project.plan', string="Project Plan", readonly=True)
-    project_name = fields.Char(string="Project Name", required=True)
-    user_id = fields.Many2one('res.users', string="Project manager")
-    description = fields.Html(string="Description")
-    sale_order_id = fields.Many2one('sale.order', string="Sale order")
+    project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly=True)
+    project_name = fields.Char(string="Nombre del proyecto", required=True)
+    user_id = fields.Many2one('res.users', string="Administrador del proyecto")
+    description = fields.Html(string="Descripción")
+    sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
     
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
-        string="Picking Templates"
+        string="Plantilla de movimientos"
     )
 
     wizard_plan_lines = fields.One2many(
@@ -30,14 +30,14 @@ class ProjectCreation(models.TransientModel):
 
     note = fields.Char()
 
-    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Costo total",  compute='_compute_total_cost', default=0.0)
 
     picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada')
     partner_id = fields.Many2one('res.partner', string='Contacto')
-    date_start = fields.Datetime(string="Planned Start Date")
+    date_start = fields.Datetime(string="Fecha de inicio planeada")
     date = fields.Datetime()
 
     @api.onchange('sale_order_id')
@@ -57,14 +57,11 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
-        project_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
-        picking_line_vals = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
-
         project_vals = {
             'name': self.project_name,
             'description': self.description,
-            'project_plan_lines': self.wizard_plan_lines,
-            'project_picking_lines': self.wizard_picking_lines,
+            'project_plan_lines': self.prep_plan_lines(self.sale_order_id.project_plan_lines),
+            'project_picking_lines': self.prep_picking_lines(self.sale_order_id.project_picking_lines),
             'default_picking_type_id': self.picking_type_id.id,
             'publication_date': fields.Datetime.now(),
             'date_start': self.date_start,
@@ -103,7 +100,7 @@ class ProjectCreation(models.TransientModel):
         }) for line in pickings]
 
         stock_picking_vals = {
-            'name': task_id.name,
+            'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
             'partner_id': self.partner_id.id,
             'picking_type_id': self.picking_type_id.id,
             'location_id': self.location_id.id,

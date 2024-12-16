@@ -6,28 +6,28 @@ from odoo.exceptions import ValidationError
 class ProjectLines(models.Model):
     _name = 'project.plan.line'
     _description = 'Project plan lines'
-
+    _order = 'sequence'
     
-    name = fields.Char(string="Name", default=False)
+    name = fields.Char(string="Tarea", default=False)
     chapter = fields.Char(string="Chapter")
     clave = fields.Integer(string="Task id")
-    description = fields.Char(string="Description")
-    use_project_task = fields.Boolean(default=True, string="Use task")
+    description = fields.Char(string="Descripción")
+    use_project_task = fields.Boolean(default=True, string="Usar tarea")
 
     
-    project_plan_id = fields.Many2one('project.plan', string="Project plan")
-    origin_project_id = fields.Many2one('project.project', string="Project")
+    project_plan_id = fields.Many2one('project.plan', string="Plan de proyecto")
+    origin_project_id = fields.Many2one('project.project', string="Proyecto")
     stage_id = fields.Many2one(
         'project.task.type',
         string="Stage",
     )
-    partner_id = fields.Many2many('res.users', string="Assigned user")
-    task_timesheet_id = fields.Many2one('task.timesheet', string="Timesheet")
-    sale_order_id = fields.Many2one('sale.order', string="Origin")
+    partner_id = fields.Many2many('res.users', string="Usuarios asignados")
+    task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
+    sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
 
     
-    planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Begin date")
-    planned_date_end = fields.Datetime(default=fields.Date.context_today, string="End date")
+    planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Fecha de inicio")
+    planned_date_end = fields.Datetime(default=fields.Date.context_today, string="Fecha de finalización")
 
     display_type = fields.Selection(
             [
@@ -37,7 +37,7 @@ class ProjectLines(models.Model):
     )
     code = fields.Char(string="Code")
     sequence = fields.Integer()
-    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Picking Templates")
+    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario")
 
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
@@ -58,17 +58,23 @@ class ProjectLines(models.Model):
             'target': 'new',
         }
     
-    @api.constrains('task_timesheet_id')
-    def _check_required_fields(self):
-        for record in self:
-            if not record.task_timesheet_id:
-                raise ValidationError("El campo 'Task Timesheet' es obligatorio y no puede estar vacío.")
+    # @api.constrains('name')
+    # def _check_name(self):
+    #     for record in self:
+    #         if not record.name:
+    #             raise ValidationError("El campo 'Name' es obligatorio y no puede estar vacío.")
 
-    @api.constrains('project_plan_pickings')
-    def _check_required_fields(self):
-        for record in self:
-            if not record.project_plan_pickings:
-                raise ValidationError("Debe seleccionar al menos un elemento en 'Picking Templates'.")
+    # @api.constrains('task_timesheet_id')
+    # def _check_task_timesheet_id(self):
+    #     for record in self:
+    #         if not record.task_timesheet_id:
+    #             raise ValidationError("El campo 'Task Timesheet' es obligatorio y no puede estar vacío.")
+
+    # @api.constrains('project_plan_pickings')
+    # def _check_project_plan_pickings(self):
+    #     for record in self:
+    #         if not record.project_plan_pickings:
+    #             raise ValidationError("Debe seleccionar al menos un elemento en 'Picking Templates'.")
 
     # @api.constrains('planned_date_begin', 'planned_date_end')
     # def _check_dates(self):

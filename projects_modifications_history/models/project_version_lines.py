@@ -7,13 +7,13 @@ class ProjecVersionLines(models.Model):
     _name = 'project.version.lines'
     _description = 'Project versions history'
 
-    modification_date = fields.Datetime(string='Modification date')
-    project_id = fields.Many2one('project.project', string='Project')
-    modified_by = fields.Many2one('res.users', string='Modified by')
-    modification_motive = fields.Html(string='Motive of adjustment')
-    project_name = fields.Char(string='Project name')
-    project_version_history_id = fields.Many2one('project.version.history', string="Project history")
-    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
+    modification_date = fields.Datetime(string='Fecha de modificación')
+    project_id = fields.Many2one('project.project', string='Proyecto')
+    modified_by = fields.Many2one('res.users', string='Modificado por')
+    modification_motive = fields.Html(string='Motivo de los cambios')
+    project_name = fields.Char(string='Nombre del proyecto')
+    project_version_history_id = fields.Many2one('project.version.history', string="Historial del proyecto")
+    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
     project_plan_lines = fields.Many2many(
         'project.plan.line',
@@ -23,7 +23,7 @@ class ProjecVersionLines(models.Model):
 
     project_picking_lines = fields.Many2many(
         'project.picking.lines',
-        string='Stock',
+        string='Inventario',
         relation='project_version_lines_picking_lines_rel'
     )
 
@@ -40,7 +40,7 @@ class ProjecVersionLines(models.Model):
     )
 
     version_number = fields.Char(
-        string='Version Number',
+        string='Numero de versión',
         compute='_compute_version_number',
         store=True
     )
@@ -52,6 +52,7 @@ class ProjecVersionLines(models.Model):
 
     has_previous_version = fields.Boolean(
         string="Has Previous Version",
+        compute='_compute_previous_version_lines',
         store=True
     )
 
@@ -67,6 +68,7 @@ class ProjecVersionLines(models.Model):
             else:
                 record.version_number = "V0"
 
+    @api.depends('project_id')
     def _compute_previous_version_lines(self):
         for record in self:
             record.project_name = record.project_id.name
@@ -79,10 +81,104 @@ class ProjecVersionLines(models.Model):
             _logger.warning(f"Resultado de búsqueda: {previous_version}")
             
             if previous_version:
-                record.previous_version_plan_lines = previous_version.project_plan_lines
-                _logger.warning(f'La version previa es: {previous_version.project_plan_lines}')
-                record.previous_version_picking_lines = previous_version.project_picking_lines
-                record.has_previous_version = True
+                record.previous_version_plan_lines = [(5, 0, 0)]
+                record.previous_version_plan_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': line.use_project_task,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'partner_id': line.partner_id,
+                        'project_plan_pickings': line.project_plan_pickings.id,
+                        'task_timesheet_id': line.task_timesheet_id,
+                    })
+                    for line in previous_version.project_plan_lines
+                ]
+
+                aux_previous_project_plan_lines =  record.previous_version_plan_lines
+
+                previous_version.project_plan_lines = [(5, 0, 0)]
+                previous_version.project_plan_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': line.use_project_task,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'partner_id': line.partner_id,
+                        'project_plan_pickings': line.project_plan_pickings.id,
+                        'task_timesheet_id': line.task_timesheet_id,
+                    })
+                    for line in aux_previous_project_plan_lines
+                ]
+
+                aux_project_plan_lines =  record.project_plan_lines
+
+                record.project_plan_lines = [(5, 0, 0)]
+                record.project_plan_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': line.use_project_task,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'partner_id': line.partner_id,
+                        'project_plan_pickings': line.project_plan_pickings.id,
+                        'task_timesheet_id': line.task_timesheet_id,
+                    })
+                    for line in aux_project_plan_lines
+                ]
+
+              
+                
+                record.previous_version_picking_lines = [(5, 0, 0)]
+                record.previous_version_picking_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'product_id': line.product_id,
+                        'product_uom': line.product_uom,
+                        'product_packaging_id': line.product_packaging_id,
+                        'quantity': line.quantity,
+                        'reservado': line.reservado,
+                        'standard_price': line.standard_price,
+                        'subtotal': line.subtotal,
+                    })
+                    for line in previous_version.project_picking_lines
+                ]
+
+                aux_previous_project_pickings_lines =  record.previous_version_picking_lines
+                previous_version.project_picking_lines = [(5, 0, 0)]
+                previous_version.project_picking_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'product_id': line.product_id,
+                        'product_uom': line.product_uom,
+                        'product_packaging_id': line.product_packaging_id,
+                        'quantity': line.quantity,
+                        'reservado': line.reservado,
+                        'standard_price': line.standard_price,
+                        'subtotal': line.subtotal,
+                    })
+                    for line in aux_previous_project_pickings_lines
+                ]
+
+                aux_project_picking_lines =  record.project_picking_lines
+                record.project_picking_lines = [(5, 0, 0)]
+                record.project_picking_lines = [
+                    (0, 0, {
+                        'name': line.name,
+                        'product_id': line.product_id,
+                        'product_uom': line.product_uom,
+                        'product_packaging_id': line.product_packaging_id,
+                        'quantity': line.quantity,
+                        'reservado': line.reservado,
+                        'standard_price': line.standard_price,
+                        'subtotal': line.subtotal,
+                    })
+                    for line in aux_project_picking_lines
+                ]
+
             else:
                 _logger.warning('No tiene version previa')
                 record.previous_version_plan_lines = [(5, 0, 0)]

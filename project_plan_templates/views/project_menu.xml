@@ -2,13 +2,13 @@
 <odoo>
     <data>
         <record id="plan_template_action" model="ir.actions.act_window">
-            <field name="name">Plantillas de planes de proyecto</field>
+            <field name="name">Plantillas de tareas de proyecto</field>
             <field name="res_model">project.plan</field>
             <field name="view_mode">tree,form</field> 
         </record>
 
         <record id="plan_picking_templates_action" model="ir.actions.act_window">
-            <field name="name">Plantillas de operaciones de inventario</field>
+            <field name="name">Plantillas de movimientos de inventario</field>
             <field name="res_model">project.plan.pickings</field> 
             <field name="view_mode">tree,form</field>
         </record>
@@ -27,7 +27,7 @@
 
         <menuitem
             id="menu_project_config_new_option"
-            name="Plantillas de planes de proyecto"
+            name="Plantillas de tareas de proyecto"
             action="plan_template_action" 
             parent="menu_project_config" 
             sequence="20" 
@@ -35,7 +35,7 @@
 
         <menuitem
             id="project_picking_option"
-            name="Plantillas de operaciones de inventario"
+            name="Plantillas de movimientos de inventario"
             action="plan_picking_templates_action" 
             parent="menu_project_config" 
             sequence="20" 

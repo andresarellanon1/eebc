@@ -30,10 +30,10 @@
                                 </group>
                             </group>
                             <notebook>
-                                <page name="description" string="Description">
+                                <page name="description" string="Descripción">
                                     <field name="description" />
                                 </page>
-                                <page name="planning" string="Planning">
+                                <page name="planning" string="Tareas del proyecto">
                                     <group>
                                         <field name="project_plan_id" invisible="1"/>
                                     </group>
@@ -42,7 +42,7 @@
                                             <tree editable="bottom" style="width: 100%;">
                                                 <control>
                                                     <create name="add_product_control" string="Add a product"/>
-                                                    <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                                    <create name="add_section_control" string="Añadir sección" context="{'default_display_type': 'line_section'}"/>
                                                 </control>
                                                 <field name="display_type" column_invisible="True"/>
                                                 <field name="name"/>
@@ -57,7 +57,7 @@
                                         </field>
                                     </div>
                                 </page>
-                                <page name="Stock" string="Stock">
+                                <page name="Stock" string="Inventario">
                                     <div>
                                         <field name="wizard_picking_lines" widget="section_and_note_one2many" mode="tree,kanban">
                                             <tree editable="editable_bottom" style="width: 100%;">
