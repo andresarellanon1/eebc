@@ -81,7 +81,7 @@ class SaleOrder(models.Model):
             'subtotal': False
         })
     
-    def prep_plan_section_line(self, line, for_create:
+    def prep_plan_section_line(self, line, for_create):
         return (0, 0, {
             'name': line.name,
             'display_type': line.display_type or 'line_section',
