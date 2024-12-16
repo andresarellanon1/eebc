@@ -55,10 +55,10 @@ class SaleOrder(models.Model):
                 plan_lines = []
                 for line in sale.order_line:
                     if line.display_type == 'line_section':
-                        plan_lines.append(self.prep_plan_section_line(line))
+                        plan_lines.append(self.prep_plan_section_line(line, True))
                     else:
                         if line.product_id.project_plan_id:
-                            plan_lines.append(self.prep_plan_section_line(line))
+                            plan_lines.append(self.prep_plan_section_line(line, False))
                             plan_lines += self.prep_plan_lines(line)
 
                         for project_picking in line.product_id.project_plan_id.project_plan_pickings:
@@ -81,7 +81,7 @@ class SaleOrder(models.Model):
             'subtotal': False
         })
     
-    def prep_plan_section_line(self, line):
+    def prep_plan_section_line(self, line, for_create:
         return (0, 0, {
             'name': line.name,
             'display_type': line.display_type or 'line_section',
@@ -92,6 +92,7 @@ class SaleOrder(models.Model):
             'partner_id': False,
             'project_plan_pickings': False,
             'task_timesheet_id': False,
+            'for_create': for_create
         })
 
     def prep_plan_lines(self, line):
@@ -107,7 +108,8 @@ class SaleOrder(models.Model):
                 'partner_id': [(6, 0, plan.partner_id.ids)],
                 'project_plan_pickings': plan.project_plan_pickings.id,
                 'task_timesheet_id': plan.task_timesheet_id.id,
-                'display_type': False
+                'display_type': False,
+                'for_create': True
             }))
         return plan_lines
 
