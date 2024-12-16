@@ -78,6 +78,7 @@ class ProjectPlanPickingLine(models.Model):
     def _onchange_product_id(self):
         if self.product_id:
             self.product_uom = self.product_id.uom_id
+            self.name = self.product_id.name
 
     def reservado_update(self, task_inventory_lines):
         for record in self:
