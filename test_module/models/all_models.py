@@ -4,6 +4,7 @@ class Paciente(models.Model):
     _name = 'sanatorio.quiroz.paciente'
     _description = 'Paciente'
 
+
     nombre = fields.Char(string="Nombre")
     apellido_paterno = fields.Char(string="Apellido Paterno")
     apellido_materno = fields.Char(string="Apellido Materno")
