@@ -56,7 +56,6 @@
                             <field name="product_uom"/>
                             <field name="product_packaging_id"/>
                             <field name="quantity"/>
-                            <field name="reservado"/>
                             <field name="standard_price"/>
                             <field name="subtotal"/>
                         </tree>
