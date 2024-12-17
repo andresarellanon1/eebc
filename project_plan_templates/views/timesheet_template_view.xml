@@ -26,7 +26,7 @@
 
                         <notebook>
 
-                            <page name="description" string="Description">
+                            <page name="description" string="Descripción">
                                 <field name="description"/> 
                             </page>
 
