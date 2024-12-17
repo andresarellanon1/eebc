@@ -270,7 +270,7 @@ class StockMove(models.Model):
                     'quantity_available': notice.quantity,
                     'aviso_name': notice.display_name,
                     'in_or_out': in_or_out,
-                    'lot_line_ids': lot_line_ids,
+                    # 'lot_line_ids': lot_line_ids,
                 }))
             _logger.warning(f'Líneas creadas: {lines}')
             return lines
