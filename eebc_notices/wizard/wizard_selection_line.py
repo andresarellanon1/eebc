@@ -13,9 +13,9 @@ class WizardSelectionLine(models.TransientModel):
 
 
 
-    lot_line_ids = fields.One2many(
-    'wizard.selection.lot.line', 'line_id', string='Lotes Asignados', 
-        )
+    # lot_line_ids = fields.One2many(
+    # 'wizard.selection.lot.line', 'line_id', string='Lotes Asignados', 
+    #     )
 
     
     quantity = fields.Float(string='Cantidad asignada', default=0, required=True)
