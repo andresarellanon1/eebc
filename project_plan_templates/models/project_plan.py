@@ -54,13 +54,35 @@ class ProjectPlan(models.Model):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
 
-    @api.onchange('project_plan_pickings')
-    def onchange_picking_lines(self):
+    @api.depends('project_plan_lines')
+    def _compute_picking_lines(self):
         for record in self:
-            lines = self.env['project.picking.lines']
-            for picking in record.project_plan_pickings:
-                lines |= picking.project_picking_lines
-            record.picking_lines = lines
+            record.project_picking_lines = [(5, 0, 0)]
+            record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
+
+    def get_picking_lines(self, line):
+        picking_lines = []
+
+        for picking in line:
+            picking_lines += self.prep_picking_lines(picking)
+                
+        return picking_lines
+
+    def prep_picking_lines(self, line):
+        picking_lines = []
+        for picking in line.project_plan_pickings.project_picking_lines:
+            picking_lines.append((0, 0, {
+                'name': picking.product_id.name,
+                'product_id': picking.product_id.id,
+                'product_uom': picking.product_uom.id,
+                'product_packaging_id': picking.product_packaging_id.id,
+                'product_uom_qty': picking.product_uom_qty,
+                'quantity': picking.quantity,
+                'standard_price': picking.standard_price,
+                'subtotal': picking.subtotal,
+                'display_type': False
+            }))
+        return picking_lines
 
     @api.depends('product_template_id')
     def _compute_service_project_domain(self):
