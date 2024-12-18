@@ -11,18 +11,16 @@ class ProjectProject(models.Model):
 
     _inherit = 'project.project'
 
-    default_picking_type_id = fields.Many2one('stock.picking.type', string="Operation type")
+    default_picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación")
     pickin_ids = fields.Many2many('stock.picking', string="Operaciones de Inventario")
     bid_code = fields.Char(string='Licitación')
     exchange_rate = fields.Float(string="Tipo de cambio")
-    creation_date = fields.Date(string="Creation Date", default=fields.Date.context_today, readonly=True)
-    submission_date = fields.Date(string="Submission Date")
-    publication_date = fields.Date(string="Publication Date")
-    site_supervisor_id = fields.Many2one('res.users', string="Site Supervisor")
-    subcontractor_id = fields.Many2one('res.users', string="Subcontractor")
-    is_subcontractor = fields.Boolean(string='Subcontratista')
-    # costo_total_final = fields.Float(string="Costo final", store=True,)
-    # display_costo_total_final = fields.Char(string="Costo total", store=True,)
+    creation_date = fields.Date(string="Fecha de creación", default=fields.Date.context_today, readonly=True)
+    submission_date = fields.Date(string="Fecha de entrega")
+    publication_date = fields.Date(string="Fecha de publicación")
+    site_supervisor_id = fields.Many2one('res.users', string="Supervisor")
+    subcontractor_id = fields.Many2one('res.users', string="Subcontratista")
+    is_subcontractor = fields.Boolean(string='Tiene subcontratista?')
     costo_total_final = fields.Float(string="Costo final", compute="_final_cost", store=True,)
     display_costo_total_final = fields.Char(string="Costo total", compute="_total_final_cost", store=True,)
     custom_currency_id = fields.Many2one('res.currency', string='Divisa')
@@ -30,13 +28,13 @@ class ProjectProject(models.Model):
     product_ids = fields.One2many(
         'product.product', 
         'project_id', 
-        string='Products'
+        string='Productos'
     )
 
     taxes_id = fields.Many2many(
         'account.tax',  
         string='Impuestos del cliente',
-        help='Select taxes that apply to this project.'
+        help='Elegir los impuestos de este proyecto.'
     )
 
     # Valida la fecha en formato DDMMYY y que no pase de 16 car.
