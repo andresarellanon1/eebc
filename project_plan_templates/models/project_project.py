@@ -15,20 +15,19 @@ class ProjectProject(models.Model):
     def create_project_tasks(self):
         for project in self:
             for line in project.project_plan_lines:
-                existing_task = self.env['project.task'].search([
+                if line.display_type and line.for_create:
+                    current_task_type = self.get_or_create_task_type(line.name, project)
+
+                if line.use_project_task and not line.display_type and line.for_create:
+                    if not current_task_type:
+                        current_task_type = self.get_or_create_task_type('Extras', project)
+
+                    existing_task = self.env['project.task'].search([
                         ('name', '=', line.name),
                         ('project_id', '=', project.id)
                     ], limit=1)
 
-                if not existing_task:
-
-                    if line.display_type and line.for_create:
-                        current_task_type = self.get_or_create_task_type(line.name, project)
-
-                    if line.use_project_task and not line.display_type and line.for_create:
-                        if not current_task_type:
-                            current_task_type = self.get_or_create_task_type('Extras', project)
-                    
+                    if not existing_task:
                         timesheet_lines = self.env['task.time.lines'].search([
                             ('task_timesheet_id', '=', line.task_timesheet_id.id)
                         ])
