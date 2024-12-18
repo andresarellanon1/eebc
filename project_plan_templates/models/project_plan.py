@@ -17,7 +17,8 @@ class ProjectPlan(models.Model):
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Movimientos de inventario")
     picking_lines = fields.One2many(
         'project.picking.lines',
-        'project_plan_id',  
+        'project_plan_id',
+        compute="_compute_picking_lines",
         string="Picking Lines"
     )
 
