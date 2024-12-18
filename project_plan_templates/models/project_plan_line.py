@@ -36,7 +36,7 @@ class ProjectLines(models.Model):
         ]
     )
     code = fields.Char(string="Code")
-    sequence = fields.Integer()
+    sequence = fields.Integer(default=0)
     project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario")
     for_create = fields.Boolean()
 
@@ -58,10 +58,6 @@ class ProjectLines(models.Model):
             'view_mode': 'form',
             'target': 'new',
         }
-    
-    @api.onchange('name')
-    def _onchange_sequence(self):
-        self.sequence = 0
 
     
     # @api.constrains('name')
