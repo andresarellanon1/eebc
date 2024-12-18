@@ -47,6 +47,19 @@ class ProjectProject(models.Model):
                             'stage_id': current_task_type.id,
                             'timesheet_ids': timesheet_data,
                         })
+                    else:
+                        if not existing_task.timesheet_ids and line.task_timesheet_id:
+                            timesheet_lines = self.env['task.time.lines'].search([
+                                ('task_timesheet_id', '=', line.task_timesheet_id.id)
+                            ])
+
+                            timesheet_data = [(0, 0, {
+                                'name': ts_line.description,
+                                'estimated_time': ts_line.estimated_time,
+                            }) for ts_line in timesheet_lines]
+
+                            existing_task.timesheet_ids = timesheet_data
+
 
     @api.depends('project_plan_lines')
     def _compute_picking_lines(self):
