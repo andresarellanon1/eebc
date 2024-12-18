@@ -25,7 +25,6 @@
                                                 <field name="name" readonly="1"/>
                                                 <field name="description" readonly="1"/>
                                                 <field name="use_project_task" readonly="1"/>
-                                                <field name="for_create" invisible="1"/>
                                                 <field name="planned_date_begin" widget="daterange" readonly="1"/>
                                                 <field name="planned_date_end" widget="daterange" readonly="1"/>
                                                 <field name="partner_id" widget="many2many_avatar_user" readonly="1"/>
