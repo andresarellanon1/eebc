@@ -136,7 +136,7 @@ class ProjecVersionLines(models.Model):
                 record.previous_version_picking_lines = [
                     (0, 0, {
                         'name': line.name,
-                        'product_id': line.product_id,
+                        'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
                         'product_packaging_id': line.product_packaging_id.id,
                         'quantity': line.quantity,
@@ -153,7 +153,7 @@ class ProjecVersionLines(models.Model):
                     (0, 0, {
                         'name': line.name,
                         'product_id': line.product_id.id,
-                        'product_uom': line.product_uom,
+                        'product_uom': line.product_uom.id,
                         'product_packaging_id': line.product_packaging_id.id,
                         'quantity': line.quantity,
                         'reservado': line.reservado,
@@ -168,8 +168,8 @@ class ProjecVersionLines(models.Model):
                 record.project_picking_lines = [
                     (0, 0, {
                         'name': line.name,
-                        'product_id': line.product_id,
-                        'product_uom': line.product_uom,
+                        'product_id': line.product_id.id,
+                        'product_uom': line.product_uom.id,
                         'product_packaging_id': line.product_packaging_id.id,
                         'quantity': line.quantity,
                         'reservado': line.reservado,
