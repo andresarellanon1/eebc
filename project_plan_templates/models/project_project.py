@@ -25,7 +25,7 @@ class ProjectProject(models.Model):
                     if line.display_type and line.for_create:
                         current_task_type = self.get_or_create_task_type(line.name, project)
 
-                    if line.use_project_task and nort line.display_type and line.for_create:
+                    if line.use_project_task and not line.display_type and line.for_create:
                         if not current_task_type:
                             current_task_type = self.get_or_create_task_type('Extras', project)
                     
