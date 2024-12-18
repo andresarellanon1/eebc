@@ -19,7 +19,8 @@ class ProjectPlan(models.Model):
         'project.picking.lines',
         'project_plan_id',
         compute="_compute_picking_lines",
-        string="Picking Lines"
+        string="Picking Lines",
+        store=True
     )
 
     plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
