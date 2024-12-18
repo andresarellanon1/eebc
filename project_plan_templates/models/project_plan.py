@@ -59,6 +59,7 @@ class ProjectPlan(models.Model):
     def _compute_picking_lines(self):
         for record in self:
             record.picking_lines = [(5, 0, 0)]
+            _logger.warning(f'Entro al metodo para computar pickings')
             record.picking_lines = record.get_picking_lines(record.project_plan_lines)
 
     def get_picking_lines(self, line):
@@ -66,7 +67,7 @@ class ProjectPlan(models.Model):
 
         for picking in line:
             picking_lines += self.prep_picking_lines(picking)
-            _logger.warning(picking_lines)
+            _logger.warning(f'Pickings:  {picking_lines}')
                 
         return picking_lines
 
@@ -84,6 +85,7 @@ class ProjectPlan(models.Model):
                 'subtotal': picking.subtotal,
                 'display_type': False
             }))
+            _logger.warning(f'Pickings:  {picking_lines}')
         return picking_lines
 
     @api.depends('product_template_id')
