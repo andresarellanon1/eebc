@@ -173,7 +173,7 @@ class ProjectCreation(models.TransientModel):
     def prep_plan_lines(self, plan):
         plan_lines = []
         for line in plan:
-            if line.use_project_task:
+            if line.use_project_task and line.for_create:
                 if line.display_type == 'line_section':
                     plan_lines.append((0, 0, {
                         'name': line.name,
