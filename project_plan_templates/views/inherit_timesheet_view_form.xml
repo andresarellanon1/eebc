@@ -40,8 +40,8 @@
                                 <field name="company_id" column_invisible="1"/> 
                                 <field name="sequence" column_invisible="1"/>
                                 <field name="display_type" column_invisible="True"/>
-                                <field name="name"/>
                                 <field name="product_id"/>
+                                <field name="name"/>
                                 <field name="product_uom"/>
                                 <field name="product_packaging_id"/>
                                 <field name="quantity"/>
