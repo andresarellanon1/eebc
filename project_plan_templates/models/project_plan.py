@@ -1,7 +1,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 import logging
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 class ProjectPlan(models.Model):
     _name = 'project.plan'
