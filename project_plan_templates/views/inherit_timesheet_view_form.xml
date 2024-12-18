@@ -27,7 +27,7 @@
                                 <field name="project_plan_pickings" options="{'create': True}" readonly="1"/> 
                                 <field name="task_timesheet_id" options="{'create': True}" readonly="1"/>
                                 <button name="action_preview_task" type="object" class="oe_highlight"
-                                        string="Preview task"/>
+                                        string="Ver tarea"/>
                             </tree>
                         </field>
                     </div>

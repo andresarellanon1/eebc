@@ -1,7 +1,8 @@
 from odoo import fields, models, api
 from datetime import datetime
 from odoo.exceptions import ValidationError
-
+import logging
+_logger = logging.getLogger(__name__)
 
 class ProjectLines(models.Model):
     _name = 'project.plan.line'
@@ -13,7 +14,6 @@ class ProjectLines(models.Model):
     clave = fields.Integer(string="Task id")
     description = fields.Char(string="Descripción")
     use_project_task = fields.Boolean(default=True, string="Usar tarea")
-
     
     project_plan_id = fields.Many2one('project.plan', string="Plan de proyecto")
     origin_project_id = fields.Many2one('project.project', string="Proyecto")
@@ -36,8 +36,8 @@ class ProjectLines(models.Model):
         ]
     )
     code = fields.Char(string="Code")
-    sequence = fields.Integer()
-    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario", required=True)
+    sequence = fields.Integer(default=0)
+    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario")
     for_create = fields.Boolean()
 
     def action_preview_task(self):
@@ -58,6 +58,7 @@ class ProjectLines(models.Model):
             'view_mode': 'form',
             'target': 'new',
         }
+
     
     # @api.constrains('name')
     # def _check_name(self):
