@@ -1,6 +1,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
-
+import logging
+logger = logging.getLogger(__name__)
 
 class ProjectPlan(models.Model):
     _name = 'project.plan'
@@ -65,6 +66,7 @@ class ProjectPlan(models.Model):
 
         for picking in line:
             picking_lines += self.prep_picking_lines(picking)
+            _logger.warning(picking_lines)
                 
         return picking_lines
 
