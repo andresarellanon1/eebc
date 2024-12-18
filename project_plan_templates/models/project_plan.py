@@ -61,15 +61,14 @@ class ProjectPlan(models.Model):
     def _compute_picking_lines(self):
         for record in self:
             record.picking_lines = [(5, 0, 0)]
-            _logger.warning(f'Entro al metodo para computar pickings')
             record.picking_lines = record.get_picking_lines(record.project_plan_lines)
 
     def get_picking_lines(self, line):
         picking_lines = []
 
         for picking in line:
+            picking_lines.append(self.prep_picking_section_line(picking))
             picking_lines += self.prep_picking_lines(picking)
-            _logger.warning(f'Pickings:  {picking_lines}')
                 
         return picking_lines
 
@@ -87,19 +86,20 @@ class ProjectPlan(models.Model):
                 'subtotal': picking.subtotal,
                 'display_type': False
             }))
-            _logger.warning(f'Pickings:  {picking_lines}')
         return picking_lines
-
-    @api.depends('product_template_id')
-    def _compute_service_project_domain(self):
-        for record in self:
-            service = self.env['product.template'].search([
-                ('detailed_type', '=', 'service'),
-                ('service_tracking', '=', 'project_only'),
-                ('project_plan_id', '=', False),
-                ('sale_ok', '=', True),
-            ])
-            record.service_project_domain = [(6, 0, service.ids)]
+        
+    def prep_picking_section_line(self, line):
+        return (0, 0, {
+            'name': line.name,
+            'display_type': line.display_type or 'line_section',
+            'product_id': False,
+            'product_uom': False,
+            'product_packaging_id': False,
+            'product_uom_qty': False,
+            'quantity': False,
+            'standard_price': False,
+            'subtotal': False
+        })
 
     @api.model
     def write(self, vals):
