@@ -89,9 +89,9 @@ class ProjecVersionLines(models.Model):
                         'use_project_task': line.use_project_task,
                         'planned_date_begin': line.planned_date_begin,
                         'planned_date_end': line.planned_date_end,
-                        'partner_id': line.partner_id,
+                        'partner_id': line.partner_id.id,
                         'project_plan_pickings': line.project_plan_pickings.id,
-                        'task_timesheet_id': line.task_timesheet_id,
+                        'task_timesheet_id': line.task_timesheet_id.id,
                     })
                     for line in previous_version.project_plan_lines
                 ]
@@ -106,9 +106,9 @@ class ProjecVersionLines(models.Model):
                         'use_project_task': line.use_project_task,
                         'planned_date_begin': line.planned_date_begin,
                         'planned_date_end': line.planned_date_end,
-                        'partner_id': line.partner_id,
+                        'partner_id': line.partner_id.id,
                         'project_plan_pickings': line.project_plan_pickings.id,
-                        'task_timesheet_id': line.task_timesheet_id,
+                        'task_timesheet_id': line.task_timesheet_id.id,
                     })
                     for line in aux_previous_project_plan_lines
                 ]
@@ -123,9 +123,9 @@ class ProjecVersionLines(models.Model):
                         'use_project_task': line.use_project_task,
                         'planned_date_begin': line.planned_date_begin,
                         'planned_date_end': line.planned_date_end,
-                        'partner_id': line.partner_id,
+                        'partner_id': line.partner_id.id,
                         'project_plan_pickings': line.project_plan_pickings.id,
-                        'task_timesheet_id': line.task_timesheet_id,
+                        'task_timesheet_id': line.task_timesheet_id.id,
                     })
                     for line in aux_project_plan_lines
                 ]
@@ -138,7 +138,7 @@ class ProjecVersionLines(models.Model):
                         'name': line.name,
                         'product_id': line.product_id,
                         'product_uom': line.product_uom,
-                        'product_packaging_id': line.product_packaging_id,
+                        'product_packaging_id': line.product_packaging_id.id,
                         'quantity': line.quantity,
                         'reservado': line.reservado,
                         'standard_price': line.standard_price,
@@ -154,7 +154,7 @@ class ProjecVersionLines(models.Model):
                         'name': line.name,
                         'product_id': line.product_id,
                         'product_uom': line.product_uom,
-                        'product_packaging_id': line.product_packaging_id,
+                        'product_packaging_id': line.product_packaging_id.id,
                         'quantity': line.quantity,
                         'reservado': line.reservado,
                         'standard_price': line.standard_price,
@@ -170,7 +170,7 @@ class ProjecVersionLines(models.Model):
                         'name': line.name,
                         'product_id': line.product_id,
                         'product_uom': line.product_uom,
-                        'product_packaging_id': line.product_packaging_id,
+                        'product_packaging_id': line.product_packaging_id.id,
                         'quantity': line.quantity,
                         'reservado': line.reservado,
                         'standard_price': line.standard_price,
