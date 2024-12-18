@@ -40,13 +40,13 @@ class ProjectPlan(models.Model):
     #         if not record.picking_lines:
     #             raise ValidationError("Debe agregar al menos una línea en la pestaña 'Stock'.")
 
-    @api.constrains('product_template_id')
-    def _check_unique_product_template(self):
-        for record in self:
-            if record.product_template_id:
-                duplicates = self.search([('product_template_id', '=', record.product_template_id.id), ('id', '!=', record.id)])
-                if duplicates:
-                    raise ValidationError("El producto '%s' ya está asignado a otro proyecto." % record.product_template_id.display_name)
+    # @api.constrains('product_template_id')
+    # def _check_unique_product_template(self):
+    #     for record in self:
+    #         if record.product_template_id:
+    #             duplicates = self.search([('product_template_id', '=', record.product_template_id.id), ('id', '!=', record.id)])
+    #             if duplicates:
+    #                 raise ValidationError("El producto '%s' ya está asignado a otro proyecto." % record.product_template_id.display_name)
 
 
     @api.depends('picking_lines.subtotal')
