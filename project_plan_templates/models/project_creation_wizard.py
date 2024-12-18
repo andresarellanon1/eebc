@@ -128,34 +128,33 @@ class ProjectCreation(models.TransientModel):
     def create_project_tasks(self, project):
         current_task_type = None
         for line in self.wizard_plan_lines:
-            if line.for_create:
-                if line.display_type:
-                    current_task_type = self.get_or_create_task_type(line.name, project)
+            if line.display_type and line.for_create:
+                current_task_type = self.get_or_create_task_type(line.name, project)
 
-                if line.use_project_task and not line.display_type:
-                    if not current_task_type:
-                        current_task_type = self.get_or_create_task_type('Extras', project)
+            if line.use_project_task and not line.display_type:
+                if not current_task_type:
+                    current_task_type = self.get_or_create_task_type('Extras', project)
 
-                    timesheet_lines = self.env['task.time.lines'].search([
-                        ('task_timesheet_id', '=', line.task_timesheet_id.id)
-                    ])
+                timesheet_lines = self.env['task.time.lines'].search([
+                    ('task_timesheet_id', '=', line.task_timesheet_id.id)
+                ])
 
-                    timesheet_data = [(0, 0, {
-                        'name': ts_line.description,
-                        'estimated_time': ts_line.estimated_time,
-                    }) for ts_line in timesheet_lines]
+                timesheet_data = [(0, 0, {
+                    'name': ts_line.description,
+                    'estimated_time': ts_line.estimated_time,
+                }) for ts_line in timesheet_lines]
 
-                    task_id = self.env['project.task'].create({
-                        'name': line.name,
-                        'project_id': project.id,
-                        'stage_id': current_task_type.id,
-                        'user_ids': line.partner_id.ids,
-                        'timesheet_ids': timesheet_data,
-                        'planned_date_begin': line.planned_date_begin,
-                        'date_deadline': line.planned_date_end
-                    })
+                task_id = self.env['project.task'].create({
+                    'name': line.name,
+                    'project_id': project.id,
+                    'stage_id': current_task_type.id,
+                    'user_ids': line.partner_id.ids,
+                    'timesheet_ids': timesheet_data,
+                    'planned_date_begin': line.planned_date_begin,
+                    'date_deadline': line.planned_date_end
+                })
 
-                    self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
+                self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
