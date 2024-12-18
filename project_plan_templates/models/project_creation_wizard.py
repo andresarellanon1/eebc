@@ -35,7 +35,7 @@ class ProjectCreation(models.TransientModel):
     picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
-    scheduled_date = fields.Datetime(string='Fecha programada')
+    scheduled_date = fields.Datetime(string='Fecha programada de entrega')
     partner_id = fields.Many2one('res.partner', string='Contacto')
     date_start = fields.Datetime(string="Fecha de inicio planeada")
     date = fields.Datetime()
