@@ -46,10 +46,15 @@ class ProjectProject(models.Model):
                             'planned_date_begin': line.planned_date_begin,
                             'date_deadline': line.planned_date_end,
                             'user_ids': [(6, 0, line.partner_id.ids)],
-                            'stage_id': current_task_type.id,
                             'timesheet_ids': timesheet_data,
                         })
                     else:
+                        existing_task.name = line.name
+                        existing_task.description = line.description
+                        existing_task.planned_date_begin = line.planned_date_degin
+                        existing_task.date_deadline = line.planned_date_end
+                        existing_task.user_ids = [(6, 0, line.partner_id.ids)]
+
                         if not existing_task.timesheet_ids and line.task_timesheet_id:
                             timesheet_lines = self.env['task.time.lines'].search([
                                 ('task_timesheet_id', '=', line.task_timesheet_id.id)
@@ -61,6 +66,8 @@ class ProjectProject(models.Model):
                             }) for ts_line in timesheet_lines]
 
                             existing_task.timesheet_ids = timesheet_data
+                        if line.project_plan_pickings:
+                            self.sale_order_id.create_project_tasks_pickings(existing_task, line.project_plan_pickings.project_picking_lines)
 
 
     @api.depends('project_plan_lines')
