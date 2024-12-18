@@ -37,6 +37,7 @@
                             <field name="name"/>
                             <field name="description"/>
                             <field name="use_project_task"/>
+                            <field name="for_create" invisible="1"/>
                             <field name="planned_date_begin" widget="daterange"/>
                             <field name="planned_date_end" widget="daterange"/>
                             <field name="partner_id" widget="many2many_avatar_user"/>
