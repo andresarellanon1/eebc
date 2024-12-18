@@ -46,9 +46,6 @@
 
                             <!-- Stock Tab -->
                             <page name="stock" string="Inventario">
-                                <group name="stock_container">
-                                    <field name="project_plan_pickings" widget="many2many_tags"/>
-                                </group>
                                 <div>
                                     <field name="picking_lines" nolabel="1">
                                         <tree editable="editable_bottom" style="width: 100%;">
