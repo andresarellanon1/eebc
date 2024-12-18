@@ -53,7 +53,7 @@ class ProjectProject(models.Model):
             record.project_picking_lines = record.sale_order_id.get_picking_lines(record.project_plan_lines)
             for line in record.project_plan_lines:
                 _logger.warning(line.id)
-                _logger.warning(line._order)
+                _logger.warning(line.sequence)
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
