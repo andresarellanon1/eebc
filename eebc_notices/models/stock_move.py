@@ -253,18 +253,25 @@ class StockMove(models.Model):
                 continue 
            
             notice_ids = self.env['notices.notices'].search([('product_id', '=', self.product_id.id),('quantity', '>=', 0)])
-            lines = [(0,0,{
-                'notice_id':notice.id,
-                'quantity': 0, 
-                'quantity_available': notice.quantity,
-                'aviso_name':notice.display_name, 
-                'in_or_out': in_or_out, 
-                'lot_line_ids': [
+
+            lines = []
+
+            for notice in notice_ids:
+                _logger.warning(f'Valor de lot_ids {notice.lot_ids} del notices {notice.display_name}')
+                lot_line_ids = [
                     (0, 0, {
-                        'lot_id': lot.id, 
-                        'quantity': 0}) 
-                        for lot in notice.lot_ids],}) 
-                for notice in notice_ids]
+                        'lot_id': lot.id,
+                        'quantity': 0
+                    }) for lot in notice.lot_ids
+                ]
+                lines.append((0, 0, {
+                    'notice_id': notice.id,
+                    'quantity': 0,
+                    'quantity_available': notice.quantity,
+                    'aviso_name': notice.display_name,
+                    'in_or_out': in_or_out,
+                    # 'lot_line_ids': lot_line_ids,
+                }))
             _logger.warning(f'Líneas creadas: {lines}')
             return lines
 

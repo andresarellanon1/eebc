@@ -10,7 +10,7 @@ class ProjectPlanPickings(models.Model):
     name = fields.Char(string="Nombre")
     description = fields.Html(string="Descripción")
     creation_date = fields.Date(string="Creado el", default=fields.Date.context_today, readonly=True)
-    creator_id = fields.Many2one('res.users', string="Created by", default=lambda self: self.env.user)
+    creator_id = fields.Many2one('res.users', string="Creado por", default=lambda self: self.env.user)
     
     
     project_picking_lines = fields.One2many('project.picking.lines', 'picking_id', string="Productos")
@@ -88,6 +88,7 @@ class ProjectPlanPickingLine(models.Model):
     def _onchange_product_id(self):
         if self.product_id:
             self.product_uom = self.product_id.uom_id
+            self.name = self.product_id.name
 
     def reservado_update(self, task_inventory_lines):
         for record in self:

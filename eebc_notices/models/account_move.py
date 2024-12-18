@@ -8,3 +8,5 @@ class AccountMove(models.Model):
 
     account_move_notice_id = fields.Many2one('notices.notices', string='Facturas de avisos')
 
+
+
