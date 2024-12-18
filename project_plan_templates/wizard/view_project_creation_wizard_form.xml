@@ -22,7 +22,7 @@
                                 </group>
                                 <group>
                                     <field name="scheduled_date"/>
-                                    <field name="date_start" string="Fecha planeada" 
+                                    <field name="date_start" string="Calendario del proyecto" 
                                         widget="daterange" 
                                         options="{&quot;end_date_field&quot;: &quot;date&quot;, &quot;always_range&quot;: &quot;1&quot;}" 
                                         required="date_start or date"/>
