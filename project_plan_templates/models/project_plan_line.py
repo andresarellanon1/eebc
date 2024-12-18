@@ -61,7 +61,8 @@ class ProjectLines(models.Model):
     
     @api.onchange('name')
     def _onchange_sequence(self):
-        _logger.warning(self._order)
+        self.sequence = 0
+
     
     # @api.constrains('name')
     # def _check_name(self):
