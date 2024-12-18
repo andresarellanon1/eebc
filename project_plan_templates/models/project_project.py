@@ -49,7 +49,7 @@ class ProjectProject(models.Model):
                     else:
                         existing_task.name = line.name
                         existing_task.description = line.description
-                        existing_task.planned_date_begin = line.planned_date_degin
+                        existing_task.planned_date_begin = line.planned_date_begin
                         existing_task.date_deadline = line.planned_date_end
                         existing_task.user_ids = [(6, 0, line.partner_id.ids)]
 
