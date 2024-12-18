@@ -66,9 +66,6 @@ class ProjectProject(models.Model):
                             }) for ts_line in timesheet_lines]
 
                             existing_task.timesheet_ids = timesheet_data
-                        if line.project_plan_pickings:
-                            self.sale_order_id.create_project_tasks_pickings(existing_task, line.project_plan_pickings.project_picking_lines)
-
 
     @api.depends('project_plan_lines')
     def _compute_picking_lines(self):

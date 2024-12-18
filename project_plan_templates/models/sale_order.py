@@ -129,44 +129,6 @@ class SaleOrder(models.Model):
             }))
         return picking_lines
 
-    def create_project_tasks_pickings(self, task_id, pickings):
-        stock_move_ids_vals = [(0, 0, {
-            'product_id': line.product_id.id,
-            'product_packaging_id': line.product_packaging_id.id,
-            'product_uom_qty': 0,
-            'quantity': line.quantity,
-            'product_uom': line.product_uom.id,
-            'location_id': self.location_id.id,
-            'location_dest_id': self.location_dest_id.id,
-            'name': task_id.name
-        }) for line in pickings]
-
-        stock_picking_vals = {
-            'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
-            'partner_id': self.partner_id.id,
-            'picking_type_id': self.picking_type_id.id,
-            'location_id': self.location_id.id,
-            'scheduled_date': self.scheduled_date,
-            'origin': task_id.name,
-            'task_id': task_id.id,
-            'user_id': self.env.user.id,
-            'move_ids': stock_move_ids_vals,
-            'carrier_id': False,
-            'carrier_tracking_ref': False,
-            'weight': False,
-            'shipping_weight': False,
-            'company_id': self.env.company.id,
-            'transport_type': False,
-            'custom_document_identification': False,
-            'lat_origin': False,
-            'long_origin': False,
-            'lat_dest': False,
-            'long_dest': False,
-            'note': False
-        }
-
-        self.env['stock.picking'].create(stock_picking_vals)
-
     @api.depends('project_plan_lines')
     def _compute_picking_lines(self):
         for record in self:
