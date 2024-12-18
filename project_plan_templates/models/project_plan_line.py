@@ -22,7 +22,7 @@ class ProjectLines(models.Model):
         string="Stage",
     )
     partner_id = fields.Many2many('res.users', string="Usuarios asignados")
-    task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
+    task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas", required=True)
     sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
 
     
@@ -37,7 +37,7 @@ class ProjectLines(models.Model):
     )
     code = fields.Char(string="Code")
     sequence = fields.Integer()
-    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario")
+    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario", required=True)
     for_create = fields.Boolean()
 
     def action_preview_task(self):
