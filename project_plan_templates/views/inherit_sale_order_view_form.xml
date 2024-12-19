@@ -41,8 +41,8 @@
                             <field name="planned_date_begin" widget="daterange"/>
                             <field name="planned_date_end" widget="daterange"/>
                             <field name="partner_id" widget="many2many_avatar_user"/>
-                            <field name="project_plan_pickings" attrs="{'required': [('display_type', '!=', 'line_section')]}" options="{'create': True}"/> 
-                            <field name="task_timesheet_id" attrs="{'required': [('display_type', '!=', 'line_section')]}" options="{'create': True}"/>
+                            <field name="project_plan_pickings" required="1" options="{'create': True}"/> 
+                            <field name="task_timesheet_id" required="1" options="{'create': True}"/>
                         </tree>
                     </field>
                 </page>
