@@ -22,7 +22,7 @@ class ProjectLines(models.Model):
         string="Stage",
     )
     partner_id = fields.Many2many('res.users', string="Usuarios asignados")
-    task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas", required=True)
+    task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
     sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
 
     
@@ -59,6 +59,11 @@ class ProjectLines(models.Model):
             'target': 'new',
         }
 
+    @api.constrains('task_timesheet_id')
+    def _check_task_timesheet_id(self):
+        for record in self:
+            if not record.task_timesheet_id and record.display_type != 'line_sectionn':
+                raise ValidationError("Es obligatorio agregar una plantilla de hoja de horas.")
     
     # @api.constrains('name')
     # def _check_name(self):
