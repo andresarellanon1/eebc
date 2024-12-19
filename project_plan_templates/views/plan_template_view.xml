@@ -36,6 +36,8 @@
                             <page name="tasks" string="Tareas">
                                 <field name="project_plan_lines" nolabel="1">
                                     <tree editable="editable_bottom" style="width: 100%;">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="display_type" column_invisible="True"/>
                                         <field name="name"/>
                                         <field name="description"/>
                                         <field name="project_plan_pickings" attrs="{'required': [('display_type', '!=', 'line_section')]}" options="{'create': True}"/>
