@@ -58,12 +58,6 @@ class ProjectLines(models.Model):
             'view_mode': 'form',
             'target': 'new',
         }
-
-    @api.constrains('task_timesheet_id')
-    def _check_task_timesheet_id(self):
-        for record in self:
-            if not record.task_timesheet_id and record.display_type != 'line_sectionn':
-                raise ValidationError("Es obligatorio agregar una plantilla de hoja de horas.")
     
     # @api.constrains('name')
     # def _check_name(self):
