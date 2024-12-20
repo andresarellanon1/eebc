@@ -1,5 +1,7 @@
-from odoo import fields, api, models
+from odoo import fields, models, api
 
+class ProductProduct(models.Model):
 
-class ProjectProject(models.Model):
-    _inherit = 'project.project'
+    _inherit = 'product.product'
+
+    project_quantity = fields.Integer(string="Cantidad")
