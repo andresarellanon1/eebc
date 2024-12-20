@@ -33,19 +33,6 @@
                                 <field name="description" options="{'resizable': false}"/>
                             </page>
 
-                            <page name="tasks" string="Tareas">
-                                <field name="project_plan_lines" nolabel="1">
-                                    <tree editable="editable_bottom" style="width: 100%;">
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="display_type" column_invisible="True"/>
-                                        <field name="name"/>
-                                        <field name="description"/>
-                                        <field name="project_plan_pickings" required="1" options="{'create': True}"/>
-                                        <field name="task_timesheet_id" required="1" options="{'create': True}"/>
-                                    </tree>
-                                </field>
-                            </page>
-
                             <!-- Stock Tab -->
                             <page name="stock" string="Inventario">
                                 <div>
