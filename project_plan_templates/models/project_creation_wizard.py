@@ -6,16 +6,16 @@ class ProjectCreation(models.TransientModel):
     _name = 'project.creation.wizard'
     _description = 'Wizard to confirm project creation'
 
-    project_plan_id = fields.Many2one('project.plan', string="Project Plan", readonly=True)
-    project_name = fields.Char(string="Project Name", required=True)
-    user_id = fields.Many2one('res.users', string="Project manager")
-    description = fields.Html(string="Description")
-    sale_order_id = fields.Many2one('sale.order', string="Sale order")
+    project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly=True)
+    project_name = fields.Char(string="Nombre del proyecto", required=True)
+    user_id = fields.Many2one('res.users', string="Administrador del proyecto")
+    description = fields.Html(string="Descripción")
+    sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
     
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
-        string="Picking Templates"
+        string="Plantilla de movimientos"
     )
 
     wizard_plan_lines = fields.One2many(
@@ -30,14 +30,14 @@ class ProjectCreation(models.TransientModel):
 
     note = fields.Char()
 
-    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Costo total",  compute='_compute_total_cost', default=0.0)
 
     picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
-    scheduled_date = fields.Datetime(string='Fecha programada')
+    scheduled_date = fields.Datetime(string='Fecha programada de entrega')
     partner_id = fields.Many2one('res.partner', string='Contacto')
-    date_start = fields.Datetime(string="Planned Start Date")
+    date_start = fields.Datetime(string="Fecha de inicio planeada")
     date = fields.Datetime()
 
     @api.onchange('sale_order_id')
@@ -128,10 +128,10 @@ class ProjectCreation(models.TransientModel):
     def create_project_tasks(self, project):
         current_task_type = None
         for line in self.wizard_plan_lines:
-            if line.display_type:
+            if line.display_type and line.for_create:
                 current_task_type = self.get_or_create_task_type(line.name, project)
 
-            if line.use_project_task and not line.display_type:
+            if line.use_project_task and not line.display_type and line.for_create:
                 if not current_task_type:
                     current_task_type = self.get_or_create_task_type('Extras', project)
 
@@ -173,7 +173,7 @@ class ProjectCreation(models.TransientModel):
     def prep_plan_lines(self, plan):
         plan_lines = []
         for line in plan:
-            if line.use_project_task:
+            if line.use_project_task and line.for_create:
                 if line.display_type == 'line_section':
                     plan_lines.append((0, 0, {
                         'name': line.name,
@@ -185,6 +185,7 @@ class ProjectCreation(models.TransientModel):
                         'partner_id': False,
                         'project_plan_pickings': False,
                         'task_timesheet_id': False,
+                        'for_create': line.for_create
                     }))
                 else:
                     plan_lines.append((0, 0, {
@@ -196,7 +197,8 @@ class ProjectCreation(models.TransientModel):
                         'partner_id': [(6, 0, line.partner_id.ids)],
                         'project_plan_pickings': line.project_plan_pickings.id,
                         'task_timesheet_id': line.task_timesheet_id.id,
-                        'display_type': False
+                        'display_type': False,
+                        'for_create': line.for_create
                     }))
         return plan_lines
 

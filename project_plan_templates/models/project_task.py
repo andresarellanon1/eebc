@@ -6,7 +6,7 @@ class ProjectTask(models.Model):
     stock_ids = fields.One2many(
         'stock.picking',
         'task_id',
-        string="stock"
+        string="Inventario"
     )
 
 

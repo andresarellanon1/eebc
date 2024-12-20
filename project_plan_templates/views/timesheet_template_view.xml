@@ -15,8 +15,7 @@
             <field name="name">timesheet.view.form</field>  
             <field name="model">task.timesheet</field>  
             <field name="arch" type="xml">
-                
-                <form string="Task Timesheet Template"> 
+                <form string="Plantilla de hoja de horas"> 
                     <sheet>
 
                         <div class="oe_title">
@@ -27,11 +26,11 @@
 
                         <notebook>
 
-                            <page name="description" string="Description">
+                            <page name="description" string="Descripción">
                                 <field name="description"/> 
                             </page>
 
-                            <page name="lines" string="Time lines">
+                            <page name="lines" string="Horas">
                                 <field name="task_time_lines" nolabel="1">
                                     <tree editable="editable_bottom" style="width: 100%;">
                                         <field name="description"/>  

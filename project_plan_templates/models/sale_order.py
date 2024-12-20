@@ -8,9 +8,9 @@ class SaleOrder(models.Model):
 
     _inherit = 'sale.order'
 
-    is_project = fields.Boolean(string="Is project?", default=False)
-    project_name = fields.Char(string="Project title")
-    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
+    is_project = fields.Boolean(string="Es proyecto?", default=False)
+    project_name = fields.Char(string="Titulo de proyecto")
+    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
     state = fields.Selection(
         selection_add=[
@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id', compute="_compute_picking_lines", store=True)
 
-    project_id = fields.Many2one('project.project', string="Project")
+    project_id = fields.Many2one('project.project', string="Proyecto")
     
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
@@ -55,10 +55,10 @@ class SaleOrder(models.Model):
                 plan_lines = []
                 for line in sale.order_line:
                     if line.display_type == 'line_section':
-                        plan_lines.append(self.prep_plan_section_line(line))
+                        plan_lines.append(self.prep_plan_section_line(line, True))
                     else:
                         if line.product_id.project_plan_id:
-                            plan_lines.append(self.prep_plan_section_line(line))
+                            plan_lines.append(self.prep_plan_section_line(line, False))
                             plan_lines += self.prep_plan_lines(line)
 
                         for project_picking in line.product_id.project_plan_id.project_plan_pickings:
@@ -81,7 +81,7 @@ class SaleOrder(models.Model):
             'subtotal': False
         })
     
-    def prep_plan_section_line(self, line):
+    def prep_plan_section_line(self, line, for_create):
         return (0, 0, {
             'name': line.name,
             'display_type': line.display_type or 'line_section',
@@ -92,6 +92,7 @@ class SaleOrder(models.Model):
             'partner_id': False,
             'project_plan_pickings': False,
             'task_timesheet_id': False,
+            'for_create': for_create
         })
 
     def prep_plan_lines(self, line):
@@ -107,7 +108,8 @@ class SaleOrder(models.Model):
                 'partner_id': [(6, 0, plan.partner_id.ids)],
                 'project_plan_pickings': plan.project_plan_pickings.id,
                 'task_timesheet_id': plan.task_timesheet_id.id,
-                'display_type': False
+                'display_type': False,
+                'for_create': True
             }))
         return plan_lines
 

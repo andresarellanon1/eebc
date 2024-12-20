@@ -6,10 +6,10 @@ class ProjectVersionWizard(models.TransientModel):
     _name = 'project.version.wizard'
     _description = 'Wizard for project version history'
 
-    modification_date = fields.Datetime(string='Modification date')
-    modification_motive = fields.Html(string='Motive of adjustment')
-    modified_by = fields.Many2one('res.users', string='Modified by', required=True)
-    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+    modification_date = fields.Datetime(string='Fecha de modificación')
+    modification_motive = fields.Html(string='Motivo de los cambios')
+    modified_by = fields.Many2one('res.users', string='Modificado por', required=True)
+    plan_total_cost = fields.Float(string="Costo total",  compute='_compute_total_cost', default=0.0)
 
     project_plan_lines = fields.Many2many(
         'project.plan.line',
@@ -17,10 +17,10 @@ class ProjectVersionWizard(models.TransientModel):
     )
     project_picking_lines = fields.Many2many(
         'project.picking.lines',
-        string='Stock'
+        string='Inventario'
     )
 
-    project_id = fields.Many2one('project.project', string='Project', required=True)
+    project_id = fields.Many2one('project.project', string='Proyecto', required=True)
 
     # This action confirms and records changes in the project's version history.
     # It ensures the existence of a project version history, creates one if none exists, 

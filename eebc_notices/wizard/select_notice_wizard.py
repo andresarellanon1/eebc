@@ -54,7 +54,7 @@ class SelectNoticeWizard(models.TransientModel):
                             raise ValueError("Faltan datos necesarios en stock_move_id o picking_id.")
 
                         # Escribir el historial
-                        notice.write({
+                        notice.sudo().write({
                             'history_ids': [(0, 0, {
                                 'location_id': wizard.stock_move_id.picking_id.location_id.id,
                                 'location_dest': wizard.stock_move_id.picking_id.location_dest_id.id,

@@ -5,7 +5,7 @@
             <field name="name">project.version.tree</field>
             <field name="model">project.version.lines</field>
             <field name="arch" type="xml">
-                <tree string="Versions" edit="false" create="false" delete="false">
+                <tree string="Versiones" edit="false" create="false" delete="false">
                     <field name="version_number"/>
                     <field name="modified_by"/>
                     <field name="modification_motive"/>
@@ -19,7 +19,7 @@
             <field name="name">project.version.form</field>
             <field name="model">project.version.lines</field>
             <field name="arch" type="xml">
-                <form string="Project version">
+                <form string="Version del proyecto">
                     <sheet>
                         <div class="oe_title">
                             <label for="project_name"/>
@@ -37,12 +37,12 @@
                             </group>
                         </group>
                         <notebook>
-                            <page name="motive" string="Modification motive">
+                            <page name="motive" string="Motivo del cambio">
                                 <field name="modification_motive"/>
                             </page>
-                            <page name="tasks" string="Tasks changes">
+                            <page name="tasks" string="Cambios en las tareas">
                                 <div invisible="not previous_version_plan_lines and not project_plan_lines">
-                                    <h1 style="padding-bottom: 10px">Tasks before modification</h1>
+                                    <h1 style="padding-bottom: 10px">Tareas antes de los cambios</h1>
                                     <div>
                                         <field name="previous_version_plan_lines" nolabel="1" readonly="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none" invisible="not previous_version_plan_lines">
                                             <tree style="width: 100%" editable="bottom">
@@ -56,9 +56,9 @@
                                                 <field name="task_timesheet_id" options="{'create': True}" readonly="1"/>
                                             </tree>
                                         </field>
-                                        <p invisible="previous_version_plan_lines"> There is no previous plan lines before modifications </p>
+                                        <p invisible="previous_version_plan_lines">No existen cambios previos</p>
                                     </div>
-                                    <h1 style="padding-bottom: 10px">Tasks after modification</h1>
+                                    <h1 style="padding-bottom: 10px">Tareas despues de los cambios</h1>
                                     <div>
                                         <field name="project_plan_lines" nolabel="1" readonly="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none" invisible="not project_plan_lines">
                                             <tree style="width: 100%" editable="bottom">
@@ -72,26 +72,26 @@
                                                 <field name="task_timesheet_id" options="{'create': True}" readonly="1"/>
                                             </tree>
                                         </field>
-                                        <p invisible="project_plan_lines"> There is no previous plan lines after modifications </p>
+                                        <p invisible="project_plan_lines">No existen cambios previos</p>
 
                                     </div>
                                 </div>
                                 <div invisible="previous_version_plan_lines">
                                     <div invisible="project_plan_lines">
-                                        <p>No plan lines has been modified</p>
+                                        <p>No hubo cambios en las tareas</p>
                                     </div>
                                 </div>
                             </page>
-                            <page name="stock" string="Stock changes">
+                            <page name="stock" string="Cambios en el inventario">
                                 <div invisible="not previous_version_picking_lines and not project_picking_lines">
-                                    <h1 style="padding-bottom: 10px">Stock before changes</h1>
+                                    <h1 style="padding-bottom: 10px">Inventario antes de los cambios</h1>
                                     <div>
                                         <field name="previous_version_picking_lines" nolabel="1" readonly="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none" invisible="not previous_version_picking_lines">
                                             <tree style="width: 100%" editable="bottom">
                                                 <field name="company_id" column_invisible="1" readonly="1"/>
                                                 <field name="display_type" column_invisible="True" readonly="1"/>
-                                                <field name="name" readonly="1"/>
                                                 <field name="product_id" readonly="1"/>
+                                                <field name="name" readonly="1"/>
                                                 <field name="product_uom" readonly="1"/>
                                                 <field name="product_packaging_id" readonly="1"/>
                                                 <field name="quantity" readonly="1"/>
@@ -105,17 +105,17 @@
                                                 <field name="plan_total_cost" readonly="1"/> 
                                             </group>
                                         </group>
-                                        <p invisible="previous_version_picking_lines"> There is no previous plan lines before modifications </p>
+                                        <p invisible="previous_version_picking_lines">No hay cambios previos en el inventario</p>
 
                                     </div>
-                                    <h1 style="padding-bottom: 10px">Stock after changes</h1>
+                                    <h1 style="padding-bottom: 10px">Inventario despues de los cambios</h1>
                                     <div>
                                         <field name="project_picking_lines" nolabel="1" readonly="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none" invisible="not project_picking_lines">
                                             <tree style="width: 100%" editable="bottom">
                                                 <field name="company_id" column_invisible="1" readonly="1"/>
                                                 <field name="display_type" column_invisible="True" readonly="1"/>
-                                                <field name="name" readonly="1"/>
                                                 <field name="product_id" readonly="1"/>
+                                                <field name="name" readonly="1"/>
                                                 <field name="product_uom" readonly="1"/>
                                                 <field name="product_packaging_id" readonly="1"/>
                                                 <field name="quantity" readonly="1"/>
@@ -129,13 +129,13 @@
                                                 <field name="plan_total_cost" readonly="1"/> 
                                             </group>
                                         </group>
-                                        <p invisible="project_picking_lines"> There is no previous plan lines after modifications </p>
+                                        <p invisible="project_picking_lines">No hay cambios previos en el inventario</p>
 
                                     </div>
                                 </div>
                                 <div invisible="previous_version_picking_lines">
                                     <div invisible="project_picking_lines">
-                                        <p>No stock lines has been modified</p>
+                                        <p>No hay cambios previos en el inventario</p>
                                     </div>
                                 </div>
                             </page>

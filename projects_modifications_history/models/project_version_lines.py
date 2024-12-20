@@ -7,13 +7,13 @@ class ProjecVersionLines(models.Model):
     _name = 'project.version.lines'
     _description = 'Project versions history'
 
-    modification_date = fields.Datetime(string='Modification date')
-    project_id = fields.Many2one('project.project', string='Project')
-    modified_by = fields.Many2one('res.users', string='Modified by')
-    modification_motive = fields.Html(string='Motive of adjustment')
-    project_name = fields.Char(string='Project name')
-    project_version_history_id = fields.Many2one('project.version.history', string="Project history")
-    plan_total_cost = fields.Float(string="Total cost", compute='_compute_total_cost', default=0.0)
+    modification_date = fields.Datetime(string='Fecha de modificación')
+    project_id = fields.Many2one('project.project', string='Proyecto')
+    modified_by = fields.Many2one('res.users', string='Modificado por')
+    modification_motive = fields.Html(string='Motivo de los cambios')
+    project_name = fields.Char(string='Nombre del proyecto')
+    project_version_history_id = fields.Many2one('project.version.history', string="Historial del proyecto")
+    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
     project_plan_lines = fields.Many2many(
         'project.plan.line',
@@ -23,7 +23,7 @@ class ProjecVersionLines(models.Model):
 
     project_picking_lines = fields.Many2many(
         'project.picking.lines',
-        string='Stock',
+        string='Inventario',
         relation='project_version_lines_picking_lines_rel'
     )
 
@@ -40,7 +40,7 @@ class ProjecVersionLines(models.Model):
     )
 
     version_number = fields.Char(
-        string='Version Number',
+        string='Numero de versión',
         compute='_compute_version_number',
         store=True
     )
@@ -89,9 +89,9 @@ class ProjecVersionLines(models.Model):
                         'use_project_task': line.use_project_task,
                         'planned_date_begin': line.planned_date_begin,
                         'planned_date_end': line.planned_date_end,
-                        'partner_id': line.partner_id,
+                        'partner_id': line.partner_id.ids,
                         'project_plan_pickings': line.project_plan_pickings.id,
-                        'task_timesheet_id': line.task_timesheet_id,
+                        'task_timesheet_id': line.task_timesheet_id.id,
                     })
                     for line in previous_version.project_plan_lines
                 ]
@@ -106,9 +106,9 @@ class ProjecVersionLines(models.Model):
                         'use_project_task': line.use_project_task,
                         'planned_date_begin': line.planned_date_begin,
                         'planned_date_end': line.planned_date_end,
-                        'partner_id': line.partner_id,
+                        'partner_id': line.partner_id.ids,
                         'project_plan_pickings': line.project_plan_pickings.id,
-                        'task_timesheet_id': line.task_timesheet_id,
+                        'task_timesheet_id': line.task_timesheet_id.id,
                     })
                     for line in aux_previous_project_plan_lines
                 ]
@@ -123,9 +123,9 @@ class ProjecVersionLines(models.Model):
                         'use_project_task': line.use_project_task,
                         'planned_date_begin': line.planned_date_begin,
                         'planned_date_end': line.planned_date_end,
-                        'partner_id': line.partner_id,
+                        'partner_id': line.partner_id.ids,
                         'project_plan_pickings': line.project_plan_pickings.id,
-                        'task_timesheet_id': line.task_timesheet_id,
+                        'task_timesheet_id': line.task_timesheet_id.id,
                     })
                     for line in aux_project_plan_lines
                 ]
@@ -136,9 +136,9 @@ class ProjecVersionLines(models.Model):
                 record.previous_version_picking_lines = [
                     (0, 0, {
                         'name': line.name,
-                        'product_id': line.product_id,
-                        'product_uom': line.product_uom,
-                        'product_packaging_id': line.product_packaging_id,
+                        'product_id': line.product_id.id,
+                        'product_uom': line.product_uom.id,
+                        'product_packaging_id': line.product_packaging_id.id,
                         'quantity': line.quantity,
                         'reservado': line.reservado,
                         'standard_price': line.standard_price,
@@ -152,9 +152,9 @@ class ProjecVersionLines(models.Model):
                 previous_version.project_picking_lines = [
                     (0, 0, {
                         'name': line.name,
-                        'product_id': line.product_id,
-                        'product_uom': line.product_uom,
-                        'product_packaging_id': line.product_packaging_id,
+                        'product_id': line.product_id.id,
+                        'product_uom': line.product_uom.id,
+                        'product_packaging_id': line.product_packaging_id.id,
                         'quantity': line.quantity,
                         'reservado': line.reservado,
                         'standard_price': line.standard_price,
@@ -168,9 +168,9 @@ class ProjecVersionLines(models.Model):
                 record.project_picking_lines = [
                     (0, 0, {
                         'name': line.name,
-                        'product_id': line.product_id,
-                        'product_uom': line.product_uom,
-                        'product_packaging_id': line.product_packaging_id,
+                        'product_id': line.product_id.id,
+                        'product_uom': line.product_uom.id,
+                        'product_packaging_id': line.product_packaging_id.id,
                         'quantity': line.quantity,
                         'reservado': line.reservado,
                         'standard_price': line.standard_price,
