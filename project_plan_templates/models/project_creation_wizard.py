@@ -194,7 +194,6 @@ class ProjectCreation(models.TransientModel):
                         'use_project_task': True,
                         'planned_date_begin': line.planned_date_begin,
                         'planned_date_end': line.planned_date_end,
-                        'partner_id': [(6, 0, line.partner_id.ids)],
                         'project_plan_pickings': line.project_plan_pickings.id,
                         'task_timesheet_id': line.task_timesheet_id.id,
                         'display_type': False,
