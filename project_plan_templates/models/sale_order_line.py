@@ -6,7 +6,7 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     products_project_domain = fields.Many2many('product.template', store=True, compute="_products_project_domain")
-    code = fields.Char(string="Clave")
+    code = fields.Char(string="Code")
 
     @api.depends('order_id', 'order_id.is_project')
     def _products_project_domain(self):
