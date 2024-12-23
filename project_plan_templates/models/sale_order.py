@@ -46,7 +46,7 @@ class SaleOrder(models.Model):
             if sale.is_project:
                 if not sale.project_name:
                     raise ValidationError(
-                        f"Project name needed."
+                        f"se requiere el nombre del proyecto"
                     )
                 sale.project_plan_pickings = [(5, 0, 0)]
                 sale.project_plan_lines = [(5, 0, 0)]
