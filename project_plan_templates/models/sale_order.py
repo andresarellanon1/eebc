@@ -88,7 +88,6 @@ class SaleOrder(models.Model):
             'use_project_task': True,
             'planned_date_begin': False,
             'planned_date_end': False,
-            'partner_id': False,
             'project_plan_pickings': False,
             'task_timesheet_id': False,
             'for_create': for_create
@@ -104,7 +103,6 @@ class SaleOrder(models.Model):
                 'use_project_task': True,
                 'planned_date_begin': fields.Datetime.now(),
                 'planned_date_end': fields.Datetime.now(),
-                'partner_id': [(6, 0, plan.partner_id.ids)],
                 'project_plan_pickings': plan.project_plan_pickings.id,
                 'task_timesheet_id': plan.task_timesheet_id.id,
                 'display_type': False,
