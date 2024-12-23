@@ -255,15 +255,15 @@ class StockMove(models.Model):
             notice_ids = self.env['notices.notices'].search([('product_id', '=', self.product_id.id),('quantity', '>=', 0)])
 
             lines = []
+            lot_line_ids = []
 
             for notice in notice_ids:
                 _logger.warning(f'Valor de lot_ids {notice.lot_ids} del notices {notice.display_name}')
-                lot_line_ids = [
-                    (0, 0, {
+                lot_line_ids.append((0, 0, {
                         'lot_id': lot.id,
                         'quantity': 0
                     }) for lot in notice.lot_ids
-                ]
+                )
                 lines.append((0, 0, {
                     'notice_id': notice.id,
                     'quantity': 0,
