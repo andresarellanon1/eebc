@@ -94,14 +94,16 @@ class Notices(models.Model):
 
     @api.depends('history_ids')
     def _compute_series(self):
-        for notice in self:
-            lot_set = set()
+         for notice in self:
+            lot_ids = []
             for history_record in notice.history_ids:
                 stock_move = history_record.stock_move_id
                 if stock_move:
                     for lot in stock_move.lot_ids:
-                        lot_set.add(lot.id)
-            notice.lot_ids = [(6, 0, list(lot_set))]
+                        if lot.id not in lot_ids:
+                            lot_ids.append(lot.id)
+            _logger.warning(f"Lotes asignados al aviso {notice.id}: {lot_ids}")
+            notice.lot_ids = [(6, 0, lot_ids)]
 
     @api.depends('history_ids')
     def _compute_origin_invoice_ids(self):
