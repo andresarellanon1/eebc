@@ -9,7 +9,6 @@
                    
                                 <field name="lot_id" options="{'no_create': True}"/>
                                 <field name="quantity"/>
-                        </field>
 
 
 
