@@ -259,11 +259,14 @@ class StockMove(models.Model):
 
             for notice in notice_ids:
                 _logger.warning(f'Valor de lot_ids {notice.lot_ids} del notices {notice.display_name}')
-                lot_line_ids.append((0, 0, {
+                lot_line_ids = []
+            
+                # Construcción de lot_line_ids usando append
+                for lot in notice.lot_ids:
+                    lot_line_ids.append({
                         'lot_id': lot.id,
                         'quantity': 0
-                    }) for lot in notice.lot_ids
-                )
+                    }) 
                 lines.append((0, 0, {
                     'notice_id': notice.id,
                     'quantity': 0,
