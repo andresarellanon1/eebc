@@ -263,6 +263,7 @@ class StockMove(models.Model):
             
                 # Construcción de lot_line_ids usando append
                 for lot in notice.lot_ids:
+                    _logger.warning('objeto lot')
                     lot_line_ids.append({
                         'lot_id': lot.id,
                         'quantity': 0
