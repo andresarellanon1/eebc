@@ -13,20 +13,26 @@
                     <field name="aviso_name" invisible="1"/>
                     <field name="quantity"/>
                     <field name="quantity_available" readonly="1" invisible="in_or_out"/>
+                     <field name="lot_line_ids">
+                            <tree  editable="bottom">
+                                <field name="lot_id" options="{'no_create': True}"/>
+                                <field name="quantity"/>
+                            </tree>
+                        </field>
 
 
 
 
                     </group>
     
-                    <group  string="Lotes Asignados">
+                    <!-- <group  string="Lotes Asignados">
                         <field name="lot_line_ids">
                             <tree  editable="bottom">
                                 <field name="lot_id" options="{'no_create': True}"/>
                                 <field name="quantity"/>
                             </tree>
                         </field>
-                    </group>
+                    </group> -->
                 </sheet>
              </form>
         </field>
