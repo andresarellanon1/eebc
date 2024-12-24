@@ -22,19 +22,42 @@ class SelectNoticeWizard(models.TransientModel):
     )
     quantity = fields.Float(string="Demanda total", readonly=True,)
     stock_move_id = fields.Many2one('stock.move', string='Traslado')
-
+    
+    
     @api.model
-    def default_get(self, fields):
-        res = super(SelectNoticeWizard, self).default_get(fields)
-        if 'stock_move_id' in self._context:
-            res['stock_move_id'] = self._context['stock_move_id']
-        if 'cantidad' in self._context:
-            res['quantity'] = self._context['cantidad']
-        if 'lines' in self._context:
-            res['notice_ids'] = self._context['lines']
-        _logger.warning('vALORDE LINEASS RES : %s',res)
-        
+    def default_get(self, fields_list):
+        res = super(SelectNoticeWizard, self).default_get(fields_list)
+        stock_move_id = self.env.context.get('stock_move_id')
+
+        if stock_move_id:
+            stock_move = self.env['stock.move'].browse(stock_move_id)
+            lines = stock_move._create_line_ids("out")  # o "in" dependiendo del contexto
+            notice_lines = []
+            for line in lines:
+                lot_line_ids = [(0, 0, lot) for lot in line[2].get('lot_line_ids', [])]
+                notice_lines.append({
+                    'notice_id': line[2]['notice_id'],
+                    'quantity': line[2]['quantity'],
+                    'quantity_available': line[2]['quantity_available'],
+                    'aviso_name': line[2]['aviso_name'],
+                    'in_or_out': line[2]['in_or_out'],
+                    'lot_line_ids': lot_line_ids,
+                })
+            res['notice_ids'] = [(0, 0, line) for line in notice_lines]
         return res
+
+    # @api.model
+    # def default_get(self, fields):
+    #     res = super(SelectNoticeWizard, self).default_get(fields)
+    #     if 'stock_move_id' in self._context:
+    #         res['stock_move_id'] = self._context['stock_move_id']
+    #     if 'cantidad' in self._context:
+    #         res['quantity'] = self._context['cantidad']
+    #     if 'lines' in self._context:
+    #         res['notice_ids'] = self._context['lines']
+    #     _logger.warning('vALORDE LINEASS RES : %s',res)
+        
+    #     return res
     
 
     def action_get_products(self):
