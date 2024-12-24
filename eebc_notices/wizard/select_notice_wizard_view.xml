@@ -17,8 +17,12 @@
                                 <field name="quantity"/>
                                 <field name="quantity_available" column_invisible="1" />
                                 <field name="aviso_name" column_invisible="1" invisible="1"/>
-                                <field name="lot_line_ids" column_invisible="0" invisible="0"/>
-
+                                <field name="lot_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="lot_id"/>
+                                        <field name="quantity"/>
+                                    </tree>
+                                </field>
 
 
                             </tree>

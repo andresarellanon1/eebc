@@ -7,6 +7,6 @@ class WizardSelectionLotLine(models.TransientModel):
     _name = 'wizard.selection.lot.line'
     _description = 'Wizard Selection Lot Line'
 
-    line_id = fields.Many2one('wizard.selection.line', string='Línea del Wizard', required=True)
+    line_id = fields.Many2one('wizard.selection.line', string='Línea del Wizard')
     lot_id = fields.Many2one('stock.lot', string='Lote')
     quantity = fields.Float(string='Cantidad')
