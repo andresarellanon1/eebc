@@ -17,7 +17,7 @@ class ProjectPlanPickings(models.Model):
     active = fields.Boolean(string="Activo", default=True)
     project_id = fields.Many2one('project.project', string="Proyecto")
 
-    plan_total_cost = fields.Float(string="Costo total",  compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Costo total", default=0.0)
 
     def toggle_active(self):
         for record in self:
@@ -57,7 +57,7 @@ class ProjectPlanPickingLine(models.Model):
     stock_move_id = fields.Many2one('stock.move', string='Inventario')
     
     standard_price = fields.Float(string="Precio", compute='_compute_standard_price')
-    subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal")
+    subtotal = fields.Float(string="Subtotal")
     total_cost = fields.Float(string="Costo total")
 
     display_type = fields.Selection(
