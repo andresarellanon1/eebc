@@ -23,10 +23,10 @@ class ProjectPlanPickings(models.Model):
         for record in self:
             record.active = not record.active
 
-    @api.depends('project_picking_lines.subtotal')
-    def _compute_total_cost(self):
-        for plan in self:
-            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+    # @api.depends('project_picking_lines.subtotal')
+    # def _compute_total_cost(self):
+    #     for plan in self:
+    #         plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
         
     @api.constrains('project_picking_lines')
     def _check_picking_lines(self):
@@ -103,12 +103,12 @@ class ProjectPlanPickingLine(models.Model):
             record.standard_price = record.product_id.standard_price
             
 
-    @api.depends('quantity')
-    def _compute_subtotal(self):
-        for record in self:
-            quantity = record.quantity
+    # @api.depends('quantity')
+    # def _compute_subtotal(self):
+    #     for record in self:
+    #         quantity = record.quantity
 
-            if quantity >= 0:
-                record.subtotal = record.standard_price * quantity
-            else:
-                record.subtotal = 0.00
+    #         if quantity >= 0:
+    #             record.subtotal = record.standard_price * quantity
+    #         else:
+    #             record.subtotal = 0.00
