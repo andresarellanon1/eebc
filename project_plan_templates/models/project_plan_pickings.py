@@ -89,6 +89,7 @@ class ProjectPlanPickingLine(models.Model):
         if self.product_id:
             self.product_uom = self.product_id.uom_id
             self.name = self.product_id.name
+            self.standard_price = self.product_id.standard_price
 
     def reservado_update(self, task_inventory_lines):
         for record in self:
