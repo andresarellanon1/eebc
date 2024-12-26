@@ -23,7 +23,7 @@ class ProjectPlan(models.Model):
         store=True
     )
 
-    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Costo total", default=0.0)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
 
     product_template_id = fields.Many2one(
@@ -52,10 +52,10 @@ class ProjectPlan(models.Model):
     #                 raise ValidationError("El producto '%s' ya está asignado a otro proyecto." % record.product_template_id.display_name)
 
 
-    @api.depends('picking_lines.subtotal')
-    def _compute_total_cost(self):
-        for plan in self:
-            plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
+    # @api.depends('picking_lines.subtotal')
+    # def _compute_total_cost(self):
+    #     for plan in self:
+    #         plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
 
     @api.depends('project_plan_lines')
     def _compute_picking_lines(self):
