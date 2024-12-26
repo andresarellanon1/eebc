@@ -103,12 +103,12 @@ class ProjectPlanPickingLine(models.Model):
             record.standard_price = record.product_id.last_supplier_last_price
             
 
-    # @api.depends('quantity')
-    # def _compute_subtotal(self):
-    #     for record in self:
-    #         quantity = record.quantity
+    @api.depends('quantity')
+    def _compute_subtotal(self):
+        for record in self:
+            quantity = record.quantity
 
-    #         if quantity >= 0:
-    #             record.subtotal = record.standard_price * quantity
-    #         else:
-    #             record.subtotal = 0.00
+            if quantity >= 0:
+                record.subtotal = record.standard_price * quantity
+            else:
+                record.subtotal = 0.00
