@@ -47,6 +47,7 @@
                                         <field name="product_uom"/>
                                         <field name="product_packaging_id"/>
                                         <field name="standard_price" column_invisible="1"/>
+                                        <field name="subtotal" column_invisible="1"/>
                                         <!--<field name="quantity"/>
                                         <field name="standard_price"/>
                                         <field name="subtotal"/>-->
