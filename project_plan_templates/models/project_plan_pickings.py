@@ -57,7 +57,7 @@ class ProjectPlanPickingLine(models.Model):
     stock_move_id = fields.Many2one('stock.move', string='Inventario')
     
     standard_price = fields.Float(string="Precio", compute='_compute_standard_price')
-    subtotal = fields.Float(string="Subtotal")
+    subtotal = fields.Float(string="Subtotal", compute='_compute_subtotal')
     total_cost = fields.Float(string="Costo total")
 
     display_type = fields.Selection(
