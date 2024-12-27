@@ -148,7 +148,6 @@ class ProjectCreation(models.TransientModel):
                     'name': line.name,
                     'project_id': project.id,
                     'stage_id': current_task_type.id,
-                    'user_ids': line.partner_id.ids,
                     'timesheet_ids': timesheet_data,
                     'planned_date_begin': line.planned_date_begin,
                     'date_deadline': line.planned_date_end
