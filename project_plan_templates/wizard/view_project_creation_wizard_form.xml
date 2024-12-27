@@ -14,11 +14,11 @@
                         </div>
                             <group>
                                 <group>
-                                    <field name="partner_id"/>
                                     <field name="sale_order_id" invisible="1"/>
+                                    <!--<field name="partner_id"/>
                                     <field name="picking_type_id"/>
                                     <field name="location_id"/>
-                                    <field name="location_dest_id"/>
+                                    <field name="location_dest_id"/>-->
                                 </group>
                                 <group>
                                     <field name="scheduled_date"/>

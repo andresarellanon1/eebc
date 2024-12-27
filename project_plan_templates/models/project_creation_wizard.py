@@ -153,7 +153,7 @@ class ProjectCreation(models.TransientModel):
                     'date_deadline': line.planned_date_end
                 })
 
-                self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
+                #self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
