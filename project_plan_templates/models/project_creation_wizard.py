@@ -61,7 +61,7 @@ class ProjectCreation(models.TransientModel):
             'name': self.project_name,
             'description': self.description,
             'project_plan_lines': self.prep_plan_lines(self.sale_order_id.project_plan_lines),
-            'project_picking_lines': self.prep_picking_lines(self.sale_order_id.project_picking_lines),
+            'project_picking_lines': self.wizard_picking_lines,
             'default_picking_type_id': self.picking_type_id.id,
             'publication_date': fields.Datetime.now(),
             'date_start': self.date_start,
@@ -144,26 +144,21 @@ class ProjectCreation(models.TransientModel):
                     'estimated_time': ts_line.estimated_time,
                 }) for ts_line in timesheet_lines]
 
-                picking_lines = []
-                for picking in self.wizard_picking_lines:
-                    is_task = False
-                    if picking.display_type and picking.name == line.name:
-                        is_task = True
-                    else:
-                        if picking.display_type and picking.name != line.name:
-                            is_task = False
-                        if is_task:
-                            picking_lines.append((0, 0, {
-                                'name': picking.product_id.name,
-                                'product_id': picking.product_id.id,
-                                'product_uom': picking.product_uom.id,
-                                'product_packaging_id': picking.product_packaging_id.id,
-                                'product_uom_qty': picking.product_uom_qty,
-                                'quantity': picking.quantity,
-                                'standard_price': picking.standard_price,
-                                'subtotal': picking.subtotal,
-                                'display_type': False
-                            }))
+                picking_lines = [
+                    (0, 0, {
+                        'name': picking.product_id.name,
+                        'product_id': picking.product_id.id,
+                        'product_uom': picking.product_uom.id,
+                        'product_packaging_id': picking.product_packaging_id.id,
+                        'product_uom_qty': picking.product_uom_qty,
+                        'quantity': picking.quantity,
+                        'standard_price': picking.standard_price,
+                        'subtotal': picking.subtotal,
+                        'display_type': False
+                    })
+                    for picking in self.wizard_picking_lines
+                    if not picking.display_type and picking.name == line.name
+                ]
 
                 task_id = self.env['project.task'].create({
                     'name': line.name,
