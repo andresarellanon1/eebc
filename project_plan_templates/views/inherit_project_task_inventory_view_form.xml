@@ -8,7 +8,7 @@
 
         <field name="arch" type="xml">
             <xpath expr="//page[@name='extra_info']" position="after">
-                <page name="material" string="Material">
+                <page name="moves" string="Movimientos de inventario">
                     <button name="action_open_task_inventory_wizard" type="object" string="Crear Inventario" class="oe_highlight"/>
                     <field name="stock_ids" widget="One2many_list" readonly="1">
                         <tree editable="false">
@@ -18,6 +18,28 @@
                             <field name="scheduled_date"/> 
                         </tree>
                     </field>
+                </page>
+                <page name="material" string="Materiales">
+                    <field name="project_picking_lines" mode="tree,kanban" nolabel="1">
+                        <tree editable="editable_bottom" style="width: 100%">
+                            <field name="company_id" column_invisible="1"/> 
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="product_uom"/>
+                            <field name="product_packaging_id"/>
+                            <field name="quantity"/>
+                            <field name="used_quantity"/>
+                            <!--<field name="standard_price"/>
+                            <field name="subtotal"/>-->
+                        </tree>
+                    </field>
+                    <!--<group>
+                        <group colspan="4">
+                        </group>
+                        <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                            <field name="task_total_cost"/> 
+                        </group>
+                    </group>-->
                 </page>
             </xpath>
         </field>

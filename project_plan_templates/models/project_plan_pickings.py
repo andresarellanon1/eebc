@@ -38,6 +38,7 @@ class ProjectPlanPickings(models.Model):
 class ProjectPlanPickingLine(models.Model):
     _name = 'project.picking.lines'
     _description = 'Project picking lines'
+    _order = 'sequence'
 
     name = fields.Char(required=True, string="Nombre")
     
@@ -45,10 +46,12 @@ class ProjectPlanPickingLine(models.Model):
     picking_id = fields.Many2one('project.plan.pickings', string="Plantilla de proyecto")
     product_id = fields.Many2one('product.product', string="Producto")
     sale_order_id = fields.Many2one('sale.order')
+    task_id = fields.Many2one('project.task', string="Tarea")
     
    
     quantity = fields.Float(string="Cantidad")
     location_id = fields.Many2one('stock.location', string="Localización")
+    used_quantity = fields.Float(string="Cantidad utilizada", default=0)
     reservado = fields.Float(string='Reservado')
     
    
@@ -56,7 +59,7 @@ class ProjectPlanPickingLine(models.Model):
     project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas")
     stock_move_id = fields.Many2one('stock.move', string='Inventario')
     
-    standard_price = fields.Float(string="Precio", compute='_compute_standard_price')
+    standard_price = fields.Float(string="Precio")
     subtotal = fields.Float(string="Subtotal", compute='_compute_subtotal')
     total_cost = fields.Float(string="Costo total")
 
@@ -82,13 +85,20 @@ class ProjectPlanPickingLine(models.Model):
     # def _check_product_packaging_id(self):
     #     for record in self:
     #         if not record.product_packaging_id:
-    #             raise ValidationError("El campo 'Packaging' es obligatorio. No se puede guardar una línea sin este campo.") 
+    #             raise ValidationError("El campo 'Packaging' es obligatorio. No se puede guardar una línea sin este campo.")
+
+    @api.onchange('used_quantity')
+    def _check_quantity(self):
+        for record in self:
+            if record.used_quantity > quantity:
+                raise ValidationError("Cantidad excedida, ordene mas o ingrese la cantidad correcta")
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
             self.product_uom = self.product_id.uom_id
             self.name = self.product_id.name
+            self.standard_price = self.product_id.standard_price
 
     def reservado_update(self, task_inventory_lines):
         for record in self:
@@ -96,12 +106,6 @@ class ProjectPlanPickingLine(models.Model):
                 if record.product_id.id == inventory_lines.product_id.id:
                     if record.quantity >= (record.reservado + inventory_lines.quantity):
                         record.reservado += inventory_lines.quantity
-
-    @api.depends('product_id')
-    def _compute_standard_price(self):
-        for record in self:
-            record.standard_price = record.product_id.last_supplier_last_price
-            
 
     @api.depends('quantity')
     def _compute_subtotal(self):

@@ -60,8 +60,8 @@ class ProjectCreation(models.TransientModel):
         project_vals = {
             'name': self.project_name,
             'description': self.description,
-            'project_plan_lines': self.prep_plan_lines(self.sale_order_id.project_plan_lines),
-            'project_picking_lines': self.prep_picking_lines(self.sale_order_id.project_picking_lines),
+            'project_plan_lines': self.prep_plan_lines(self.wizard_plan_lines),
+            'project_picking_lines': self.prep_picking_lines(self.wizard_picking_lines),
             'default_picking_type_id': self.picking_type_id.id,
             'publication_date': fields.Datetime.now(),
             'date_start': self.date_start,
@@ -144,13 +144,35 @@ class ProjectCreation(models.TransientModel):
                     'estimated_time': ts_line.estimated_time,
                 }) for ts_line in timesheet_lines]
 
+                picking_lines = []
+                is_task = False  # Bandera para identificar si estamos en la tarea correcta
+
+                for picking in self.wizard_picking_lines:
+                    if picking.display_type:
+                        # Actualizar la bandera si el nombre coincide
+                        is_task = picking.name == line.name
+                    elif is_task:
+                        # Si la bandera está activa, agregar esta línea de picking
+                        picking_lines.append((0, 0, {
+                            'name': picking.product_id.name,
+                            'product_id': picking.product_id.id,
+                            'product_uom': picking.product_uom.id,
+                            'product_packaging_id': picking.product_packaging_id.id,
+                            'product_uom_qty': picking.product_uom_qty,
+                            'quantity': picking.quantity,
+                            'standard_price': picking.standard_price,
+                            'subtotal': picking.subtotal,
+                            'display_type': False
+                        }))
+
                 task_id = self.env['project.task'].create({
                     'name': line.name,
                     'project_id': project.id,
                     'stage_id': current_task_type.id,
                     'timesheet_ids': timesheet_data,
                     'planned_date_begin': line.planned_date_begin,
-                    'date_deadline': line.planned_date_end
+                    'date_deadline': line.planned_date_end,
+                    'project_picking_lines': picking_lines
                 })
 
                 #self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
@@ -195,7 +217,7 @@ class ProjectCreation(models.TransientModel):
                         'project_plan_pickings': line.project_plan_pickings.id,
                         'task_timesheet_id': line.task_timesheet_id.id,
                         'display_type': False,
-                        'for_create': line.for_create
+                        'for_create': True
                     }))
         return plan_lines
 
