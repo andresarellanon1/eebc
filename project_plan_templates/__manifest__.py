@@ -25,7 +25,7 @@
         "views/task_picking_line.xml",
         "views/inherit_sale_order_view_form.xml",
         "views/inherit_sale_project_view.xml",
-        'views/inherit_head_sale_order.xml'
+        'views/inherit_head_sale_order.xml',
         'reports/report_analytics.xml',
     ],
     "license": "LGPL-3",
