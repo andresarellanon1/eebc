@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <report
+        id="action_report_project_stock"
+        model="project.project"
+        string="Reporte de Materiales del Proyecto"
+        report_type="qweb-pdf"
+        name="mi_modulo.project_stock_report_template"
+        file="mi_modulo.project_stock_report_template"
+    />
+</odoo>
