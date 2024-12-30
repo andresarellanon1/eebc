@@ -144,21 +144,26 @@ class ProjectCreation(models.TransientModel):
                     'estimated_time': ts_line.estimated_time,
                 }) for ts_line in timesheet_lines]
 
-                picking_lines = [
-                    (0, 0, {
-                        'name': picking.product_id.name,
-                        'product_id': picking.product_id.id,
-                        'product_uom': picking.product_uom.id,
-                        'product_packaging_id': picking.product_packaging_id.id,
-                        'product_uom_qty': picking.product_uom_qty,
-                        'quantity': picking.quantity,
-                        'standard_price': picking.standard_price,
-                        'subtotal': picking.subtotal,
-                        'display_type': False
-                    })
-                    for picking in self.wizard_picking_lines
-                    if not picking.display_type and picking.name == line.name
-                ]
+                picking_lines = []
+                is_task = False  # Bandera para identificar si estamos en la tarea correcta
+
+                for picking in self.wizard_picking_lines:
+                    if picking.display_type:
+                        # Actualizar la bandera si el nombre coincide
+                        is_task = picking.name == line.name
+                    elif is_task:
+                        # Si la bandera está activa, agregar esta línea de picking
+                        picking_lines.append((0, 0, {
+                            'name': picking.product_id.name,
+                            'product_id': picking.product_id.id,
+                            'product_uom': picking.product_uom.id,
+                            'product_packaging_id': picking.product_packaging_id.id,
+                            'product_uom_qty': picking.product_uom_qty,
+                            'quantity': picking.quantity,
+                            'standard_price': picking.standard_price,
+                            'subtotal': picking.subtotal,
+                            'display_type': False
+                        }))
 
                 task_id = self.env['project.task'].create({
                     'name': line.name,
