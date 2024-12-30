@@ -11,7 +11,7 @@
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="action_open_create_project_wizard" type="object" string="Crear Proyecto" invisible="state != 'sale'"/>
-                <button name="action_open_create_project_wizard" type="object" string="Generar Reporte" class="btn-primary"/>
+                <button name="action_generate_report" type="object" string="Generar Reporte" class="btn-primary"/>
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="replace">
                 <button name="action_cancel" type="object" string="Cancel" invisible="state not in ['draft', 'sent', 'sale', 'budget'] or not id or locked" data-hotkey="x"/>
