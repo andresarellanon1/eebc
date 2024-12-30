@@ -1,10 +1,9 @@
-from odoo import models, fields
+class ProjectTask(models.Model):
+    _inherit = 'project.task'
 
-class ProjectInherit(models.Model):
-    _inherit = 'project.project'
-
-    project_picking_lines = fields.One2many(
-        'stock.move',  # Cambia por el modelo correcto si no es stock.move
-        'project_id',
-        string="Líneas de Inventario"
+    # Relación con los registros de inventario
+    stock_ids = fields.One2many(
+        'stock.picking',  # O el modelo que corresponda
+        'task_id',  # Relación con el campo en stock.picking que referencia a la tarea
+        string="Materiales"
     )
