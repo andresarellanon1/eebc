@@ -173,10 +173,3 @@ class SaleOrder(models.Model):
             }
         }
     
-    @api.multi
-    def action_generate_report(self):
-        self.ensure_one()  
-
-        
-        report = self.env.ref('project_plan_templates.report_analytics') 
-        return report.report_action(self)
