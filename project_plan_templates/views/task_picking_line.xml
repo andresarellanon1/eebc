@@ -1,26 +1,24 @@
 <odoo>
    
-    <record id="view_task_inventory_line_form" model="ir.ui.view"> <!-- Define a new form view for the task.inventory.line model -->
-        <field name="name">task.inventory.line.form</field> <!-- Name of the view -->
-        <field name="model">task.inventory.line</field> <!-- The model this view applies to (task.inventory.line) -->
+    <record id="view_task_inventory_line_form" model="ir.ui.view"> 
+        <field name="name">task.inventory.line.form</field> 
+        <field name="model">task.inventory.line</field> 
         
         
         <field name="arch" type="xml"> 
             <form string="Asignar Productos a Inventario de Tarea">
                 <sheet>
-                    <!-- Group layout to organize the fields inside -->
                     <group>
                         <group>
-                            <field name="product_id"/> <!-- Product field (Product selected for inventory line) -->
-                            <field name="quantity"/> <!-- Quantity field (The amount of product) -->
-                            <field name="product_uom"/> <!-- Product Unit of Measure field (UOM for the product) -->
+                            <field name="product_id"/> 
+                            <field name="quantity"/> 
+                            <field name="product_uom"/> 
 
-                            <field name="product_packaging_id"/> <!-- Product Packaging field (Packaging type for the product) -->
+                            <field name="product_packaging_id"/> 
                         </group>
 
-                        <!-- Second group of fields (additional product quantities) -->
                         <group>
-                            <field name="product_uom_qty"/>  <!-- Product UOM quantity field (Another UOM quantity field) -->
+                            <field name="product_uom_qty"/> 
                         </group>
                     </group>
                 </sheet>

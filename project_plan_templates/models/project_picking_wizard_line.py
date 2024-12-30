@@ -6,8 +6,9 @@ class ProjectPickingWizardLine(models.TransientModel):
 
     wizard_creation_id = fields.Many2one('project.creation.wizard')
 
-    product_id = fields.Many2one('product.product', string="Product", required=True)
-    quantity = fields.Float(string="Quantity", required=True)
+    name = fields.Char(string="Name")
+    product_id = fields.Many2one('product.product', string="Product")
+    quantity = fields.Float(string="Quantity")
     location_id = fields.Many2one('stock.location', string="Location")
     picking_name = fields.Char(string="Picking Name")
     project_plan_id = fields.Many2one('project.plan', string="Project plan")
@@ -16,6 +17,20 @@ class ProjectPickingWizardLine(models.TransientModel):
     standard_price = fields.Float(string="Price", compute='_compute_standard_price')
     subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal")
     total_cost = fields.Float(string="Total cost")
+
+    display_type = fields.Selection(
+        [
+            ('line_section', 'Section'),
+            ('line_note', 'Note'),
+        ]
+    )
+    code = fields.Char(string="Code")
+    sequence = fields.Integer()
+
+    product_packaging_id = fields.Many2one('product.packaging', string="Empaquetado", domain="[('product_id', '=', product_id)]", check_company=True)
+    product_uom = fields.Many2one('uom.uom', string='Unidad de medida')
+    company_id = fields.Many2one('res.company', string="Empresa")
+    product_uom_qty = fields.Float(string="Demanda")
 
     @api.depends('product_id')
     def _compute_standard_price(self):

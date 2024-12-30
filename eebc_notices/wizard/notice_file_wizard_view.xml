@@ -5,21 +5,61 @@
         <field name="model">notice.file.wizard</field>
         <field name="arch" type="xml">
             <form string="Analisar archivo">
-                <group>
-                   
-                    <field name="notice" />
-                    <field name="folio" />
-                    <field name="description" />
-                    <field name="account_move_invoice_ids" />
-                    <field name="res_partner_supplier_id" />
-                    <field name="purchases_order_id" />
-                    <field name="quantity" />
+             <sheet>
+                <header> 
+                    <group>
+                        <field name="create_tab"/>
+                    </group>
+                    <group>
+                        <field name="update_tab"/>
+                    </group>
+                </header>
+                <notebook>
+               
+                    <page string="Crear nuevo aviso" name="create_page_tab"  invisible="not create_tab">
 
-                </group>
+                        <group>
+                        
+                            <field name="notice" />
+                            <field name="folio" />
+                            <field name="description" />
+                            <field name="account_move_invoice_ids" />
+                            <field name="res_partner_supplier_id" />
+                            <field name="purchases_order_id" />
+                            <field name="quantity" />
+
+                        </group>
+                    </page>
+
+
+                    <page string="Asignar cantidades a los avisos" name="assign_tab"  invisible="not update_tab">
+
+                         <group>
+                            <field name="quantity" readonly="1"/>
+
+                                <field name="notice_ids">
+                                    <tree create="0">
+                                        <field name="notice_id"  options="{'no_open': True}"/>
+                                        <field name="quantity"/>
+                                        <field name="quantity_available" column_invisible="1" />
+                                        <field name="aviso_name" column_invisible="1" invisible="1"/>
+                                        <field name="in_or_out" column_invisible="1" invisible="1"/>
+
+
+
+                                    </tree>
+                                </field>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
                
                 <footer>
-                    <button name="create_notice" type="object" string="Crear aviso" class="btn-primary"/>
+                
+                    <button name="create_notice" type="object" string="Confirmar" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    
+
                 </footer>
             </form>
         </field>

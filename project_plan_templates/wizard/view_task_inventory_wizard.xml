@@ -4,7 +4,7 @@
             <field name="name">task.inventory.wizard</field>
             <field name="model">task.inventory.wizard</field>
             <field name="arch" type="xml">
-                <form string="Create inventory">
+                <form string="Crear movimiento de inventario">
                     <sheet>
                         <div class="oe_title">
                             <h1>
@@ -26,7 +26,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Operations" name="operations">
+                            <page string="Operaciones" name="operations">
                                 <group>
                                     <field name="project_stock_products" invisible="1"/>
                                 </group>
@@ -41,7 +41,7 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Additional Info" name="extra">
+                            <page string="Información adicional" name="extra">
                                 <group>
                                     <group string="Información de envío">
                                         <field name="carrier_id" string="Transportista"/>
@@ -67,7 +67,8 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Note" name="note">
+                            <page string="Nota" name="note">
+                                <field name="note" placeholder="Escribe tus notas aquí..."/>
                             </page>
                         </notebook>
                         <footer>

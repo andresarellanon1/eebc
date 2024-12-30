@@ -1,45 +1,40 @@
 <odoo>
     <data>
-        <!-- Define a tree view for task.timesheet model -->
         <record id="timesheet_view_tree" model="ir.ui.view">
-            <field name="name">timesheet.tree</field>  <!-- Tree view name -->
-            <field name="model">task.timesheet</field>  <!-- Model the view is for -->
+            <field name="name">timesheet.tree</field>  
+            <field name="model">task.timesheet</field>  
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name"/>  <!-- Field to display: 'name' -->
-                    <field name="description"/>  <!-- Field to display: 'description' -->
+                    <field name="name"/>  
+                    <field name="description"/> 
                 </tree>
             </field>
         </record>
 
         <record id="timesheet_view_form" model="ir.ui.view">
-            <field name="name">timesheet.view.form</field>  <!-- Form view name -->
-            <field name="model">task.timesheet</field>  <!-- Model the form is for -->
+            <field name="name">timesheet.view.form</field>  
+            <field name="model">task.timesheet</field>  
             <field name="arch" type="xml">
-                
-                <form string="Task Timesheet Template"> <!-- Define the form layout -->
+                <form string="Plantilla de hoja de horas"> 
                     <sheet>
-                        <!-- Title section -->
+
                         <div class="oe_title">
                             <label for="name"/> 
  
-                            <h1><field name="name" class="w-100" required="1"/></h1>  <!-- Field for name (required) -->
+                            <h1><field name="name" class="w-100" required="1"/></h1>  
                         </div>
-                        
-                        <!-- Notebook to organize different sections of the form -->
+
                         <notebook>
 
-                            <!-- Description tab -->
-                            <page name="description" string="Description">
-                                <field name="description"/>  <!-- Display the description field -->
+                            <page name="description" string="Descripción">
+                                <field name="description"/> 
                             </page>
 
-                            <!-- Time lines tab for managing task time lines -->
-                            <page name="lines" string="Time lines">
+                            <page name="lines" string="Horas">
                                 <field name="task_time_lines" nolabel="1">
                                     <tree editable="editable_bottom" style="width: 100%;">
-                                        <field name="description"/>  <!-- Field for task time line description -->
-                                        <field name="estimated_time" widget="timesheet_uom"/>  <!-- Estimated time field -->
+                                        <field name="description"/>  
+                                        <field name="estimated_time" widget="timesheet_uom"/>  
                                     </tree>
                                 </field>
                             </page>

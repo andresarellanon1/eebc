@@ -3,6 +3,13 @@ from odoo import fields, models, api
 
 # campo nuevo total computada(sumatoria de la cantidad de historiales)   - lISTO!!
 
+
+
+
+import logging
+
+_logger = logging.getLogger(__name__)
+
 class Notices(models.Model):
 
     _name= 'notices.notices'    
@@ -19,6 +26,7 @@ class Notices(models.Model):
         comodel_name='res.partner',
     )
     
+
 
     
     notice = fields.Char(string='Aviso')
@@ -66,6 +74,8 @@ class Notices(models.Model):
         comodel_name='notices.history',
         inverse_name='notice_id',
     )
+    
+
 
     # @api.depends('history_ids')
     # def _compute_location_origin_id(self):
@@ -80,18 +90,20 @@ class Notices(models.Model):
     def _compute_name(self):
         for record in self:
             # Concatenar 'Aviso' al valor del campo `notice`
-            record.name = f"Aviso: {record.notice}" if record.notice else "Aviso sin nombre"
+            record.name = f"Aviso {record.notice}" if record.notice else "Aviso sin nombre"
 
     @api.depends('history_ids')
     def _compute_series(self):
-        for notice in self:
-            lot_set = set()
+         for notice in self:
+            lot_ids = []
             for history_record in notice.history_ids:
                 stock_move = history_record.stock_move_id
                 if stock_move:
                     for lot in stock_move.lot_ids:
-                        lot_set.add(lot.id)
-            notice.lot_ids = [(6, 0, list(lot_set))]
+                        if lot.id not in lot_ids:
+                            lot_ids.append(lot.id)
+            _logger.warning(f"Lotes asignados al aviso {notice.id}: {lot_ids}")
+            notice.lot_ids = [(6, 0, lot_ids)]
 
     @api.depends('history_ids')
     def _compute_origin_invoice_ids(self):
@@ -115,10 +127,13 @@ class Notices(models.Model):
                         invoice_set.add(invoice.id)
             notice.sale_invoice_ids = [(6, 0, list(invoice_set))]
 
-    @api.depends('history_ids.quantity')
+    @api.depends( 'history_ids.state')
     def _compute_quantity(self):
+        _logger.warning('Entramos a compute de quantity')
+        
         for record in self:
-            approved_history = record.history_ids.filtered(lambda h: h.state == 'approved')
+            approved_history = record.history_ids.filtered(lambda h: h.state == 'draft')
+            _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')
             record.quantity = sum(approved_history.mapped('quantity'))
 
 

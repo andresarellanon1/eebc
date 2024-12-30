@@ -1,58 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- Define a new tree view for the 'project.plan.pickings' model -->
+
         <record id="plan_picking_template_view_tree" model="ir.ui.view">
-            <field name="name">plan.picking.template.tree</field>  <!-- Name of the tree view -->
-            <field name="model">project.plan.pickings</field>  <!-- The model to which the view is applied -->
+            <field name="name">plan.picking.template.tree</field>
+            <field name="model">project.plan.pickings</field>
             <field name="arch" type="xml">
-                <tree>  <!-- This defines the structure of the tree view -->
-                    <field name="name"/>  <!-- Display the 'name' field -->
-                    <field name="description"/>  <!-- Display the 'description' field -->
-                    <field name="creation_date"/>  <!-- Display the 'creation_date' field -->
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="creation_date"/>
                 </tree>
             </field>
         </record>
 
-        <!-- Define a new form view for the 'project.plan.pickings' model -->
         <record id="plan_picking_template_view_form" model="ir.ui.view">
-            <field name="name">plan.picking.template.view.from</field>  <!-- Name of the form view -->
-            <field name="model">project.plan.pickings</field>  <!-- The model to which the view is applied -->
+            <field name="name">plan.picking.template.view.from</field>
+            <field name="model">project.plan.pickings</field>
             <field name="arch" type="xml">
-                <form string="Project plan picking template">  <!-- Form view header with a custom string -->
+                <form string="Plantillas de movimientos de inventario">
                     <sheet>
-                        <div class="oe_title">  <!-- Section for the form title and metadata -->
-                            <label for="name"/>  
-                            <h1><field name="name" class="w-100" required="1"/></h1> 
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" class="w-100" required="1"/>
+                            </h1>
                             <group>
                                 <group>
-                                    <field name="creator_id"/>  
+                                    <field name="creator_id"/>
                                 </group>
                                 <group>
-                                    <field name="creation_date"/>  
+                                    <field name="creation_date"/>
                                 </group>
                             </group>
                         </div>
-                        <notebook>  <!-- Notebook section for multiple pages in the form -->
-                            <page name="description" string="Description">  <!-- Page for the 'description' field -->
-                                <field name="description" options="{'resizable': false}"/>  
+                        <notebook>
+                            <page name="description" string="Descripción">
+                                <field name="description" options="{'resizable': false}"/>
                             </page>
-                            <page name="picking_lines" string="Pickings">  <!-- Page for the 'project_picking_lines' field -->
-                                <field name="project_picking_lines" nolabel="1">  
-                                    <tree editable="editable_bottom" style="width: 100%;">  <!-- Display a tree of picking lines -->
-                                        <field name="product_id"/>  <!-- Display the 'product_id' field in the picking line -->
-                                        <field name="quantity"/>  <!-- Display the 'quantity' field in the picking line -->
-                                        <field name="standard_price"/>  <!-- Display the 'standard_price' field -->
-                                        <field name="subtotal"/>  <!-- Display the 'subtotal' field -->
+                            <page name="picking_lines" string="Materiales">
+                                <field name="project_picking_lines" nolabel="1">
+                                    <tree editable="editable_bottom" style="width: 100%;">
+                                        <field name="company_id" column_invisible="1"/>
+                                        <field name="name" column_invisible="1"/>
+                                        <field name="product_id"/>
+                                        <field name="product_uom"/>
+                                        <field name="product_packaging_id"/>
+                                        <field name="standard_price" column_invisible="1"/>
+                                        <field name="subtotal" column_invisible="1"/>
+                                        <!--<field name="quantity"/>
+                                        <field name="standard_price"/>
+                                        <field name="subtotal"/>-->
                                     </tree>
                                 </field>
-                                <group>
+                                <!--<group>
                                     <group colspan="4">
                                     </group>
                                     <group class="oe_subtotal_footer" colspan="2" name="sale_total">
-                                        <field name="plan_total_cost"/>  <!-- Display the 'plan_total_cost' field -->
+                                        <field name="plan_total_cost"/>
                                     </group>
-                                </group>
+                                </group>-->
                             </page>
                         </notebook>
                     </sheet>

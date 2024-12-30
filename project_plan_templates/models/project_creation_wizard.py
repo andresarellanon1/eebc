@@ -1,19 +1,21 @@
 from odoo import models, fields, api
+import logging
+logger = logging.getLogger(__name__)
 
 class ProjectCreation(models.TransientModel):
     _name = 'project.creation.wizard'
     _description = 'Wizard to confirm project creation'
 
-    project_plan_id = fields.Many2one('project.plan', string="Project Plan", readonly=True)
-    project_name = fields.Char(string="Project Name", required=True)
-    user_id = fields.Many2one('res.users', string="Project manager")
-    description = fields.Html(string="Description")
-    is_sale_order = fields.Boolean(default=False)
-    sale_order_id = fields.Many2one('sale.order')
+    project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly=True)
+    project_name = fields.Char(string="Nombre del proyecto", required=True)
+    user_id = fields.Many2one('res.users', string="Administrador del proyecto")
+    description = fields.Html(string="Descripción")
+    sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
     
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
-        string="Picking Templates"
+        string="Plantilla de movimientos"
     )
 
     wizard_plan_lines = fields.One2many(
@@ -28,90 +30,43 @@ class ProjectCreation(models.TransientModel):
 
     note = fields.Char()
 
-    plan_total_cost = fields.Float(string="Total cost",  compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Costo total",  compute='_compute_total_cost', default=0.0)
 
-    @api.onchange('project_plan_pickings')
-    def _compute_wizard_picking_lines(self):
+    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
+    location_id = fields.Many2one('stock.location', string='Ubicación de origen')
+    location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
+    scheduled_date = fields.Datetime(string='Fecha programada de entrega')
+    partner_id = fields.Many2one('res.partner', string='Contacto')
+    date_start = fields.Datetime(string="Fecha de inicio planeada")
+    date = fields.Datetime()
+
+    @api.onchange('sale_order_id')
+    def _compute_wizard_lines(self):
         for record in self:
-            # Limpiamos las líneas previas
+            
             record.wizard_picking_lines = [(5, 0, 0)]
+            record.wizard_plan_lines = [(5, 0, 0)]
 
-            # Construimos las líneas del wizard basándonos en los picking seleccionados
-            wizard_lines = []
-            for picking in record.project_plan_pickings:
-                for line in picking.project_picking_lines:
-                    wizard_lines.append((0, 0, {
-                        'product_id': line.product_id.id,
-                        'quantity': line.quantity,
-                    }))
+            plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
+            picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
 
-            # Asignamos las líneas creadas al campo del wizard
-            record.wizard_picking_lines = wizard_lines
+            record.wizard_plan_lines = plan_lines
+            record.wizard_picking_lines = picking_lines
 
-    # Updates wizard plan lines when the project plan template changes. 
-    # This method first clears any existing wizard plan lines using a (5, 0, 0)
-    # command, then creates new wizard lines by copying all relevant fields from
-    # the project plan template lines. For relations that could be null (task_timesheet_id, partner_id, stage_id),
-    # conditional assignments are used to handle potential empty values.
     
-    @api.onchange('project_plan_id')
-    def _compute_wizard_plan_lines(self):
-        for record in self:
-            if record.project_plan_id:
-                # Clear existing wizard plan lines
-                record.wizard_plan_lines = [(5, 0, 0)]
-
-                # Prepare new wizard lines from project plan template
-                wizard_lines = []
-                for line in record.project_plan_id.project_plan_lines:
-                    wizard_lines.append((0, 0, {
-                        'name': line.name,
-                        'chapter': line.chapter,
-                        'description': line.description,
-                        'use_project_task': line.use_project_task,
-                        'planned_date_begin': line.planned_date_begin,
-                        'planned_date_end': line.planned_date_end,
-                        'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
-                        'partner_id': line.partner_id.id if line.partner_id else False,
-                        'stage_id': line.stage_id.id if line.stage_id else False,
-                    }))
-
-                # Update record with new wizard lines
-                record.wizard_plan_lines = wizard_lines
-
-    # The `action_confirm_create_project` method creates a complete project based on the template.
-    # It prepares the data for project tasks and inventory items by filtering lines with 
-    # 'use_project_task' enabled and gathers the necessary details for each line.
-    # It then creates the project with tasks, timesheets, and inventory items,
-    # and opens the new project in a form view.
-
     def action_confirm_create_project(self):
         self.ensure_one()
-
-        project_plan_lines_vals = [(0, 0, {
-            'name': line.name,
-            'chapter': line.chapter,
-            'description': line.description,
-            'use_project_task': line.use_project_task,
-            'planned_date_begin': line.planned_date_begin,
-            'planned_date_end': line.planned_date_end,
-            'task_timesheet_id': line.task_timesheet_id.id,
-            'partner_id': [(6, 0, line.partner_id.ids)],
-            'stage_id': line.stage_id,
-        }) for line in self.wizard_plan_lines if line.use_project_task]
-
-        picking_lines_vals = [(0, 0, {
-            'product_id': line.product_id.id,
-            'quantity': line.quantity,
-        }) for line in self.wizard_picking_lines]
-
-        logger.warning(f"picking_line")
 
         project_vals = {
             'name': self.project_name,
             'description': self.description,
-            'project_plan_lines': project_plan_lines_vals,
-            'project_picking_lines': picking_lines_vals,
+            'project_plan_lines': self.prep_plan_lines(self.sale_order_id.project_plan_lines),
+            'project_picking_lines': self.prep_picking_lines(self.sale_order_id.project_picking_lines),
+            'default_picking_type_id': self.picking_type_id.id,
+            'publication_date': fields.Datetime.now(),
+            'date_start': self.date_start,
+            'date': self.date,
+            'sale_order_id': self.sale_order_id.id
         }
 
         logger.warning(f"project_vals")
@@ -121,42 +76,65 @@ class ProjectCreation(models.TransientModel):
 
         logger.warning(f"create_project_task")
 
-        self.project_plan_id.project_name = False
+        self.sale_order_id.state = 'budget'
+        self.sale_order_id.project_id = project.id
 
-        if self.is_sale_order:
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
 
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'sale.order',
-                'res_id': self.sale_order_id.id,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'target': 'current',
-                'context': self.env.context
-            }
-        else:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'project.project',
-                'res_id': project.id,
-                'view_mode': 'form',
-                'target': 'current',
-            }
+    def create_project_tasks_pickings(self, task_id, pickings):
+        stock_move_ids_vals = [(0, 0, {
+            'product_id': line.product_id.id,
+            'product_packaging_id': line.product_packaging_id.id,
+            'product_uom_qty': 0,
+            'quantity': line.quantity,
+            'product_uom': line.product_uom.id,
+            'location_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id,
+            'name': task_id.name
+        }) for line in pickings]
 
-    # The `create_project_tasks` method generates tasks for the project using only 
-    # the filtered lines with 'use_project_task' enabled. It fetches associated 
-    # timesheets and organizes tasks into stages based on `stage_id`. If a line 
-    # doesn’t have a `stage_id`, it assigns the task to a default "Extras" stage.
+        stock_picking_vals = {
+            'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
+            'partner_id': self.partner_id.id,
+            'picking_type_id': self.picking_type_id.id,
+            'location_id': self.location_id.id,
+            'scheduled_date': self.scheduled_date,
+            'origin': task_id.name,
+            'task_id': task_id.id,
+            'user_id': self.env.user.id,
+            'move_ids': stock_move_ids_vals,
+            'carrier_id': False,
+            'carrier_tracking_ref': False,
+            'weight': False,
+            'shipping_weight': False,
+            'company_id': self.env.company.id,
+            'transport_type': False,
+            'custom_document_identification': False,
+            'lat_origin': False,
+            'long_origin': False,
+            'lat_dest': False,
+            'long_dest': False,
+            'note': False
+        }
+
+        self.env['stock.picking'].create(stock_picking_vals)
 
     def create_project_tasks(self, project):
         current_task_type = None
-        for line in self.project_plan_lines:
-            if line.stage_id:
-                current_task_type = self.get_or_create_task_type(line.stage_id, project)
-            else:
-                current_task_type = self.get_or_create_task_type('Extras', project)
+        for line in self.wizard_plan_lines:
+            if line.display_type and line.for_create:
+                current_task_type = self.get_or_create_task_type(line.name, project)
 
-            if line.use_project_task:
+            if line.use_project_task and not line.display_type and line.for_create:
+                if not current_task_type:
+                    current_task_type = self.get_or_create_task_type('Extras', project)
+
                 timesheet_lines = self.env['task.time.lines'].search([
                     ('task_timesheet_id', '=', line.task_timesheet_id.id)
                 ])
@@ -166,18 +144,16 @@ class ProjectCreation(models.TransientModel):
                     'estimated_time': ts_line.estimated_time,
                 }) for ts_line in timesheet_lines]
 
-                self.env['project.task'].create({
+                task_id = self.env['project.task'].create({
                     'name': line.name,
                     'project_id': project.id,
                     'stage_id': current_task_type.id,
-                    'user_ids': line.partner_id.ids,
                     'timesheet_ids': timesheet_data,
+                    'planned_date_begin': line.planned_date_begin,
+                    'date_deadline': line.planned_date_end
                 })
 
-    # The `get_or_create_task_type` method retrieves or creates a task stage 
-    # (task type) based on the `stage_id` provided. If the stage doesn't exist,
-    # it creates a new one and links it to the project. If the stage already exists, 
-    # it simply assigns the task to this existing stage.
+                #self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
@@ -192,6 +168,65 @@ class ProjectCreation(models.TransientModel):
             })
             
         return task_type
+
+    def prep_plan_lines(self, plan):
+        plan_lines = []
+        for line in plan:
+            if line.use_project_task and line.for_create:
+                if line.display_type == 'line_section':
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'display_type':  line.display_type or 'line_section',
+                        'description': False,
+                        'use_project_task': True,
+                        'planned_date_begin': False,
+                        'planned_date_end': False,
+                        'project_plan_pickings': False,
+                        'task_timesheet_id': False,
+                        'for_create': line.for_create
+                    }))
+                else:
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': True,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'project_plan_pickings': line.project_plan_pickings.id,
+                        'task_timesheet_id': line.task_timesheet_id.id,
+                        'display_type': False,
+                        'for_create': line.for_create
+                    }))
+        return plan_lines
+
+    def prep_picking_lines(self, picking):
+        picking_lines = []
+        for line in picking:
+            if line.display_type == 'line_section':
+                picking_lines.append((0, 0, {
+                    'name': line.name,
+                    'display_type': line.display_type or 'line_section',
+                    'product_id': False,
+                    'product_uom': False,
+                    'product_packaging_id': False,
+                    'product_uom_qty': False,
+                    'quantity': False,
+                    'standard_price': False,
+                    'subtotal': False
+                }))
+            else:
+                picking_lines.append((0, 0, {
+                    'name': line.product_id.name,
+                    'product_id': line.product_id.id,
+                    'product_uom': line.product_uom.id,
+                    'product_packaging_id': line.product_packaging_id.id,
+                    'product_uom_qty': line.product_uom_qty,
+                    'quantity': line.quantity,
+                    'standard_price': line.standard_price,
+                    'subtotal': line.subtotal,
+                    'display_type': False
+                }))
+        return picking_lines
 
     @api.depends('wizard_picking_lines.subtotal')
     def _compute_total_cost(self):

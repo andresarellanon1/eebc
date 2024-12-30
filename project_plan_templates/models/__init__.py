@@ -11,10 +11,8 @@ from . import project_task
 from . import stock_picking
 from . import sale_order
 from . import product_product
-from . import project_sale_creation_wizard
 from . import product_template
 from . import task_inventory_line
-from . import stock_picking_type
 from . import project_plan_wizard_line
 from . import project_picking_wizard_line
 from . import sale_order_line

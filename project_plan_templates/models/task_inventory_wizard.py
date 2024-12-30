@@ -10,7 +10,6 @@ class ProjectCreation(models.TransientModel):
     project_stock_products = fields.Many2many('product.product', string="Productos")
     task_inventory_lines = fields.One2many('task.inventory.line', 'inventory_id', string='Productos del proyecto')
     
-    # Sección de información general
     name = fields.Char(string='Referencia')
     partner_id = fields.Many2one('res.partner', string='Contacto')
     picking_type_id = fields.Many2one('stock.picking.type', string='Tipo de operación', compute='_compute_picking_type_id')
@@ -22,8 +21,8 @@ class ProjectCreation(models.TransientModel):
     task_id_char = fields.Char(string='Tarea origen', compute="_compute_task_id")
     user_id = fields.Many2one('res.users', string='Contacto')
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
+    note = fields.Text(string="Note")
 
-    # Sección de Información adicional
     carrier_id = fields.Many2one('delivery.carrier')
     carrier_tracking_ref = fields.Char(string="Referencia de rastreo")
     weight = fields.Float(string="Peso")
@@ -33,7 +32,6 @@ class ProjectCreation(models.TransientModel):
     transport_type = fields.Selection(string="Tipo de transporte", selection=[('00', 'No usa carreteras federales'), ('01', 'Autotransporte Federal')])
     custom_document_identification = fields.Char(string="Customs Document Identification")
 
-    # Sección de localización
     lat_origin = fields.Float(string="Latitud de origen")
     long_origin = fields.Float(string="Longitud de origen")
     lat_dest = fields.Float(string="Latitud de destino")
@@ -116,6 +114,7 @@ class ProjectCreation(models.TransientModel):
                 'long_origin': self.long_origin,
                 'lat_dest': self.lat_dest,
                 'long_dest': self.long_dest,
+                'note': self.note,
             }
 
             stock_picking = self.env['stock.picking'].create(stock_picking_vals)

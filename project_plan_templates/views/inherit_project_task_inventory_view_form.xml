@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Define a new view that inherits from the 'project.task' form view -->
+    
     <record id="inherit_project_task_inventory_view_form" model="ir.ui.view">
-        <field name="name">inherit.project.task.view.form</field>  <!-- Internal name of the custom view -->
-        <field name="model">project.task</field>  <!-- Model associated with the view -->
-        <field name="inherit_id" ref="project.view_task_form2"/>  <!-- The view that is being inherited, in this case, the 'view_task_form2' of the 'project' module -->
+        <field name="name">inherit.project.task.view.form</field> 
+        <field name="model">project.task</field> 
+        <field name="inherit_id" ref="project.view_task_form2"/> 
 
         <field name="arch" type="xml">
-            <!-- Use XPath to locate the 'extra_info' page and add a new page after it -->
             <xpath expr="//page[@name='extra_info']" position="after">
-                <!-- Define a new page with the name 'material' -->
                 <page name="material" string="Material">
-                    <!-- Add a button that triggers the 'action_open_task_inventory_wizard' when clicked -->
                     <button name="action_open_task_inventory_wizard" type="object" string="Crear Inventario" class="oe_highlight"/>
-                    <!-- Add a One2many field that will display stock records related to the task -->
                     <field name="stock_ids" widget="One2many_list" readonly="1">
-                        <!-- Define the tree view structure for the 'stock_ids' field -->
                         <tree editable="false">
-                            <field name="name"/>  <!-- Name of the stock item -->
-                            <field name="state"/>  <!-- State of the stock item -->
-                            <field name="new_selection"/>  <!-- New selection state for the stock item -->
-                            <field name="scheduled_date"/>  <!-- Scheduled date for the stock item -->
+                            <field name="name"/> 
+                            <field name="state"/> 
+                            <field name="new_selection"/>  
+                            <field name="scheduled_date"/> 
                         </tree>
                     </field>
                 </page>

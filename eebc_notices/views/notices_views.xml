@@ -51,11 +51,24 @@
                     <!-- Pestaña de Información General -->
                     <page string="Información General">
                         <group>
-                            <field name="product_id"/>
-                            <field name="partner_id"/>
-                            <field name="notice"/>
-                            <field name="description"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="notice" readonly="1"/>
+                            <field name="description" readonly="1"/>
                             <field name="quantity" string="Cantidad"/>
+                        </group>
+
+                        <group>
+                        <!-- ponerlo en tree -->
+                         <field name="lot_ids" string="Lotes">
+
+                            <tree string="Lotes/Series" create="0">
+                                <field name="name"/>
+                                <field name="product_id"/>
+                                <field name="create_date"/>
+                            </tree>
+                         </field>
+                            
                         </group>
                     </page>
                     
