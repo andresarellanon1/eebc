@@ -52,6 +52,7 @@ class ProjectPlanPickingLine(models.Model):
     quantity = fields.Float(string="Cantidad")
     location_id = fields.Many2one('stock.location', string="Localización")
     used_quantity = fields.Float(string="Cantidad utilizada", default=0)
+    reservado = fields.Float(string='Reservado')
     
    
     picking_name = fields.Char(string="Inventario")
