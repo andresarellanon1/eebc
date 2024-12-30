@@ -24,7 +24,9 @@
         "views/inherit_project_task_inventory_view_form.xml",
         "views/task_picking_line.xml",
         "views/inherit_sale_order_view_form.xml",
-        "views/inherit_sale_project_view.xml"
+        "views/inherit_sale_project_view.xml",
+        'reports/report_unit_price_analysis.xml',
+        'reports/report_unit_price_analysis_template.xml',
     ],
     "license": "LGPL-3",
     'installable': True,

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Definir el reporte -->
+    <report
+        id="action_report_project_task_materials"
+        model="project.task"
+        string="Reporte de Materiales de Tarea"
+        report_type="qweb-pdf"
+        name="mi_modulo.project_task_material_report"
+        file="mi_modulo.project_task_material_report"
+        print_report_name="'Reporte Materiales - %s' % (object.name)"
+    />
+
+    <!-- Plantilla del reporte -->
+    <template id="project_task_material_report">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <h2>Reporte de Materiales de Tarea</h2>
+
+                <p><strong>Tarea:</strong> <t t-esc="doc.name"/></p>
+                <p><strong>Proyecto:</strong> <t t-esc="doc.project_id.name"/></p>
+                <p><strong>Fecha de Programación:</strong> <t t-esc="doc.scheduled_date"/></p>
+
+                <h3>Materiales Asociados a la Tarea:</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Estado</th>
+                            <th>Selección Nueva</th>
+                            <th>Fecha Programada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="doc.stock_ids" t-as="stock">
+                            <tr>
+                                <td><t t-esc="stock.name"/></td>
+                                <td><t t-esc="stock.state"/></td>
+                                <td><t t-esc="stock.new_selection"/></td>
+                                <td><t t-esc="stock.scheduled_date"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>
