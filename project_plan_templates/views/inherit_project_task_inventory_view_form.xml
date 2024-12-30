@@ -28,17 +28,18 @@
                             <field name="product_uom"/>
                             <field name="product_packaging_id"/>
                             <field name="quantity"/>
-                            <field name="standard_price"/>
-                            <field name="subtotal"/>
+                            <field name="used_quantity"/>
+                            <!--<field name="standard_price"/>
+                            <field name="subtotal"/>-->
                         </tree>
                     </field>
-                    <group>
+                    <!--<group>
                         <group colspan="4">
                         </group>
                         <group class="oe_subtotal_footer" colspan="2" name="sale_total">
                             <field name="task_total_cost"/> 
                         </group>
-                    </group>
+                    </group>-->
                 </page>
             </xpath>
         </field>
