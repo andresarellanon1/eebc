@@ -212,7 +212,7 @@ class ProjectCreation(models.TransientModel):
                         'project_plan_pickings': line.project_plan_pickings.id,
                         'task_timesheet_id': line.task_timesheet_id.id,
                         'display_type': False,
-                        'for_create': line.for_create
+                        'for_create': True
                     }))
         return plan_lines
 
