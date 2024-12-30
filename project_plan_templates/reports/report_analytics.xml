@@ -1,0 +1,46 @@
+<odoo>
+    <template id="report_analytics">
+        <t t-name="projects_plan_templates.report_analytics">
+            <h2>Reporte de Orden de Venta</h2>
+            <p>Orden: <span t-esc="doc.name"/></p>
+            <p>Cliente: <span t-esc="doc.partner_id.name"/></p>
+            <p>Fecha: <span t-esc="doc.date_order"/></p>
+
+            <t t-if="doc.order_line">
+                <h3>Líneas de Orden:</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="doc.order_line" t-as="line">
+                            <tr>
+                                <td><span t-esc="line.product_id.name"/></td>
+                                <td><span t-esc="line.product_uom_qty"/></td>
+                                <td><span t-esc="line.price_unit"/></td>
+                                <td><span t-esc="line.price_total"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+
+        </t>
+    </template>
+
+    <!-- Definir el reporte en Odoo -->
+    <report
+        id="report_sale_order"
+        model="sale.order"
+        string="Reporte de Orden de Venta"
+        report_type="qweb-pdf"
+        name="projects_plan_templates.report_analytics"
+        file="projects_plan_templates.report_analytics"
+        print_report_name="'Orden de Venta - %s' % (object.name)"
+    />
+</odoo>
