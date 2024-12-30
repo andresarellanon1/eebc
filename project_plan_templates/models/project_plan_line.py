@@ -38,7 +38,7 @@ class ProjectLines(models.Model):
     code = fields.Char(string="Code")
     sequence = fields.Integer(default=0)
     project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario")
-    for_create = fields.Boolean()
+    for_create = fields.Boolean(default=True)
 
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
