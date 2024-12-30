@@ -45,6 +45,7 @@ class ProjectPlanPickingLine(models.Model):
     picking_id = fields.Many2one('project.plan.pickings', string="Plantilla de proyecto")
     product_id = fields.Many2one('product.product', string="Producto")
     sale_order_id = fields.Many2one('sale.order')
+    task_id = fields.Many2one('project.task', string="Tarea")
     
    
     quantity = fields.Float(string="Cantidad")
