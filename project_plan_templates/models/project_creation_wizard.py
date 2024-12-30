@@ -60,8 +60,8 @@ class ProjectCreation(models.TransientModel):
         project_vals = {
             'name': self.project_name,
             'description': self.description,
-            'project_plan_lines': self.prep_plan_lines(self.sale_order_id.project_plan_lines),
-            'project_picking_lines': self.wizard_picking_lines,
+            'project_plan_lines': self.prep_plan_lines(self.wizard_plan_lines),
+            'project_picking_lines': self.prep_picking_lines(self.wizard_picking_lines),
             'default_picking_type_id': self.picking_type_id.id,
             'publication_date': fields.Datetime.now(),
             'date_start': self.date_start,
