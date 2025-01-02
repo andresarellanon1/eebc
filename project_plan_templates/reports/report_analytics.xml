@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_analytics">
         <t t-name="projects_plan_templates.report_analytics">
@@ -39,14 +40,4 @@
             </t>
         </t>
     </template>
-
-    <report
-    id="report_analytics"
-    model="sale.order"
-    string="Reporte de Orden de Venta"
-    report_type="qweb-pdf"
-    name="report_analytics"
-    file="projects_plan_templates.report_analytics"
-    print_report_name="'Orden de Venta - %s' % (object.name)"/>
-
 </odoo>
