@@ -1,5 +1,5 @@
 <odoo>
-    <template id="report_analytics">
+    <template id="projects_plan_templates.report_analytics">
         <t t-name="projects_plan_templates.report_analytics">
             <div class="report-header">
                 <img t-att-src="'/web/image/res.company/%s/logo' % (doc.company_id.id) if doc.company_id.logo else '/path/to/default/logo.png'" alt="Logo"/>
@@ -41,12 +41,12 @@
     </template>
 
     <report
-        id="report_analytics"
-        model="sale.order"
-        string="Reporte de Orden de Venta"
-        report_type="qweb-pdf"
-        name="projects_plan_templates.report_analytics"
-        file="projects_plan_templates.report_analytics"
-        print_report_name="'Orden de Venta - %s' % (object.name)"
-    />
+    id="report_analytics"
+    model="sale.order"
+    string="Reporte de Orden de Venta"
+    report_type="qweb-pdf"
+    name="projects_plan_templates.report_analytics"
+    file="projects_plan_templates.report_analytics"
+    print_report_name="'Orden de Venta - %s' % (object.name)"/>
+
 </odoo>
