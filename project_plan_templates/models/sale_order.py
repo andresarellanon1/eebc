@@ -173,3 +173,12 @@ class SaleOrder(models.Model):
             }
         }
     
+    def action_open_report(self):
+        self.ensure_one()  
+        return {
+            'type': 'ir.actions.report',
+            'report_name': 'report_analytics', 
+            'report_type': 'qweb-pdf',  
+            'res_model': 'sale.order',
+            'res_id': self.id  
+        }

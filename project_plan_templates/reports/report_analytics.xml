@@ -1,7 +1,11 @@
 <odoo>
     <template id="report_analytics">
         <t t-name="projects_plan_templates.report_analytics">
-            <h2>Reporte de Orden de Venta</h2>
+            <div class="header">
+                <img t-att-src="'/web/image/res.company/%s/logo' % (doc.company_id.id)" alt="Logo"/>
+                 <h1>Reporte de Orden de Venta</h1>
+            </div>
+
             <p>Orden: <span t-esc="doc.name"/></p>
             <p>Cliente: <span t-esc="doc.partner_id.name"/></p>
             <p>Fecha: <span t-esc="doc.date_order"/></p>
@@ -35,7 +39,7 @@
 
     <!-- Definir el reporte en Odoo -->
     <report
-        id="report_sale_order"
+        id="report_analytics"
         model="sale.order"
         string="Reporte de Orden de Venta"
         report_type="qweb-pdf"
