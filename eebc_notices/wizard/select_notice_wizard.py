@@ -70,9 +70,10 @@ class SelectNoticeWizard(models.TransientModel):
 
                 # Iterar sobre notice_ids
                 for line in wizard.notice_ids:
-                    for notice in line.notice_id:
+                    _logger.warning('Notice: %s', line.notice_id.name)
+                    for lot in line.lot_line_ids:
                         
-                        _logger.warning('Estos son los valores de los lotes obtenidos')
+                        _logger.warning(f'lot {lot.lot_id.name} cantidad establecida {lot.quantity}')
                         
                         # # Validar datos necesarios antes de proceder
                         # if not wizard.stock_move_id or not wizard.stock_move_id.picking_id:
