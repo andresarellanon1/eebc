@@ -7,8 +7,10 @@
              <form string="Select Lote">
 
                    
-                                <field name="lot_id" options="{'no_create': True}"/>
-                                <field name="quantity"/>
+                                <field name="lot_id" string="Lote" options="{'no_create': True}" 
+                                readonly="1"
+                                />
+                                <field string="Cantidad" name="quantity"/>
 
 
 
