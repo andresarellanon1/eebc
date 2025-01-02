@@ -173,10 +173,14 @@ class SaleOrder(models.Model):
             }
         }
     
-    @api.multi
-    def action_print_report(self):
-        # Esta función es llamada cuando se presiona el botón
-        # Generar el reporte de la orden de venta
-        self.ensure_one()  # Verifica que solo se haya seleccionado una orden
-        return self.env.ref('projects_plan_templates.report_analytics').report_action(self)
+    def action_open_report(self):
+        self.ensure_one()  
+        return {
+            'type': 'ir.actions.report',
+            'report_name': 'projects_plan_templates.report_analytics', 
+            'report_type': 'qweb-pdf', 
+            'res_model': 'sale.order', 
+            'res_id': self.id,  
+            'context': self.env.context,
+        }
 
