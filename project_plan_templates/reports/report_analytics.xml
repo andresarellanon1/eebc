@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <template id="report_analytics">
+    <template id="report_analytics" name="projects_plan_templates.report_analytics">
         <t t-name="projects_plan_templates.report_analytics">
             <div class="report-header">
                 <img t-att-src="'/web/image/res.company/%s/logo' % (doc.company_id.id) if doc.company_id.logo else '/path/to/default/logo.png'" alt="Logo"/>
