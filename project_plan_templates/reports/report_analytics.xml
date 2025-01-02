@@ -45,7 +45,7 @@
     model="sale.order"
     string="Reporte de Orden de Venta"
     report_type="qweb-pdf"
-    name="projects_plan_templates.report_analytics"
+    name="report_analytics"
     file="projects_plan_templates.report_analytics"
     print_report_name="'Orden de Venta - %s' % (object.name)"/>
 
