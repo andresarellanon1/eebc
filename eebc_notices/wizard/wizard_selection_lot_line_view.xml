@@ -5,16 +5,8 @@
         <field name="model">wizard.selection.lot.line</field>
         <field name="arch" type="xml">
              <form string="Select Lote">
-
-                   
-                                <field name="lot_id" string="Lote" options="{'no_create': True}" 
-                                readonly="1"
-                                />
-                                <field string="Cantidad" name="quantity"/>
-
-
-
-
+                <field name="lot_id" string="Lote" options="{'no_create': True}" readonly="1"/>
+                <field string="Cantidad" name="quantity"/>
              </form>
         </field>
     </record>
