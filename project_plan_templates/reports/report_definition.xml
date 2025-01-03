@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <report
-        id="report_analytics"
-        model="sale.order"
-        string="Reporte de Análisis"
-        report_type="qweb-pdf"
-        name="project_plan_templates.report_analytics"
-        file="project_plan_templates.report_analytics"
-    />
+    <record id="report_analytics" model="ir.actions.report">
+        <field name="name">Report Analytics</field>
+        <field name="model">project.plan.templates</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">project_plan_templates.report_analytics</field>
+        <field name="report_file">module_name.report_analytics</field>
+        <field name="binding_model_id" ref="model_project_plan_templates"/>
+        <field name="binding_type">report</field>
+    </record>
+
 </odoo>
