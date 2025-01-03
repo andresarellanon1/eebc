@@ -2,47 +2,49 @@
 <odoo>
     <!-- Plantilla del reporte para los materiales -->
     <template id="report_analytics" name="Reporte de Materiales">
-        <t t-name="project_plan_templates.report_analytics">
-            <div class="report-header text-center">
-                <img t-att-src="'/web/image/res.company/%s/logo' % (doc.company_id.id) if doc.company_id.logo else '/web/static/src/img/default_logo.png'" alt="Logo" style="max-height: 100px;"/>
-                <h1>Reporte de Materiales</h1>
-            </div>
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="report-header text-center">
+                    <img t-att-src="'/web/image/res.company/%s/logo' % (doc.company_id.id) if doc.company_id.logo else '/web/static/src/img/default_logo.png'" alt="Logo" style="max-height: 100px;"/>
+                    <h1>Reporte de Materiales</h1>
+                </div>
 
-            <div class="report-content">
-                <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
-                <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
-                <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
-            </div>
+                <div class="report-content">
+                    <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
+                    <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
+                    <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
+                </div>
 
-            <t t-if="doc.project_picking_lines">
-                <h3>Materiales:</h3>
-                <table class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Nombre</th>
-                            <th>Unidad de Medida</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unitario</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="doc.project_picking_lines" t-as="line">
+                <t t-if="doc.project_picking_lines">
+                    <h3>Materiales:</h3>
+                    <table class="table table-striped table-bordered">
+                        <thead>
                             <tr>
-                                <td><span t-esc="line.product_id.name"/></td>
-                                <td><span t-esc="line.name"/></td>
-                                <td><span t-esc="line.product_uom.name"/></td>
-                                <td><span t-esc="line.quantity"/></td>
-                                <td><span t-esc="line.standard_price"/></td>
-                                <td><span t-esc="line.subtotal"/></td>
+                                <th>Producto</th>
+                                <th>Nombre</th>
+                                <th>Unidad de Medida</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
                             </tr>
-                        </t>
-                    </tbody>
-                </table>
-            </t>
-            <t t-else="">
-                <p class="text-muted">No hay materiales disponibles.</p>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc.project_picking_lines" t-as="line">
+                                <tr>
+                                    <td><span t-esc="line.product_id.name"/></td>
+                                    <td><span t-esc="line.name"/></td>
+                                    <td><span t-esc="line.product_uom.name"/></td>
+                                    <td><span t-esc="line.quantity"/></td>
+                                    <td><span t-esc="line.standard_price"/></td>
+                                    <td><span t-esc="line.subtotal"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-else="">
+                    <p class="text-muted">No hay materiales disponibles.</p>
+                </t>
             </t>
         </t>
     </template>
