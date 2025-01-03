@@ -2,7 +2,7 @@
 <odoo>
     <report
         id="report_analytics"
-        model="sale.order"
+        model="sale.order.line"
         string="Reporte de Orden de Venta"
         report_type="qweb-pdf"
         name="project_plan_templates.report_analytics"
