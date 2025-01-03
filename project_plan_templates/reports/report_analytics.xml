@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_analytics" name="Reporte Analítico de Proyectos">
-        <t t-name="projects_plan_templates.report_analytics">
+        <t t-name="project_plan_templates.report_analytics">
             <div class="report-header text-center">
                 <img t-att-src="'/web/image/res.company/%s/logo' % (doc.company_id.id) if doc.company_id.logo else '/web/static/src/img/default_logo.png'" alt="Logo" style="max-height: 100px;"/>
                 <h1>Reporte de Orden de Venta</h1>

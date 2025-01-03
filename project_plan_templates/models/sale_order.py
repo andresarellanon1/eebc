@@ -178,7 +178,7 @@ class SaleOrder(models.Model):
         
         return {
             'type': 'ir.actions.report',
-            'report_name': 'projects_plan_templates.report_analytics', 
+            'report_name': 'project_plan_templates.report_analytics', 
             'report_type': 'qweb-pdf',
             'res_model': 'sale.order', 
             'res_id': self.id,
