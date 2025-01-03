@@ -2,19 +2,21 @@
 <odoo>
     <template id="report_analytics" name="Reporte Analítico de Proyectos">
         <t t-name="projects_plan_templates.report_analytics">
-            <div class="report-header">
-                <img t-att-src="'/web/image/res.company/%s/logo' % (doc.company_id.id) if doc.company_id.logo else '/path/to/default/logo.png'" alt="Logo"/>
+            <div class="report-header text-center">
+                <img t-att-src="'/web/image/res.company/%s/logo' % (doc.company_id.id) if doc.company_id.logo else '/web/static/src/img/default_logo.png'" alt="Logo" style="max-height: 100px;"/>
                 <h1>Reporte de Orden de Venta</h1>
             </div>
 
-            <p>Orden: <span t-esc="doc.name"/></p>
-            <p>Cliente: <span t-esc="doc.partner_id.name"/></p>
-            <p>Fecha: <span t-esc="doc.date_order"/></p>
-            <p>Empresa: <span t-esc="doc.company_id.name if doc.company_id else 'No definida'"/></p>
+            <div class="report-content">
+                <p><strong>Orden:</strong> <span t-esc="doc.name"/></p>
+                <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
+                <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
+                <p><strong>Empresa:</strong> <span t-esc="doc.company_id.name if doc.company_id else 'No definida'"/></p>
+            </div>
 
             <t t-if="doc.order_line">
                 <h3>Líneas de Orden:</h3>
-                <table class="table table-bordered">
+                <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>Producto</th>
@@ -36,7 +38,7 @@
                 </table>
             </t>
             <t t-else="">
-                <p>No hay líneas de orden disponibles.</p>
+                <p class="text-muted">No hay líneas de orden disponibles.</p>
             </t>
         </t>
     </template>
