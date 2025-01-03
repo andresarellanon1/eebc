@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <report
-        id="out_invoice_template_custom"
-        model="ir.actions.report"
-        string="Reporte de Análisis"
+        id="report_analytics"
+        model="sale.order"
+        string="Reporte de Análisis de Precios Unitarios"
         report_type="qweb-pdf"
         name="project_plan_templates.report_analytics"
         file="project_plan_templates.report_analytics"
