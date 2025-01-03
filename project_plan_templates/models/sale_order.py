@@ -175,8 +175,12 @@ class SaleOrder(models.Model):
         
         
     def action_open_report(self):
-        self.ensure_one()  
-        report = self.env.ref('project_plan_templates.report_analytics')  
-        return report.report_action(self) 
-
-
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.report',
+            'report_name': 'project_plan_templates.report_analytics', 
+            'report_type': 'qweb-pdf',
+            'res_model': 'sale.order',
+            'res_id': self.id,
+            'context': self.env.context,
+        }
