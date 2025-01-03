@@ -21,6 +21,8 @@
                                     <tree editable="bottom">
                                         <field name="lot_id"/>
                                         <field name="quantity"/>
+                                        <field name="lot_quantity_available" invisible="1"/>
+
                                     </tree>
                                 </field>
 
