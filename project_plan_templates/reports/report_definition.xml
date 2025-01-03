@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <report
-        id="out_invoice_template_custom"
-        model="ir.actions.report"
-        string="Reporte de Análisis"
-        report_type="qweb-pdf"
-        name="project_plan_templates.report_analytics"
-        file="project_plan_templates.report_analytics"
-    />
+    <record id="report_analytics" model="ir.actions.report">
+        <field name="name">Reporte Analisis de Precios Unitarios</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">project_plan_templates.report_analytics</field>
+    </record>
 </odoo>
