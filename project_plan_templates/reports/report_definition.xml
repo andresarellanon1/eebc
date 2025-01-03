@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="action_report_analytics" model="ir.actions.report">
-        <field name="name">Reporte de Materiales</field>
-        <field name="type">qweb-pdf</field>
-        <field name="report_name">project_plan_templates.report_analytics</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="model">sale.order</field>
-        <field name="binding_model_id" ref="model_sale_order"/>
-        <field name="binding_type">report</field>
-    </record>
-
+    <report
+        id="report_analytics"
+        model="sale.order"
+        string="Reporte de Análisis de Precios Unitarios"
+        report_type="qweb-pdf"
+        name="project_plan_templates.report_analytics"
+        file="project_plan_templates.report_analytics"
+    />
 </odoo>
