@@ -29,14 +29,4 @@ class SaleOrderLine(models.Model):
 
                 record.products_project_domain = [(6, 0, products.ids)]
 
-    def action_open_report(self):
-        self.ensure_one()
-        
-        return {
-            'type': 'ir.actions.report',
-            'report_name': 'project_plan_templates.report_analytics', 
-            'report_type': 'qweb-pdf', 
-            'res_model': 'sale.order.line', 
-            'res_id': self.id, 
-            'context': self.env.context, 
-        }
+    

@@ -172,15 +172,15 @@ class SaleOrder(models.Model):
                 'default_project_name': self.project_name
             }
         }
-    
-    def action_open_report(self):
-        self.ensure_one()  
         
+        
+    def action_open_report(self):
+        self.ensure_one()
         return {
             'type': 'ir.actions.report',
             'report_name': 'project_plan_templates.report_analytics', 
             'report_type': 'qweb-pdf',
-            'res_model': 'sale.order', 
+            'res_model': 'sale.order',
             'res_id': self.id,
             'context': self.env.context,
         }
