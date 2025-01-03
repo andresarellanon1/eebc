@@ -3,9 +3,9 @@
     <report
         id="report_analytics"
         model="sale.order.line"
-        string="Reporte de Orden de Venta"
+        string="Reporte de Análisis"
         report_type="qweb-pdf"
         name="project_plan_templates.report_analytics"
         file="project_plan_templates.report_analytics"
-        print_report_name="'Orden de Venta - %s' % (object.name)"/>
+    />
 </odoo>
