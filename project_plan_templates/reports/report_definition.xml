@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!-- Definir el modelo con su external ID -->
+    <record id="model_project_plan_templates" model="ir.model">
+        <field name="name">project.plan.templates</field>
+        <field name="model">project.plan.templates</field>
+        <field name="state">manual</field>
+    </record>
+
+    <!-- Definir el reporte -->
     <record id="report_analytics" model="ir.actions.report">
         <field name="name">Report Analytics</field>
         <field name="model">project.plan.templates</field>
@@ -9,5 +17,4 @@
         <field name="binding_model_id" ref="model_project_plan_templates"/>
         <field name="binding_type">report</field>
     </record>
-
 </odoo>
