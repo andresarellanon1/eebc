@@ -14,19 +14,19 @@
                         <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
                     </div>
 
-                    <t t-foreach="doc.project_picking_lines" t-as="line">
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Unidad de Medida</th>
-                                    <th>Empaque</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio Estándar</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Unidad de Medida</th>
+                                <th>Empaque</th>
+                                <th>Cantidad</th>
+                                <th>Precio Estándar</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc.project_picking_lines" t-as="line">
                                 <tr>
                                     <td><span t-esc="line.product_id.name"/></td>
                                     <td><span t-esc="line.product_uom.name"/></td>
@@ -35,9 +35,9 @@
                                     <td><span t-esc="line.standard_price"/></td>
                                     <td><span t-esc="line.subtotal"/></td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </t>
+                            </t>
+                        </tbody>
+                    </table>
                 </t>
             </t>
         </t>
