@@ -20,6 +20,7 @@
                                 <th>Producto</th>
                                 <th>Cantidad</th>
                                 <th>Precio Unitario</th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,6 +31,7 @@
                                         <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
                                         <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
                                         <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
+                                        <td><span t-esc="line.subtotal or 'Sin Total'"/></td>
                                     </tr>
                                 </t>
                             </t>
@@ -41,7 +43,6 @@
                             <tr>
                                 <th>Producto</th>
                                 <th>Unidad de Medida</th>
-                                <th>Empaque</th>
                                 <th>Cantidad</th>
                                 <th>Precio Estándar</th>
                                 <th>Subtotal</th>
@@ -59,7 +60,6 @@
                                     <t t-else="">
                                         <td><span t-esc="line.product_id.name"/></td>
                                         <td><span t-esc="line.product_uom.name"/></td>
-                                        <td><span t-esc="line.product_packaging_id.name"/></td>
                                         <td><span t-esc="line.quantity"/></td>
                                         <td><span t-esc="line.standard_price"/></td>
                                         <td><span t-esc="line.subtotal"/></td>
