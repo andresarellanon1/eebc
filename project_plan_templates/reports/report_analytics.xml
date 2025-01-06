@@ -4,41 +4,38 @@
     <template id="report_analytics" name="Reporte de Materiales">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
-                <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
-                <div class="report-header text-center">
-                    <h1>Reporte de Materiales</h1>
-                </div>
+                <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
+                <t t-set="forced_vat" t-value="doc.fiscal_position_id.foreign_vat"/>
 
-                <div class="report-content">
-                    <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
-                    <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
-                    <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
+                <!-- MENSAJE -->
+                <div>
+                    <div class="row" style="font-size: 10px;">
+                        <p class="text-end">
+                            <span t-field="doc.date_order"/><br/> Referencia: <span t-field="doc.name"/>
+                        </p>
+                    </div>
+                    <div class="row" style="font-size: 10px;">
+                        <p>
+                            <br/> <span t-field="doc.partner_id.name"/>
+                        </p>
+                    </div>
+                    <div class="row" style="font-size: 10px;">
+                        <p>
+                            Por medio de la presente, además de enviarle un cordial saludo, tengo el
+                            gusto de presentar a su consideración la propuesta económica por usted
+                            solicitada referente a:
+                        </p>
+                    </div>
+                    <div class="row" style="font-size: 10px;">
+                        <p class="text-center"> "<span t-field="doc.title"/>" </p>
+                    </div>
+                    <div class="row" style="font-size: 10px;">
+                        <p>
+                            Sirvanse encontrar aquí nuestra propuesta para la realización de este
+                            proyecto.
+                        </p>
+                    </div>
                 </div>
-
-                <t t-foreach="doc.project_picking_lines" t-as="line">
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Unidad de Medida</th>
-                                <th>Empaque</th>
-                                <th>Cantidad</th>
-                                <th>Precio Estándar</th>
-                                <th>Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span t-esc="line.product_id.name"/></td>
-                                <td><span t-esc="line.product_uom.name"/></td>
-                                <td><span t-esc="line.product_packaging_id.name"/></td>
-                                <td><span t-esc="line.quantity"/></td>
-                                <td><span t-esc="line.standard_price"/></td>
-                                <td><span t-esc="line.subtotal"/></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </t>
             </t>
         </t>
     </template>
