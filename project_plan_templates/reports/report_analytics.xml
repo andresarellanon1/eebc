@@ -12,30 +12,27 @@
                     
                 </div>
 
-                <t t-if="sale_order.project_picking_lines">
-                    <h3>Materiales:</h3>
-                    <table class="table table-striped table-bordered">
+                <t t-foreach="doc.project_picking_lines" t-as="line">
+                    <table class="table table-condensed">
                         <thead>
                             <tr>
                                 <th>Producto</th>
-                                <th>Nombre</th>
                                 <th>Unidad de Medida</th>
+                                <th>Empaque</th>
                                 <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Total</th>
+                                <th>Precio Estándar</th>
+                                <th>Subtotal</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="sale_order.project_picking_lines" t-as="line">
-                                <tr>
-                                    <td><span t-esc="line.product_id.name"/></td>
-                                    <td><span t-esc="line.name"/></td>
-                                    <td><span t-esc="line.product_uom.name"/></td>
-                                    <td><span t-esc="line.quantity"/></td>
-                                    <td><span t-esc="line.standard_price"/></td>
-                                    <td><span t-esc="line.subtotal"/></td>
-                                </tr>
-                            </t>
+                            <tr>
+                                <td><span t-esc="line.product_id.name"/></td>
+                                <td><span t-esc="line.product_uom.name"/></td>
+                                <td><span t-esc="line.product_packaging_id.name"/></td>
+                                <td><span t-esc="line.quantity"/></td>
+                                <td><span t-esc="line.standard_price"/></td>
+                                <td><span t-esc="line.subtotal"/></td>
+                            </tr>
                         </tbody>
                     </table>
                 </t>
