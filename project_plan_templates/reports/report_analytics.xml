@@ -36,9 +36,6 @@
                         </tbody>
                     </table>
                 </t>
-                <t t-else="">
-                    <p class="text-muted">No hay materiales disponibles.</p>
-                </t>
             </t>
         </t>
     </template>
