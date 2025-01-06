@@ -14,14 +14,27 @@
                         <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
                     </div>
 
-                    <div class="order-lines">
-                        <t t-foreach="doc.order_line" t-as="line">
-                            <p><strong>Producto:</strong> <span t-esc="line.product_id.name or 'Sin producto'"/></p>
-                            <p><strong>Cantidad:</strong> <span t-esc="line.product_uom_qty or 'Sin cantidad'"/></p>
-                            <p><strong>Precio Unitario:</strong> <span t-esc="line.price_unit or 'Sin precio'"/></p>
-                            <br/>
-                        </t>
-                    </div>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc.order_line" t-as="line">
+                                <!-- Verificar si hay producto, cantidad y precio -->
+                                <t t-if="line.product_id and line.product_uom_qty and line.price_unit">
+                                    <tr>
+                                        <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
+                                        <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
+                                        <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
 
                     <table class="table table-condensed">
                         <thead>
