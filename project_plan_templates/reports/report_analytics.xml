@@ -30,7 +30,7 @@
                                 <t t-if="line.product_id and line.product_uom_qty and line.price_unit">
                                     <tr>
                                         <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
-                                        <td><span t-esc="line.product_uom or 'Sin producto'"/></td>
+                                        <td><span t-esc="line.product_uom.name or 'Sin producto'"/></td>
                                         <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
                                         <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
                                         <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
