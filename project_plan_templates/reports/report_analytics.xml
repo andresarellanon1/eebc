@@ -26,11 +26,22 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <t t-set="previous_order_id" t-value="None"/>
                             <t t-foreach="doc.project_picking_lines" t-as="line">
+                                <!-- Verificar si la línea pertenece a una nueva orden -->
+                                <t t-if="line.picking_id.sale_id != previous_order_id">
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <strong>Orden de Venta: <span t-esc="line.picking_id.sale_id.name"/></strong>
+                                        </td>
+                                    </tr>
+                                    <!-- Actualizar el ID de la orden para la siguiente iteración -->
+                                    <t t-set="previous_order_id" t-value="line.picking_id.sale_id.id"/>
+                                </t>
+
                                 <tr>
-                                    <!-- Mostrar el contenido de la tarea o línea directamente -->
+                                    <!-- Si no hay producto, mostrar el contenido de la tarea -->
                                     <t t-if="not line.product_id">
-                                        <!-- Si no hay producto, mostrar el contenido de la línea -->
                                         <td colspan="6"><strong><span t-esc="line.name or 'Sin descripción'"/></strong></td>
                                     </t>
                                     <!-- Si hay producto, mostrar los detalles del material -->
