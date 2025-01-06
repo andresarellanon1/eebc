@@ -9,12 +9,12 @@
                 </div>
 
                 <div class="report-content">
-                    <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
-                    <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
-                    <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
+                    <p><strong>Orden de Venta:</strong> <span t-esc="sale_order.name"/></p>
+                    <p><strong>Cliente:</strong> <span t-esc="sale_order.partner_id.name"/></p>
+                    <p><strong>Fecha:</strong> <span t-esc="sale_order.date_order"/></p>
                 </div>
 
-                <t t-if="doc.project_picking_lines">
+                <t t-if="sale_order.project_picking_lines">
                     <h3>Materiales:</h3>
                     <table class="table table-striped table-bordered">
                         <thead>
