@@ -26,22 +26,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-set="previous_order_id" t-value="None"/>
                             <t t-foreach="doc.project_picking_lines" t-as="line">
-                                <!-- Verificar si la línea pertenece a una nueva orden -->
-                                <t t-if="line.picking_id.sale_order_id != previous_order_id">
-                                    <tr>
-                                        <td colspan="6">
-                                            <strong>Orden de Venta: <span t-esc="line.picking_id.sale_order_id.name"/></strong>
-                                        </td>
-                                    </tr>
-                                    <!-- Actualizar el ID de la orden para la siguiente iteración -->
-                                    <t t-set="previous_order_id" t-value="line.picking_id.sale_order_id.id"/>
-                                </t>
-
                                 <tr>
-                                    <!-- Si no hay producto, mostrar el contenido de la tarea -->
+                                    <!-- Mostrar el contenido de la tarea o línea directamente -->
                                     <t t-if="not line.product_id">
+                                        <!-- Si no hay producto, mostrar el contenido de la línea -->
                                         <td colspan="6"><strong><span t-esc="line.name or 'Sin descripción'"/></strong></td>
                                     </t>
                                     <!-- Si hay producto, mostrar los detalles del material -->
@@ -52,7 +41,7 @@
                                         <td><span t-esc="line.quantity"/></td>
                                         <td><span t-esc="line.standard_price"/></td>
                                         <td><span t-esc="line.subtotal"/></td>
-                                    </t>ss
+                                    </t>
                                 </tr>
                             </t>
                         </tbody>
