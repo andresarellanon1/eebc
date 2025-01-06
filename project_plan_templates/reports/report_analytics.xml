@@ -25,6 +25,7 @@
                                 <th>Subtotal</th>
                             </tr>
                         </thead>
+                        
                         <tbody>
                             <t t-set="tarea_count" t-value="0"/> <!-- Inicializar el contador -->
                             <!-- Recorrer solo las líneas de picking con productos -->
