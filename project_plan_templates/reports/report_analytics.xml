@@ -29,14 +29,14 @@
                             <t t-set="previous_order_id" t-value="None"/>
                             <t t-foreach="doc.project_picking_lines" t-as="line">
                                 <!-- Verificar si la línea pertenece a una nueva orden -->
-                                <t t-if="line.picking_id.order_id != previous_order_id">
+                                <t t-if="line.picking_id.sale_order_id != previous_order_id">
                                     <tr>
                                         <td colspan="6">
-                                            <strong>Orden de Venta: <span t-esc="line.picking_id.order_id.name"/></strong>
+                                            <strong>Orden de Venta: <span t-esc="line.picking_id.sale_order_id.name"/></strong>
                                         </td>
                                     </tr>
                                     <!-- Actualizar el ID de la orden para la siguiente iteración -->
-                                    <t t-set="previous_order_id" t-value="line.picking_id.order_id.id"/>
+                                    <t t-set="previous_order_id" t-value="line.picking_id.sale_order_id.id"/>
                                 </t>
 
                                 <tr>
@@ -52,7 +52,7 @@
                                         <td><span t-esc="line.quantity"/></td>
                                         <td><span t-esc="line.standard_price"/></td>
                                         <td><span t-esc="line.subtotal"/></td>
-                                    </t>
+                                    </t>ss
                                 </tr>
                             </t>
                         </tbody>
