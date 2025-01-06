@@ -31,7 +31,7 @@
                                         <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
                                         <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
                                         <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
-                                        <td><span t-esc="line.subtotal or 'Sin Total'"/></td>
+                                        <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
                                     </tr>
                                 </t>
                             </t>
