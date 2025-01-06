@@ -26,15 +26,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-set="tarea_count" t-value="0"/> <!-- Inicializar el contador -->
                             <t t-foreach="doc.project_picking_lines" t-as="line">
                                 <tr>
-                                    <!-- Condicional para mostrar "Tarea X" si no hay datos -->
+                                    <!-- Mostrar el contenido de la tarea o línea directamente -->
                                     <t t-if="not line.product_id">
-                                        <t t-set="tarea_count" t-value="tarea_count + 1"/> <!-- Incrementar el contador -->
-                                        <td colspan="6"><strong>Tarea <span t-esc="tarea_count"/></strong></td>
+                                        <!-- Si no hay producto, mostrar el contenido de la línea -->
+                                        <td colspan="6"><strong><span t-esc="line.name or 'Sin descripción'"/></strong></td>
                                     </t>
-                                    <!-- Si hay datos, mostrar los detalles como antes -->
+                                    <!-- Si hay producto, mostrar los detalles del material -->
                                     <t t-else="">
                                         <td><span t-esc="line.product_id.name"/></td>
                                         <td><span t-esc="line.product_uom.name"/></td>
