@@ -27,23 +27,27 @@
                         </thead>
                         <tbody>
                             <t t-set="tarea_count" t-value="0"/> <!-- Inicializar el contador -->
+                            <!-- Recorrer solo las líneas de picking con productos -->
                             <t t-foreach="doc.project_picking_lines" t-as="line">
-                                <tr>
-                                    <!-- Condicional para mostrar "Tarea X" si no hay datos -->
-                                    <t t-if="not line.product_id">
-                                        <t t-set="tarea_count" t-value="tarea_count + 1"/> <!-- Incrementar el contador -->
-                                        <td colspan="6" class="text-center"><strong>Tarea <span t-esc="tarea_count"/></strong></td>
-                                    </t>
-                                    <!-- Si hay datos, mostrar los detalles como antes -->
-                                    <t t-else="">
+                                <t t-if="line.product_id">
+                                    <tr>
                                         <td><span t-esc="line.product_id.name"/></td>
                                         <td><span t-esc="line.product_uom.name"/></td>
                                         <td><span t-esc="line.product_packaging_id.name"/></td>
                                         <td><span t-esc="line.quantity"/></td>
                                         <td><span t-esc="line.standard_price"/></td>
                                         <td><span t-esc="line.subtotal"/></td>
-                                    </t>
-                                </tr>
+                                    </tr>
+                                </t>
+                            </t>
+                            <!-- Recorrer las líneas sin productos y agregar la tarea -->
+                            <t t-foreach="doc.project_picking_lines" t-as="line">
+                                <t t-if="not line.product_id">
+                                    <t t-set="tarea_count" t-value="tarea_count + 1"/> <!-- Incrementar el contador -->
+                                    <tr>
+                                        <td colspan="6"><strong>Tarea <span t-esc="tarea_count"/></strong></td>
+                                    </tr>
+                                </t>
                             </t>
                         </tbody>
                     </table>
