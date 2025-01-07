@@ -17,7 +17,7 @@
                         <tree create="0">
                             <field name="lot_id" options="{'no_create': True}"/>
                             <field name="quantity"/>
-                            <field name="lot_quantity_available" invisible="1"/>
+                            <field name="lot_quantity_available" column_invisible="1"  invisible="1"/>
 
                         </tree>
                     </field>
