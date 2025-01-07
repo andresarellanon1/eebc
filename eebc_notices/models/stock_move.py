@@ -222,7 +222,10 @@ class StockMove(models.Model):
     def action_show_outgoing(self):
         in_or_out = "out"
         notice_lines_to_wizard =self._create_line_ids(in_or_out)
+        _logger.warning('1')
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
+        _logger.warning('2')
+
 
         # aqui va variable para saber que haremos salida y pasarla a la llave in_or_out
 
