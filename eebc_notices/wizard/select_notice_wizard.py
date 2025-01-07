@@ -26,6 +26,7 @@ class SelectNoticeWizard(models.TransientModel):
     
     @api.model
     def default_get(self, fields_list):
+        _logger.warning('entra a default select notice')
         res = super(SelectNoticeWizard, self).default_get(fields_list)
         stock_move_id = self.env.context.get('stock_move_id')
 
