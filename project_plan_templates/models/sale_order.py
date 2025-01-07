@@ -25,9 +25,40 @@ class SaleOrder(models.Model):
 
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
-    project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id', compute="_compute_picking_lines", store=True)
+    # project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id', compute="_compute_picking_lines", store=True)
 
     project_id = fields.Many2one('project.project', string="Proyecto")
+
+    project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
+
+    @api.model
+    def create(self, vals):
+        record = super(SaleOrder, self).create(vals)
+        record.update_picking_lines()
+        return record
+
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        if 'project_plan_lines' in vals:
+            self.update_picking_lines()
+        return res
+
+    def update_picking_lines(self):
+        for record in self:
+            record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
+            record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
+
+    def get_picking_lines(self, line):
+        picking_lines = []
+
+        for picking in line:
+            if picking.display_type == 'line_section':
+                picking_lines.append(self.prep_picking_section_line(picking))
+            else:
+                picking_lines.append(self.prep_picking_section_line(picking))
+                picking_lines += self.prep_picking_lines(picking)
+                
+        return picking_lines
     
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
@@ -46,7 +77,7 @@ class SaleOrder(models.Model):
             if sale.is_project:
                 if not sale.project_name:
                     raise ValidationError(
-                        f"Project name needed."
+                        f"se requiere el nombre del proyecto"
                     )
                 sale.project_plan_pickings = [(5, 0, 0)]
                 sale.project_plan_lines = [(5, 0, 0)]
@@ -55,10 +86,10 @@ class SaleOrder(models.Model):
                 plan_lines = []
                 for line in sale.order_line:
                     if line.display_type == 'line_section':
-                        plan_lines.append(self.prep_plan_section_line(line))
+                        plan_lines.append(self.prep_plan_section_line(line, True))
                     else:
                         if line.product_id.project_plan_id:
-                            plan_lines.append(self.prep_plan_section_line(line))
+                            plan_lines.append(self.prep_plan_section_line(line, False))
                             plan_lines += self.prep_plan_lines(line)
 
                         for project_picking in line.product_id.project_plan_id.project_plan_pickings:
@@ -81,7 +112,7 @@ class SaleOrder(models.Model):
             'subtotal': False
         })
     
-    def prep_plan_section_line(self, line):
+    def prep_plan_section_line(self, line, for_create):
         return (0, 0, {
             'name': line.name,
             'display_type': line.display_type or 'line_section',
@@ -89,9 +120,9 @@ class SaleOrder(models.Model):
             'use_project_task': True,
             'planned_date_begin': False,
             'planned_date_end': False,
-            'partner_id': False,
             'project_plan_pickings': False,
             'task_timesheet_id': False,
+            'for_create': for_create
         })
 
     def prep_plan_lines(self, line):
@@ -104,10 +135,10 @@ class SaleOrder(models.Model):
                 'use_project_task': True,
                 'planned_date_begin': fields.Datetime.now(),
                 'planned_date_end': fields.Datetime.now(),
-                'partner_id': [(6, 0, plan.partner_id.ids)],
                 'project_plan_pickings': plan.project_plan_pickings.id,
                 'task_timesheet_id': plan.task_timesheet_id.id,
-                'display_type': False
+                'display_type': False,
+                'for_create': True
             }))
         return plan_lines
 
@@ -127,24 +158,6 @@ class SaleOrder(models.Model):
             }))
         return picking_lines
 
-    @api.depends('project_plan_lines')
-    def _compute_picking_lines(self):
-        for record in self:
-            record.project_picking_lines = [(5, 0, 0)]
-            record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
-
-    def get_picking_lines(self, line):
-        picking_lines = []
-
-        for picking in line:
-            if picking.display_type == 'line_section':
-                picking_lines.append(self.prep_picking_section_line(picking))
-            else:
-                picking_lines.append(self.prep_picking_section_line(picking))
-                picking_lines += self.prep_picking_lines(picking)
-                
-        return picking_lines
-
     def action_open_create_project_wizard(self):
         self.ensure_one()
 
@@ -158,4 +171,24 @@ class SaleOrder(models.Model):
                 'default_sale_order_id': self.id,
                 'default_project_name': self.project_name
             }
+        }
+        
+        
+    def action_open_report(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.report',
+            'report_name': 'project_plan_templates.report_analytics', 
+            'report_type': 'qweb-pdf',
+            'res_model': 'sale.order',
+            'res_id': self.id,
+            'context': self.env.context,
+        }
+        
+    def _get_report_values(self, docids, data=None):
+        docs = self.env['sale.order'].browse(docids)  
+        return {
+            'doc_ids': docids,
+            'doc_model': 'sale.order',
+            'docs': docs,
         }

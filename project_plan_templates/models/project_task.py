@@ -9,10 +9,17 @@ class ProjectTask(models.Model):
         string="Inventario"
     )
 
+    project_picking_lines = fields.One2many('project.picking.lines', 'task_id')
+
+    task_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
+
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.task_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
 
     def action_open_task_inventory_wizard(self):
         self.ensure_one()
-        
 
         return {
             'name': 'Create inventory', 
