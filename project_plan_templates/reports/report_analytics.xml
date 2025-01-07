@@ -40,36 +40,48 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-condensed">
-                        <thead>
+                    <t t-set="is_table_open" t-value="False"/>
+                    <t t-foreach="doc.project_picking_lines" t-as="line">
+                        <t t-if="not line.product_id and is_table_open">
+                            </tbody></table>
+                            <t t-set="is_table_open" t-value="False"/>
+                        </t>
+
+                        <t t-if="not line.product_id and not is_table_open">
+                            <div class="section">
+                                <strong><span t-esc="line.name or 'Sin descripción'"/></strong>
+                            </div>
+                        </t>
+
+                        <t t-if="line.product_id and not is_table_open">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Unidad de Medida</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio Unitario</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <t t-set="is_table_open" t-value="True"/>
+                        </t>
+
+                        <t t-if="line.product_id">
                             <tr>
-                                <th>Producto</th>
-                                <th>Unidad de Medida</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Total</th>
+                                <td><span t-esc="line.product_id.name"/></td>
+                                <td><span t-esc="line.product_uom.name"/></td>
+                                <td><span t-esc="line.quantity"/></td>
+                                <td><span t-esc="line.standard_price"/></td>
+                                <td><span t-esc="line.subtotal"/></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="doc.project_picking_lines" t-as="line">
-                                <tr>
-                                    <!-- Mostrar el contenido de la tarea o línea directamente -->
-                                    <t t-if="not line.product_id">
-                                        <!-- Si no hay producto, mostrar el contenido de la línea -->
-                                        <td colspan="6"><strong><span t-esc="line.name or 'Sin descripción'"/></strong></td>
-                                    </t>
-                                    <!-- Si hay producto, mostrar los detalles del material -->
-                                    <t t-else="">
-                                        <td><span t-esc="line.product_id.name"/></td>
-                                        <td><span t-esc="line.product_uom.name"/></td>
-                                        <td><span t-esc="line.quantity"/></td>
-                                        <td><span t-esc="line.standard_price"/></td>
-                                        <td><span t-esc="line.subtotal"/></td>
-                                    </t>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </table>
+                        </t>
+                    </t>
+
+                    <t t-if="is_table_open">
+                        </tbody></table>
+                    </t>
                 </t>
             </t>
         </t>
