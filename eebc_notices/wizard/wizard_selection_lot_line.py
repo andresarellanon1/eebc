@@ -12,3 +12,11 @@ class WizardSelectionLotLine(models.TransientModel):
     quantity = fields.Float(string='Cantidad')
     lot_quantity_available = fields.Float(string='Cantidad de lote disponible')
     
+
+    @api.onchange('lot_quantity_available')
+    def _check_quantity(self):
+        for record in self:
+            if record.quantity < 0:
+                raise ValidationError('La cantidad no puede ser negativa.')
+            elif record.quantity > record.lot_quantity_available:
+                raise ValidationError('No puede establecer una cantidad mayor a la disponible en el lote.')
