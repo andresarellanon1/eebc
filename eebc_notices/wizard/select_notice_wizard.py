@@ -26,7 +26,7 @@ class SelectNoticeWizard(models.TransientModel):
     
     @api.model
     def default_get(self, fields_list):
-        _logger.warning('entra a default select notice')
+        _logger.warning('Entra a default_get en SelectNoticeWizard')
         res = super(SelectNoticeWizard, self).default_get(fields_list)
         stock_move_id = self.env.context.get('stock_move_id')
 
@@ -34,17 +34,24 @@ class SelectNoticeWizard(models.TransientModel):
             stock_move = self.env['stock.move'].browse(stock_move_id)
             lines = stock_move._create_line_ids("out")  # o "in" dependiendo del contexto
             notice_lines = []
+
+            # Procesar líneas
             for line in lines:
-                lot_line_ids = [(0, 0, lot) for lot in line[2].get('lot_line_ids', [])]
+                # Aquí no hacemos una conversión redundante en lot_line_ids
+                lot_line_ids = line[2].get('lot_line_ids', [])
                 notice_lines.append({
                     'notice_id': line[2]['notice_id'],
                     'quantity': line[2]['quantity'],
                     'quantity_available': line[2]['quantity_available'],
                     'aviso_name': line[2]['aviso_name'],
                     'in_or_out': line[2]['in_or_out'],
-                    'lot_line_ids': lot_line_ids,
+                    'lot_line_ids': lot_line_ids,  # Usamos directamente los datos correctamente formados
                 })
+
+            # Convertimos las líneas en el formato requerido por Odoo
             res['notice_ids'] = [(0, 0, line) for line in notice_lines]
+
+        _logger.warning(f'Valores asignados a res[\'notice_ids\']: {res.get("notice_ids")}')
         return res
 
     # @api.model
