@@ -8,7 +8,7 @@
                 <group name="asignacion_lote" string="Establezca cantidad">
                     <field name="lot_id" options="{'no_create': True, 'no_open': True}" readonly="1"/>
                     <field name="quantity"/>
-                    <field name="lot_quantity_available"/>
+                    <field name="lot_quantity_available" readonly="1"/>
 
                 </group>
                 
