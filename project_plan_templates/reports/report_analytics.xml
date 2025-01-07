@@ -14,39 +14,7 @@
                         <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
                     </div>
 
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Unidad de Medida</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="doc.order_line" t-as="line">
-                                <t t-if="line.product_id and line.product_uom_qty and line.price_unit">
-                                    <tr>
-                                        <td>
-                                            <t t-if="line.product_id.name and len(line.product_id.name) > 8">
-                                                <!-- Mostrar información de líneas de orden -->
-                                                <span t-esc="line.product_id.name or 'Sin producto'"/>
-                                            </t>
-                                            <t t-else="">
-                                                <!-- Mostrar información de materiales -->
-                                                <span t-esc="line.name or 'Sin descripción'"/>
-                                            </t>
-                                        </td>
-                                        <td><span t-esc="line.product_uom.name or 'Sin producto'"/></td>
-                                        <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
-                                        <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
-                                        <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
-                                    </tr>
-                                </t>
-                            </t>
-                        </tbody>
-                    </table>
+                    
 
                     <table class="table table-condensed">
                         <thead>
@@ -62,15 +30,18 @@
                             <t t-foreach="doc.project_picking_lines" t-as="line">
                                 <tr>
                                     <t t-if="not line.product_id">
-                                        <t t-if ="line.name < 8">
+                                        <t t-if ="len(line.name) > 8">
                                             <td colspan="6"><strong><span t-esc="line.name or 'Sin descripción'"/></strong></td>
                                         </t>
-                                        </t-else ="">
-                                            <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
-                                            <td><span t-esc="line.product_uom.name or 'Sin producto'"/></td>
-                                            <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
-                                            <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
-                                            <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
+                                        <t t-else="">
+                                            <tr>
+                                                <!-- Mostrar información de líneas de orden -->
+                                                <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
+                                                <td><span t-esc="line.product_uom.name or 'Sin producto'"/></td>
+                                                <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
+                                                <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
+                                                <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
+                                            </tr>
                                         </t>
                                     </t>
                                     <t t-else="">
