@@ -42,8 +42,8 @@
 
                     <!-- Cerrar cualquier tabla abierta -->
                     <t t-if="is_table_open">
-                        </tbody>
-                        </table>
+                        <tbody>
+                        <table>
                         <t t-set="is_table_open" t-value="False"/>
                     </t>
 
