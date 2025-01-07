@@ -26,28 +26,24 @@
                         </thead>
                         <tbody>
                             <t t-foreach="doc.order_line" t-as="line">
-                                <!-- Verificar si hay producto, cantidad y precio -->
-                                <t t-if="line.product_id and line.product_uom_qty and line.price_unit">
-                                    <tr>
-                                        <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
-                                        <td><span t-esc="line.product_uom.name or 'Sin producto'"/></td>
-                                        <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
-                                        <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
-                                        <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
-                                    </tr>
-                                </t>
+                                <tr t-if="line.product_id and line.product_uom_qty and line.price_unit">
+                                    <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
+                                    <td><span t-esc="line.product_uom.name or 'Sin UOM'"/></td>
+                                    <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
+                                    <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
+                                    <td><span t-esc="line.price_subtotal or 'Sin total'"/></td>
+                                </tr>
                             </t>
                         </tbody>
                     </table>
 
                     <t t-set="is_table_open" t-value="False"/>
                     <t t-foreach="doc.project_picking_lines" t-as="line">
-                        <t t-if="not line.product_id and is_table_open">
-                            </tbody></table>
-                            <t t-set="is_table_open" t-value="False"/>
-                        </t>
-
-                        <t t-if="not line.product_id and not is_table_open">
+                        <t t-if="not line.product_id">
+                            <t t-if="is_table_open">
+                                </tbody></table>
+                                <t t-set="is_table_open" t-value="False"/>
+                            </t>
                             <div class="section">
                                 <strong><span t-esc="line.name or 'Sin descripción'"/></strong>
                             </div>
