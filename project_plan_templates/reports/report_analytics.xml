@@ -14,8 +14,6 @@
                         <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
                     </div>
 
-                    
-
                     <table class="table table-condensed">
                         <thead>
                             <tr>
@@ -29,21 +27,12 @@
                         <tbody>
                             <t t-foreach="doc.project_picking_lines" t-as="line">
                                 <tr>
+                                    <!-- Mostrar el contenido de la tarea o línea directamente -->
                                     <t t-if="not line.product_id">
-                                        <t t-if ="len(line.name) > 8">
-                                            <td colspan="6"><strong><span t-esc="line.name or 'Sin descripción'"/></strong></td>
-                                        </t>
-                                        <t t-else="">
-                                            <tr>
-                                                <!-- Mostrar información de líneas de orden -->
-                                                <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
-                                                <td><span t-esc="line.product_uom.name or 'Sin producto'"/></td>
-                                                <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
-                                                <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
-                                                <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
-                                            </tr>
-                                        </t>
+                                        <!-- Si no hay producto, mostrar el contenido de la línea -->
+                                        <td colspan="6"><strong><span t-esc="line.name or 'Sin descripción'"/></strong></td>
                                     </t>
+                                    <!-- Si hay producto, mostrar los detalles del material -->
                                     <t t-else="">
                                         <td><span t-esc="line.product_id.name"/></td>
                                         <td><span t-esc="line.product_uom.name"/></td>
