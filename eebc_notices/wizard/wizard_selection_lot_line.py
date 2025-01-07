@@ -13,7 +13,7 @@ class WizardSelectionLotLine(models.TransientModel):
     lot_quantity_available = fields.Float(string='Cantidad de lote disponible')
     
 
-    @api.onchange('lot_quantity_available')
+    @api.onchange('quantity')
     def _check_quantity(self):
         for record in self:
             if record.quantity < 0:
