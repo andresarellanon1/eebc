@@ -18,7 +18,7 @@ class WizardSelectionLine(models.TransientModel):
         )
 
     
-    quantity = fields.Float(string='Cantidad asignada', default=0, required=True)
+    quantity = fields.Float(string='Cantidad establecida', default=0, required=True)
     quantity_available = fields.Float(string='Cantidad disponible')
     quantity_available_lot = fields.Float(string='Cantidad disponible en lotes')
 
