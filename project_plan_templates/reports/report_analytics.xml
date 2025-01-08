@@ -47,11 +47,13 @@
                                     </t>
                                 </t>
                                 <t t-else="">
-                                    <td><span t-esc="line.product_id.name"/></td>
-                                    <td><span t-esc="line.product_uom.name"/></td>
-                                    <td><span t-esc="line.quantity"/></td>
-                                    <td><span t-esc="line.standard_price"/></td>
-                                    <td><span t-esc="line.subtotal"/></td>
+                                    <tr>
+                                        <td><span t-esc="line.product_id.name"/></td>
+                                        <td><span t-esc="line.product_uom.name"/></td>
+                                        <td><span t-esc="line.quantity"/></td>
+                                        <td><span t-esc="line.standard_price"/></td>
+                                        <td><span t-esc="line.subtotal"/></td>
+                                    </tr>
                                 </t>
                             </t>
                         </tbody>
