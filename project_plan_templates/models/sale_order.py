@@ -193,8 +193,3 @@ class SaleOrder(models.Model):
             'docs': docs,
         }
     
-    is_long_name = fields.Boolean(string="Nombre Largo", compute="_compute_is_long_name")
-
-    def _compute_is_long_name(self):
-        for line in self:
-            line.is_long_name = line.name and len(line.name) > 9
