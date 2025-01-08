@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_analytics" name="Reporte de Materiales">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="report-header text-center">
+                        <h1>Análisis de precios unitarios</h1>
+                    </div>
+
+                    <div class="report-content">
+                        <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
+                        <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
+                        <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
+                    </div>
+
+                    <table class="table table-condensed">
+                        
+                        <tbody>
+                            <t t-foreach="doc.project_picking_lines" t-as="line">
+                                <t t-if="line.for_create == False">
+                                    <t t-foreach="doc.order_line" t-as="order_line">
+                                        <t t-if="order_line.product_id.name == line.product_id.name">
+                                            <tr>
+                                                <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
+                                                <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
+                                                <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
+                                                <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
+                                                <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Unidad de Medida</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tr>
+                                        <td><span t-esc="line.product_id.name"/></td>
+                                        <td><span t-esc="line.product_uom.name"/></td>
+                                        <td><span t-esc="line.quantity"/></td>
+                                        <td><span t-esc="line.standard_price"/></td>
+                                        <td><span t-esc="line.subtotal"/></td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

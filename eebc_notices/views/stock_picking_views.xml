@@ -16,9 +16,9 @@
 
 
             <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='operations']/field[@name='move_ids_without_package']/tree[1]/field[@name='product_uom']" position="after">
-                <field name="picking_type_codigo" invisible="0"/>
-                <field name="show_outgoing_button" invisible="0"/>
-                <field name="show_incoming_button" invisible="0"/>
+                <field name="picking_type_codigo" invisible="1"/>
+                <field name="show_outgoing_button" invisible="1"/>
+                <field name="show_incoming_button" invisible="1"/>
                 <!-- <field name="notice_established" invisible="0"/>
                 <field name="notice_selected" invisible="0"/> -->
 

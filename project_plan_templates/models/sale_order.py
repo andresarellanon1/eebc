@@ -172,3 +172,24 @@ class SaleOrder(models.Model):
                 'default_project_name': self.project_name
             }
         }
+        
+        
+    def action_open_report(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.report',
+            'report_name': 'project_plan_templates.report_analytics', 
+            'report_type': 'qweb-pdf',
+            'res_model': 'sale.order',
+            'res_id': self.id,
+            'context': self.env.context,
+        }
+        
+    def _get_report_values(self, docids, data=None):
+        docs = self.env['sale.order'].browse(docids)  
+        return {
+            'doc_ids': docids,
+            'doc_model': 'sale.order',
+            'docs': docs,
+        }
+    

@@ -32,6 +32,9 @@ class Notices(models.Model):
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
     quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
+    total_lot_quantity = fields.Float(string='Cantidad', compute='_compute_total_lot_quantity', store=True)
+    
+
     
     # stock_location_origin_id = fields.Many2one(
     #     string='Almacen origen',
@@ -84,6 +87,14 @@ class Notices(models.Model):
     #             if history_record.location_dest:
     #                 self.stock_location_origin_id.append(history_record.location_dest) 
                     
+
+    @api.depends('lot_ids')
+    def _compute_total_lot_quantity(self):
+        for notice in self:
+            # Sumar la cantidad disponible de cada lote asociado al aviso
+            total_quantity = sum(lot.product_qty for lot in notice.lot_ids)
+            _logger.warning(f"Total lot quantity para aviso {notice.id}: {total_quantity}")
+            notice.total_lot_quantity = total_quantity
     
     
     @api.depends('notice')
@@ -94,14 +105,16 @@ class Notices(models.Model):
 
     @api.depends('history_ids')
     def _compute_series(self):
-        for notice in self:
-            lot_set = set()
+         for notice in self:
+            lot_ids = []
             for history_record in notice.history_ids:
                 stock_move = history_record.stock_move_id
                 if stock_move:
                     for lot in stock_move.lot_ids:
-                        lot_set.add(lot.id)
-            notice.lot_ids = [(6, 0, list(lot_set))]
+                        if lot.id not in lot_ids:
+                            lot_ids.append(lot.id)
+            _logger.warning(f"Lotes asignados al aviso {notice.id}: {lot_ids}")
+            notice.lot_ids = [(6, 0, lot_ids)]
 
     @api.depends('history_ids')
     def _compute_origin_invoice_ids(self):
@@ -133,6 +146,8 @@ class Notices(models.Model):
             approved_history = record.history_ids.filtered(lambda h: h.state == 'draft')
             _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')
             record.quantity = sum(approved_history.mapped('quantity'))
+
+
 
 
 
