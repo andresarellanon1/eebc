@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_analytics" name="Reporte de Materiales">
         <t t-call="web.html_container">
@@ -26,33 +27,41 @@
                         <tbody>
                             <t t-foreach="doc.project_picking_lines" t-as="line">
                                 <tr>
-                                    <!-- Verificamos que 'line.product_id.name' no sea falso y luego calculamos su longitud -->
-                                    <t t-if="line.product_id.name and len(line.product_id.name) > 8 and not line.quantity">
-                                        <td><span t-esc="line.product_id.name"/></td>
-                                        <td><span t-esc="line.product_uom.name"/></td>
-                                        <td><span t-esc="line.quantity or 'Sin cantidad'"/></td>
-                                        <td><span t-esc="line.standard_price or 'Sin precio'"/></td>
-                                        <td><span t-esc="line.subtotal or 'Sin total'"/></td>
-                                        <!-- Mostrar detalles de las líneas de la orden -->
-                                        <t t-foreach="doc.order_line" t-as="order_line">
-                                            <t t-if="order_line.product_id == line.product_id">
+                                    <tr t-if="not line.product_id">
+                                        <td colspan="6">
+                                            <strong>
+                                                <span t-esc="line.name or 'Sin descripción'"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <t t-if="not line.product_id and line.product_id.name and len(line.product_id.name) > 8 and not line.quantity">
+                                       <t t-foreach="doc.order_line" t-as="line">
+                                            <!-- Verificar si hay producto, cantidad y precio -->
+                                            <t t-if="line.product_id and line.product_uom_qty and line.price_unit">
                                                 <tr>
-                                                    <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
-                                                    <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
-                                                    <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
-                                                    <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
-                                                    <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                                    <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
+                                                    <td><span t-esc="line.product_uom.name or 'Sin producto'"/></td>
+                                                    <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
+                                                    <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
+                                                    <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
                                                 </tr>
                                             </t>
+                                            <t t-else="">
+                                                <td colspan="6">
+                                                    <strong>
+                                                        <span t-esc="line.name or 'Sin descripción'"/>
+                                                    </strong>
+                                                </td>
+                                            </t>
                                         </t>
+                              
                                     </t>
-                                    <!-- Si el nombre del producto no es mayor a 8 caracteres o ya tiene más datos, solo mostramos el producto -->
                                     <t t-else="">
                                         <td><span t-esc="line.product_id.name"/></td>
                                         <td><span t-esc="line.product_uom.name"/></td>
-                                        <td><span t-esc="line.quantity or 'Sin cantidad'"/></td>
-                                        <td><span t-esc="line.standard_price or 'Sin precio'"/></td>
-                                        <td><span t-esc="line.subtotal or 'Sin total'"/></td>
+                                        <td><span t-esc="line.quantity"/></td>
+                                        <td><span t-esc="line.standard_price"/></td>
+                                        <td><span t-esc="line.subtotal"/></td>
                                     </t>
                                 </tr>
                             </t>
