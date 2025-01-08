@@ -197,4 +197,4 @@ class SaleOrder(models.Model):
 
     def _compute_is_long_name(self):
         for line in self:
-            line.is_long_name = line.name and len(line.name) > 8
+            line.is_long_name = line.name and len(line.name) > 9
