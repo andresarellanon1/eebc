@@ -15,43 +15,35 @@
                     </div>
 
                     <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Unidad de Medida</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
+                        
                         <tbody>
-                            <!-- Inicializar índice para coincidencias -->
-                            <t t-set="match_index" t-value="0" />
+                            <t t-set="index" t-value="0"/>
                             <t t-foreach="doc.project_picking_lines" t-as="line">
                                 <t t-if="not line.product_id">
-                                    <!-- Inicializar variable de control para coincidencias en esta línea -->
-                                    <t t-set="found_index" t-value="0" />
+                                    <t t-set="found_match" t-value="False"/>
                                     <t t-foreach="doc.order_line" t-as="order_line">
-                                        <!-- Buscar coincidencia -->
-                                        <t t-if="order_line.product_id.name == line.name">
-                                            <!-- Incrementar índice de coincidencia -->
-                                            <t t-set="found_index" t-value="found_index + 1" />
-                                            <!-- Imprimir la coincidencia correcta -->
-                                            <t t-if="found_index == match_index + 1">
+                                        <!-- Si hay coincidencia y es la primera vez en esta iteración -->
+                                        <t t-if="order_line.product_id.name == line.name and not found_match">
+                                            <tr>
+                                                <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
+                                                <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
+                                                <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
+                                                <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
+                                                <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                            </tr>
+                                            <thead>
                                                 <tr>
-                                                    <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
-                                                    <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
-                                                    <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
-                                                    <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
-                                                    <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                                    <th>Producto</th>
+                                                    <th>Unidad de Medida</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio Unitario</th>
+                                                    <th>Total</th>
                                                 </tr>
-                                                <!-- Incrementar índice general de coincidencias -->
-                                                <t t-set="match_index" t-value="match_index + 1" />
-                                            </t>
+                                            </thead>
+                                            <t t-set="found_match" t-value="True"/>
                                         </t>
                                     </t>
-                                    <!-- Si no hubo coincidencia -->
-                                    <t t-if="found_index == 0">
+                                    <t t-if="not found_match">
                                         <tr>
                                             <td colspan="5">
                                                 <strong><span t-esc="line.name or 'Sin descripción'"/></strong>
@@ -59,7 +51,6 @@
                                         </tr>
                                     </t>
                                 </t>
-                                <!-- Si la línea ya tiene producto -->
                                 <t t-else="">
                                     <tr>
                                         <td><span t-esc="line.product_id.name"/></td>
