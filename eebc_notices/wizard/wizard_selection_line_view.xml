@@ -14,6 +14,7 @@
                     <field name="quantity"/>
                     <field name="quantity_by_lot"/>
 
+                    <field name="quantity_available_lot" readonly="1" invisible="in_or_out"/>
                     <field name="quantity_available" readonly="1" invisible="in_or_out"/>
                     <field name="lot_line_ids" >
                         <tree create="0">

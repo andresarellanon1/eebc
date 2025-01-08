@@ -16,6 +16,8 @@
                                 <field name="notice_id"  options="{'no_open': True}"/>
                                 <field name="quantity"/>
                                 <field name="quantity_available" column_invisible="1" />
+                                <field name="quantity_available_lot" column_invisible="1" invisible="1"/>
+
                                 <field name="aviso_name" column_invisible="1" invisible="1"/>
                                 <field name="lot_line_ids">
                                     <tree editable="bottom">

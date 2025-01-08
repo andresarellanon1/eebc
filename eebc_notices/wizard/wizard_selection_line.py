@@ -20,6 +20,8 @@ class WizardSelectionLine(models.TransientModel):
     
     quantity = fields.Float(string='Cantidad asignada', default=0, required=True)
     quantity_available = fields.Float(string='Cantidad disponible')
+    quantity_available_lot = fields.Float(string='Cantidad disponible en lotes')
+
     quantity_by_lot = fields.Float(string='Cantidad establecida de lotes', 
         compute='_compute_quantity_by_lot' )
     
@@ -30,6 +32,8 @@ class WizardSelectionLine(models.TransientModel):
             total += lot.quantity
         
         self.quantity_by_lot = total
+
+        self.quantity_available
     
     
 

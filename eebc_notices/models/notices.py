@@ -32,6 +32,9 @@ class Notices(models.Model):
     notice = fields.Char(string='Aviso')
     description = fields.Char(string='Descripción')
     quantity = fields.Float(string='Cantidad', compute='_compute_quantity', store=True)
+    total_lot_quantity = fields.Float(string='Cantidad', compute='_compute_total_lot_quantity', store=True)
+    
+
     
     # stock_location_origin_id = fields.Many2one(
     #     string='Almacen origen',
@@ -84,6 +87,14 @@ class Notices(models.Model):
     #             if history_record.location_dest:
     #                 self.stock_location_origin_id.append(history_record.location_dest) 
                     
+
+    @api.depends('lot_ids')
+    def _compute_total_lot_quantity(self):
+        for notice in self:
+            # Sumar la cantidad disponible de cada lote asociado al aviso
+            total_quantity = sum(lot.product_qty for lot in notice.lot_ids)
+            _logger.warning(f"Total lot quantity para aviso {notice.id}: {total_quantity}")
+            notice.total_lot_quantity = total_quantity
     
     
     @api.depends('notice')
@@ -135,6 +146,8 @@ class Notices(models.Model):
             approved_history = record.history_ids.filtered(lambda h: h.state == 'draft')
             _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')
             record.quantity = sum(approved_history.mapped('quantity'))
+
+
 
 
 
