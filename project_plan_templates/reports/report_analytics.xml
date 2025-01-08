@@ -41,7 +41,7 @@
                                     </t>
                                     <t t-if="not found_match">
                                         <td colspan="5">
-                                            <strong><span t-esc="line.name or 'Sin descripción'"/></span></strong>
+                                            <strong><span t-esc="line.name or 'Sin descripción'"/></strong>
                                         </td>
                                     </t>
                                 </t>
