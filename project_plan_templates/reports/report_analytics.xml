@@ -27,24 +27,26 @@
                         <tbody>
                             <t t-foreach="doc.project_picking_lines" t-as="line">
                                 <tr>
-                                    
+                                    <tr t-if="not line.product_id">
+                                        <td colspan="6">
+                                            <strong>
+                                                <span t-esc="line.name or 'Sin descripción'"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
                                     <t t-if="not line.product_id">
-                                        <t t-foreach="order.lines" t-as="line">                                   
-                                            <tr t-if="not line.product_id">
-                                                <td colspan="6">
-                                                    <strong>
-                                                        <span t-esc="line.name or 'Sin descripción'"/>
-                                                    </strong>
-                                                </td>
-                                            </tr>
-                                            <tr t-if="not line.product_id and line.is_long_name">
-                                                <td colspan="2"><span t-esc="line.name or 'Sin descripción'"/></td>
-                                                <td><span t-esc="line.quantity or 'Sin cantidad'"/></td>
-                                                <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
-                                                <td><span t-esc="line.tax_id.name or 'Sin impuestos'"/></td>
-                                                <td><span t-esc="line.price_subtotal or 'Sin subtotal'"/></td>
-                                            </tr>
-                                        </t>                                   
+                                       <t t-foreach="doc.order_line" t-as="line">
+                                            <!-- Verificar si hay producto, cantidad y precio -->
+                                            <t t-if="line.product_id and line.product_uom_qty and line.price_unit">
+                                                <tr>
+                                                    <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
+                                                    <td><span t-esc="line.product_uom.name or 'Sin producto'"/></td>
+                                                    <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
+                                                    <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
+                                                    <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
+                                                </tr>
+                                            </t>
+                                        </t>
                                     </t>
                                     <t t-else="">
                                         <td><span t-esc="line.product_id.name"/></td>
