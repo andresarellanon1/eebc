@@ -222,7 +222,10 @@ class StockMove(models.Model):
     def action_show_outgoing(self):
         in_or_out = "out"
         notice_lines_to_wizard =self._create_line_ids(in_or_out)
+        _logger.warning('1')
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
+        _logger.warning('2')
+
 
         # aqui va variable para saber que haremos salida y pasarla a la llave in_or_out
 
@@ -247,55 +250,37 @@ class StockMove(models.Model):
 
 
 
-    # def _create_line_ids(self, in_or_out):
-    #     for move in self:
-    #         if not move.id:
-    #             continue 
-           
-    #         notice_ids = self.env['notices.notices'].search([('product_id', '=', self.product_id.id),('quantity', '>=', 0)])
-
-    #         lines = []
-    #         lot_line_ids = []
-
-    #         for notice in notice_ids:
-    #             _logger.warning(f'Valor de lot_ids {notice.lot_ids} del notices {notice.display_name}')
-    #             lot_line_ids = []
-            
-    #             # Construcción de lot_line_ids usando append
-    #             for lot in notice.lot_ids:
-    #                 _logger.warning('objeto lot: : %s', lot)
-    #                 lot_line_ids.append({
-    #                     'lot_id': lot.id,
-    #                     'quantity': 0
-    #                 }) 
-    #             lines.append((0, 0, {
-    #                 'notice_id': notice.id,
-    #                 'quantity': 0,
-    #                 'quantity_available': notice.quantity,
-    #                 'aviso_name': notice.display_name,
-    #                 'in_or_out': in_or_out,
-    #                 'lot_line_ids': lot_line_ids,
-    #             }))
-    #         _logger.warning(f'Líneas creadas: {lines}')
-    #         return lines
-
-           
     def _create_line_ids(self, in_or_out):
-        lines = []
         for move in self:
-            notice_ids = self.env['notices.notices'].search([
-                ('product_id', '=', move.product_id.id),
-                ('quantity', '>=', 0),
-            ])
+            if not move.id:
+                continue 
+           
+            notice_ids = self.env['notices.notices'].search([('product_id', '=', self.product_id.id),('quantity', '>=', 0)])
+
+            lines = []
+
             for notice in notice_ids:
-                lot_line_ids = [{'lot_id': lot.id, 'quantity': 0} for lot in notice.lot_ids]
+                _logger.warning(f'Valor de lot_ids {notice.lot_ids} del notices {notice.display_name}')
+                lot_line_ids = [
+                    (0, 0, {
+                        'lot_id': lot.id,
+                        'quantity': 0,
+                        'lot_quantity_available': lot.product_qty
+
+                    }) for lot in notice.lot_ids
+                ]
                 lines.append((0, 0, {
                     'notice_id': notice.id,
                     'quantity': 0,
                     'quantity_available': notice.quantity,
+                    'quantity_available_lot': notice.total_lot_quantity,
                     'aviso_name': notice.display_name,
                     'in_or_out': in_or_out,
                     'lot_line_ids': lot_line_ids,
                 }))
-        return lines
+            _logger.warning(f'Líneas creadas: {lines}')
+            return lines
+
+           
+
 
