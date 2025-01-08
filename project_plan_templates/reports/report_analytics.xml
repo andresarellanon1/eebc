@@ -31,13 +31,14 @@
                                     <t t-foreach="doc.order_line" t-as="order_line">
                                         <t t-if="order_line.product_id.name == line.name">
                                                 <tr>
-                                                <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
-                                                <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
-                                                <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
-                                                <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
-                                                <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
-                                            </tr>
+                                                    <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
+                                                    <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
+                                                    <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
+                                                    <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
+                                                    <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                                </tr>
                                             <t t-set="found_match" t-value="True"/>
+                                        </t>
                                     </t>
                                     <t t-if="not found_match">
                                         <td colspan="5">
