@@ -28,11 +28,7 @@
                                 <tr>
                                     <!-- Si el nombre del producto es mayor a 8 caracteres y no tiene más información, mostramos las líneas de la orden -->
                                     <t t-if="len(line.product_id.name) > 8 and not line.quantity">
-                                        <td colspan="6">
-                                            <strong>
-                                                <span t-esc="line.name or 'Sin descripción'"/>
-                                            </strong>
-                                        </td>
+                                        <td><span t-esc="line.product_id.name"/></td>
                                         <!-- Mostrar detalles de las líneas de la orden -->
                                         <t t-foreach="doc.order_line" t-as="order_line">
                                             <t t-if="order_line.product_id == line.product_id">
