@@ -26,9 +26,13 @@
                         <tbody>
                             <t t-foreach="doc.project_picking_lines" t-as="line">
                                 <tr>
-                                    <!-- Si el nombre del producto es mayor a 8 caracteres y no tiene más información, mostramos las líneas de la orden -->
-                                    <t t-if="len(line.product_id.name) > 8 and not line.quantity">
+                                    <!-- Verificamos que 'line.product_id.name' no sea falso y luego calculamos su longitud -->
+                                    <t t-if="line.product_id.name and len(line.product_id.name) > 8 and not line.quantity">
                                         <td><span t-esc="line.product_id.name"/></td>
+                                        <td><span t-esc="line.product_uom.name"/></td>
+                                        <td><span t-esc="line.quantity or 'Sin cantidad'"/></td>
+                                        <td><span t-esc="line.standard_price or 'Sin precio'"/></td>
+                                        <td><span t-esc="line.subtotal or 'Sin total'"/></td>
                                         <!-- Mostrar detalles de las líneas de la orden -->
                                         <t t-foreach="doc.order_line" t-as="order_line">
                                             <t t-if="order_line.product_id == line.product_id">
