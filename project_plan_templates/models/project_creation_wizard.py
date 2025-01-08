@@ -92,7 +92,7 @@ class ProjectCreation(models.TransientModel):
             stock_move_vals = [(0, 0, {
                 'product_id': line.product_id.id,
                 'product_packaging_id': line.product_packaging_id.id,
-                'product_uom_qty': 0,
+                'product_uom_qty': line.quantity,
                 'quantity': line.quantity,
                 'product_uom': line.product_uom.id,
                 'location_id': self.location_id.id,
@@ -121,7 +121,8 @@ class ProjectCreation(models.TransientModel):
                 'long_origin': False,
                 'lat_dest': False,
                 'long_dest': False,
-                'note': False
+                'note': False,
+                'state': 'draft'
             }
 
             self.env['stock.picking'].create(stock_picking_vals)
