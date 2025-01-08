@@ -36,15 +36,19 @@
                                     </tr>
                                     <t t-if="not line.product_id">
                                        <t t-foreach="doc.order_line" t-as="line">
-                                            <!-- Verificar si hay producto, cantidad y precio -->
-                                            <t t-if="line.product_id and line.product_uom_qty and line.price_unit">
-                                                <tr>
-                                                    <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
-                                                    <td><span t-esc="line.product_uom.name or 'Sin producto'"/></td>
-                                                    <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
-                                                    <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
-                                                    <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
-                                                </tr>
+                                            <!-- Mostrar solo una línea de orden asociada -->
+                                            <t t-set="order_lines_displayed" t-value="False"/>
+                                            <t t-foreach="doc.order_line" t-as="order_line">
+                                                <t t-if="not order_lines_displayed">
+                                                    <tr>
+                                                        <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
+                                                        <td><span t-esc="order_line.product_uom.name or 'Sin unidad'"/></td>
+                                                        <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
+                                                        <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
+                                                        <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                                    </tr>
+                                                    <t t-set="order_lines_displayed" t-value="True"/>
+                                                </t>
                                             </t>
                                         </t>
                               
