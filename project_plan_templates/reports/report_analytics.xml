@@ -29,6 +29,15 @@
                                                     <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
                                                     <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
                                                 </tr>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Producto</th>
+                                                        <th>Unidad de Medida</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Precio Unitario</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
                                             <t t-set="found_match" t-value="True"/>
                                         </t>
                                     </t>
@@ -38,16 +47,7 @@
                                         </td>
                                     </t>
                                 </t>
-                                <t t-else="">
-                                    <thead>
-                                        <tr>
-                                            <th>Producto</th>
-                                            <th>Unidad de Medida</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio Unitario</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
+                                <t t-else="">                                   
                                     <tr>
                                         <td><span t-esc="line.product_id.name"/></td>
                                         <td><span t-esc="line.product_uom.name"/></td>
