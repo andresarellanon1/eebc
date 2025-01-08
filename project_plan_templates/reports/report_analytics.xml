@@ -21,7 +21,7 @@
                                 <t t-if="not line.product_id">
                                     <t t-set="found_match" t-value="False"/>
                                     <t t-foreach="doc.order_line" t-as="order_line">
-                                        <t t-if="order_line.product_id.name == line.name and line.for_create == False">
+                                        <t t-if="not order_line.for_create">
                                                 <tr>
                                                     <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
                                                     <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
