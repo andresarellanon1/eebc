@@ -11,7 +11,8 @@ class WizardSelectionLotLine(models.TransientModel):
     lot_id = fields.Many2one('stock.lot', string='Lote')
     quantity = fields.Float(string='Cantidad')
     lot_quantity_available = fields.Float(string='Cantidad de lote disponible')
-    
+    is_selected = fields.Boolean(string="Select")  # Checkbox
+
 
     @api.onchange('quantity')
     def _check_quantity(self):
