@@ -39,6 +39,7 @@ class ProjectCreation(models.TransientModel):
     partner_id = fields.Many2one('res.partner', string='Contacto')
     date_start = fields.Datetime(string="Fecha de inicio planeada")
     date = fields.Datetime()
+    project_id = fields.Many2one('project.project', string="Proyecto")
 
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
