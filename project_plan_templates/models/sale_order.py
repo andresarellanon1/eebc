@@ -30,6 +30,7 @@ class SaleOrder(models.Model):
     project_id = fields.Many2one('project.project', string="Proyecto")
 
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
+    edit_project = fields.Boolean(string="Modificar proyecto", default=False)
 
     @api.model
     def create(self, vals):
@@ -69,6 +70,9 @@ class SaleOrder(models.Model):
     def _onchange_is_project(self):
         for record in self:
             record.order_line = None
+            if not record.is_project and record.edit_project:
+                record.edit_project = False
+                record.project_id = False
 
     def action_confirm(self):
         self.ensure_one()
@@ -169,7 +173,8 @@ class SaleOrder(models.Model):
             'target': 'new',  
             'context': {
                 'default_sale_order_id': self.id,
-                'default_project_name': self.project_name
+                'default_project_name': self.project_name,
+                'default_project_id': self.project_id
             }
         }
         
