@@ -7,6 +7,8 @@ class SaleOrderLine(models.Model):
 
     products_project_domain = fields.Many2many('product.template', store=True, compute="_products_project_domain")
     code = fields.Char(string="Code")
+    
+    project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
 
     @api.depends('order_id', 'order_id.is_project')
     def _products_project_domain(self):

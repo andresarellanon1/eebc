@@ -24,6 +24,7 @@ class ProjectLines(models.Model):
     partner_id = fields.Many2many('res.users', string="Usuarios asignados")
     task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
     sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
+    sale_order_picking_id = fields.Many2one('project.picking.lines', string="Picking")
 
     
     planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Fecha de inicio")
