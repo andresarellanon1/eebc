@@ -38,4 +38,4 @@ class SaleOrderLine(models.Model):
     @api.onchange('product_id')
     def _compute_project_planning_lines(self):
         for sale in self:
-            sale.order_id._load_project_planning_lines()
+            sale.order_id.load_project_planning_lines()

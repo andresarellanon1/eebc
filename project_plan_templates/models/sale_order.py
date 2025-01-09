@@ -108,7 +108,7 @@ class SaleOrder(models.Model):
     #     for sale in self:
     #         if sale.edit_project:
 
-    def _load_project_planning_lines(self):
+    def load_project_planning_lines(self):
         for sale in self:
             if sale.is_project:
                 if not sale.project_name:
