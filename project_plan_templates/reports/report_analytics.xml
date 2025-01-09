@@ -15,14 +15,22 @@
                     </div>
 
                     <table class="table table-condensed">
-                        
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Unidad de Medida</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            <t t-set="index" t-value="0"/>
                             <t t-foreach="doc.project_picking_lines" t-as="line">
                                 <t t-if="not line.product_id">
+                                    <!-- Inicializa la variable para la coincidencia -->
                                     <t t-set="found_match" t-value="False"/>
                                     <t t-foreach="doc.order_line" t-as="order_line">
-                                        <!-- Si hay coincidencia y es la primera vez en esta iteración -->
+                                        <!-- Verificar si hay coincidencia -->
                                         <t t-if="order_line.product_id.name == line.name and not found_match">
                                             <tr>
                                                 <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
@@ -31,15 +39,6 @@
                                                 <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
                                                 <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
                                             </tr>
-                                            <thead>
-                                                <tr>
-                                                    <th>Producto</th>
-                                                    <th>Unidad de Medida</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Precio Unitario</th>
-                                                    <th>Total</th>
-                                                </tr>
-                                            </thead>
                                             <t t-set="found_match" t-value="True"/>
                                         </t>
                                     </t>
@@ -63,6 +62,7 @@
                             </t>
                         </tbody>
                     </table>
+
                 </t>
             </t>
         </t>
