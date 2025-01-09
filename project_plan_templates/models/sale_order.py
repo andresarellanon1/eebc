@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
         }
     )
 
-    project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates", compute="_compute_project_planning_lines")
+    project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates", compute="_compute_project_planning_lines", store = True)
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     # project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id', compute="_compute_picking_lines", store=True)
 
@@ -111,10 +111,6 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line', 'order_line.product_id')
     def _compute_project_planning_lines(self):
-        for sale in self:
-            sale.load_project_planning_lines()
-
-    def load_project_planning_lines(self):
         for sale in self:
             if sale.is_project:
                 if not sale.project_name:
