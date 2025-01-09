@@ -58,6 +58,8 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
+        logger.warning(f"Sale Order ID: {self.sale_order_id.id}")
+
         project_vals = {
             'name': self.project_name,
             'description': self.description,
