@@ -37,16 +37,17 @@
                                         <!-- Marcar coincidencia como encontrada y registrar esta línea como usada -->
                                         <t t-set="found_match" t-value="True"/>
                                         <t t-set="order_lines_used" t-value="order_lines_used + [order_line.id]"/>
+                                        <thead>
+                                            <tr>
+                                                <th>Producto</th>
+                                                <th>Unidad de Medida</th>
+                                                <th>Cantidad</th>
+                                                <th>Precio Unitario</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
                                     </t>
-                                    <thead>
-                                        <tr>
-                                            <th>Producto</th>
-                                            <th>Unidad de Medida</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio Unitario</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
+                                    
                                 </t>
                                 <t t-if="not found_match and not line.product_id">
                                     <tr>
