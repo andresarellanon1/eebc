@@ -17,8 +17,8 @@
                     <field name="quantity_available_lot" readonly="1" invisible="in_or_out"/>
                     <field name="quantity_available" readonly="1" invisible="in_or_out"/>
                     <field name="lot_line_ids" >
-                        <tree create="0" edit="1">
-                            <field name="is_selected"/>
+                        <tree create="0">
+                            <field name="is_selected"  edit="1"/>
                             <field name="lot_id" readonly="1" options="{'no_create': True}"/>
                             <field name="quantity" readonly="1"/>
                             <field name="lot_quantity_available" column_invisible="1"  invisible="1"/>
