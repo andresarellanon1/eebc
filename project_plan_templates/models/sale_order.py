@@ -200,17 +200,21 @@ class SaleOrder(models.Model):
     def action_open_create_project_wizard(self):
         self.ensure_one()
 
+        context = {
+            'default_sale_order_id': self.id,
+            'default_project_name': self.project_name,
+        }
+
+        if self.project_id:
+            context['default_project_id'] = self.project_id.id
+
         return {
             'name': 'Projects creation',  
             'view_mode': 'form',  
             'res_model': 'project.creation.wizard',  
             'type': 'ir.actions.act_window',  
             'target': 'new',  
-            'context': {
-                'default_sale_order_id': self.id,
-                'default_project_name': self.project_name,
-                'default_project_id': self.project_id
-            }
+            'context': context,
         }
         
         
