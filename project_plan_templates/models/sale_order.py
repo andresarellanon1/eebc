@@ -40,7 +40,6 @@ class SaleOrder(models.Model):
 
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
-        self._compute_project_planning_lines()
         if 'project_plan_lines' in vals:
             self.update_picking_lines()
         return res
@@ -75,41 +74,9 @@ class SaleOrder(models.Model):
                 record.edit_project = False
                 record.project_id = False
 
-    # def action_confirm(self):
-    #     self.ensure_one()
+    def action_generate_planning(self):
+        self.ensure_one()
         
-    #     for sale in self:
-    #         if sale.is_project:
-    #             if not sale.project_name:
-    #                 raise ValidationError(
-    #                     f"se requiere el nombre del proyecto"
-    #                 )
-    #             sale.project_plan_pickings = [(5, 0, 0)]
-    #             sale.project_plan_lines = [(5, 0, 0)]
-
-    #             plan_pickings = []
-    #             plan_lines = []
-    #             for line in sale.order_line:
-    #                 if line.display_type == 'line_section':
-    #                     plan_lines.append(self.prep_plan_section_line(line, True))
-    #                 else:
-    #                     if line.product_id.project_plan_id:
-    #                         plan_lines.append(self.prep_plan_section_line(line, False))
-    #                         plan_lines += self.prep_plan_lines(line)
-
-    #                     for project_picking in line.product_id.project_plan_id.project_plan_pickings:
-    #                         plan_pickings.append((4, project_picking.id))
-
-    #             sale.project_plan_pickings = plan_pickings
-    #             sale.project_plan_lines = plan_lines
-    #         return super(SaleOrder, self).action_confirm()
-
-    # @api.onchange('project_id')
-    # def _compute_order_lines_from_project_previous_version(self):
-    #     for sale in self:
-    #         if sale.edit_project:
-
-    def _compute_project_planning_lines(self):
         for sale in self:
             if sale.is_project:
                 if not sale.project_name:
@@ -134,6 +101,12 @@ class SaleOrder(models.Model):
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
+            
+
+    # @api.onchange('project_id')
+    # def _compute_order_lines_from_project_previous_version(self):
+    #     for sale in self:
+    #         if sale.edit_project:
     
     def prep_picking_section_line(self, line):
         return (0, 0, {
