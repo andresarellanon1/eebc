@@ -108,6 +108,12 @@ class SaleOrder(models.Model):
     #     for sale in self:
     #         if sale.edit_project:
 
+
+    @api.depends('order_line', 'order_line.product_id')
+    def _compute_project_planning_lines(self):
+        for sale in self:
+            sale.load_project_planning_lines()
+
     def load_project_planning_lines(self):
         for sale in self:
             if sale.is_project:
