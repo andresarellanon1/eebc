@@ -10,9 +10,9 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale" invisible="is_project != False"/>
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="after">
-                <button name="action_open_create_project_wizard" type="object" string="Crear Proyecto" invisible="state != 'sale'"/>
-                <button name="action_generate_planning" type="object" string="Crear Proyecto"/>
-                <button name="action_open_report" type="object" string="Generar Reporte" class="btn-primary" invisible="state == 'draft'"/>
+                <button name="action_open_create_project_wizard" class="btn-primary" type="object" string="Crear Proyecto" invisible="state != 'sale'"/>
+                <button name="action_generate_planning" class="btn-primary" type="object" string="Generar planeación"/>
+                <button name="action_open_report" type="object" string="Generar Reporte" class="btn-primary"/>
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="replace">
                 <button name="action_cancel" type="object" string="Cancel" invisible="state not in ['draft', 'sent', 'sale', 'budget'] or not id or locked" data-hotkey="x"/>
