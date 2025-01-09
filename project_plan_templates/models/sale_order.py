@@ -200,6 +200,8 @@ class SaleOrder(models.Model):
     def action_open_create_project_wizard(self):
         self.ensure_one()
 
+        logger.warning(f"Sale Order ID: {self.id}")
+
         context = {
             'default_sale_order_id': self.id,
             'default_project_name': self.project_name,
