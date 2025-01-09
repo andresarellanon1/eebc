@@ -26,32 +26,37 @@
                         </thead>
                         <tbody>
                             <t t-foreach="doc.project_picking_lines" t-as="line">
-                                <!-- Inicializa la variable para controlar coincidencias -->
-                                <t t-set="found_match" t-value="False"/>
-
-                                <t t-foreach="doc.order_line" t-as="order_line">
-                                    <!-- Verifica si hay coincidencia y aún no se encontró una línea -->
-                                    <t t-if="order_line.product_id.name == line.name and not found_match">
+                                <t t-if="not line.product_id">
+                                    <!-- Inicializa la variable para la coincidencia -->
+                                    <t t-set="found_match" t-value="False"/>
+                                    <t t-foreach="doc.order_line" t-as="order_line">
+                                        <!-- Verificar si hay coincidencia -->
+                                        <t t-if="order_line.product_id.name == line.name and not found_match">
+                                            <tr>
+                                                <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
+                                                <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
+                                                <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
+                                                <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
+                                                <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                            </tr>
+                                            <t t-set="found_match" t-value="True"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="not found_match">
                                         <tr>
-                                            <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
-                                            <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
-                                            <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
-                                            <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
-                                            <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                            <td colspan="5">
+                                                <strong><span t-esc="line.name or 'Sin descripción'"/></strong>
+                                            </td>
                                         </tr>
-                                        <!-- Marca que se encontró coincidencia -->
-                                        <t t-set="found_match" t-value="True"/>
-                                        <!-- Detiene el ciclo interno cuando encuentra la primera coincidencia -->
-                                        <t t-break=""/>
                                     </t>
                                 </t>
-                                
-                                <!-- Si no se encontró coincidencia, muestra solo la descripción de la línea -->
-                                <t t-if="not found_match">
+                                <t t-else="">
                                     <tr>
-                                        <td colspan="5">
-                                            <strong><span t-esc="line.name or 'Sin descripción'"/></strong>
-                                        </td>
+                                        <td><span t-esc="line.product_id.name"/></td>
+                                        <td><span t-esc="line.product_uom.name"/></td>
+                                        <td><span t-esc="line.quantity"/></td>
+                                        <td><span t-esc="line.standard_price"/></td>
+                                        <td><span t-esc="line.subtotal"/></td>
                                     </tr>
                                 </t>
                             </t>
