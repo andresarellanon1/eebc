@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
         }
     )
 
-    project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates", compute="_compute_project_planning_lines", store = True)
+    project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     # project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id', compute="_compute_picking_lines", store=True)
 
@@ -40,6 +40,7 @@ class SaleOrder(models.Model):
 
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
+        self._compute_project_planning_lines()
         if 'project_plan_lines' in vals:
             self.update_picking_lines()
         return res
@@ -108,8 +109,6 @@ class SaleOrder(models.Model):
     #     for sale in self:
     #         if sale.edit_project:
 
-
-    @api.depends('order_line', 'order_line.product_id')
     def _compute_project_planning_lines(self):
         for sale in self:
             if sale.is_project:
