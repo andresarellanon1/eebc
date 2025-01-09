@@ -36,3 +36,8 @@ class SaleOrderLine(models.Model):
     def _compute_is_long_name(self):
         for line in self:
             line.is_long_name = line.name and len(line.name) > 9
+
+    @api.onchange('product_id')
+    def _compute_project_planning_lines(self):
+        for sale in self:
+            sale.order_id._load_project_planning_lines()
