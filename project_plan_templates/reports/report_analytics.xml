@@ -26,7 +26,7 @@
                                 <!-- Comparar con las líneas de la orden -->
                                 <t t-foreach="doc.order_line" t-as="order_line">
                                     <!-- Validar nombre y que no se haya usado esta línea antes -->
-                                    <t t-if="order_line.product_id.name == line.name and order_line.id not in order_lines_used and not found_match and not for_create">
+                                    <t t-if="order_line.product_id.name == line.name and order_line.id not in order_lines_used and not found_match and not line.for_create">
                                         <tr>
                                             <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
                                             <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
@@ -38,14 +38,14 @@
                                         <t t-set="found_match" t-value="True"/>
                                         <t t-set="order_lines_used" t-value="order_lines_used + [order_line.id]"/>
                                         <thead>
-                                            <tr>
-                                                <th>Producto</th>
-                                                <th>Unidad de Medida</th>
-                                                <th>Cantidad</th>
-                                                <th>Precio Unitario</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
+                                                <tr>
+                                                    <th>Producto</th>
+                                                    <th>Unidad de Medida</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio Unitario</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
                                     </t>
                                     
                                 </t>
