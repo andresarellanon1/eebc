@@ -16,25 +16,26 @@ class WizardSelectionLine(models.TransientModel):
     lot_line_ids = fields.One2many(
     'wizard.selection.lot.line', 'line_id', string='Lotes Asignados', 
         )
+        
 
     
     quantity = fields.Float(string='Cantidad establecida', default=0, required=True)
     quantity_available = fields.Float(string='Cantidad disponible')
     quantity_available_lot = fields.Float(string='Cantidad disponible en lotes')
 
-    quantity_by_lot = fields.Float(string='Cantidad establecida de lotes', 
-        compute='_compute_quantity_by_lot' )
+    #quantity_by_lot = fields.Float(string='Cantidad establecida de lotes', 
+     #   compute='_compute_quantity_by_lot' )
     
-    @api.depends('lot_line_ids')
-    def _compute_quantity_by_lot(self):
-        total = 0
-        for lot in self.lot_line_ids:
-            total += lot.quantity
+   #@api.depends('lot_line_ids')
+   # def _compute_quantity_by_lot(self):
+    #    total = 0
+     #   for lot in self.lot_line_ids:
+      #      total += lot.quantity
         
-        self.quantity_by_lot = total
+       # self.quantity_by_lot = total
 
-        self.quantity_available
-    
+        #self.quantity_available
+    ###
     
 
 

@@ -30,6 +30,7 @@ class SaleOrder(models.Model):
     project_id = fields.Many2one('project.project', string="Proyecto")
 
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
+    edit_project = fields.Boolean(string="Modificar proyecto", default=False)
 
     @api.model
     def create(self, vals):
@@ -69,8 +70,11 @@ class SaleOrder(models.Model):
     def _onchange_is_project(self):
         for record in self:
             record.order_line = None
+            if not record.is_project and record.edit_project:
+                record.edit_project = False
+                record.project_id = False
 
-    def action_confirm(self):
+    def action_generate_planning(self):
         self.ensure_one()
         
         for sale in self:
@@ -97,7 +101,42 @@ class SaleOrder(models.Model):
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
-            return super(SaleOrder, self).action_confirm()
+            
+
+    @api.onchange('project_id')
+    def _compute_order_lines_from_project_previous_version(self):
+        for sale in self:
+            if sale.edit_project and sale.project_id and sale.project_id.sale_order_id:
+                previous_order = sale.project_id.sale_order_id.id
+
+                new_order_lines = []
+                for line in previous_order.order_line:
+                    new_line = {
+                        'product_id': line.product_id.id,
+                        'name': line.name,
+                        'product_uom_qty': line.product_uom_qty,
+                        'price_unit': line.price_unit,
+                        'discount': line.discount,
+                    }
+                    new_order_lines.append((0, 0, new_line))
+                sale.order_line = new_order_lines
+
+                new_project_plan_lines = []
+                for line in previous_order.project_plan_lines:
+                    if line.display_type == 'line_section':
+                        new_project_plan_lines.append(self.prep_plan_section_line(line, for_create=True))
+                    else:
+                        new_project_plan_lines.append(self.prep_plan_section_line(line, for_create=False))
+                        new_project_plan_lines += self.prep_plan_lines(line)
+                sale.project_plan_lines = new_project_plan_lines
+
+                new_project_plan_pickings = []
+                for line in previous_order.project_plan_pickings:
+                    if line.display_type == 'line_section':
+                        new_project_plan_pickings.append(self.prep_picking_section_line(line))
+                    else:
+                        new_project_plan_pickings += self.prep_picking_lines(line)
+                sale.project_plan_pickings = new_project_plan_pickings
     
     def prep_picking_section_line(self, line):
         return (0, 0, {
@@ -161,16 +200,23 @@ class SaleOrder(models.Model):
     def action_open_create_project_wizard(self):
         self.ensure_one()
 
+        logger.warning(f"Sale Order ID: {self.id}")
+
+        context = {
+            'default_sale_order_id': self.id,
+            'default_project_name': self.project_name,
+        }
+
+        if self.project_id:
+            context['default_project_id'] = self.project_id.id
+
         return {
             'name': 'Projects creation',  
             'view_mode': 'form',  
             'res_model': 'project.creation.wizard',  
             'type': 'ir.actions.act_window',  
             'target': 'new',  
-            'context': {
-                'default_sale_order_id': self.id,
-                'default_project_name': self.project_name
-            }
+            'context': context,
         }
         
         
