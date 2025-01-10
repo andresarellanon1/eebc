@@ -52,7 +52,7 @@ class WizardSelectionLine(models.TransientModel):
         
     )
 
-    @api.onchange('lot_line_ids')
+    @api.onchange('lot_line_ids.is_selected')
     def _check_selected(self):
         for record in self.lot_line_ids:
             if record.is_selected:
