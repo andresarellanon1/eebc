@@ -4,7 +4,7 @@ class AccountAnalyticLine(models.Model):
 
     _inherit = 'account.analytic.line'
 
-    estimated_time = fields.Float(string="Horas estimadas")
+    estimated_time = fields.Float(string="Horas estimadas", compute='_compute_work_hours')
     work_shift = fields.Float(string='Jornadas Laborales')
 
     def _compute_work_hours(self):
