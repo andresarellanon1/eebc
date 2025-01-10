@@ -143,7 +143,10 @@ class ProjectCreation(models.TransientModel):
             existing_picking_names = existing_pickings.mapped('name')
             for picking_line in self.wizard_picking_lines:
                 if picking_line.name not in existing_picking_names and not picking_line.display_type:
-                    self.create_project_tasks_pickings(None, [picking_line])
+                    # Aquí, asignamos un task_id válido antes de crear el picking
+                    # Verificar si ya existe una tarea para este picking o crear una nueva
+                    task_id = self.get_or_create_task_for_picking(picking_line, project)
+                    self.create_project_tasks_pickings(task_id, [picking_line])
 
             return {
                 'name': 'Project Version History',
@@ -160,6 +163,23 @@ class ProjectCreation(models.TransientModel):
                     'default_modification_date': fields.Datetime.now(),
                 }
             }
+
+    def get_or_create_task_for_picking(self, picking_line, project):
+        # Intentar encontrar una tarea asociada con este picking
+        task = self.env['project.task'].search([
+            ('project_id', '=', project.id),
+            ('name', '=', picking_line.name)  # Asumimos que el nombre del picking puede estar relacionado con el nombre de la tarea
+        ], limit=1)
+
+        if not task:
+            # Si no se encuentra una tarea, crear una nueva tarea para el picking
+            task = self.env['project.task'].create({
+                'name': picking_line.name,
+                'project_id': project.id,
+                'stage_id': self.env.ref('project.project_stage_new').id,  # Usar un stage predeterminado
+            })
+        
+        return task
 
     def create_project_tasks_pickings(self, task_id, pickings):
         for line in pickings:
