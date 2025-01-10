@@ -28,11 +28,16 @@
                                     <!-- Validar nombre y que no se haya usado esta línea antes -->
                                     <t t-if="order_line.product_id.name == line.name and order_line.id not in order_lines_used and not found_match">
                                         <tr>
+                                           
                                             <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
-                                            <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
-                                            <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
-                                            <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
-                                            <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                            <td>
+                                                <table>
+                                                    <tr><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></tr>
+                                                    <tr><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></tr>
+                                                    <tr><span t-esc="order_line.price_unit or 'Sin precio'"/></tr>
+                                                    <tr><span t-esc="order_line.price_subtotal or 'Sin total'"/></tr>
+                                                </table>
+                                            </td>
                                         </tr>
                                         <!-- Marcar coincidencia como encontrada y registrar esta línea como usada -->
                                         <t t-set="found_match" t-value="True"/>
