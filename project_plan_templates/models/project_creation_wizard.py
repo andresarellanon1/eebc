@@ -88,9 +88,17 @@ class ProjectCreation(models.TransientModel):
             project = self.project_id
 
             existing_task_names = project.task_ids.mapped('name')
+            curren_task_type = None
             for line in self.wizard_plan_lines:
+                if line.display_type and line.for_create:
+                    current_task_type = self.get_or_create_task_type(line.name, project)
+
+                if line.use_project_task and not line.display_type and line.for_create:
+                    if not current_task_type:
+                        current_task_type = self.get_or_create_task_type('Extras', project)
+                
                 if line.name not in existing_task_names and line.use_project_task and line.for_create:
-                    self.create_task_in_project(project, line)
+                    self.create_task_in_project(project, current_task_type, line)
 
             existing_pickings = self.env['stock.picking'].search([('origin', 'ilike', project.name)])
             existing_picking_names = existing_pickings.mapped('name')
@@ -114,9 +122,7 @@ class ProjectCreation(models.TransientModel):
                 }
             }
 
-    def create_task_in_project(self, project, line):
-        current_task_type = self.get_or_create_task_type(line.name, project)
-
+    def create_task_in_project(self, current_task_type, project, line):
         timesheet_lines = self.env['task.time.lines'].search([('task_timesheet_id', '=', line.task_timesheet_id.id)])
         timesheet_data = [(0, 0, {'name': ts_line.description, 'estimated_time': ts_line.estimated_time})
                         for ts_line in timesheet_lines]
