@@ -102,7 +102,7 @@ class ProjectCreation(models.TransientModel):
                 if line.use_project_task and not line.display_type and line.for_create:
                     if not current_task_type:
                         current_task_type = self.get_or_create_task_type('Extras', project)
-                raise ValidationError(f"LLego al final: {project_b.id}")
+                #raise ValidationError(f"LLego al final: {project_b.id}")
                 if line.name not in existing_task_names and line.use_project_task and line.for_create:
                     timesheet_lines = self.env['task.time.lines'].search([('task_timesheet_id', '=', line.task_timesheet_id.id)])
                     timesheet_data = [(0, 0, {'name': ts_line.description, 'estimated_time': ts_line.estimated_time})
