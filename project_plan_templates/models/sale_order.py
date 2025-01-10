@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     is_project = fields.Boolean(string="Es proyecto?", default=False)
-    project_name = fields.Char(string="Titulo de proyecto", store=True)
+    project_name = fields.Char(string="Titulo de proyecto")
     plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
     state = fields.Selection(
@@ -83,7 +83,7 @@ class SaleOrder(models.Model):
         
         for sale in self:
             if sale.is_project:
-                if not sale.project_name:
+                if not sale.project_name and not sale.edit_project:
                     raise ValidationError(
                         f"se requiere el nombre del proyecto"
                     )
@@ -219,10 +219,17 @@ class SaleOrder(models.Model):
 
         logger.warning(f"Sale Order ID: {self.id}")
 
+        project_name = []
+
+        if self.project_name:
+            project_name = self.project_name
+        else:
+            project_name = self.project_id.name
+
         context = {
             'default_sale_order_id': self.id,
             'default_actual_sale_order_id': self.id,
-            'default_project_name': self.project_name,
+            'default_project_name': project_name,
         }
 
         if self.project_id:
