@@ -88,10 +88,8 @@ class ProjectCreation(models.TransientModel):
             }
         else:
             project = self._origin.project_id
-            project_b = self.project_id
 
-            logger.warning(f"Id del proyecto: {project.id}")
-            logger.warning(f"Id del proyecto: {project_b.id}")
+            logger.warning(f"Id del sale: {self.sale_order_id.id}")
             
             existing_task_names = project.task_ids.mapped('name')
             curren_task_type = None
