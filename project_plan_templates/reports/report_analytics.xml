@@ -34,22 +34,30 @@
 
                                         <!-- Columna derecha: Detalles del producto -->
                                         <td style="vertical-align: top; width: 100%;" colspan="4">
-                                            <table class="table table-condensed" style="margin: 0;">
+                                            <table style="border: none; margin: 0; width: 100%;">
                                                 <tr>
-                                                    <th>Unidad de Medida:</th>
-                                                    <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
+                                                    <th style="text-align: left; font-weight: normal; padding: 0; border: none;">Unidad de Medida:</th>
+                                                    <td style="text-align: left; padding: 0; border: none;">
+                                                        <span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/>
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Cantidad:</th>
-                                                    <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
+                                                    <th style="text-align: left; font-weight: normal; padding: 0; border: none;">Cantidad:</th>
+                                                    <td style="text-align: left; padding: 0; border: none;">
+                                                        <span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/>
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Precio Unitario:</th>
-                                                    <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
+                                                    <th style="text-align: left; font-weight: normal; padding: 0; border: none;">Precio Unitario:</th>
+                                                    <td style="text-align: left; padding: 0; border: none;">
+                                                        <span t-esc="order_line.price_unit or 'Sin precio'"/>
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Total:</th>
-                                                    <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                                    <th style="text-align: left; font-weight: normal; padding: 0; border: none;">Total:</th>
+                                                    <td style="text-align: left; padding: 0; border: none;">
+                                                        <span t-esc="order_line.price_subtotal or 'Sin total'"/>
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </td>
