@@ -6,7 +6,6 @@ class ProjectPlanWizardLine(models.TransientModel):
     _description = 'Project plan wizard line'
 
     wizard_id = fields.Many2one('project.creation.wizard', string="Wizard")
-    partner_id = fields.Many2many('res.users', string="Usuarios asignados")
     task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
 
     name = fields.Char(string="Tarea")

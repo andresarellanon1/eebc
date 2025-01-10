@@ -35,10 +35,11 @@ class ProjectCreation(models.TransientModel):
     picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
-    scheduled_date = fields.Datetime(string='Fecha programada')
+    scheduled_date = fields.Datetime(string='Fecha programada de entrega')
     partner_id = fields.Many2one('res.partner', string='Contacto')
     date_start = fields.Datetime(string="Fecha de inicio planeada")
     date = fields.Datetime()
+    project_id = fields.Many2one('project.project', string="Proyecto")
 
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
@@ -57,11 +58,13 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
+        logger.warning(f"Sale Order ID: {self.sale_order_id.id}")
+
         project_vals = {
             'name': self.project_name,
             'description': self.description,
-            'project_plan_lines': self.prep_plan_lines(self.sale_order_id.project_plan_lines),
-            'project_picking_lines': self.prep_picking_lines(self.sale_order_id.project_picking_lines),
+            'project_plan_lines': self.prep_plan_lines(self.wizard_plan_lines),
+            'project_picking_lines': self.prep_picking_lines(self.wizard_picking_lines),
             'default_picking_type_id': self.picking_type_id.id,
             'publication_date': fields.Datetime.now(),
             'date_start': self.date_start,
@@ -88,42 +91,44 @@ class ProjectCreation(models.TransientModel):
         }
 
     def create_project_tasks_pickings(self, task_id, pickings):
-        stock_move_ids_vals = [(0, 0, {
-            'product_id': line.product_id.id,
-            'product_packaging_id': line.product_packaging_id.id,
-            'product_uom_qty': 0,
-            'quantity': line.quantity,
-            'product_uom': line.product_uom.id,
-            'location_id': self.location_id.id,
-            'location_dest_id': self.location_dest_id.id,
-            'name': task_id.name
-        }) for line in pickings]
+        for line in pickings:
+            stock_move_vals = [(0, 0, {
+                'product_id': line.product_id.id,
+                'product_packaging_id': line.product_packaging_id.id,
+                'product_uom_qty': line.quantity,
+                'quantity': line.quantity,
+                'product_uom': line.product_uom.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'name': task_id.name
+            })]
 
-        stock_picking_vals = {
-            'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
-            'partner_id': self.partner_id.id,
-            'picking_type_id': self.picking_type_id.id,
-            'location_id': self.location_id.id,
-            'scheduled_date': self.scheduled_date,
-            'origin': task_id.name,
-            'task_id': task_id.id,
-            'user_id': self.env.user.id,
-            'move_ids': stock_move_ids_vals,
-            'carrier_id': False,
-            'carrier_tracking_ref': False,
-            'weight': False,
-            'shipping_weight': False,
-            'company_id': self.env.company.id,
-            'transport_type': False,
-            'custom_document_identification': False,
-            'lat_origin': False,
-            'long_origin': False,
-            'lat_dest': False,
-            'long_dest': False,
-            'note': False
-        }
+            stock_picking_vals = {
+                'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
+                'partner_id': self.partner_id.id,
+                'picking_type_id': self.picking_type_id.id,
+                'location_id': self.location_id.id,
+                'scheduled_date': self.scheduled_date,
+                'origin': task_id.name,
+                'task_id': task_id.id,
+                'user_id': self.env.user.id,
+                'move_ids': stock_move_vals,
+                'carrier_id': False,
+                'carrier_tracking_ref': False,
+                'weight': False,
+                'shipping_weight': False,
+                'company_id': self.env.company.id,
+                'transport_type': False,
+                'custom_document_identification': False,
+                'lat_origin': False,
+                'long_origin': False,
+                'lat_dest': False,
+                'long_dest': False,
+                'note': False,
+                'state': 'draft'
+            }
 
-        self.env['stock.picking'].create(stock_picking_vals)
+            self.env['stock.picking'].create(stock_picking_vals)
 
     def create_project_tasks(self, project):
         current_task_type = None
@@ -131,7 +136,7 @@ class ProjectCreation(models.TransientModel):
             if line.display_type and line.for_create:
                 current_task_type = self.get_or_create_task_type(line.name, project)
 
-            if line.use_project_task and not line.display_type:
+            if line.use_project_task and not line.display_type and line.for_create:
                 if not current_task_type:
                     current_task_type = self.get_or_create_task_type('Extras', project)
 
@@ -144,14 +149,35 @@ class ProjectCreation(models.TransientModel):
                     'estimated_time': ts_line.estimated_time,
                 }) for ts_line in timesheet_lines]
 
+                picking_lines = []
+                is_task = False  # Bandera para identificar si estamos en la tarea correcta
+
+                for picking in self.wizard_picking_lines:
+                    if picking.display_type:
+                        # Actualizar la bandera si el nombre coincide
+                        is_task = picking.name == line.name
+                    elif is_task:
+                        # Si la bandera está activa, agregar esta línea de picking
+                        picking_lines.append((0, 0, {
+                            'name': picking.product_id.name,
+                            'product_id': picking.product_id.id,
+                            'product_uom': picking.product_uom.id,
+                            'product_packaging_id': picking.product_packaging_id.id,
+                            'product_uom_qty': picking.product_uom_qty,
+                            'quantity': picking.quantity,
+                            'standard_price': picking.standard_price,
+                            'subtotal': picking.subtotal,
+                            'display_type': False
+                        }))
+
                 task_id = self.env['project.task'].create({
                     'name': line.name,
                     'project_id': project.id,
                     'stage_id': current_task_type.id,
-                    'user_ids': line.partner_id.ids,
                     'timesheet_ids': timesheet_data,
                     'planned_date_begin': line.planned_date_begin,
-                    'date_deadline': line.planned_date_end
+                    'date_deadline': line.planned_date_end,
+                    'project_picking_lines': picking_lines
                 })
 
                 self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
@@ -173,7 +199,7 @@ class ProjectCreation(models.TransientModel):
     def prep_plan_lines(self, plan):
         plan_lines = []
         for line in plan:
-            if line.use_project_task:
+            if line.use_project_task and line.for_create:
                 if line.display_type == 'line_section':
                     plan_lines.append((0, 0, {
                         'name': line.name,
@@ -182,7 +208,6 @@ class ProjectCreation(models.TransientModel):
                         'use_project_task': True,
                         'planned_date_begin': False,
                         'planned_date_end': False,
-                        'partner_id': False,
                         'project_plan_pickings': False,
                         'task_timesheet_id': False,
                         'for_create': line.for_create
@@ -194,11 +219,10 @@ class ProjectCreation(models.TransientModel):
                         'use_project_task': True,
                         'planned_date_begin': line.planned_date_begin,
                         'planned_date_end': line.planned_date_end,
-                        'partner_id': [(6, 0, line.partner_id.ids)],
                         'project_plan_pickings': line.project_plan_pickings.id,
                         'task_timesheet_id': line.task_timesheet_id.id,
                         'display_type': False,
-                        'for_create': line.for_create
+                        'for_create': True
                     }))
         return plan_lines
 

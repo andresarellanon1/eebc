@@ -13,6 +13,8 @@
         "views/project_menu.xml",
         "views/plan_template_view.xml",
         "security/ir.model.access.csv",
+        "reports/report_analytics.xml",
+        "reports/report_definition.xml",
         "views/inherit_timesheet_view_form.xml",
         "views/inherit_task_view_form.xml",
         "views/plan_picking_template_view.xml",
@@ -24,7 +26,7 @@
         "views/inherit_project_task_inventory_view_form.xml",
         "views/task_picking_line.xml",
         "views/inherit_sale_order_view_form.xml",
-        "views/inherit_sale_project_view.xml"
+        "views/inherit_sale_project_view.xml",
     ],
     "license": "LGPL-3",
     'installable': True,

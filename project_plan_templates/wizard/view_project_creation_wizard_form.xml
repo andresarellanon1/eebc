@@ -14,15 +14,15 @@
                         </div>
                             <group>
                                 <group>
-                                    <field name="partner_id"/>
                                     <field name="sale_order_id" invisible="1"/>
+                                    <field name="partner_id"/>
                                     <field name="picking_type_id"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                 </group>
                                 <group>
                                     <field name="scheduled_date"/>
-                                    <field name="date_start" string="Fecha planeada" 
+                                    <field name="date_start" string="Calendario del proyecto" 
                                         widget="daterange" 
                                         options="{&quot;end_date_field&quot;: &quot;date&quot;, &quot;always_range&quot;: &quot;1&quot;}" 
                                         required="date_start or date"/>
@@ -48,9 +48,9 @@
                                                 <field name="name"/>
                                                 <field name="description"/>
                                                 <field name="use_project_task"/>
+                                                <field name="for_create" column_invisible="1"/>
                                                 <field name="planned_date_begin" widget="daterange"/>
                                                 <field name="planned_date_end" widget="daterange"/>
-                                                <field name="partner_id" widget="many2many_avatar_user"/>
                                                 <field name="project_plan_pickings" options="{'create': True}"/>
                                                 <field name="task_timesheet_id" options="{'create': True}"/>
                                             </tree>

@@ -222,7 +222,10 @@ class StockMove(models.Model):
     def action_show_outgoing(self):
         in_or_out = "out"
         notice_lines_to_wizard =self._create_line_ids(in_or_out)
+        _logger.warning('1')
         order = self.env['purchase.order'].search([('name', '=', self.origin)])
+        _logger.warning('2')
+
 
         # aqui va variable para saber que haremos salida y pasarla a la llave in_or_out
 
@@ -261,16 +264,19 @@ class StockMove(models.Model):
                 lot_line_ids = [
                     (0, 0, {
                         'lot_id': lot.id,
-                        'quantity': 0
+                        'quantity': 0,
+                        'lot_quantity_available': lot.product_qty
+
                     }) for lot in notice.lot_ids
                 ]
                 lines.append((0, 0, {
                     'notice_id': notice.id,
                     'quantity': 0,
                     'quantity_available': notice.quantity,
+                    'quantity_available_lot': notice.total_lot_quantity,
                     'aviso_name': notice.display_name,
                     'in_or_out': in_or_out,
-                    # 'lot_line_ids': lot_line_ids,
+                    'lot_line_ids': lot_line_ids,
                 }))
             _logger.warning(f'Líneas creadas: {lines}')
             return lines

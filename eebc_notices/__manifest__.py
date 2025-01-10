@@ -1,6 +1,6 @@
 {
     'name': "EBBC NOTICES",
-    'version': '17.0.1.102',
+    'version': '17.0.1.106',
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
@@ -18,6 +18,8 @@
         "wizard/notice_file_wizard_view.xml",
         "wizard/select_notice_wizard_view.xml",
         "wizard/wizard_selection_line_view.xml",
+        "wizard/wizard_selection_lot_line_view.xml",
+        
 
 
 
