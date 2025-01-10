@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 import logging
+from odoo.exceptions import UserError, ValidationError
 logger = logging.getLogger(__name__)
 
 class ProjectCreation(models.TransientModel):
@@ -87,9 +88,10 @@ class ProjectCreation(models.TransientModel):
             }
         else:
             project = self._origin.project_id
-
+            project_b = self.project_id
 
             logger.warning(f"Id del proyecto: {project.id}")
+            logger.warning(f"Id del proyecto: {project_b.id}")
 
             existing_task_names = project.task_ids.mapped('name')
             curren_task_type = None
@@ -109,6 +111,8 @@ class ProjectCreation(models.TransientModel):
             for picking_line in self.wizard_picking_lines:
                 if picking_line.name not in existing_picking_names and not picking_line.display_type:
                     self.create_project_tasks_pickings(None, [picking_line])
+
+            raise ValidationError(f"LLego al final: {project_b.id}")
 
             return {
                 'name': 'Project Version History',
