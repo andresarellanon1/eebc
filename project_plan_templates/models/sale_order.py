@@ -110,10 +110,10 @@ class SaleOrder(models.Model):
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
         for sale in self:
-            logger.warning(f"Encontro la sale order: {sale.project_id.sale_order_id}")
-            if sale.edit_project and sale.project_id and sale.project_id.sale_order_id:
+            logger.warning(f"Encontro la sale order: {sale.project_id.actual_sale_order_id}")
+            if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
 
-                previous_order = sale.project_id.sale_order_id
+                previous_order = sale.project_id.actual_sale_order_id
 
                 sale.partner_id = previous_order.partner_id
 
@@ -140,7 +140,7 @@ class SaleOrder(models.Model):
                 }) for line in previous_order.project_plan_lines]
 
                 # Copiar project_plan_pickings directamente
-                sale.project_plan_pickings = [(0, 0, {
+                sale.project_picking_lines = [(0, 0, {
                     'name': line.name,
                     'display_type': line.display_type,
                     'product_id': line.product_id.id if line.product_id else False,
@@ -150,7 +150,7 @@ class SaleOrder(models.Model):
                     'quantity': line.quantity,
                     'standard_price': line.standard_price,
                     'subtotal': line.subtotal,
-                }) for line in previous_order.project_plan_pickings]
+                }) for line in previous_order.project_picking_lines]
     
     def prep_picking_section_line(self, line, for_create):
         return (0, 0, {
@@ -220,6 +220,7 @@ class SaleOrder(models.Model):
 
         context = {
             'default_sale_order_id': self.id,
+            'default_actual_sale_order_id': self.id,
             'default_project_name': self.project_name,
         }
 

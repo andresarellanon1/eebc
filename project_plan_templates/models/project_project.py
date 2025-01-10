@@ -14,6 +14,7 @@ class ProjectProject(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines", compute="_compute_picking_lines", store=True)
     plan_total_cost = fields.Float(string="Costo total", default=0.0)
     sale_order_id = fields.Many2one('sale.order', string='Orden de venta', readonly=False, store=True)
+    actual_sale_order_id = fields.Many2one('sale.order', string="Orden de venta", store=True)
 
     def create_project_tasks(self):
         for project in self:
