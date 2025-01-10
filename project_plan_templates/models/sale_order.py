@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     is_project = fields.Boolean(string="Es proyecto?", default=False)
-    project_name = fields.Char(string="Titulo de proyecto")
+    project_name = fields.Char(string="Titulo de proyecto", store=True)
     plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
     state = fields.Selection(
