@@ -72,6 +72,7 @@ class ProjectCreation(models.TransientModel):
             }
 
             project = self.env['project.project'].create(project_vals)
+            logger.warning(f"Id del proyecto: {project.id}")
             self.create_project_tasks(project)
 
             self.sale_order_id.state = 'budget'
@@ -86,6 +87,8 @@ class ProjectCreation(models.TransientModel):
             }
         else:
             project = self.project_id
+
+            logger.warning(f"Id del proyecto: {project.id}")
 
             existing_task_names = project.task_ids.mapped('name')
             curren_task_type = None
@@ -107,11 +110,19 @@ class ProjectCreation(models.TransientModel):
                     self.create_project_tasks_pickings(None, [picking_line])
 
             return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'project.project',
-                'res_id': project.id,
+                'name': 'Project Version History',
                 'view_mode': 'form',
-                'target': 'current',
+                'res_model': 'project.version.wizard',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context': {
+                    'default_project_id': project.id,
+                    'default_project_plan_id': project.project_plan_id.id if project.project_plan_id else False,
+                    'default_project_plan_lines': [(6, 0, project.project_plan_lines.ids)] if project.project_plan_lines else False,
+                    'default_project_picking_lines': [(6, 0, project.project_picking_lines.ids)] if project.project_picking_lines else False,
+                    'default_modified_by': self.env.user.id,
+                    'default_modification_date': fields.Datetime.now(),
+                }
             }
 
     def create_task_in_project(self, current_task_type, project, line):
