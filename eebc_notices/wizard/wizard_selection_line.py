@@ -20,6 +20,8 @@ class WizardSelectionLine(models.TransientModel):
 
     
     quantity = fields.Float(string='Cantidad establecida', default=0, required=True)
+    series_batch_quantity = fields.Float(string='Cantidad establecida en serie/lotes', default=0)
+
     quantity_available = fields.Float(string='Cantidad disponible')
     quantity_available_lot = fields.Float(string='Cantidad disponible en lotes')
 
@@ -54,7 +56,10 @@ class WizardSelectionLine(models.TransientModel):
     def _check_selected(self):
         for record in self.lot_line_ids:
             if record.is_selected:
-                self.quantity_available_lot += 1
+                self.series_batch_quantity += 1
+            else:
+                self.series_batch_quantity -= 1
+
 
                 
            
