@@ -52,12 +52,14 @@ class WizardSelectionLine(models.TransientModel):
         
     )
 
-    @api.onchange('lot_line_ids.is_selected')
+    @api.onchange('lot_line_ids')
     def _check_selected(self):
         for record in self.lot_line_ids:
-            if record.is_selected:
+            if record.is_selected and not record._origin.is_selected:
+                # Si el registro fue marcado
                 self.series_batch_quantity += 1
-            else:
+            elif not record.is_selected and record._origin.is_selected:
+                # Si el registro fue desmarcado
                 self.series_batch_quantity -= 1
 
 
