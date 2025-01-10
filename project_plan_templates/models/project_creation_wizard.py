@@ -92,7 +92,7 @@ class ProjectCreation(models.TransientModel):
 
             logger.warning(f"Id del proyecto: {project.id}")
             logger.warning(f"Id del proyecto: {project_b.id}")
-
+            raise ValidationError(f"LLego al final: {project_b.id}")
             existing_task_names = project.task_ids.mapped('name')
             curren_task_type = None
             for line in self.wizard_plan_lines:
@@ -112,7 +112,7 @@ class ProjectCreation(models.TransientModel):
                 if picking_line.name not in existing_picking_names and not picking_line.display_type:
                     self.create_project_tasks_pickings(None, [picking_line])
 
-            raise ValidationError(f"LLego al final: {project_b.id}")
+            
 
             return {
                 'name': 'Project Version History',
