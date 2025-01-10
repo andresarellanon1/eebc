@@ -115,8 +115,11 @@ class SaleOrder(models.Model):
 
                 previous_order = sale.project_id.sale_order_id
 
+                sale.partner_id = previous_order.partner_id
+
                 sale.order_line = [(0, 0, {
                     'product_id': line.product_id.id,
+                    'display_type': line.display_type,
                     'name': line.name,
                     'product_uom_qty': line.product_uom_qty,
                     'price_unit': line.price_unit,
