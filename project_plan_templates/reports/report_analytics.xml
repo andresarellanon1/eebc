@@ -26,7 +26,7 @@
                                 <!-- Comparar con las líneas de la orden -->
                                 <t t-foreach="doc.order_line" t-as="order_line">
                                     <!-- Validar nombre y que no se haya usado esta línea antes -->
-                                    <t t-if="order_line.product_id.name == line.name and order_line.id not in order_lines_used and not found_match">
+                                    <t t-if="order_line.product_id.name == line.name and order_line.id not in order_lines_used and not found_match ">
                                         <!-- Columna izquierda: Nombre del producto -->
                                         <td style="vertical-align: top; font-weight: bold; width: 30%; border-right: 1px solid #ddd;">
                                             <span t-esc="order_line.product_id.name or 'Sin producto'"/>
@@ -34,32 +34,33 @@
 
                                         <!-- Columna derecha: Detalles del producto -->
                                         <td style="vertical-align: top; width: 100%;" colspan="4">
-                                            <table style="border: none; margin: 0; width: 100%;">
-                                                <tr>
-                                                    <th style="text-align: left; font-weight: normal; padding: 0; border: none;">Unidad de Medida:</th>
-                                                    <td style="text-align: left; padding: 0; border: none;">
-                                                        <span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th style="text-align: left; font-weight: normal; padding: 0; border: none;">Cantidad:</th>
-                                                    <td style="text-align: left; padding: 0; border: none;">
-                                                        <span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th style="text-align: left; font-weight: normal; padding: 0; border: none;">Precio Unitario:</th>
-                                                    <td style="text-align: left; padding: 0; border: none;">
-                                                        <span t-esc="order_line.price_unit or 'Sin precio'"/>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th style="text-align: left; font-weight: normal; padding: 0; border: none;">Total:</th>
-                                                    <td style="text-align: left; padding: 0; border: none;">
-                                                        <span t-esc="order_line.price_subtotal or 'Sin total'"/>
-                                                    </td>
-                                                </tr>
-                                            </table>
+                                            <table class="table table-borderless" style="margin: 0; width: 100%;">
+                                            <tr>
+                                                <th style="text-align: left; font-weight: normal; padding: 0;">Unidad de Medida:</th>
+                                                <td style="text-align: left; padding: 0;">
+                                                    <span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; font-weight: normal; padding: 0;">Cantidad:</th>
+                                                <td style="text-align: left; padding: 0;">
+                                                    <span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; font-weight: normal; padding: 0;">Precio Unitario:</th>
+                                                <td style="text-align: left; padding: 0;">
+                                                    <span t-esc="order_line.price_unit or 'Sin precio'"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; font-weight: normal; padding: 0;">Total:</th>
+                                                <td style="text-align: left; padding: 0;">
+                                                    <span t-esc="order_line.price_subtotal or 'Sin total'"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+
                                         </td>
                                         <!-- Marcar coincidencia como encontrada y registrar esta línea como usada -->
                                         <t t-set="found_match" t-value="True"/>
