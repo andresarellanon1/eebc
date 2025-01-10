@@ -38,7 +38,7 @@ class ProjectLines(models.Model):
     )
     code = fields.Char(string="Code")
     sequence = fields.Integer(default=0)
-    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario")
+    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Lista de materiales")
     for_create = fields.Boolean(default=True)
 
     def action_preview_task(self):
