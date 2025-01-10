@@ -92,7 +92,7 @@ class ProjectCreation(models.TransientModel):
 
             logger.warning(f"Id del proyecto: {project.id}")
             logger.warning(f"Id del proyecto: {project_b.id}")
-            raise ValidationError(f"LLego al final: {project_b.id}")
+            
             existing_task_names = project.task_ids.mapped('name')
             curren_task_type = None
             for line in self.wizard_plan_lines:
@@ -105,7 +105,7 @@ class ProjectCreation(models.TransientModel):
                 
                 if line.name not in existing_task_names and line.use_project_task and line.for_create:
                     self.create_task_in_project(project, current_task_type, line)
-
+                    raise ValidationError(f"LLego al final: {project_b.id}")
             existing_pickings = self.env['stock.picking'].search([('origin', 'ilike', project.name)])
             existing_picking_names = existing_pickings.mapped('name')
             for picking_line in self.wizard_picking_lines:
