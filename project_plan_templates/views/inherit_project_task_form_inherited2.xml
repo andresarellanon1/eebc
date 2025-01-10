@@ -7,6 +7,7 @@
 
         <field name="arch" type="xml">
             <xpath expr="//tree//field[@name='unit_amount']" position="before">
+                <field name="work_shift"/> 
                 <field name="estimated_time" widget="timesheet_uom"/> 
             </xpath>
         </field>
