@@ -72,7 +72,7 @@ class ProjectCreation(models.TransientModel):
             'sale_order_id': self.sale_order_id.id
         }
 
-        logger.warning(f"project_vals")
+        logger.warning(f"{project_vals}")
 
         project = self.env['project.project'].create(project_vals)
         self.create_project_tasks(project)
