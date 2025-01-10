@@ -20,7 +20,7 @@
             <xpath expr="//field[@name='partner_id']" position="before">
                 <field name="is_project" invisible="state in ('sale', 'budget', 'process')"/>
                 <field name="edit_project" invisible="is_project != True or state in ('sale', 'budget', 'process')"/>
-                <field name="project_name" invisible="is_project != True or state in ('process') or edit_project != False" readonly="state in ('budget')"/>
+                <field name="project_name" invisible="is_project != True or state in ('process')" readonly="state in ('budget') or edit_project != False"/>
                 <field name="project_id" invisible="state in ('sale', 'process') or edit_project != True" readonly="state in ('budget')"/>
             </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="replace">
