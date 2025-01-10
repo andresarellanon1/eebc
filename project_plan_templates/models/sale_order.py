@@ -113,7 +113,7 @@ class SaleOrder(models.Model):
             logger.warning(f"Encontro la sale order: {sale.project_id.sale_order_id}")
             if sale.edit_project and sale.project_id and sale.project_id.sale_order_id:
 
-                previous_order = sale.project_id.sale_order_id.id
+                previous_order = sale.project_id.sale_order_id
 
                 new_order_lines = []
                 for line in previous_order.order_line:
