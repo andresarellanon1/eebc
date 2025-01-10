@@ -55,13 +55,14 @@ class WizardSelectionLine(models.TransientModel):
     @api.onchange('lot_line_ids')
     def _check_selected(self):
         for record in self.lot_line_ids:
-            _logger.info(f"Registro: {record}, Estado actual: {record.is_selected}, Estado previo: {record._origin.is_selected}")
-            if record.is_selected and not record._origin.is_selected:
-                _logger.info("Checkbox marcado, incrementando contador")
+            if record.is_selected and not record.was_selected:
+            # Marcar: Incrementar el contador
                 self.series_batch_quantity += 1
-            elif not record.is_selected and record._origin.is_selected:
-                _logger.info("Checkbox desmarcado, decrementando contador")
+                record.was_selected = True  # Actualizar el estado previo
+            elif not record.is_selected and record.was_selected:
+                # Desmarcar: Decrementar el contador
                 self.series_batch_quantity -= 1
+                record.was_selected = False  # Actualizar el estado previo
 
 
                 

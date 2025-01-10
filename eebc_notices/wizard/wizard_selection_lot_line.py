@@ -12,6 +12,7 @@ class WizardSelectionLotLine(models.TransientModel):
     quantity = fields.Float(string='Cantidad')
     lot_quantity_available = fields.Float(string='Cantidad de lote disponible')
     is_selected = fields.Boolean(string="Select")  # Checkbox
+    was_selected = fields.Boolean(string="Estado previo", default=False)
 
 
     @api.onchange('quantity')
