@@ -115,35 +115,39 @@ class SaleOrder(models.Model):
 
                 previous_order = sale.project_id.sale_order_id
 
-                new_order_lines = []
-                for line in previous_order.order_line:
-                    new_line = {
-                        'product_id': line.product_id.id,
-                        'name': line.name,
-                        'product_uom_qty': line.product_uom_qty,
-                        'price_unit': line.price_unit,
-                        'discount': line.discount,
-                    }
-                    new_order_lines.append((0, 0, new_line))
-                sale.order_line = new_order_lines
+                sale.order_line = [(0, 0, {
+                    'product_id': line.product_id.id,
+                    'name': line.name,
+                    'product_uom_qty': line.product_uom_qty,
+                    'price_unit': line.price_unit,
+                    'discount': line.discount,
+                }) for line in previous_order.order_line]
 
-                new_project_plan_lines = []
-                for line in previous_order.project_plan_lines:
-                    if line.display_type == 'line_section':
-                        new_project_plan_lines.append(self.prep_plan_section_line(line, for_create=True))
-                    else:
-                        new_project_plan_lines.append(self.prep_plan_section_line(line, for_create=False))
-                        new_project_plan_lines += self.prep_plan_lines(line)
-                sale.project_plan_lines = new_project_plan_lines
+                # Copiar project_plan_lines directamente
+                sale.project_plan_lines = [(0, 0, {
+                    'name': line.name,
+                    'display_type': line.display_type,
+                    'description': line.description,
+                    'use_project_task': line.use_project_task,
+                    'planned_date_begin': line.planned_date_begin,
+                    'planned_date_end': line.planned_date_end,
+                    'project_plan_pickings': line.project_plan_pickings,
+                    'task_timesheet_id': line.task_timesheet_id,
+                    'for_create': line.for_create,
+                }) for line in previous_order.project_plan_lines]
 
-                new_project_plan_pickings = []
-                for line in previous_order.project_plan_pickings:
-                    if line.display_type == 'line_section':
-                        new_project_plan_pickings.append(self.prep_picking_section_line(line, for_create=True))
-                    else:
-                        new_project_plan_pickings.append(self.prep_picking_section_line(line, for_create=False))
-                        new_project_plan_pickings += self.prep_picking_lines(line)
-                sale.project_plan_pickings = new_project_plan_pickings
+                # Copiar project_plan_pickings directamente
+                sale.project_plan_pickings = [(0, 0, {
+                    'name': line.name,
+                    'display_type': line.display_type,
+                    'product_id': line.product_id.id if line.product_id else False,
+                    'product_uom': line.product_uom.id if line.product_uom else False,
+                    'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
+                    'product_uom_qty': line.product_uom_qty,
+                    'quantity': line.quantity,
+                    'standard_price': line.standard_price,
+                    'subtotal': line.subtotal,
+                }) for line in previous_order.project_plan_pickings]
     
     def prep_picking_section_line(self, line, for_create):
         return (0, 0, {
