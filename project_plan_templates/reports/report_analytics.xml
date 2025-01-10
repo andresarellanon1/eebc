@@ -30,7 +30,7 @@
                                     <t t-if="order_line.product_id.name == line.name and order_line.id not in order_lines_used and not found_match ">
                                         <tr>
                                             <td colspan="5">
-                                                <strong><span style="text-align: center;"/>Servicio</strong>
+                                                <th style="text-align: center;">Servicio</th>
                                             </td>
                                         </tr>
                                         <!-- Columna izquierda: Nombre del producto -->
