@@ -54,9 +54,9 @@ class SaleOrder(models.Model):
 
         for picking in line:
             if picking.display_type == 'line_section':
-                picking_lines.append(self.prep_picking_section_line(picking))
+                picking_lines.append(self.prep_picking_section_line(picking, for_create=True))
             else:
-                picking_lines.append(self.prep_picking_section_line(picking))
+                picking_lines.append(self.prep_picking_section_line(picking, for_create=False))
                 picking_lines += self.prep_picking_lines(picking)
                 
         return picking_lines
@@ -135,12 +135,13 @@ class SaleOrder(models.Model):
                 new_project_plan_pickings = []
                 for line in previous_order.project_plan_pickings:
                     if line.display_type == 'line_section':
-                        new_project_plan_pickings.append(self.prep_picking_section_line(line))
+                        new_project_plan_pickings.append(self.prep_picking_section_line(line, for_create=True))
                     else:
+                        new_project_plan_pickings.append(self.prep_picking_section_line(line, for_create=False))
                         new_project_plan_pickings += self.prep_picking_lines(line)
                 sale.project_plan_pickings = new_project_plan_pickings
     
-    def prep_picking_section_line(self, line):
+    def prep_picking_section_line(self, line, for_create):
         return (0, 0, {
             'name': line.name,
             'display_type': line.display_type or 'line_section',
@@ -150,7 +151,8 @@ class SaleOrder(models.Model):
             'product_uom_qty': False,
             'quantity': False,
             'standard_price': False,
-            'subtotal': False
+            'subtotal': False,
+            'for_create': for_create
         })
     
     def prep_plan_section_line(self, line, for_create):
@@ -195,7 +197,8 @@ class SaleOrder(models.Model):
                 'quantity': picking.quantity,
                 'standard_price': picking.standard_price,
                 'subtotal': picking.subtotal,
-                'display_type': False
+                'display_type': False,
+                'for_create': True
             }))
         return picking_lines
 
