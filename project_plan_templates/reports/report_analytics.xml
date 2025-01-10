@@ -15,6 +15,15 @@
                     </div>
 
                     <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Unidad de Medida</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <!-- Crear un índice para recorrer las líneas de la orden -->
                             <t t-set="order_lines_used" t-value="[]"/> <!-- Rastreador de coincidencias usadas -->
@@ -29,7 +38,7 @@
                                     <t t-if="order_line.product_id.name == line.name and order_line.id not in order_lines_used and not found_match ">
                                         <tr>
                                             <td colspan="5">
-                                                <strong><span t-esc=""/></strong>
+                                                <strong><span t-esc=" "/></strong>
                                             </td>
                                         </tr>
                                         <!-- Columna izquierda: Nombre del producto -->
