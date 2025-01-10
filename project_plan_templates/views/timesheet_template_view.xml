@@ -35,7 +35,7 @@
                                     <tree editable="editable_bottom" style="width: 100%;">
                                         <field name="description"/>  
                                         <field name="work_shift" widget="float_time"/>
-                                        <field name="estimated_time" widget="timesheet_uom"/>
+                                        <field name="estimated_time" widget="timesheet_uom"/> 
                                     </tree>
                                 </field>
                             </page>
