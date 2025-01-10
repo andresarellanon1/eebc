@@ -36,7 +36,7 @@
                                 <create name="add_section_control" string="Añadir sección" context="{'default_display_type': 'line_section'}"/>
                             </control>
                             <field name="sequence" widget="handle"/>
-                            <field name="display_type" column_invisible="True"/>
+                            <field name="display_type" column_invisible="1"/>
                             <field name="name"/>
                             <field name="description"/>
                             <field name="use_project_task"/>
@@ -53,7 +53,7 @@
                         <tree editable="editable_bottom" style="width: 100%">
                             <field name="company_id" column_invisible="1"/> 
                             <field name="sequence" widget="handle"/>
-                            <field name="display_type" column_invisible="True"/>
+                            <field name="display_type" column_invisible="1"/>
                             <field name="product_id"/>
                             <field name="name"/>
                             <field name="for_create" column_invisible="1"/>
