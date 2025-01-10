@@ -1,6 +1,6 @@
 {
     'name': "EBBC NOTICES",
-    'version': '17.0.1.105',
+    'version': '17.0.1.106',
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
