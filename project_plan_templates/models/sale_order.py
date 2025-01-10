@@ -116,6 +116,7 @@ class SaleOrder(models.Model):
                 previous_order = sale.project_id.actual_sale_order_id
 
                 sale.partner_id = previous_order.partner_id
+                sale.project_name = previous_order.project_name
 
                 sale.order_line = [(0, 0, {
                     'product_id': line.product_id.id,
