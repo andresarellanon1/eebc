@@ -33,7 +33,7 @@
                                         </td>
 
                                         <!-- Columna derecha: Detalles del producto -->
-                                        <td style="vertical-align: top; width: 70%;" colspan="4">
+                                        <td style="vertical-align: top; width: 100%;" colspan="4">
                                             <table class="table table-condensed" style="margin: 0;">
                                                 <tr>
                                                     <th>Unidad de Medida:</th>
