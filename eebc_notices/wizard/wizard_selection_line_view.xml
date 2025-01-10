@@ -12,6 +12,8 @@
                     <field name="in_or_out" invisible="1"/>
                     <field name="aviso_name" invisible="1"/>
                     <field name="quantity"/>
+                    <field name="series_batch_quantity"  readonly="1"/>
+
                    <!-- <field name="quantity_by_lot"/> -->
 
                     <field name="quantity_available_lot" readonly="1" invisible="in_or_out"/>
