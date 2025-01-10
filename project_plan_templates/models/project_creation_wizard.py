@@ -86,7 +86,8 @@ class ProjectCreation(models.TransientModel):
                 'target': 'current',
             }
         else:
-            project = self.project_id
+            project = self._origin.project_id
+
 
             logger.warning(f"Id del proyecto: {project.id}")
 
