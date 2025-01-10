@@ -102,42 +102,41 @@ class ProjectCreation(models.TransientModel):
                 if line.use_project_task and not line.display_type and line.for_create:
                     if not current_task_type:
                         current_task_type = self.get_or_create_task_type('Extras', project)
-                #raise ValidationError(f"LLego al final: {project_b.id}")
-                if line.name not in existing_task_names and line.use_project_task and line.for_create:
-                    timesheet_lines = self.env['task.time.lines'].search([('task_timesheet_id', '=', line.task_timesheet_id.id)])
-                    timesheet_data = [(0, 0, {'name': ts_line.description, 'estimated_time': ts_line.estimated_time})
-                                    for ts_line in timesheet_lines]
+                    if line.name not in existing_task_names and line.use_project_task and line.for_create:
+                        timesheet_lines = self.env['task.time.lines'].search([('task_timesheet_id', '=', line.task_timesheet_id.id)])
+                        timesheet_data = [(0, 0, {'name': ts_line.description, 'estimated_time': ts_line.estimated_time})
+                                        for ts_line in timesheet_lines]
 
-                    picking_lines = []
-                    is_task = False
+                        picking_lines = []
+                        is_task = False
 
-                    for picking in self.wizard_picking_lines:
-                        if picking.display_type:
-                            is_task = picking.name == line.name
-                        elif is_task:
-                            picking_lines.append((0, 0, {
-                                'name': picking.product_id.name,
-                                'product_id': picking.product_id.id,
-                                'product_uom': picking.product_uom.id,
-                                'product_packaging_id': picking.product_packaging_id.id,
-                                'product_uom_qty': picking.product_uom_qty,
-                                'quantity': picking.quantity,
-                                'standard_price': picking.standard_price,
-                                'subtotal': picking.subtotal,
-                                'display_type': False
-                            }))
+                        for picking in self.wizard_picking_lines:
+                            if picking.display_type:
+                                is_task = picking.name == line.name
+                            elif is_task:
+                                picking_lines.append((0, 0, {
+                                    'name': picking.product_id.name,
+                                    'product_id': picking.product_id.id,
+                                    'product_uom': picking.product_uom.id,
+                                    'product_packaging_id': picking.product_packaging_id.id,
+                                    'product_uom_qty': picking.product_uom_qty,
+                                    'quantity': picking.quantity,
+                                    'standard_price': picking.standard_price,
+                                    'subtotal': picking.subtotal,
+                                    'display_type': False
+                                }))
 
-                    task_id = self.env['project.task'].create({
-                        'name': line.name,
-                        'project_id': project.id,
-                        'stage_id': current_task_type.id,
-                        'timesheet_ids': timesheet_data,
-                        'planned_date_begin': line.planned_date_begin,
-                        'date_deadline': line.planned_date_end,
-                        'project_picking_lines': picking_lines
-                    })
+                        task_id = self.env['project.task'].create({
+                            'name': line.name,
+                            'project_id': project.id,
+                            'stage_id': current_task_type.id,
+                            'timesheet_ids': timesheet_data,
+                            'planned_date_begin': line.planned_date_begin,
+                            'date_deadline': line.planned_date_end,
+                            'project_picking_lines': picking_lines
+                        })
 
-                    self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
+                        self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
 
             existing_pickings = self.env['stock.picking'].search([('origin', 'ilike', project.name)])
             existing_picking_names = existing_pickings.mapped('name')
