@@ -107,19 +107,11 @@ class ProjectCreation(models.TransientModel):
                     self.create_project_tasks_pickings(None, [picking_line])
 
             return {
-                'name': 'Project Version History',
-                'view_mode': 'form',
-                'res_model': 'project.version.wizard',
                 'type': 'ir.actions.act_window',
-                'target': 'new',
-                'context': {
-                    'default_project_id': project.id,
-                    'default_project_plan_id': project.project_plan_id.id if project.project_plan_id else False,
-                    'default_project_plan_lines': [(6, 0, project.project_plan_lines.ids)] if project.project_plan_lines else False,
-                    'default_project_picking_lines': [(6, 0, project.project_picking_lines.ids)] if project.project_picking_lines else False,
-                    'default_modified_by': self.env.user.id,
-                    'default_modification_date': fields.Datetime.now(),
-                }
+                'res_model': 'project.project',
+                'res_id': project.id,
+                'view_mode': 'form',
+                'target': 'current',
             }
 
     def create_task_in_project(self, current_task_type, project, line):
