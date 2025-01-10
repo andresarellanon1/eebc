@@ -53,13 +53,15 @@ class SaleOrder(models.Model):
         picking_lines = []
 
         for picking in line:
-            if picking.display_type == 'line_section':
-                picking_lines.append(self.prep_picking_section_line(picking, True))
-                picking_lines.append(self.prep_picking_section_line(picking, False))
-            else:
-                if picking.for_create:
+            if picking.for_create:
+                if picking.display_type == 'line_section':
                     picking_lines.append(self.prep_picking_section_line(picking, True))
-                    picking_lines += self.prep_picking_lines(picking)
+                else:
+                    if picking.for_create:
+                        picking_lines.append(self.prep_picking_section_line(picking, True))
+                        picking_lines += self.prep_picking_lines(picking)
+            else:
+                picking_lines.append(self.prep_picking_section_line(picking, False))
                 
         return picking_lines
     
