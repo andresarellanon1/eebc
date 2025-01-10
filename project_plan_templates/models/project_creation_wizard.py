@@ -102,10 +102,9 @@ class ProjectCreation(models.TransientModel):
                 if line.use_project_task and not line.display_type and line.for_create:
                     if not current_task_type:
                         current_task_type = self.get_or_create_task_type('Extras', project)
-                
+                raise ValidationError(f"LLego al final: {project_b.id}")
                 if line.name not in existing_task_names and line.use_project_task and line.for_create:
                     self.create_task_in_project(project, current_task_type, line)
-                    raise ValidationError(f"LLego al final: {project_b.id}")
             existing_pickings = self.env['stock.picking'].search([('origin', 'ilike', project.name)])
             existing_picking_names = existing_pickings.mapped('name')
             for picking_line in self.wizard_picking_lines:
