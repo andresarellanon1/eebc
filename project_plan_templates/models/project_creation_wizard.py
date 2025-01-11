@@ -138,15 +138,13 @@ class ProjectCreation(models.TransientModel):
 
             project.sale_order_id = self.sale_order_id.id
 
-            # Fusionar los project_plan_lines existentes con los nuevos
-            existing_plan_lines = project.project_plan_lines  # Esto es un registro de Odoo, no una lista normal
-            new_plan_lines = self.prep_plan_lines(self.wizard_plan_lines)  # Asegúrate de que este valor sea un registro de Odoo también
-            project.project_plan_lines = [(6, 0, existing_plan_lines.ids + new_plan_lines.ids)]
+            existing_plan_lines = project.project_plan_lines
+            new_plan_lines = self.prep_plan_lines(self.wizard_plan_lines)
+            project.project_plan_lines += [(6, 0, new_plan_lines.ids)]
 
-            # Fusionar los project_picking_lines existentes con los nuevos
             existing_picking_lines = project.project_picking_lines
             new_picking_lines = self.prep_picking_lines(self.wizard_picking_lines)
-            project.project_picking_lines = [(6, 0, existing_picking_lines.ids + new_picking_lines.ids)]
+            project.project_picking_lines += [(6, 0, new_picking_lines.ids)]
 
             existing_pickings = self.env['stock.picking'].search([('origin', 'ilike', project.name)])
             existing_picking_names = existing_pickings.mapped('name')
