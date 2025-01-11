@@ -138,11 +138,13 @@ class ProjectCreation(models.TransientModel):
 
             project.sale_order_id = self.sale_order_id.id
 
-            existing_plan_lines = project.project_plan_lines
-            project.project_plan_lines += self.prep_plan_lines(self.wizard_plan_lines)
+            new_plan_lines = self.prep_plan_lines(self.wizard_plan_lines)  # Debe retornar datos en formato [(0, 0, {...})]
+            project.project_plan_lines = [(4, line.id) for line in project.project_plan_lines] + new_plan_lines
 
-            existing_picking_lines = project.project_picking_lines
-            project.project_picking_lines += self.prep_picking_lines(self.wizard_picking_lines)
+
+            new_picking_lines = self.prep_picking_lines(self.wizard_picking_lines)
+            project.project_picking_lines = [(4, line.id) for line in project.project_picking_lines] + new_picking_lines
+
 
             existing_pickings = self.env['stock.picking'].search([('origin', 'ilike', project.name)])
             existing_picking_names = existing_pickings.mapped('name')
