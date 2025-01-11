@@ -139,8 +139,8 @@ class ProjectCreation(models.TransientModel):
             project.sale_order_id = self.sale_order_id.id
 
             # Fusionar los project_plan_lines existentes con los nuevos
-            existing_plan_lines = project.project_plan_lines
-            new_plan_lines = self.prep_plan_lines(self.wizard_plan_lines)
+            existing_plan_lines = project.project_plan_lines  # Esto es un registro de Odoo, no una lista normal
+            new_plan_lines = self.prep_plan_lines(self.wizard_plan_lines)  # Asegúrate de que este valor sea un registro de Odoo también
             project.project_plan_lines = [(6, 0, existing_plan_lines.ids + new_plan_lines.ids)]
 
             # Fusionar los project_picking_lines existentes con los nuevos
