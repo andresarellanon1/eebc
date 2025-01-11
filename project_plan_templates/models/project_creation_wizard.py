@@ -136,6 +136,18 @@ class ProjectCreation(models.TransientModel):
 
                         self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
 
+            project.sale_order_id = self.sale_order_id.id
+
+            # Fusionar los project_plan_lines existentes con los nuevos
+            existing_plan_lines = project.project_plan_lines
+            new_plan_lines = self.prep_plan_lines(self.wizard_plan_lines)
+            project.project_plan_lines = [(6, 0, existing_plan_lines.ids + new_plan_lines.ids)]
+
+            # Fusionar los project_picking_lines existentes con los nuevos
+            existing_picking_lines = project.project_picking_lines
+            new_picking_lines = self.prep_picking_lines(self.wizard_picking_lines)
+            project.project_picking_lines = [(6, 0, existing_picking_lines.ids + new_picking_lines.ids)]
+
             existing_pickings = self.env['stock.picking'].search([('origin', 'ilike', project.name)])
             existing_picking_names = existing_pickings.mapped('name')
             # for picking_line in self.wizard_picking_lines:
