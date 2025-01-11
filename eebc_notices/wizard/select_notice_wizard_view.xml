@@ -18,7 +18,6 @@
                                 <field name="series_batch_quantity"  readonly="1"/>
 
                                 <field name="quantity_available" column_invisible="1" />
-                                <field name="quantity_available_lot" column_invisible="1" invisible="1"/>
 
                                 <field name="aviso_name" column_invisible="1" invisible="1"/>
                                 <field name="lot_line_ids">
@@ -28,7 +27,6 @@
 
                                         <field name="lot_id"/>
                                         <field name="quantity" column_invisible="1"  invisible="1"/>
-                                        <field name="lot_quantity_available" column_invisible="1" invisible="1"/>
 
                                     </tree>
                                 </field>
