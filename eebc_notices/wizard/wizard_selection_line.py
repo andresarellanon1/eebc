@@ -18,7 +18,9 @@ class WizardSelectionLine(models.TransientModel):
         )
         
 
-    
+    quantity = fields.Float(string='Cantidad establecida', default=0, required=True)
+
+    quantity_demanded = fields.Float(string='Cantidad demandada')
     quantity = fields.Float(string='Cantidad establecida', default=0, required=True)
     series_batch_quantity = fields.Float(string='Cantidad establecida en serie/lotes', default=0)
 
@@ -57,6 +59,7 @@ class WizardSelectionLine(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         _logger.warning('Entra a default_get en WizardSelectionLine')
+        _logger.warning(f'Contexto completo: {self.env.context}')
         res = super(WizardSelectionLine, self).default_get(fields_list)
        
         return res
