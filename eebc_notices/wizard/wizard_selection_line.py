@@ -52,6 +52,15 @@ class WizardSelectionLine(models.TransientModel):
         
     )
 
+    # @api.constrains('notice_ids')  # Decorador que valida automáticamente
+    # def _check_quantities(self):
+    @api.model
+    def default_get(self, fields_list):
+        _logger.warning('Entra a default_get en WizardSelectionLine')
+        res = super(WizardSelectionLine, self).default_get(fields_list)
+       
+        return res
+
     @api.onchange('lot_line_ids')
     def _check_selected(self):
         for record in self.lot_line_ids:

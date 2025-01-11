@@ -23,17 +23,8 @@ class SelectNoticeWizard(models.TransientModel):
     quantity = fields.Float(string="Demanda total", readonly=True,)
     stock_move_id = fields.Many2one('stock.move', string='Traslado')
     
-    def write(self, vals):
-        res = super(SelectNoticeWizard, self).write(vals)
+    
 
-        # Acceder a los registros One2many después de actualizar
-        for line in self.notice_ids.lot_line_ids:
-            if line.is_selected:
-                # Log de los registros marcados
-                _logger.info(f"Registro actualizado: {line.lot_id}, Cantidad: {line.quantity}")
-
-        return res
-        
     @api.model
     def default_get(self, fields_list):
         _logger.warning('Entra a default_get en SelectNoticeWizard')
