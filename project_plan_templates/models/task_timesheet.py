@@ -9,4 +9,4 @@ class TaskTimesheet(models.Model):
     description = fields.Html(string="Descripción")
 
     task_time_lines = fields.One2many('task.time.lines', 'task_timesheet_id')
-    sale_order_id = fields.Many2one('project.picking.lines', string='Picking id')
+    
