@@ -89,6 +89,11 @@
                                     <!-- Encuentra la primera coincidencia no utilizada -->
                                     <t t-set="order_line_match" t-value="False"/>
                                     <t t-foreach="doc.order_line" t-as="order_line">
+                                        <tr>
+                                            <td colspan="5">
+                                                <strong>Servicios</strong>
+                                            </td>
+                                        </tr>
                                         <t t-if="not order_line_match and order_line.product_id.name == line.name and order_line.id not in order_lines_used">
                                             <tr>
                                                 <td style="vertical-align: top; font-weight: bold; width: 30%; border-right: 1px solid #ddd;">
