@@ -9,4 +9,3 @@ class TaskTimesheet(models.Model):
     description = fields.Html(string="Descripción")
 
     task_time_lines = fields.One2many('task.time.lines', 'task_timesheet_id')
-    
