@@ -93,19 +93,21 @@ class SaleOrder(models.Model):
                 plan_pickings = []
                 plan_lines = []
                 for line in sale.order_line:
-                    if line.display_type == 'line_section':
-                        plan_lines.append(self.prep_plan_section_line(line, True))
-                    else:
-                        if line.product_id.project_plan_id:
-                            plan_lines.append(self.prep_plan_section_line(line, False))
-                            plan_lines += self.prep_plan_lines(line)
+                    if line.for_modification:
+                        if line.display_type == 'line_section':
+                            plan_lines.append(self.prep_plan_section_line(line, True))
+                        else:
+                            if line.product_id.project_plan_id:
+                                plan_lines.append(self.prep_plan_section_line(line, False))
+                                plan_lines += self.prep_plan_lines(line)
 
-                        for project_picking in line.product_id.project_plan_id.project_plan_pickings:
-                            plan_pickings.append((4, project_picking.id))
+                            for project_picking in line.product_id.project_plan_id.project_plan_pickings:
+                                plan_pickings.append((4, project_picking.id))
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
-            
+
+            sale.state = 'budget'
 
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
@@ -125,10 +127,11 @@ class SaleOrder(models.Model):
                     'product_uom_qty': line.product_uom_qty,
                     'price_unit': line.price_unit,
                     'discount': line.discount,
+                    'for_modification': False
                 }) for line in previous_order.order_line]
 
                 # Copiar project_plan_lines directamente
-                sale.project_plan_lines = [(0, 0, {
+                plan_lines = [(0, 0, {
                     'name': line.name,
                     'display_type': line.display_type,
                     'description': line.description,
@@ -138,10 +141,11 @@ class SaleOrder(models.Model):
                     'project_plan_pickings': line.project_plan_pickings,
                     'task_timesheet_id': line.task_timesheet_id,
                     'for_create': line.for_create,
+                    'for_modification': False
                 }) for line in previous_order.project_plan_lines]
 
                 # Copiar project_plan_pickings directamente
-                sale.project_picking_lines = [(0, 0, {
+                picking_lines = [(0, 0, {
                     'name': line.name,
                     'display_type': line.display_type,
                     'product_id': line.product_id.id if line.product_id else False,
@@ -151,7 +155,29 @@ class SaleOrder(models.Model):
                     'quantity': line.quantity,
                     'standard_price': line.standard_price,
                     'subtotal': line.subtotal,
+                    'for_modification': False
                 }) for line in previous_order.project_picking_lines]
+
+                new_plan_lines = []
+                new_picking_lines = []
+
+                for line in plan_lines:
+                    if line.display_type == 'line_section':
+                        new_plan_lines.append(self.prep_plan_section_line(line, True))
+                    else:
+                        new_plan_lines.append(self.prep_plan_section_line(line, True))
+                        new_plan_lines += self.prep_plan_lines(line)
+
+                for line in picking_lines:
+                    if picking.display_type == 'line_section':
+                        new_picking_lines.append(self.prep_picking_section_line(picking, True))
+                    else:
+                        if picking.for_create:
+                            new_picking_lines.append(self.prep_picking_section_line(picking, True))
+                            new_picking_lines += self.prep_picking_lines(picking)
+                
+                sale.project_plan_lines = new_plan_lines
+
     
     def prep_picking_section_line(self, line, for_create):
         return (0, 0, {
@@ -182,7 +208,12 @@ class SaleOrder(models.Model):
 
     def prep_plan_lines(self, line):
         plan_lines = []
-        for plan in line.product_id.project_plan_id.project_plan_lines:
+        if not self.project_id:
+            lines = line.product_id.project_plan_id.project_plan_lines
+        else:
+            lines = line
+
+        for plan in lines:
             plan_lines.append((0, 0, {
                 #'name': f"{line.product_template_id.name}-{plan.name}",
                 'name': plan.name,
@@ -199,7 +230,12 @@ class SaleOrder(models.Model):
 
     def prep_picking_lines(self, line):
         picking_lines = []
-        for picking in line.project_plan_pickings.project_picking_lines:
+        if not self.project_id:
+            lines = line.project_plan_pickings.project_picking_lines
+        else:
+            lines = line
+
+        for picking in lines:
             picking_lines.append((0, 0, {
                 'name': picking.product_id.name,
                 'product_id': picking.product_id.id,

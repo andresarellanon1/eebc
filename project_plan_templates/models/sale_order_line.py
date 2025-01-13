@@ -9,6 +9,7 @@ class SaleOrderLine(models.Model):
     code = fields.Char(string="Code")
     
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
+    for_modification = fields.Boolean(string="For modification", default=True)
 
     @api.depends('order_id', 'order_id.is_project')
     def _products_project_domain(self):
