@@ -24,6 +24,7 @@ class SelectNoticeWizard(models.TransientModel):
     stock_move_id = fields.Many2one('stock.move', string='Traslado')
     
     
+
     @api.model
     def default_get(self, fields_list):
         _logger.warning('Entra a default_get en SelectNoticeWizard')
@@ -43,7 +44,6 @@ class SelectNoticeWizard(models.TransientModel):
                     'notice_id': line[2]['notice_id'],
                     'quantity': line[2]['quantity'],
                     'quantity_available': line[2]['quantity_available'],
-                    'quantity_available_lot' : line[2]['quantity_available_lot'],
                     'aviso_name': line[2]['aviso_name'],
                     'in_or_out': line[2]['in_or_out'],
                     'lot_line_ids': lot_line_ids,  # Usamos directamente los datos correctamente formados
@@ -82,7 +82,7 @@ class SelectNoticeWizard(models.TransientModel):
                     _logger.warning('Notice: %s', line.notice_id.name)
                     for lot in line.lot_line_ids:
                         
-                        _logger.warning(f'lot {lot.lot_id.name} cantidad establecida {lot.quantity}')
+                        _logger.warning(f'lot {lot.lot_id.name} esta seleccionado {lot.is_selected}')
                         
                         # # Validar datos necesarios antes de proceder
                         # if not wizard.stock_move_id or not wizard.stock_move_id.picking_id:

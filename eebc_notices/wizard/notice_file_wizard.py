@@ -113,22 +113,22 @@ class NoticeFileWizard(models.TransientModel):
                             'default_message': f"El folio del archivo ({self.folio}) ya existe en el folio ({notice_id}).",
                         }
                     }
-                # else:
-                #     notice_id.write({
-                #         'history_ids': [(0, 0, {
-                #             'location_dest': self._context['location_dest_id'],
-                #             'location_id': self._context['location_id'],
-                #             'product_id': self._context['product_id'],
-                #             'quantity': 0,
-                #             'folio': self.folio,
-                #             'picking_code': self._context['type'],
-                #             'origin': self._context['origin'],
-                #             'purchase_order_id':self._context['purchase_order_id'],
-                #             'sale_order_id':self._context['sale_ids'],
-                #             'state': 'draft',
+                else:
+                    notice_id.write({
+                        'history_ids': [(0, 0, {
+                            'location_dest': self._context['location_dest_id'],
+                            'location_id': self._context['location_id'],
+                            'product_id': self._context['product_id'],
+                            'quantity': self.quantity,
+                            'folio': self.folio,
+                            'picking_code': self._context['type'],
+                            'origin': self._context['origin'],
+                            'purchase_order_id':self._context['purchase_order_id'],
+                            'sale_order_id':self._context['sale_ids'],
+                            'state': 'draft',
 
-                #         })]
-                #     })
+                        })]
+                    })
             else:
                 notice = self.env['notices.notices'].create({
                     'product_id': self._context['product_id'],
@@ -137,26 +137,23 @@ class NoticeFileWizard(models.TransientModel):
                     'partner_id': self._context['proveedor_id'],
                     'notice': self.notice,
                 })
-                # self.env['notices.history'].create({
-                #     'location_id': self._context['location_id'],
-                #     'location_dest': self._context['location_dest_id'],
-                #     'product_id': self._context['product_id'],
-                #     'quantity': 0,
-                #     'picking_code': self._context['type'],
-                #     'notice_id': notice.id,
-                #     'folio': self.folio,
-                #     'origin': self._context['origin'],
-                #     'purchase_order_id':self._context['purchase_order_id'],
-                #     'sale_order_id':self._context['sale_ids'],
-                #     'stock_move_id':self._context['stock_move_id'],
-                #     'state': 'draft',
+                self.env['notices.history'].create({
+                    'location_id': self._context['location_id'],
+                    'location_dest': self._context['location_dest_id'],
+                    'product_id': self._context['product_id'],
+                    'quantity': self.quantity,
+                    'picking_code': self._context['type'],
+                    'notice_id': notice.id,
+                    'folio': self.folio,
+                    'origin': self._context['origin'],
+                    'purchase_order_id':self._context['purchase_order_id'],
+                    'sale_order_id':self._context['sale_ids'],
+                    'stock_move_id':self._context['stock_move_id'],
+                    'state': 'draft',
                     
-                # })
+                })
                 
-                # bool_notice_established = self.env['stock.move'].search([('id','=', self._context['stock_move_id'])]).notice_established
-                # if bool_notice_established:
-                #     _logger.warning(f'Se cumple if de bool_notice_established, valor: {bool_notice_established}')
-                #     bool_notice_established = True
+           
                     
             # Limpieza del contexto
             self = self.with_context(
