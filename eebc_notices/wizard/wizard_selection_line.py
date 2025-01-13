@@ -24,18 +24,7 @@ class WizardSelectionLine(models.TransientModel):
 
     quantity_available = fields.Float(string='Cantidad disponible')
 
-    quantity_by_lot = fields.Float(string='Cantidad establecida de lotes', 
-       compute='_compute_quantity_by_lot' )
-    
-    @api.depends('lot_line_ids')
-    def _compute_quantity_by_lot(self):
-       total = 0
-       for lot in self.lot_line_ids:
-           total += lot.quantity
-        
-       self.quantity_by_lot = total
 
-    
 
 
     in_or_out = fields.Boolean(
