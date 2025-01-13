@@ -44,7 +44,6 @@ class SelectNoticeWizard(models.TransientModel):
                     'notice_id': line[2]['notice_id'],
                     'quantity': line[2]['quantity'],
                     'quantity_available': line[2]['quantity_available'],
-                    'quantity_available_lot' : line[2]['quantity_available_lot'],
                     'aviso_name': line[2]['aviso_name'],
                     'in_or_out': line[2]['in_or_out'],
                     'lot_line_ids': lot_line_ids,  # Usamos directamente los datos correctamente formados
