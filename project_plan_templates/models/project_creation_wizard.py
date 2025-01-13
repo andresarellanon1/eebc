@@ -138,12 +138,23 @@ class ProjectCreation(models.TransientModel):
 
             project.sale_order_id = self.sale_order_id.id
 
-            new_plan_lines = self.prep_plan_lines(self.wizard_plan_lines)  # Debe retornar datos en formato [(0, 0, {...})]
-            project.project_plan_lines = [(4, line.id) for line in project.project_plan_lines] + new_plan_lines
+            existing_plan_lines = project.project_plan_lines
+            new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)  # [(0, 0, {...})]
 
+            # Actualizar líneas existentes
+            for existing_line in existing_plan_lines:
+                for new_line in new_plan_lines_data:
+                    if existing_line.name == new_line[2]['name']:  # Comparar por un identificador único (e.g., 'name')
+                        existing_line.write(new_line[2])  # Actualizar los datos
+                        break
+                else:
+                    # Si no se encuentra coincidencia, es una nueva línea
+                    project.project_plan_lines += [(0, 0, new_line[2])]
 
-            new_picking_lines = self.prep_picking_lines(self.wizard_picking_lines)
-            project.project_picking_lines = [(4, line.id) for line in project.project_picking_lines] + new_picking_lines
+            # Agregar nuevas líneas
+            for new_line in new_plan_lines_data:
+                if not any(existing_line.name == new_line[2]['name'] for existing_line in existing_plan_lines):
+                    project.project_plan_lines += [(0, 0, new_line[2])]
 
 
             existing_pickings = self.env['stock.picking'].search([('origin', 'ilike', project.name)])
