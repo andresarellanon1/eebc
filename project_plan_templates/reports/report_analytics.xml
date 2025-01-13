@@ -63,13 +63,11 @@
                                             <strong>Detalles de las líneas de tiempo de la tarea:</strong>
                                         </td>
                                     </tr>
-                                    <!-- Encabezado de la tabla para task.time.lines -->
                                     <tr>
                                         <th>Descripción</th>
                                         <th>Turno de Trabajo</th>
                                         <th>Tiempo Estimado</th>
                                     </tr>
-                                    <!-- Itera sobre task.time.lines -->
                                     <t t-foreach="line.task_time_lines" t-as="time_line">
                                         <tr>
                                             <td><span t-esc="time_line.description or 'Sin descripción'"/></td>
@@ -77,6 +75,13 @@
                                             <td><span t-esc="time_line.estimated_time or 'Sin tiempo estimado'"/></td>
                                         </tr>
                                     </t>
+                                </t>
+                                <t t-else="">
+                                    <tr>
+                                        <td colspan="5">
+                                            <em>No hay líneas de tiempo asociadas.</em>
+                                        </td>
+                                    </tr>
                                 </t>
                                 <!-- Si 'for_create' es False, muestra los detalles de la línea de la orden -->
                             <!-- Si 'for_create' es False, busca la primera línea disponible -->
