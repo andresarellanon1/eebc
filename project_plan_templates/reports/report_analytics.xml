@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!-- Plantilla del reporte para los materiales -->
     <template id="report_analytics" name="Reporte de Materiales">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
@@ -16,56 +17,134 @@
 
                     <table class="table table-condensed">
                         <tbody>
-                            <!-- Crear un índice para recorrer las líneas de la orden -->
-                            <t t-set="order_lines_used" t-value="[]"/> <!-- Rastreador de coincidencias usadas -->
-
-                            <!-- Iterar a través de las líneas de picking -->
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Unidad de Medida</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            
+                            <!-- Inicializa la variable de suma total -->
+                            <t t-set="total_subtotal" t-value="0"/> <!-- Acumulador de subtotal -->
+                            <t t-set="order_lines_used" t-value="[]"/> 
+        
+                            <!-- Tabla de materiales para la línea actual -->
                             <t t-foreach="doc.project_picking_lines" t-as="line">
-                                <t t-set="found_match" t-value="False"/>
-                                
-                                <!-- Comparar con las líneas de la orden -->
-                                <t t-foreach="doc.order_line" t-as="order_line">
-                                    <!-- Validar nombre y que no se haya usado esta línea antes -->
-                                    <t t-if="order_line.product_id.name == line.name and order_line.id not in order_lines_used and not found_match">
+                                <!-- Si 'for_create' es True, muestra la línea de picking -->
+                                <t t-if="line.for_create == True">
+                                    <t t-if="line.product_id">
                                         <tr>
-                                            <td><span t-esc="order_line.product_id.name or 'Sin producto'"/></td>
-                                            <td><span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/></td>
-                                            <td><span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/></td>
-                                            <td><span t-esc="order_line.price_unit or 'Sin precio'"/></td>
-                                            <td><span t-esc="order_line.price_subtotal or 'Sin total'"/></td>
+                                            <td><span t-esc="line.product_id.name"/></td>
+                                            <td><span t-esc="line.product_uom.name"/></td>
+                                            <td><span t-esc="line.quantity"/></td>
+                                            <td><span t-esc="line.standard_price"/></td>
+                                            <td>
+                                                <span t-esc="line.subtotal"/>
+                                                <!-- Acumula el subtotal -->
+                                                <t t-set="total_subtotal" t-value="total_subtotal + line.subtotal"/>
+                                            </td>
                                         </tr>
-                                        <!-- Marcar coincidencia como encontrada y registrar esta línea como usada -->
-                                        <t t-set="found_match" t-value="True"/>
-                                        <t t-set="order_lines_used" t-value="order_lines_used + [order_line.id]"/>
-                                        <thead>
-                                            <tr>
-                                                <th>Producto</th>
-                                                <th>Unidad de Medida</th>
-                                                <th>Cantidad</th>
-                                                <th>Precio Unitario</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
+                                    </t>
+                                    <t t-else="">
+                                        <tr>
+                                            <td colspan="5">
+                                                <strong><span t-esc="line.name or 'Sin descripción'"/></strong>
+                                            </td>
+                                        </tr>
                                     </t>
                                 </t>
-                                <t t-if="not found_match and not line.product_id">
+                                
+                                <t t-if="line.task_time_lines_ids">
                                     <tr>
                                         <td colspan="5">
-                                            <strong><span t-esc="line.name or 'Sin descripción'"/></strong>
+                                            <strong>Detalles de las líneas de tiempo de la tarea:</strong>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <th>Descripción</th>
+                                        <th>Turno de Trabajo</th>
+                                        <th>Tiempo Estimado</th>
+                                    </tr>
+                                    <t t-foreach="line.task_time_lines_ids" t-as="time_line">
+                                        <tr>
+                                            <td><span t-esc="time_line.description or 'Sin descripción'"/></td>
+                                            <td><span t-esc="time_line.work_shift or 'Sin turno de trabajo'"/></td>
+                                            <td><span t-esc="time_line.estimated_time or 'Sin tiempo estimado'"/></td>
+                                        </tr>
+                                    </t>
                                 </t>
                                 <t t-else="">
                                     <tr>
-                                        <td><span t-esc="line.product_id.name"/></td>
-                                        <td><span t-esc="line.product_uom.name"/></td>
-                                        <td><span t-esc="line.quantity"/></td>
-                                        <td><span t-esc="line.standard_price"/></td>
-                                        <td><span t-esc="line.subtotal"/></td>
+                                        <td colspan="5">
+                                            <em>No hay líneas de tiempo asociadas.</em>
+                                        </td>
                                     </tr>
+                                </t>
+
+                                <!-- Si 'for_create' es False, muestra los detalles de la línea de la orden -->
+                            <!-- Si 'for_create' es False, busca la primera línea disponible -->
+                                <t t-if="line.for_create == False">
+                                    <!-- Encuentra la primera coincidencia no utilizada -->
+                                    <t t-set="order_line_match" t-value="False"/>
+                                    <t t-foreach="doc.order_line" t-as="order_line">
+                                        
+                                        <t t-if="not order_line_match and order_line.product_id.name == line.name and order_line.id not in order_lines_used">
+                                            <tr>
+                                                <td style="vertical-align: top; font-weight: bold; width: 30%; border-right: 1px solid #ddd;">
+                                                    <span t-esc="order_line.product_id.name or 'Sin producto'"/>
+                                                </td>
+        
+                                                <!-- Columna derecha: Detalles del producto -->
+                                                <td style="vertical-align: top; width: 100%;" colspan="4">
+                                                    <table class="table table-borderless" style="margin: 0; width: 100%;">
+                                                    <tr>
+                                                        <th style="text-align: left; font-weight: normal; padding: 0;">Unidad de Medida:</th>
+                                                        <td style="text-align: left; padding: 0;">
+                                                            <span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="text-align: left; font-weight: normal; padding: 0;">Cantidad:</th>
+                                                        <td style="text-align: left; padding: 0;">
+                                                            <span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="text-align: left; font-weight: normal; padding: 0;">Precio Unitario:</th>
+                                                        <td style="text-align: left; padding: 0;">
+                                                            <span t-esc="order_line.price_unit or 'Sin precio'"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="text-align: left; font-weight: normal; padding: 0;">Total:</th>
+                                                        <td style="text-align: left; padding: 0;">
+                                                            <span t-esc="order_line.price_subtotal or 'Sin total'"/>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                </td>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Producto</th>
+                                                        <th>Unidad de Medida</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Precio Unitario</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                            </tr>
+                                            <!-- Marcar la línea como usada -->
+                                            <t t-set="order_lines_used" t-value="order_lines_used + [order_line.id]"/>
+                                            <t t-set="order_line_match" t-value="True"/>
+                                        </t>
+                                    </t>
                                 </t>
                             </t>
                         </tbody>
+
                     </table>
 
                 </t>

@@ -53,11 +53,15 @@ class SaleOrder(models.Model):
         picking_lines = []
 
         for picking in line:
-            if picking.display_type == 'line_section':
-                picking_lines.append(self.prep_picking_section_line(picking))
+            if picking.for_create:
+                if picking.display_type == 'line_section':
+                    picking_lines.append(self.prep_picking_section_line(picking, True))
+                else:
+                    if picking.for_create:
+                        picking_lines.append(self.prep_picking_section_line(picking, True))
+                        picking_lines += self.prep_picking_lines(picking)
             else:
-                picking_lines.append(self.prep_picking_section_line(picking))
-                picking_lines += self.prep_picking_lines(picking)
+                picking_lines.append(self.prep_picking_section_line(picking, False))
                 
         return picking_lines
     
@@ -79,7 +83,7 @@ class SaleOrder(models.Model):
         
         for sale in self:
             if sale.is_project:
-                if not sale.project_name:
+                if not sale.project_name and not sale.edit_project:
                     raise ValidationError(
                         f"se requiere el nombre del proyecto"
                     )
@@ -101,14 +105,71 @@ class SaleOrder(models.Model):
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
+
+            sale.state = 'budget'
             
 
-    # @api.onchange('project_id')
-    # def _compute_order_lines_from_project_previous_version(self):
-    #     for sale in self:
-    #         if sale.edit_project:
+    @api.onchange('project_id')
+    def _compute_order_lines_from_project_previous_version(self):
+        for sale in self:
+            logger.warning(f"Encontro la sale order: {sale.project_id.actual_sale_order_id}")
+            if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
+
+                previous_order = sale.project_id.actual_sale_order_id
+
+                sale.partner_id = previous_order.partner_id
+                sale.project_name = previous_order.project_name
+
+                sale.order_line = [(0, 0, {
+                    'product_id': line.product_id.id,
+                    'display_type': line.display_type,
+                    'name': line.name,
+                    'product_uom_qty': line.product_uom_qty,
+                    'price_unit': line.price_unit,
+                    'discount': line.discount,
+                }) for line in previous_order.order_line]
+
+                # Copiar project_plan_lines directamente
+                # Preparar y asignar líneas de plan
+                plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
+                sale.project_plan_lines = plan_lines
+
+                # Preparar y asignar líneas de picking
+                picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
+                sale.project_picking_lines = picking_lines
+
+    def _prepare_plan_lines(self, lines):
+        """Prepara las líneas de plan para asignarlas al pedido."""
+        return [(0, 0, {
+            'name': line.name,
+            'display_type': line.display_type,
+            'description': line.description,
+            'use_project_task': line.use_project_task,
+            'planned_date_begin': line.planned_date_begin,
+            'planned_date_end': line.planned_date_end,
+            'project_plan_pickings': line.project_plan_pickings.id if line.project_plan_pickings else False,
+            'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
+            'for_create': line.for_create,
+            'for_modification': False
+        }) for line in lines]
+
+    def _prepare_picking_lines(self, lines):
+        """Prepara las líneas de picking para asignarlas al pedido."""
+        return [(0, 0, {
+            'name': line.name,
+            'display_type': line.display_type,
+            'product_id': line.product_id.id if line.product_id else False,
+            'product_uom': line.product_uom.id if line.product_uom else False,
+            'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
+            'product_uom_qty': line.product_uom_qty,
+            'quantity': line.quantity,
+            'standard_price': line.standard_price,
+            'subtotal': line.subtotal,
+            'for_create': line.for_create,
+            'for_modification': False
+        }) for line in lines]
     
-    def prep_picking_section_line(self, line):
+    def prep_picking_section_line(self, line, for_create):
         return (0, 0, {
             'name': line.name,
             'display_type': line.display_type or 'line_section',
@@ -118,7 +179,8 @@ class SaleOrder(models.Model):
             'product_uom_qty': False,
             'quantity': False,
             'standard_price': False,
-            'subtotal': False
+            'subtotal': False,
+            'for_create': for_create
         })
     
     def prep_plan_section_line(self, line, for_create):
@@ -163,12 +225,31 @@ class SaleOrder(models.Model):
                 'quantity': picking.quantity,
                 'standard_price': picking.standard_price,
                 'subtotal': picking.subtotal,
-                'display_type': False
+                'display_type': False,
+                'for_create': True
             }))
         return picking_lines
 
     def action_open_create_project_wizard(self):
         self.ensure_one()
+
+        logger.warning(f"Sale Order ID: {self.id}")
+
+        project_name = []
+
+        if self.project_name:
+            project_name = self.project_name
+        else:
+            project_name = self.project_id.name
+
+        context = {
+            'default_sale_order_id': self.id,
+            'default_actual_sale_order_id': self.id,
+            'default_project_name': project_name,
+        }
+
+        if self.project_id:
+            context['default_project_id'] = self.project_id.id
 
         return {
             'name': 'Projects creation',  
@@ -176,11 +257,7 @@ class SaleOrder(models.Model):
             'res_model': 'project.creation.wizard',  
             'type': 'ir.actions.act_window',  
             'target': 'new',  
-            'context': {
-                'default_sale_order_id': self.id,
-                'default_project_name': self.project_name,
-                'default_project_id': self.project_id
-            }
+            'context': context,
         }
         
         

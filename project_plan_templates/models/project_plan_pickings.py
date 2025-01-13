@@ -14,7 +14,7 @@ class ProjectPlanPickings(models.Model):
     
     
     project_picking_lines = fields.One2many('project.picking.lines', 'picking_id', string="Productos")
-    project_plan_lines = fields.One2many('project.plan.line', 'sale_order_picking_id')
+    
     active = fields.Boolean(string="Activo", default=True)
     project_id = fields.Many2one('project.project', string="Proyecto")
 
@@ -48,14 +48,16 @@ class ProjectPlanPickingLine(models.Model):
     product_id = fields.Many2one('product.product', string="Producto")
     sale_order_id = fields.Many2one('sale.order')
     task_id = fields.Many2one('project.task', string="Tarea")
-    
+
+    project_plan_lines = fields.One2many('project.plan.line', 'sale_order_picking_id')
+    task_time_lines_ids = fields.One2many('task.time.lines', 'picking_line_id', string='Líneas de Tiempo')
    
     quantity = fields.Float(string="Cantidad")
     location_id = fields.Many2one('stock.location', string="Localización")
     used_quantity = fields.Float(string="Cantidad utilizada", default=0)
     reservado = fields.Float(string='Reservado')
     
-   
+
     picking_name = fields.Char(string="Inventario")
     project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas")
     stock_move_id = fields.Many2one('stock.move', string='Inventario')
@@ -75,6 +77,9 @@ class ProjectPlanPickingLine(models.Model):
     product_uom = fields.Many2one('uom.uom', string='Unidad de medida')
     company_id = fields.Many2one('res.company', string="Empresa")
     product_uom_qty = fields.Float(string="Demanda")
+    for_create = fields.Boolean(default=True)
+    for_modification = fields.Boolean(default=True)
+    
 
     # @api.constrains('product_id')
     # def _check_product_id(self):

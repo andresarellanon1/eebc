@@ -14,7 +14,8 @@
                         </div>
                             <group>
                                 <group>
-                                    <field name="sale_order_id" invisible="1"/>
+                                    <field name="project_id" readonly="1"/>
+                                    <field name="sale_order_id" readonly="1"/>
                                     <field name="partner_id"/>
                                     <field name="picking_type_id"/>
                                     <field name="location_id"/>
