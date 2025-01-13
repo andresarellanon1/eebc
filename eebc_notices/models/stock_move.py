@@ -132,15 +132,6 @@ class StockMove(models.Model):
         compute='_compute_aviso_button_flags',
     )
 
-    # agregar campo notices
-    
-    # notice_established = fields.Boolean(string = 'Aviso establecido', 
-    # default=False
-    # )
-    
-    # notice_selected = fields.Boolean(string = 'Aviso seleccionado', 
-    # default=False
-    # )
 
 
     @api.model_create_multi
