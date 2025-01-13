@@ -76,7 +76,7 @@ class ProjectCreation(models.TransientModel):
             logger.warning(f"Id del proyecto: {project.id}")
             self.create_project_tasks(project)
 
-            self.sale_order_id.state = 'budget'
+            self.sale_order_id.state = 'sale'
             self.sale_order_id.project_id = project.id
 
             return {
@@ -141,7 +141,6 @@ class ProjectCreation(models.TransientModel):
             existing_plan_lines = project.project_plan_lines
             new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
 
-            # Agregar nuevas líneas y actualizar existentes
             project.project_plan_lines = [
                 (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
                 for line in existing_plan_lines
@@ -152,7 +151,6 @@ class ProjectCreation(models.TransientModel):
                 if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
             ]
 
-            # Actualizar project_picking_lines
             existing_picking_lines = project.project_picking_lines
             new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
 
@@ -165,6 +163,8 @@ class ProjectCreation(models.TransientModel):
                 new_line for new_line in new_picking_lines_data
                 if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
             ]
+
+            self.sale_order_id.state = 'sale'
 
             return {
                 'name': 'Project Version History',
