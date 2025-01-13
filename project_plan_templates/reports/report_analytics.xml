@@ -57,7 +57,7 @@
                                     </t>
                                 </t>
                                 
-                                <t t-if="line.task_time_lines">
+                                <t t-if="line.task_time_lines_ids">
                                     <tr>
                                         <td colspan="5">
                                             <strong>Detalles de las líneas de tiempo de la tarea:</strong>
@@ -68,7 +68,7 @@
                                         <th>Turno de Trabajo</th>
                                         <th>Tiempo Estimado</th>
                                     </tr>
-                                    <t t-foreach="line.task_time_lines" t-as="time_line">
+                                    <t t-foreach="line.task_time_lines_ids" t-as="time_line">
                                         <tr>
                                             <td><span t-esc="time_line.description or 'Sin descripción'"/></td>
                                             <td><span t-esc="time_line.work_shift or 'Sin turno de trabajo'"/></td>
@@ -83,6 +83,7 @@
                                         </td>
                                     </tr>
                                 </t>
+
                                 <!-- Si 'for_create' es False, muestra los detalles de la línea de la orden -->
                             <!-- Si 'for_create' es False, busca la primera línea disponible -->
                                 <t t-if="line.for_create == False">
