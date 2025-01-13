@@ -272,7 +272,6 @@ class StockMove(models.Model):
                     'notice_id': notice.id,
                     'quantity': 0,
                     'quantity_available': notice.quantity,
-                    'quantity_available_lot': notice.total_lot_quantity,
                     'aviso_name': notice.display_name,
                     'in_or_out': in_or_out,
                     'lot_line_ids': lot_line_ids,
