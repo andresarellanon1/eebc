@@ -18,7 +18,7 @@
                                     <create name="add_product_control" string="Añadir tarea"/>
                                     <create name="add_section_control" string="Añadir sección" context="{'default_display_type': 'line_section'}"/>
                                 </control>
-                                <field name="sequence" widget="handle"/>
+                                <!-- <field name="sequence" widget="handle"/> -->
                                 <field name="display_type" column_invisible="True"/>
                                 <field name="name"/>
                                 <field name="description"/>
