@@ -262,6 +262,5 @@ class SaleOrder(models.Model):
             'doc_ids': docids,
             'doc_model': 'sale.order',
             'docs': docs,
-            'task_time_lines': docs.mapped('task_time_lines'),
         }
     
