@@ -14,7 +14,7 @@ class ProjectPlanPickings(models.Model):
     
     
     project_picking_lines = fields.One2many('project.picking.lines', 'picking_id', string="Productos")
-    project_plan_lines = fields.One2many('project.plan.line', 'sale_order_picking_id')
+    
     active = fields.Boolean(string="Activo", default=True)
     project_id = fields.Many2one('project.project', string="Proyecto")
 
@@ -48,6 +48,8 @@ class ProjectPlanPickingLine(models.Model):
     product_id = fields.Many2one('product.product', string="Producto")
     sale_order_id = fields.Many2one('sale.order')
     task_id = fields.Many2one('project.task', string="Tarea")
+
+    project_plan_lines = fields.One2many('project.plan.line', 'sale_order_picking_id')
     
    
     quantity = fields.Float(string="Cantidad")
