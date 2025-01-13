@@ -46,7 +46,7 @@ class NoticeFileWizard(models.TransientModel):
     
     @api.model
     def default_get(self, fields):
-        res = super(NoticeFileWizard, self).default_get(fields_list)
+        res = super(NoticeFileWizard, self).default_get(fields)
         if 'cantidad' in self._context:
             res['quantity'] = self._context['cantidad']
         if 'proveedor' in self._context:
