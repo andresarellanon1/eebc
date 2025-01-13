@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sale.view_order_form"></field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state']" position="replace">
-                <field name="state" widget="statusbar" statusbar_visible="draft,sale,budget,process" invisible="is_project != True"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,budget,sale,process" invisible="is_project != True"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale" invisible="is_project != False"/>
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="after">
@@ -20,8 +20,8 @@
             <xpath expr="//field[@name='partner_id']" position="before">
                 <field name="is_project" invisible="state in ('sale', 'budget', 'process')"/>
                 <field name="edit_project" invisible="is_project != True or state in ('sale', 'budget', 'process')"/>
-                <field name="project_name" invisible="is_project != True or state in ('process') or edit_project != False" readonly="state in ('budget')"/>
-                <field name="project_id" invisible="state in ('sale', 'process') or edit_project != True" readonly="state in ('budget')"/>
+                <field name="project_name" invisible="is_project != True or state in ('process')" readonly="state in ('budget', 'sale') or edit_project != False"/>
+                <field name="project_id" invisible="edit_project != True" readonly="state in ('budget', 'sale')"/>
             </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="replace">
                 <field name="products_project_domain" column_invisible="1"/>
@@ -36,7 +36,7 @@
                                 <create name="add_section_control" string="Añadir sección" context="{'default_display_type': 'line_section'}"/>
                             </control>
                             <field name="sequence" widget="handle"/>
-                            <field name="display_type" column_invisible="True"/>
+                            <field name="display_type" column_invisible="1"/>
                             <field name="name"/>
                             <field name="description"/>
                             <field name="use_project_task"/>
@@ -53,7 +53,7 @@
                         <tree editable="editable_bottom" style="width: 100%">
                             <field name="company_id" column_invisible="1"/> 
                             <field name="sequence" widget="handle"/>
-                            <field name="display_type" column_invisible="True"/>
+                            <field name="display_type" column_invisible="1"/>
                             <field name="product_id"/>
                             <field name="name"/>
                             <field name="for_create" column_invisible="1"/>

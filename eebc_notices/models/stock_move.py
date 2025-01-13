@@ -265,7 +265,6 @@ class StockMove(models.Model):
                     (0, 0, {
                         'lot_id': lot.id,
                         'quantity': 0,
-                        'lot_quantity_available': lot.product_qty
 
                     }) for lot in notice.lot_ids
                 ]

@@ -83,7 +83,7 @@ class SaleOrder(models.Model):
         
         for sale in self:
             if sale.is_project:
-                if not sale.project_name:
+                if not sale.project_name and not sale.edit_project:
                     raise ValidationError(
                         f"se requiere el nombre del proyecto"
                     )
@@ -110,40 +110,48 @@ class SaleOrder(models.Model):
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
         for sale in self:
-            logger.warning(f"Encontro la sale order: {sale.project_id.sale_order_id}")
-            if sale.edit_project and sale.project_id and sale.project_id.sale_order_id:
+            logger.warning(f"Encontro la sale order: {sale.project_id.actual_sale_order_id}")
+            if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
 
-                previous_order = sale.project_id.sale_order_id.id
+                previous_order = sale.project_id.actual_sale_order_id
 
-                new_order_lines = []
-                for line in previous_order.order_line:
-                    new_line = {
-                        'product_id': line.product_id.id,
-                        'name': line.name,
-                        'product_uom_qty': line.product_uom_qty,
-                        'price_unit': line.price_unit,
-                        'discount': line.discount,
-                    }
-                    new_order_lines.append((0, 0, new_line))
-                sale.order_line = new_order_lines
+                sale.partner_id = previous_order.partner_id
+                sale.project_name = previous_order.project_name
 
-                new_project_plan_lines = []
-                for line in previous_order.project_plan_lines:
-                    if line.display_type == 'line_section':
-                        new_project_plan_lines.append(self.prep_plan_section_line(line, for_create=True))
-                    else:
-                        new_project_plan_lines.append(self.prep_plan_section_line(line, for_create=False))
-                        new_project_plan_lines += self.prep_plan_lines(line)
-                sale.project_plan_lines = new_project_plan_lines
+                sale.order_line = [(0, 0, {
+                    'product_id': line.product_id.id,
+                    'display_type': line.display_type,
+                    'name': line.name,
+                    'product_uom_qty': line.product_uom_qty,
+                    'price_unit': line.price_unit,
+                    'discount': line.discount,
+                }) for line in previous_order.order_line]
 
-                new_project_plan_pickings = []
-                for line in previous_order.project_plan_pickings:
-                    if line.display_type == 'line_section':
-                        new_project_plan_pickings.append(self.prep_picking_section_line(line, for_create=True))
-                    else:
-                        new_project_plan_pickings.append(self.prep_picking_section_line(line, for_create=False))
-                        new_project_plan_pickings += self.prep_picking_lines(line)
-                sale.project_plan_pickings = new_project_plan_pickings
+                # Copiar project_plan_lines directamente
+                sale.project_plan_lines = [(0, 0, {
+                    'name': line.name,
+                    'display_type': line.display_type,
+                    'description': line.description,
+                    'use_project_task': line.use_project_task,
+                    'planned_date_begin': line.planned_date_begin,
+                    'planned_date_end': line.planned_date_end,
+                    'project_plan_pickings': line.project_plan_pickings,
+                    'task_timesheet_id': line.task_timesheet_id,
+                    'for_create': line.for_create,
+                }) for line in previous_order.project_plan_lines]
+
+                # Copiar project_plan_pickings directamente
+                sale.project_picking_lines = [(0, 0, {
+                    'name': line.name,
+                    'display_type': line.display_type,
+                    'product_id': line.product_id.id if line.product_id else False,
+                    'product_uom': line.product_uom.id if line.product_uom else False,
+                    'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
+                    'product_uom_qty': line.product_uom_qty,
+                    'quantity': line.quantity,
+                    'standard_price': line.standard_price,
+                    'subtotal': line.subtotal,
+                }) for line in previous_order.project_picking_lines]
     
     def prep_picking_section_line(self, line, for_create):
         return (0, 0, {
@@ -211,9 +219,17 @@ class SaleOrder(models.Model):
 
         logger.warning(f"Sale Order ID: {self.id}")
 
+        project_name = []
+
+        if self.project_name:
+            project_name = self.project_name
+        else:
+            project_name = self.project_id.name
+
         context = {
             'default_sale_order_id': self.id,
-            'default_project_name': self.project_name,
+            'default_actual_sale_order_id': self.id,
+            'default_project_name': project_name,
         }
 
         if self.project_id:

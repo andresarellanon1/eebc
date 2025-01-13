@@ -24,6 +24,7 @@ class SelectNoticeWizard(models.TransientModel):
     stock_move_id = fields.Many2one('stock.move', string='Traslado')
     
     
+
     @api.model
     def default_get(self, fields_list):
         _logger.warning('Entra a default_get en SelectNoticeWizard')

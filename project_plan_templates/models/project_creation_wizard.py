@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 import logging
+from odoo.exceptions import UserError, ValidationError
 logger = logging.getLogger(__name__)
 
 class ProjectCreation(models.TransientModel):
@@ -58,37 +59,134 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
-        logger.warning(f"Sale Order ID: {self.sale_order_id.id}")
+        if not self.project_id:
+            project_vals = {
+                'name': self.project_name,
+                'description': self.description,
+                'project_plan_lines': self.prep_plan_lines(self.wizard_plan_lines),
+                'project_picking_lines': self.prep_picking_lines(self.wizard_picking_lines),
+                'default_picking_type_id': self.picking_type_id.id,
+                'publication_date': fields.Datetime.now(),
+                'date_start': self.date_start,
+                'date': self.date,
+                'sale_order_id': self.sale_order_id.id
+            }
 
-        project_vals = {
-            'name': self.project_name,
-            'description': self.description,
-            'project_plan_lines': self.prep_plan_lines(self.wizard_plan_lines),
-            'project_picking_lines': self.prep_picking_lines(self.wizard_picking_lines),
-            'default_picking_type_id': self.picking_type_id.id,
-            'publication_date': fields.Datetime.now(),
-            'date_start': self.date_start,
-            'date': self.date,
-            'sale_order_id': self.sale_order_id.id
-        }
+            project = self.env['project.project'].create(project_vals)
+            logger.warning(f"Id del proyecto: {project.id}")
+            self.create_project_tasks(project)
 
-        logger.warning(f"project_vals")
+            self.sale_order_id.state = 'budget'
+            self.sale_order_id.project_id = project.id
 
-        project = self.env['project.project'].create(project_vals)
-        self.create_project_tasks(project)
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.project',
+                'res_id': project.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
+        else:
+            project = self._origin.project_id
 
-        logger.warning(f"create_project_task")
+            logger.warning(f"Id del sale: {self.sale_order_id.id}")
+            
+            existing_task_names = project.task_ids.mapped('name')
+            curren_task_type = None
+            for line in self.wizard_plan_lines:
+                if line.display_type and line.for_create:
+                    current_task_type = self.get_or_create_task_type(line.name, project)
 
-        self.sale_order_id.state = 'budget'
-        self.sale_order_id.project_id = project.id
+                if line.use_project_task and not line.display_type and line.for_create:
+                    if not current_task_type:
+                        current_task_type = self.get_or_create_task_type('Extras', project)
+                    if line.name not in existing_task_names and line.use_project_task and line.for_create:
+                        timesheet_lines = self.env['task.time.lines'].search([('task_timesheet_id', '=', line.task_timesheet_id.id)])
+                        timesheet_data = [(0, 0, {'name': ts_line.description, 'estimated_time': ts_line.estimated_time})
+                                        for ts_line in timesheet_lines]
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'project.project',
-            'res_id': project.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
+                        picking_lines = []
+                        is_task = False
+
+                        for picking in self.wizard_picking_lines:
+                            if picking.display_type:
+                                is_task = picking.name == line.name
+                            elif is_task:
+                                picking_lines.append((0, 0, {
+                                    'name': picking.product_id.name,
+                                    'product_id': picking.product_id.id,
+                                    'product_uom': picking.product_uom.id,
+                                    'product_packaging_id': picking.product_packaging_id.id,
+                                    'product_uom_qty': picking.product_uom_qty,
+                                    'quantity': picking.quantity,
+                                    'standard_price': picking.standard_price,
+                                    'subtotal': picking.subtotal,
+                                    'display_type': False
+                                }))
+
+                        task_id = self.env['project.task'].create({
+                            'name': line.name,
+                            'project_id': project.id,
+                            'stage_id': current_task_type.id,
+                            'timesheet_ids': timesheet_data,
+                            'planned_date_begin': line.planned_date_begin,
+                            'date_deadline': line.planned_date_end,
+                            'project_picking_lines': picking_lines
+                        })
+
+                        self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
+
+            project.sale_order_id = self.sale_order_id.id
+
+            new_plan_lines = self.prep_plan_lines(self.wizard_plan_lines)  # Debe retornar datos en formato [(0, 0, {...})]
+            project.project_plan_lines = [(4, line.id) for line in project.project_plan_lines] + new_plan_lines
+
+
+            new_picking_lines = self.prep_picking_lines(self.wizard_picking_lines)
+            project.project_picking_lines = [(4, line.id) for line in project.project_picking_lines] + new_picking_lines
+
+
+            existing_pickings = self.env['stock.picking'].search([('origin', 'ilike', project.name)])
+            existing_picking_names = existing_pickings.mapped('name')
+            # for picking_line in self.wizard_picking_lines:
+            #     if picking_line.name not in existing_picking_names and not picking_line.display_type:
+            #         # Aquí, asignamos un task_id válido antes de crear el picking
+            #         # Verificar si ya existe una tarea para este picking o crear una nueva
+            #         task_id = self.get_or_create_task_for_picking(picking_line, project)
+            #         self.create_project_tasks_pickings(task_id, [picking_line])
+
+            return {
+                'name': 'Project Version History',
+                'view_mode': 'form',
+                'res_model': 'project.version.wizard',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context': {
+                    'default_project_id': project.id,
+                    'default_project_plan_id': project.project_plan_id.id if project.project_plan_id else False,
+                    'default_project_plan_lines': [(6, 0, project.project_plan_lines.ids)] if project.project_plan_lines else False,
+                    'default_project_picking_lines': [(6, 0, project.project_picking_lines.ids)] if project.project_picking_lines else False,
+                    'default_modified_by': self.env.user.id,
+                    'default_modification_date': fields.Datetime.now(),
+                }
+            }
+
+    def get_or_create_task_for_picking(self, picking_line, project):
+        # Intentar encontrar una tarea asociada con este picking
+        task = self.env['project.task'].search([
+            ('project_id', '=', project.id),
+            ('name', '=', picking_line.name)  # Asumimos que el nombre del picking puede estar relacionado con el nombre de la tarea
+        ], limit=1)
+
+        if not task:
+            # Si no se encuentra una tarea, crear una nueva tarea para el picking
+            task = self.env['project.task'].create({
+                'name': picking_line.name,
+                'project_id': project.id,
+                'stage_id': self.env.ref('project.project_stage_new').id,  # Usar un stage predeterminado
+            })
+        
+        return task
 
     def create_project_tasks_pickings(self, task_id, pickings):
         for line in pickings:
@@ -150,14 +248,12 @@ class ProjectCreation(models.TransientModel):
                 }) for ts_line in timesheet_lines]
 
                 picking_lines = []
-                is_task = False  # Bandera para identificar si estamos en la tarea correcta
+                is_task = False
 
                 for picking in self.wizard_picking_lines:
                     if picking.display_type:
-                        # Actualizar la bandera si el nombre coincide
                         is_task = picking.name == line.name
                     elif is_task:
-                        # Si la bandera está activa, agregar esta línea de picking
                         picking_lines.append((0, 0, {
                             'name': picking.product_id.name,
                             'product_id': picking.product_id.id,
