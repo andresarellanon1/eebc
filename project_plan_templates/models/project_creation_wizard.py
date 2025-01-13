@@ -139,32 +139,32 @@ class ProjectCreation(models.TransientModel):
             project.sale_order_id = self.sale_order_id.id
 
             existing_plan_lines = project.project_plan_lines
-            new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)  # [(0, 0, {...})]
+            new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
 
-            # Actualizar líneas existentes
-            for existing_line in existing_plan_lines:
-                for new_line in new_plan_lines_data:
-                    if existing_line.name == new_line[2]['name']:  # Comparar por un identificador único (e.g., 'name')
-                        existing_line.write(new_line[2])  # Actualizar los datos
-                        break
-                else:
-                    # Si no se encuentra coincidencia, es una nueva línea
-                    project.project_plan_lines += [(0, 0, new_line[2])]
+            # Agregar nuevas líneas y actualizar existentes
+            project.project_plan_lines = [
+                (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+                for line in existing_plan_lines
+                for new_line in new_plan_lines_data
+                if line.name == new_line[2]['name']
+            ] + [
+                new_line for new_line in new_plan_lines_data
+                if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
+            ]
 
-            # Agregar nuevas líneas
-            for new_line in new_plan_lines_data:
-                if not any(existing_line.name == new_line[2]['name'] for existing_line in existing_plan_lines):
-                    project.project_plan_lines += [(0, 0, new_line[2])]
+            # Actualizar project_picking_lines
+            existing_picking_lines = project.project_picking_lines
+            new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
 
-
-            existing_pickings = self.env['stock.picking'].search([('origin', 'ilike', project.name)])
-            existing_picking_names = existing_pickings.mapped('name')
-            # for picking_line in self.wizard_picking_lines:
-            #     if picking_line.name not in existing_picking_names and not picking_line.display_type:
-            #         # Aquí, asignamos un task_id válido antes de crear el picking
-            #         # Verificar si ya existe una tarea para este picking o crear una nueva
-            #         task_id = self.get_or_create_task_for_picking(picking_line, project)
-            #         self.create_project_tasks_pickings(task_id, [picking_line])
+            project.project_picking_lines = [
+                (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+                for line in existing_picking_lines
+                for new_line in new_picking_lines_data
+                if line.name == new_line[2]['name']
+            ] + [
+                new_line for new_line in new_picking_lines_data
+                if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
+            ]
 
             return {
                 'name': 'Project Version History',
