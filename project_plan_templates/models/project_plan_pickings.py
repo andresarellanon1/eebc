@@ -51,8 +51,6 @@ class ProjectPlanPickingLine(models.Model):
 
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_picking_id')
     
-    task_timesheet_ids = fields.One2many('task.time.lines','sale_order_id', string='Timesheets')
-    
    
     quantity = fields.Float(string="Cantidad")
     location_id = fields.Many2one('stock.location', string="Localización")
