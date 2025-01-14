@@ -14,10 +14,12 @@ class SaleOrder(models.Model):
 
     state = fields.Selection([
         ('draft', 'Cotización'),
-        ('budget', 'Presupuesto'),
+        ('budget', 'Budget'),
         ('sale', 'Orden de venta'),
-        ('process', 'En proceso')
-    ], string='Estado', default='draft')
+        ('process', 'In process'),
+        ('done', 'Hecho'),
+        ('cancel', 'Cancelado')
+    ], string='Estado', readonly=True, copy=False, tracking=True, default='draft')
 
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
