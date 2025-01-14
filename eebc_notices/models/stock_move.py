@@ -181,6 +181,7 @@ class StockMove(models.Model):
         in_or_out = "in"
         notice_lines_to_wizard =self._create_line_ids(in_or_out)
         # aqui va variable para saber que haremos entrada y pasarla a la llave in_or_out
+        _logger.warning('LOTES: %s', self.lot_ids)
 
         return {
             'type': 'ir.actions.act_window',
