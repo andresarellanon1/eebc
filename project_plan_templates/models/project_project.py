@@ -74,7 +74,7 @@ class ProjectProject(models.Model):
                             'project_picking_lines': picking_lines
                         })
 
-                        self.create_project_tasks_pickings(task_id, picking_lines)
+                        self.create_project_tasks_pickings(task_id, [line[2] for line in picking_lines])
                     else:
                         existing_task.name = line.name
                         existing_task.description = line.description
