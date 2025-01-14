@@ -12,16 +12,12 @@ class SaleOrder(models.Model):
     project_name = fields.Char(string="Titulo de proyecto")
     plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
-    state = fields.Selection(
-        selection_add=[
-            ('budget', 'Budget'),
-            ('process', 'In process')
-        ],
-        ondelete={
-            'budget': 'set default',
-            'process': 'set default'
-        }
-    )
+    state = fields.Selection([
+        ('draft', 'Cotización'),
+        ('budget', 'Presupuesto'),
+        ('sale', 'Orden de venta'),
+        ('process', 'En proceso')
+    ], string='Estado', default='draft')
 
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
