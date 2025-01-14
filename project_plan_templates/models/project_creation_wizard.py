@@ -59,6 +59,8 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
+        self.sale_order_id.state = 'sale'
+
         if not self.project_id:
             project_vals = {
                 'name': self.project_name,
@@ -75,9 +77,6 @@ class ProjectCreation(models.TransientModel):
             project = self.env['project.project'].create(project_vals)
             logger.warning(f"Id del proyecto: {project.id}")
             self.create_project_tasks(project)
-
-            self.sale_order_id.state = 'budget'
-            self.sale_order_id.project_id = project.id
 
             return {
                 'type': 'ir.actions.act_window',
@@ -136,12 +135,12 @@ class ProjectCreation(models.TransientModel):
 
                         self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
 
+            self.sale_order_id.project_id = project.id
             project.sale_order_id = self.sale_order_id.id
 
             existing_plan_lines = project.project_plan_lines
             new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
 
-            # Agregar nuevas líneas y actualizar existentes
             project.project_plan_lines = [
                 (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
                 for line in existing_plan_lines
@@ -152,7 +151,6 @@ class ProjectCreation(models.TransientModel):
                 if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
             ]
 
-            # Actualizar project_picking_lines
             existing_picking_lines = project.project_picking_lines
             new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
 

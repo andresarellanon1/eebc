@@ -105,6 +105,8 @@ class SaleOrder(models.Model):
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
+
+            sale.state = 'budget'
             
 
     @api.onchange('project_id')
@@ -128,30 +130,44 @@ class SaleOrder(models.Model):
                 }) for line in previous_order.order_line]
 
                 # Copiar project_plan_lines directamente
-                sale.project_plan_lines = [(0, 0, {
-                    'name': line.name,
-                    'display_type': line.display_type,
-                    'description': line.description,
-                    'use_project_task': line.use_project_task,
-                    'planned_date_begin': line.planned_date_begin,
-                    'planned_date_end': line.planned_date_end,
-                    'project_plan_pickings': line.project_plan_pickings,
-                    'task_timesheet_id': line.task_timesheet_id,
-                    'for_create': line.for_create,
-                }) for line in previous_order.project_plan_lines]
+                # Preparar y asignar líneas de plan
+                plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
+                sale.project_plan_lines = plan_lines
 
-                # Copiar project_plan_pickings directamente
-                sale.project_picking_lines = [(0, 0, {
-                    'name': line.name,
-                    'display_type': line.display_type,
-                    'product_id': line.product_id.id if line.product_id else False,
-                    'product_uom': line.product_uom.id if line.product_uom else False,
-                    'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
-                    'product_uom_qty': line.product_uom_qty,
-                    'quantity': line.quantity,
-                    'standard_price': line.standard_price,
-                    'subtotal': line.subtotal,
-                }) for line in previous_order.project_picking_lines]
+                # Preparar y asignar líneas de picking
+                picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
+                sale.project_picking_lines = picking_lines
+
+    def _prepare_plan_lines(self, lines):
+        """Prepara las líneas de plan para asignarlas al pedido."""
+        return [(0, 0, {
+            'name': line.name,
+            'display_type': line.display_type,
+            'description': line.description,
+            'use_project_task': line.use_project_task,
+            'planned_date_begin': line.planned_date_begin,
+            'planned_date_end': line.planned_date_end,
+            'project_plan_pickings': line.project_plan_pickings.id if line.project_plan_pickings else False,
+            'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
+            'for_create': line.for_create,
+            'for_modification': False
+        }) for line in lines]
+
+    def _prepare_picking_lines(self, lines):
+        """Prepara las líneas de picking para asignarlas al pedido."""
+        return [(0, 0, {
+            'name': line.name,
+            'display_type': line.display_type,
+            'product_id': line.product_id.id if line.product_id else False,
+            'product_uom': line.product_uom.id if line.product_uom else False,
+            'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
+            'product_uom_qty': line.product_uom_qty,
+            'quantity': line.quantity,
+            'standard_price': line.standard_price,
+            'subtotal': line.subtotal,
+            'for_create': line.for_create,
+            'for_modification': False
+        }) for line in lines]
     
     def prep_picking_section_line(self, line, for_create):
         return (0, 0, {
