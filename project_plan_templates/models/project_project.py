@@ -63,7 +63,7 @@ class ProjectProject(models.Model):
                                     'display_type': False
                                 }))
 
-                        self.env['project.task'].create({
+                        task_id = self.env['project.task'].create({
                             'name': line.name,
                             'project_id': project.id,
                             'stage_id': current_task_type.id,
