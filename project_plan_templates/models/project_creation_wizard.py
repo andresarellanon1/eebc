@@ -59,6 +59,9 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
+        self.sale_order_id.state = 'sale'
+        self.sale_order_id.project_id = project.id
+
         if not self.project_id:
             project_vals = {
                 'name': self.project_name,
@@ -75,9 +78,6 @@ class ProjectCreation(models.TransientModel):
             project = self.env['project.project'].create(project_vals)
             logger.warning(f"Id del proyecto: {project.id}")
             self.create_project_tasks(project)
-
-            self.sale_order_id.state = 'sale'
-            self.sale_order_id.project_id = project.id
 
             return {
                 'type': 'ir.actions.act_window',
@@ -163,8 +163,6 @@ class ProjectCreation(models.TransientModel):
                 new_line for new_line in new_picking_lines_data
                 if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
             ]
-
-            self.sale_order_id.state = 'sale'
 
             return {
                 'name': 'Project Version History',
