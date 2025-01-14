@@ -47,7 +47,7 @@ class ProjectProject(models.Model):
                         picking_lines = []
                         is_task = False
 
-                        for picking in self.wizard_picking_lines:
+                        for picking in self.project_picking_lines:
                             if picking.display_type:
                                 is_task = picking.name == line.name
                             elif is_task:
