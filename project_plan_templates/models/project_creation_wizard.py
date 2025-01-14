@@ -60,7 +60,6 @@ class ProjectCreation(models.TransientModel):
         self.ensure_one()
 
         self.sale_order_id.state = 'sale'
-        self.sale_order_id.project_id = project.id
 
         if not self.project_id:
             project_vals = {
@@ -136,6 +135,7 @@ class ProjectCreation(models.TransientModel):
 
                         self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
 
+            self.sale_order_id.project_id = project.id
             project.sale_order_id = self.sale_order_id.id
 
             existing_plan_lines = project.project_plan_lines
