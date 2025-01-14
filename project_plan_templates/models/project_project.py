@@ -119,12 +119,14 @@ class ProjectProject(models.Model):
 
     def create_project_tasks_pickings(self, task_id, pickings):
         for line in pickings:
+            line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
+
             stock_move_vals = [(0, 0, {
-                'product_id': line.get('product_id'),  # Corregido
-                'product_packaging_id': line.get('product_packaging_id'),  # Corregido
-                'product_uom_qty': line.get('quantity'),  # Corregido
-                'quantity': line.get('quantity'),  # Corregido
-                'product_uom': line.get('product_uom'),  # Corregido
+                'product_id': line_data['product_id'],
+                'product_packaging_id': line_data['product_packaging_id'],
+                'product_uom_qty': line_data['quantity'],
+                'quantity': line_data['quantity'],
+                'product_uom': line_data['product_uom'],
                 'location_id': self.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'name': task_id.name
