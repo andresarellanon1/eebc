@@ -235,12 +235,13 @@ class ProjectCreation(models.TransientModel):
                     'project_id': project.id,
                     'stage_id': current_task_type.id,
                     'timesheet_ids': timesheet_data,
+                    'description': line.description,
                     'planned_date_begin': line.planned_date_begin,
                     'date_deadline': line.planned_date_end,
                     'project_picking_lines': picking_lines
                 })
 
-                self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
+                self.create_project_tasks_pickings(task_id, picking_lines)
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([

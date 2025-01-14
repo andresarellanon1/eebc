@@ -44,14 +44,37 @@ class ProjectProject(models.Model):
                             'estimated_time': ts_line.estimated_time,
                         }) for ts_line in timesheet_lines]
 
+                        picking_lines = []
+                        is_task = False
+
+                        for picking in self.wizard_picking_lines:
+                            if picking.display_type:
+                                is_task = picking.name == line.name
+                            elif is_task:
+                                picking_lines.append((0, 0, {
+                                    'name': picking.product_id.name,
+                                    'product_id': picking.product_id.id,
+                                    'product_uom': picking.product_uom.id,
+                                    'product_packaging_id': picking.product_packaging_id.id,
+                                    'product_uom_qty': picking.product_uom_qty,
+                                    'quantity': picking.quantity,
+                                    'standard_price': picking.standard_price,
+                                    'subtotal': picking.subtotal,
+                                    'display_type': False
+                                }))
+
                         self.env['project.task'].create({
                             'name': line.name,
                             'project_id': project.id,
+                            'stage_id': current_task_type.id,
+                            'timesheet_ids': timesheet_data,
                             'description': line.description,
                             'planned_date_begin': line.planned_date_begin,
                             'date_deadline': line.planned_date_end,
-                            'timesheet_ids': timesheet_data,
+                            'project_picking_lines': picking_lines
                         })
+
+                        self.create_project_tasks_pickings(task_id, picking_lines)
                     else:
                         existing_task.name = line.name
                         existing_task.description = line.description
@@ -93,3 +116,43 @@ class ProjectProject(models.Model):
             })
 
         return task_type
+
+    def create_project_tasks_pickings(self, task_id, pickings):
+        for line in pickings:
+            stock_move_vals = [(0, 0, {
+                'product_id': line.product_id.id,
+                'product_packaging_id': line.product_packaging_id.id,
+                'product_uom_qty': line.quantity,
+                'quantity': line.quantity,
+                'product_uom': line.product_uom.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'name': task_id.name
+            })]
+
+            stock_picking_vals = {
+                'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
+                'partner_id': self.partner_id.id,
+                'picking_type_id': self.picking_type_id.id,
+                'location_id': self.location_id.id,
+                'scheduled_date': self.scheduled_date,
+                'origin': task_id.name,
+                'task_id': task_id.id,
+                'user_id': self.env.user.id,
+                'move_ids': stock_move_vals,
+                'carrier_id': False,
+                'carrier_tracking_ref': False,
+                'weight': False,
+                'shipping_weight': False,
+                'company_id': self.env.company.id,
+                'transport_type': False,
+                'custom_document_identification': False,
+                'lat_origin': False,
+                'long_origin': False,
+                'lat_dest': False,
+                'long_dest': False,
+                'note': False,
+                'state': 'draft'
+            }
+
+            self.env['stock.picking'].create(stock_picking_vals)
