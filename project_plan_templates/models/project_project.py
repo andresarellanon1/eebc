@@ -74,7 +74,7 @@ class ProjectProject(models.Model):
                             'project_picking_lines': picking_lines
                         })
 
-                        self.create_project_tasks_pickings(task_id, [line[2] for line in picking_lines])
+                        self.create_project_tasks_pickings(task_id, picking_lines)
                     else:
                         existing_task.name = line.name
                         existing_task.description = line.description
@@ -120,11 +120,11 @@ class ProjectProject(models.Model):
     def create_project_tasks_pickings(self, task_id, pickings):
         for line in pickings:
             stock_move_vals = [(0, 0, {
-                'product_id': line.product_id.id,
-                'product_packaging_id': line.product_packaging_id.id,
-                'product_uom_qty': line.quantity,
-                'quantity': line.quantity,
-                'product_uom': line.product_uom.id,
+                'product_id': line.get('product_id'),  # Corregido
+                'product_packaging_id': line.get('product_packaging_id'),  # Corregido
+                'product_uom_qty': line.get('quantity'),  # Corregido
+                'quantity': line.get('quantity'),  # Corregido
+                'product_uom': line.get('product_uom'),  # Corregido
                 'location_id': self.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'name': task_id.name
