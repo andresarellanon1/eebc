@@ -28,6 +28,7 @@ class ProjectVersionWizard(models.TransientModel):
     contact_id = fields.Many2one('res.partner', string='Contacto')
     date_start = fields.Datetime(string="Fecha de inicio planeada")
     picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
+    date = fields.Datetime()
 
     # This action confirms and records changes in the project's version history.
     # It ensures the existence of a project version history, creates one if none exists, 
