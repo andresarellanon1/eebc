@@ -135,7 +135,8 @@ class ProjectCreation(models.TransientModel):
                     'default_contact_id': self.partner_id.id,
                     'default_location_id': self.location_id.id,
                     'default_location_dest_id': self.location_dest_id.id,
-                    'default_scheduled_date': self.scheduled_date
+                    'default_scheduled_date': self.scheduled_date,
+                    'default_picking_type_id': self.picking_type_id.id
                 }
             }
 
