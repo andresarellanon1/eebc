@@ -44,22 +44,25 @@ class SaleOrder(models.Model):
 
     def update_picking_lines(self):
         for record in self:
-            record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
+            #record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
             record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
 
     def get_picking_lines(self, line):
         picking_lines = []
 
         for picking in line:
-            if picking.for_create:
-                if picking.display_type == 'line_section':
-                    picking_lines.append(self.prep_picking_section_line(picking, True))
-                else:
-                    if picking.for_create:
+            if picking.for_modification:
+                if picking.for_create:
+                    if picking.display_type == 'line_section':
                         picking_lines.append(self.prep_picking_section_line(picking, True))
-                        picking_lines += self.prep_picking_lines(picking)
-            else:
-                picking_lines.append(self.prep_picking_section_line(picking, False))
+                    else:
+                        if picking.for_create:
+                            picking_lines.append(self.prep_picking_section_line(picking, True))
+                            picking_lines += self.prep_picking_lines(picking)
+                else:
+                    picking_lines.append(self.prep_picking_section_line(picking, False))
+
+                picking.for_modification = False
                 
         return picking_lines
     
@@ -89,7 +92,7 @@ class SaleOrder(models.Model):
                 plan_pickings = []
                 plan_lines = []
                 for line in sale.order_line:
-                    if line.for_modifitacion:
+                    if line.for_modification:
                         if line.display_type == 'line_section':
                             plan_lines.append(self.prep_plan_section_line(line, True))
                         else:
