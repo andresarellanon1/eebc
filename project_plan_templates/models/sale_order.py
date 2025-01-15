@@ -36,11 +36,11 @@ class SaleOrder(models.Model):
         record.update_picking_lines()
         return record
 
-    # def write(self, vals):
-    #     res = super(SaleOrder, self).write(vals)
-    #     if 'project_plan_lines' in vals:
-    #         self.update_picking_lines()
-    #     return res
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        if 'project_plan_lines' in vals:
+            self.update_picking_lines()
+        return res
 
     def update_picking_lines(self):
         for record in self:
