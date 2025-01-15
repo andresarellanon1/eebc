@@ -22,7 +22,7 @@ class ProjectProject(models.Model):
     contact_id = fields.Many2one('res.partner', string='Contacto')
     date_start = fields.Datetime(string="Fecha de inicio planeada")
 
-    def create_project_tasks(self):
+    def create_project_tasks(self, picking_type):
         for project in self:
 
             current_task_type = None
@@ -80,7 +80,7 @@ class ProjectProject(models.Model):
                             'project_picking_lines': picking_lines
                         })
 
-                        self.create_project_tasks_pickings(task_id, picking_lines)
+                        self.create_project_tasks_pickings(task_id, picking_lines, picking_type)
                     else:
                         existing_task.name = line.name
                         existing_task.description = line.description
