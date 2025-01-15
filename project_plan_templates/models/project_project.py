@@ -16,6 +16,12 @@ class ProjectProject(models.Model):
     sale_order_id = fields.Many2one('sale.order', string='Orden de venta', readonly=False, store=True)
     actual_sale_order_id = fields.Many2one('sale.order', string="Orden de venta", store=True)
 
+    location_id = fields.Many2one('stock.location', string='Ubicación de origen')
+    location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
+    scheduled_date = fields.Datetime(string='Fecha programada de entrega')
+    contact_id = fields.Many2one('res.partner', string='Contacto')
+    date_start = fields.Datetime(string="Fecha de inicio planeada")
+
     def create_project_tasks(self):
         for project in self:
 
@@ -134,8 +140,8 @@ class ProjectProject(models.Model):
 
             stock_picking_vals = {
                 'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
-                'partner_id': self.partner_id.id,
-                'picking_type_id': self.picking_type_id.id,
+                'partner_id': self.contact_id.id,
+                'picking_type_id': self.default_picking_type_id.id,
                 'location_id': self.location_id.id,
                 'scheduled_date': self.scheduled_date,
                 'origin': task_id.name,
