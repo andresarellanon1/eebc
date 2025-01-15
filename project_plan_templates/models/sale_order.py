@@ -30,41 +30,41 @@ class SaleOrder(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
     edit_project = fields.Boolean(string="Modificar proyecto", default=False)
 
-    # @api.model
-    # def create(self, vals):
-    #     record = super(SaleOrder, self).create(vals)
-    #     record.update_picking_lines()
-    #     return record
+    @api.model
+    def create(self, vals):
+        record = super(SaleOrder, self).create(vals)
+        record.update_picking_lines()
+        return record
 
-    # def write(self, vals):
-    #     res = super(SaleOrder, self).write(vals)
-    #     if 'project_plan_lines' in vals:
-    #         self.update_picking_lines()
-    #     return res
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        if 'project_plan_lines' in vals:
+            self.update_picking_lines()
+        return res
 
-    # def update_picking_lines(self):
-    #     for record in self:
-    #         #record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
-    #         record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
+    def update_picking_lines(self):
+        for record in self:
+            #record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
+            record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
 
-    # def get_picking_lines(self, line):
-    #     picking_lines = []
+    def get_picking_lines(self, line):
+        picking_lines = []
 
-    #     for picking in line:
-    #         if picking.for_modification:
-    #             if picking.for_create:
-    #                 if picking.display_type == 'line_section':
-    #                     picking_lines.append(self.prep_picking_section_line(picking, True))
-    #                 else:
-    #                     if picking.for_create:
-    #                         picking_lines.append(self.prep_picking_section_line(picking, True))
-    #                         picking_lines += self.prep_picking_lines(picking)
-    #             else:
-    #                 picking_lines.append(self.prep_picking_section_line(picking, False))
+        for picking in line:
+            if picking.for_modification:
+                if picking.for_create:
+                    if picking.display_type == 'line_section':
+                        picking_lines.append(self.prep_picking_section_line(picking, True))
+                    else:
+                        if picking.for_create:
+                            picking_lines.append(self.prep_picking_section_line(picking, True))
+                            picking_lines += self.prep_picking_lines(picking)
+                else:
+                    picking_lines.append(self.prep_picking_section_line(picking, False))
 
-    #             picking.for_modification = False
+                picking.for_modification = False
                 
-    #     return picking_lines
+        return picking_lines
     
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
