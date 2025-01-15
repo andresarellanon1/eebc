@@ -132,6 +132,10 @@ class ProjectCreation(models.TransientModel):
                     'default_project_picking_lines': [(6, 0, project.project_picking_lines.ids)] if project.project_picking_lines else False,
                     'default_modified_by': self.env.user.id,
                     'default_modification_date': fields.Datetime.now(),
+                    'default_contact_id': self.partner_id.id,
+                    'default_location_id': self.location_id.id,
+                    'default_location_dest_id': self.location_dest_id.id,
+                    'default_scheduled_date': self.scheduled_date
                 }
             }
 
