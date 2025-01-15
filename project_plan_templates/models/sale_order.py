@@ -38,6 +38,7 @@ class SaleOrder(models.Model):
 
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
+        logger.warning(f"Plan lines: {self.project_plan_lines}")
         if 'project_plan_lines' in vals:
             self.update_picking_lines()
         return res
