@@ -159,12 +159,14 @@ class ProjectCreation(models.TransientModel):
 
     def create_project_tasks_pickings(self, task_id, pickings):
         for line in pickings:
+            line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
+
             stock_move_vals = [(0, 0, {
-                'product_id': line.product_id.id,
-                'product_packaging_id': line.product_packaging_id.id,
-                'product_uom_qty': line.quantity,
-                'quantity': line.quantity,
-                'product_uom': line.product_uom.id,
+                'product_id': line_data['product_id'],
+                'product_packaging_id': line_data['product_packaging_id'],
+                'product_uom_qty': line_data['quantity'],
+                'quantity': line_data['quantity'],
+                'product_uom': line_data['product_uom'],
                 'location_id': self.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'name': task_id.name
@@ -172,8 +174,8 @@ class ProjectCreation(models.TransientModel):
 
             stock_picking_vals = {
                 'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
-                'partner_id': self.partner_id.id,
-                'picking_type_id': self.picking_type_id.id,
+                'partner_id': self.contact_id.id,
+                'picking_type_id': self.default_picking_type_id.id,
                 'location_id': self.location_id.id,
                 'scheduled_date': self.scheduled_date,
                 'origin': task_id.name,
