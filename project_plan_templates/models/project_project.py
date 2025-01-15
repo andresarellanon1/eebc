@@ -123,7 +123,7 @@ class ProjectProject(models.Model):
 
         return task_type
 
-    def create_project_tasks_pickings(self, task_id, pickings):
+    def create_project_tasks_pickings(self, task_id, pickings, picking_type):
         for line in pickings:
             line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
 
@@ -141,7 +141,7 @@ class ProjectProject(models.Model):
             stock_picking_vals = {
                 'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
                 'partner_id': self.contact_id.id,
-                'picking_type_id': self.default_picking_type_id.id,
+                'picking_type_id': picking_type,
                 'location_id': self.location_id.id,
                 'scheduled_date': self.scheduled_date,
                 'origin': task_id.name,
