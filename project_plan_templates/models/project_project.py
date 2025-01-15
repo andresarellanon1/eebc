@@ -133,7 +133,7 @@ class ProjectProject(models.Model):
                 'product_uom_qty': line_data['quantity'],
                 'quantity': line_data['quantity'],
                 'product_uom': line_data['product_uom'],
-                'location_id': self.location_id.id,
+                'location_id': location_id,
                 'location_dest_id': self.location_dest_id.id,
                 'name': task_id.name
             })]
