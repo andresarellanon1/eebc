@@ -22,7 +22,7 @@ class ProjectProject(models.Model):
     contact_id = fields.Many2one('res.partner', string='Contacto')
     date_start = fields.Datetime(string="Fecha de inicio planeada")
 
-    def create_project_tasks(self, picking_type):
+    def create_project_tasks(self, location_id):
         for project in self:
 
             current_task_type = None
@@ -80,7 +80,7 @@ class ProjectProject(models.Model):
                             'project_picking_lines': picking_lines
                         })
 
-                        self.create_project_tasks_pickings(task_id, picking_lines, picking_type)
+                        self.create_project_tasks_pickings(task_id, picking_lines, location_id)
                     else:
                         existing_task.name = line.name
                         existing_task.description = line.description
@@ -123,7 +123,7 @@ class ProjectProject(models.Model):
 
         return task_type
 
-    def create_project_tasks_pickings(self, task_id, pickings, picking_type):
+    def create_project_tasks_pickings(self, task_id, pickings, location_id):
         for line in pickings:
             line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
 
@@ -141,8 +141,8 @@ class ProjectProject(models.Model):
             stock_picking_vals = {
                 'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
                 'partner_id': self.contact_id.id,
-                'picking_type_id': picking_type,
-                'location_id': self.location_id.id,
+                'picking_type_id': self.default_picking_type_id.id,
+                'location_id': location_id,
                 'scheduled_date': self.scheduled_date,
                 'origin': task_id.name,
                 'task_id': task_id.id,
