@@ -22,7 +22,7 @@ class ProjectProject(models.Model):
     contact_id = fields.Many2one('res.partner', string='Contacto')
     date_start = fields.Datetime(string="Fecha de inicio planeada")
 
-    def create_project_tasks(self, location_id):
+    def create_project_tasks(self, location_id, location_dest_id):
         for project in self:
 
             current_task_type = None
@@ -80,7 +80,7 @@ class ProjectProject(models.Model):
                             'project_picking_lines': picking_lines
                         })
 
-                        self.create_project_tasks_pickings(task_id, picking_lines, location_id)
+                        self.create_project_tasks_pickings(task_id, picking_lines, location_id, location_dest_id)
                     else:
                         existing_task.name = line.name
                         existing_task.description = line.description
@@ -123,7 +123,7 @@ class ProjectProject(models.Model):
 
         return task_type
 
-    def create_project_tasks_pickings(self, task_id, pickings, location_id):
+    def create_project_tasks_pickings(self, task_id, pickings, location_id, location_dest_id):
         for line in pickings:
             line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
 
@@ -134,7 +134,7 @@ class ProjectProject(models.Model):
                 'quantity': line_data['quantity'],
                 'product_uom': line_data['product_uom'],
                 'location_id': location_id,
-                'location_dest_id': self.location_dest_id.id,
+                'location_dest_id': location_dest_id,
                 'name': task_id.name
             })]
 

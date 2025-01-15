@@ -68,7 +68,7 @@ class ProjectVersionWizard(models.TransientModel):
             raise UserError(f'Hace falta agregar el motivo de la modificacion.')
 
         # Create any newly added tasks for the project.
-        project.create_project_tasks(self.location_id.id)
+        project.create_project_tasks(self.location_id.id, self.location_dest_id.id)
 
         # Create a new entry in the project version lines for the modification details.
         self.env['project.version.lines'].create({
