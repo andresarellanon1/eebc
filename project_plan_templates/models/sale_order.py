@@ -14,9 +14,9 @@ class SaleOrder(models.Model):
 
     state = fields.Selection([
         ('draft', 'Cotización'),
-        ('budget', 'Budget'),
+        ('budget', 'Presupuesto'),
         ('sale', 'Orden de venta'),
-        ('process', 'In process'),
+        ('process', 'En proceso'),
         ('done', 'Hecho'),
         ('cancel', 'Cancelado')
     ], string='Estado', readonly=True, copy=False, tracking=True, default='draft')
@@ -84,22 +84,22 @@ class SaleOrder(models.Model):
                 if not sale.project_name and not sale.edit_project:
                     raise ValidationError(
                         f"se requiere el nombre del proyecto"
-                    )
-                sale.project_plan_pickings = [(5, 0, 0)]
-                sale.project_plan_lines = [(5, 0, 0)]
+                    ) 
 
                 plan_pickings = []
                 plan_lines = []
                 for line in sale.order_line:
-                    if line.display_type == 'line_section':
-                        plan_lines.append(self.prep_plan_section_line(line, True))
-                    else:
-                        if line.product_id.project_plan_id:
-                            plan_lines.append(self.prep_plan_section_line(line, False))
-                            plan_lines += self.prep_plan_lines(line)
+                    if line.for_modifitacion:
+                        if line.display_type == 'line_section':
+                            plan_lines.append(self.prep_plan_section_line(line, True))
+                        else:
+                            if line.product_id.project_plan_id:
+                                plan_lines.append(self.prep_plan_section_line(line, False))
+                                plan_lines += self.prep_plan_lines(line)
 
-                        for project_picking in line.product_id.project_plan_id.project_plan_pickings:
-                            plan_pickings.append((4, project_picking.id))
+                            for project_picking in line.product_id.project_plan_id.project_plan_pickings:
+                                plan_pickings.append((4, project_picking.id))
+                        line.for_modification = False
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
@@ -125,6 +125,7 @@ class SaleOrder(models.Model):
                     'product_uom_qty': line.product_uom_qty,
                     'price_unit': line.price_unit,
                     'discount': line.discount,
+                    'for_modification': False
                 }) for line in previous_order.order_line]
 
                 # Copiar project_plan_lines directamente
