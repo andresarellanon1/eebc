@@ -164,6 +164,7 @@ class SaleOrder(models.Model):
         """Prepara las líneas de plan para asignarlas al pedido."""
         return [(0, 0, {
             'name': line.name,
+            'sequence': line.sequence,
             'display_type': line.display_type,
             'description': line.description,
             'use_project_task': line.use_project_task,
@@ -179,6 +180,7 @@ class SaleOrder(models.Model):
         """Prepara las líneas de picking para asignarlas al pedido."""
         return [(0, 0, {
             'name': line.name,
+            'sequence': line.sequence,
             'display_type': line.display_type,
             'product_id': line.product_id.id if line.product_id else False,
             'product_uom': line.product_uom.id if line.product_uom else False,
