@@ -105,7 +105,7 @@ class SaleOrder(models.Model):
                 for line in sale.order_line:
                     if line.for_modification:
                         if line.display_type == 'line_section':
-                            plan_lines.append(self.prep_plan_section_line(line, True))
+                            section_line = self.prep_plan_section_line(line, True)
                             section_line.update({'sequence': sequence})
                             plan_lines.append(section_line)
                             sequence += 1
