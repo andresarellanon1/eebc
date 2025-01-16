@@ -100,26 +100,14 @@ class SaleOrder(models.Model):
 
                 plan_pickings = []
                 plan_lines = []
-                sequence = 1
-
                 for line in sale.order_line:
                     if line.for_modification:
                         if line.display_type == 'line_section':
-                            section_line = self.prep_plan_section_line(line, True)
-                            section_line.update({'sequence': sequence})
-                            plan_lines.append(section_line)
-                            sequence += 1
+                            plan_lines.append(self.prep_plan_section_line(line, True))
                         else:
                             if line.product_id.project_plan_id:
-                                section_line = self.prep_plan_section_line(line, False)
-                                section_line.update({'sequence': sequence})
-                                plan_lines.append(section_line)
-                                sequence += 1
-
-                                for plan_line in self.prep_plan_lines(line):
-                                    plan_line.update({'sequence': sequence})
-                                    plan_lines.append(plan_line)
-                                    sequence += 1
+                                plan_lines.append(self.prep_plan_section_line(line, False))
+                                plan_lines += self.prep_plan_lines(line)
 
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                                 plan_pickings.append((4, project_picking.id))
