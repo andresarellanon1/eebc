@@ -90,11 +90,13 @@ class Notices(models.Model):
 
     @api.depends('lot_ids')
     def _compute_total_lot_quantity(self):
-        for notice in self:
+        total_quantity = 0
+        for lot in self.lot_ids:
             # Sumar la cantidad disponible de cada lote asociado al aviso
-            total_quantity = sum(lot.product_qty for lot in notice.lot_ids)
-            _logger.warning(f"Total lot quantity para aviso {notice.id}: {total_quantity}")
-            notice.total_lot_quantity = total_quantity
+            total_quantity += lot.product_qty
+        
+        
+        self.total_lot_quantity = total_quantity
     
     
     @api.depends('notice')
