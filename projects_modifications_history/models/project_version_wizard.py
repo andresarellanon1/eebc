@@ -22,6 +22,14 @@ class ProjectVersionWizard(models.TransientModel):
 
     project_id = fields.Many2one('project.project', string='Proyecto', required=True)
 
+    location_id = fields.Many2one('stock.location', string='Ubicación de origen')
+    location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
+    scheduled_date = fields.Datetime(string='Fecha programada de entrega')
+    contact_id = fields.Many2one('res.partner', string='Contacto')
+    date_start = fields.Datetime(string="Fecha de inicio planeada")
+    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
+    date = fields.Datetime()
+
     # This action confirms and records changes in the project's version history.
     # It ensures the existence of a project version history, creates one if none exists, 
     # validates that a modification reason is provided, and raises an error if it's missing.
@@ -60,7 +68,7 @@ class ProjectVersionWizard(models.TransientModel):
             raise UserError(f'Hace falta agregar el motivo de la modificacion.')
 
         # Create any newly added tasks for the project.
-        project.create_project_tasks()
+        project.create_project_tasks(self.location_id.id, self.location_dest_id.id)
 
         # Create a new entry in the project version lines for the modification details.
         self.env['project.version.lines'].create({

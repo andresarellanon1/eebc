@@ -12,16 +12,14 @@ class SaleOrder(models.Model):
     project_name = fields.Char(string="Titulo de proyecto")
     plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
-    state = fields.Selection(
-        selection_add=[
-            ('budget', 'Budget'),
-            ('process', 'In process')
-        ],
-        ondelete={
-            'budget': 'set default',
-            'process': 'set default'
-        }
-    )
+    state = fields.Selection([
+        ('draft', 'Cotización'),
+        ('budget', 'Presupuesto'),
+        ('sale', 'Orden de venta'),
+        ('process', 'En proceso'),
+        ('done', 'Hecho'),
+        ('cancel', 'Cancelado')
+    ], string='Estado', readonly=True, copy=False, tracking=True, default='draft')
 
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
@@ -32,36 +30,48 @@ class SaleOrder(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
     edit_project = fields.Boolean(string="Modificar proyecto", default=False)
 
-    @api.model
-    def create(self, vals):
-        record = super(SaleOrder, self).create(vals)
-        record.update_picking_lines()
-        return record
+    # @api.model
+    # def create(self, vals):
+    #     record = super(SaleOrder, self).create(vals)
+    #     record.update_picking_lines()
+    #     return record
 
-    def write(self, vals):
-        res = super(SaleOrder, self).write(vals)
-        if 'project_plan_lines' in vals:
-            self.update_picking_lines()
-        return res
+    # def write(self, vals):
+    #     res = super(SaleOrder, self).write(vals)
+    #     logger.warning(f"Plan lines: {self.project_plan_lines}")
+
+    #     # Verificar si se modificaron las líneas o si hay cambios generales
+    #     if 'project_plan_lines' in vals or any(line.task_timesheet_id is None for line in self.project_plan_lines):
+    #         # Validar que todas las líneas tengan task_timesheet_id
+    #         for line in self.project_plan_lines:
+    #             if not line.task_timesheet_id:
+    #                 raise ValidationError("Cada línea de planificación debe tener asignada una hoja de horas (task_timesheet_id).")
+
+    #         self.update_picking_lines()
+
+    #     return res
 
     def update_picking_lines(self):
         for record in self:
-            record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
+            #record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
             record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
 
     def get_picking_lines(self, line):
         picking_lines = []
 
         for picking in line:
-            if picking.for_create:
-                if picking.display_type == 'line_section':
-                    picking_lines.append(self.prep_picking_section_line(picking, True))
-                else:
-                    if picking.for_create:
+            if picking.for_modification:
+                if picking.for_create:
+                    if picking.display_type == 'line_section':
                         picking_lines.append(self.prep_picking_section_line(picking, True))
-                        picking_lines += self.prep_picking_lines(picking)
-            else:
-                picking_lines.append(self.prep_picking_section_line(picking, False))
+                    else:
+                        if picking.for_create:
+                            picking_lines.append(self.prep_picking_section_line(picking, True))
+                            picking_lines += self.prep_picking_lines(picking)
+                else:
+                    picking_lines.append(self.prep_picking_section_line(picking, False))
+
+                picking.for_modification = False
                 
         return picking_lines
     
@@ -86,25 +96,27 @@ class SaleOrder(models.Model):
                 if not sale.project_name and not sale.edit_project:
                     raise ValidationError(
                         f"se requiere el nombre del proyecto"
-                    )
-                sale.project_plan_pickings = [(5, 0, 0)]
-                sale.project_plan_lines = [(5, 0, 0)]
+                    ) 
 
                 plan_pickings = []
                 plan_lines = []
                 for line in sale.order_line:
-                    if line.display_type == 'line_section':
-                        plan_lines.append(self.prep_plan_section_line(line, True))
-                    else:
-                        if line.product_id.project_plan_id:
-                            plan_lines.append(self.prep_plan_section_line(line, False))
-                            plan_lines += self.prep_plan_lines(line)
+                    if line.for_modification:
+                        if line.display_type == 'line_section':
+                            plan_lines.append(self.prep_plan_section_line(line, True))
+                        else:
+                            if line.product_id.project_plan_id:
+                                plan_lines.append(self.prep_plan_section_line(line, False))
+                                plan_lines += self.prep_plan_lines(line)
 
-                        for project_picking in line.product_id.project_plan_id.project_plan_pickings:
-                            plan_pickings.append((4, project_picking.id))
+                            for project_picking in line.product_id.project_plan_id.project_plan_pickings:
+                                plan_pickings.append((4, project_picking.id))
+                        line.for_modification = False
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
+
+                sale.update_picking_lines()
 
             sale.state = 'budget'
             
@@ -127,6 +139,7 @@ class SaleOrder(models.Model):
                     'product_uom_qty': line.product_uom_qty,
                     'price_unit': line.price_unit,
                     'discount': line.discount,
+                    'for_modification': False
                 }) for line in previous_order.order_line]
 
                 # Copiar project_plan_lines directamente

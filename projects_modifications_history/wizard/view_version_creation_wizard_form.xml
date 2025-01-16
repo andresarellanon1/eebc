@@ -11,6 +11,16 @@
                             <group>
                                 <field name="modified_by" readonly="1"/>
                                 <field name="modification_date" readonly="1"/>
+                                <field name="contact_id" invisible="1"/>
+                                <field name="picking_type_id" invisible="1"/>
+                                <field name="location_id" invisible="1"/>
+                                <field name="location_dest_id" invisible="1"/>
+                                <field name="scheduled_date" invisible="1"/>
+                                    <field name="date_start" string="Calendario del proyecto" 
+                                        widget="daterange" 
+                                        options="{&quot;end_date_field&quot;: &quot;date&quot;, &quot;always_range&quot;: &quot;1&quot;}" 
+                                        required="date_start or date"/>
+                                    <field name="date" invisible="1" required="date_start"/>
                             </group>
 
                             <notebook>
@@ -56,6 +66,17 @@
                                             </group>
                                         </group>
                                     </div>
+                                </page>
+                                <page name="info" string="Info">
+                                    <group>
+                                        <field name="contact_id" readonly="1"/>
+                                        <field name="picking_type_id" readonly="1"/>
+                                        <field name="location_id" readonly="1"/>
+                                        <field name="location_dest_id" readonly="1"/>
+                                        <field name="scheduled_date" readonly="1"/>
+                                            <field name="date_start" readonly="1" string="Calendario del proyecto" widget="daterange" options="{&quot;end_date_field&quot;: &quot;date&quot;, &quot;always_range&quot;: &quot;1&quot;}" required="date_start or date"/>
+                                            <field name="date" readonly="1" required="date_start"/>
+                                    </group>
                                 </page>
                             </notebook>
                         </group>
