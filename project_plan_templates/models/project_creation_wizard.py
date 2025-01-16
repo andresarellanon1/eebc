@@ -71,7 +71,7 @@ class ProjectCreation(models.TransientModel):
                 'publication_date': fields.Datetime.now(),
                 'date_start': self.date_start,
                 'date': self.date,
-                'sale_order_id': self.sale_order_id.id
+                'actual_sale_order_id': self.sale_order_id.id
             }
 
             project = self.env['project.project'].create(project_vals)
@@ -88,10 +88,10 @@ class ProjectCreation(models.TransientModel):
         else:
             project = self._origin.project_id
 
-            logger.warning(f"Id del sale: {self.sale_order_id.id}")
+            logger.warning(f"Id del sale: {self.actual_sale_order_id.id}")
 
             self.sale_order_id.project_id = project.id
-            project.sale_order_id = self.sale_order_id.id
+            project.actual_sale_order_id = self.sale_order_id.id
 
             existing_plan_lines = project.project_plan_lines
             new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
