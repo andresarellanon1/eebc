@@ -30,26 +30,26 @@ class SaleOrder(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
     edit_project = fields.Boolean(string="Modificar proyecto", default=False)
 
-    @api.model
-    def create(self, vals):
-        record = super(SaleOrder, self).create(vals)
-        record.update_picking_lines()
-        return record
+    # @api.model
+    # def create(self, vals):
+    #     record = super(SaleOrder, self).create(vals)
+    #     record.update_picking_lines()
+    #     return record
 
-    def write(self, vals):
-        res = super(SaleOrder, self).write(vals)
-        logger.warning(f"Plan lines: {self.project_plan_lines}")
+    # def write(self, vals):
+    #     res = super(SaleOrder, self).write(vals)
+    #     logger.warning(f"Plan lines: {self.project_plan_lines}")
 
-        # Verificar si se modificaron las líneas o si hay cambios generales
-        if 'project_plan_lines' in vals or any(line.task_timesheet_id is None for line in self.project_plan_lines):
-            # Validar que todas las líneas tengan task_timesheet_id
-            for line in self.project_plan_lines:
-                if not line.task_timesheet_id:
-                    raise ValidationError("Cada línea de planificación debe tener asignada una hoja de horas (task_timesheet_id).")
+    #     # Verificar si se modificaron las líneas o si hay cambios generales
+    #     if 'project_plan_lines' in vals or any(line.task_timesheet_id is None for line in self.project_plan_lines):
+    #         # Validar que todas las líneas tengan task_timesheet_id
+    #         for line in self.project_plan_lines:
+    #             if not line.task_timesheet_id:
+    #                 raise ValidationError("Cada línea de planificación debe tener asignada una hoja de horas (task_timesheet_id).")
 
-            self.update_picking_lines()
+    #         self.update_picking_lines()
 
-        return res
+    #     return res
 
     def update_picking_lines(self):
         for record in self:
@@ -115,6 +115,8 @@ class SaleOrder(models.Model):
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
+
+                sale.update_picking_lines()
 
             sale.state = 'budget'
             
