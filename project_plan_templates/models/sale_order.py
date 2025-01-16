@@ -39,8 +39,16 @@ class SaleOrder(models.Model):
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
         logger.warning(f"Plan lines: {self.project_plan_lines}")
-        if 'project_plan_lines' in vals:
+
+        # Verificar si se modificaron las líneas o si hay cambios generales
+        if 'project_plan_lines' in vals or any(line.task_timesheet_id is None for line in self.project_plan_lines):
+            # Validar que todas las líneas tengan task_timesheet_id
+            for line in self.project_plan_lines:
+                if not line.task_timesheet_id:
+                    raise ValidationError("Cada línea de planificación debe tener asignada una hoja de horas (task_timesheet_id).")
+
             self.update_picking_lines()
+
         return res
 
     def update_picking_lines(self):
@@ -115,9 +123,9 @@ class SaleOrder(models.Model):
     def _compute_order_lines_from_project_previous_version(self):
         for sale in self:
             logger.warning(f"Encontro la sale order: {sale.project_id.actual_sale_order_id}")
-            if sale.edit_project and sale.project_id and sale.project_id.sale_order_id:
+            if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
 
-                previous_order = sale.project_id.sale_order_id
+                previous_order = sale.project_id.actual_sale_order_id
 
                 sale.partner_id = previous_order.partner_id
                 sale.project_name = previous_order.project_name
