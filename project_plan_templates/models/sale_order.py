@@ -51,6 +51,15 @@ class SaleOrder(models.Model):
 
     #     return res
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        if self.id: 
+            project_plan_lines = self.env['project.plan.line'].search([('sale_order_id', '=', self.id)])
+            for line in project_plan_lines:
+                logger.info(f"Project Plan Line ID: {line.id}, Name: {line.name}, Sequence: {line.sequence}")
+        else:
+            logger.info("Sale Order does not exist yet. Cannot fetch project plan lines.")
+
     def update_picking_lines(self):
         for record in self:
             #record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes

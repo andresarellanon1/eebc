@@ -42,11 +42,6 @@ class ProjectLines(models.Model):
     for_create = fields.Boolean(default=True)
     for_modification = fields.Boolean(default=True)
 
-    @api.onchange('name')
-    def _onchange_name(self):
-        for record in self.env['project.plan.line'].search([]):
-            _logger.info(f"Name: {record.name} | Sequence: {record.sequence}")
-            
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
 
