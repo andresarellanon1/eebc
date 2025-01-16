@@ -44,10 +44,9 @@ class ProjectLines(models.Model):
 
     @api.onchange('name')
     def _onchange_name(self):
-        plan_lines = self.env['project.plan.line'].search([('sale_order_id', '=', sale_order.id)])
-        for record in plan_lines:
+        for record in self.env['project.plan.line'].search([]):
             _logger.info(f"Name: {record.name} | Sequence: {record.sequence}")
-
+            
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
 
