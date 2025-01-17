@@ -20,6 +20,7 @@ class PurchaseOrder(models.Model):
         if self.state == "done":
             return
         else:
-            self.locked_currency_rate = self.env["res.currency"].search([("name", "=", "USD")], limit=1).inverse_rate
+            locked_currency = self.env["ir.config_parameter"].sudo().get_param("sale.locked_currency")
+            self.locked_currency_rate = self.env["res.currency"].search([("id", "=", locked_currency.id)], limit=1).inverse_rate
             for line in self.order_line:
                 line._product_id_change()

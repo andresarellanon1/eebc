@@ -1,5 +1,5 @@
 {
-    'name': 'Conversor de divisa por líneas',
+    'name': 'Conversor de divisa por divisa objetivo en líneas de orden de venta/cotizacion',
     'summary': 'Conversor de divisas por líneas individuales de documentos de venta y facturas de cliente. Usa listas de precio por línea de documento de venta.',
     'description': """
             Este módulo muestra un campo de divisa seleccionable y sobreescribe los comportamientos default de la orden de venta sobre la lista de precios.

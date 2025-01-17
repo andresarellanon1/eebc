@@ -41,17 +41,13 @@ class PurchaseOrder(models.Model):
 
     def write(self, vals):
         res = super(PurchaseOrder, self).write(vals)
-
         self._update_landed_in_lines()
-
         return res
 
     def _update_landed_in_lines(self):
         for order in self:
-
             if order.is_multi_landed_cost:
                 return
-
             for line in order.order_line:
                 # Enforce the first landed cost to apply to all lines
                 if len(order.stock_landed_cost_ids) > 0:
@@ -61,15 +57,11 @@ class PurchaseOrder(models.Model):
 
     def _update_landed_pickings(self):
         for order in self:
-
             if order.is_multi_landed_cost:
                 return
-
             for line in order.order_line:
-                pickings = line.order_id.picking_ids.filtered(
-                    lambda x: x.state not in ("done", "cancel") and x.location_dest_id.usage in ("internal", "transit", "customer")
-                )
-
+                pickings = line.order_id.picking_ids.filtered(lambda x:
+                                                              x.state not in ("done", "cancel") and x.location_dest_id.usage in ("internal", "transit", "customer"))
                 if pickings and len(pickings) > 0:
                     existing_picking_ids = (
                         line.landed_cost.picking_ids.ids
@@ -81,10 +73,8 @@ class PurchaseOrder(models.Model):
                         line.landed_cost.write({
                             "picking_ids": [(6, 0, existing_picking_ids + [picking.id])],  # 6: Replace the list of IDs
                         })
-
                         if line.landed_cost.state == 'draft':
                             line.landed_cost.button_validate()
-
 
     def action_create_invoice(self):
         """
@@ -101,9 +91,7 @@ class PurchaseOrder(models.Model):
 
             order = order.with_company(order.company_id)
             pending_section = None
-            # Invoice values.
             invoice_vals = order._prepare_invoice()
-            # Invoice line values (keep only necessary sections).
             for line in order.order_line:
                 if line.display_type == 'line_section':
                     pending_section = line

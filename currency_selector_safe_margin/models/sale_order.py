@@ -22,9 +22,9 @@ class SaleOrder(models.Model):
 
     locked_currency_id = fields.Many2one(
         string="Divisa",
-        help="Divisa.",
+        help="Divisa bloqueada.",
         comodel_name="res.currency",
-        default=lambda self: self.env.company.currency_id.id,
+        default=lambda self: self.env.company.locked_currency_id.id,
     )
 
     def _compute_safe_margin(self):
