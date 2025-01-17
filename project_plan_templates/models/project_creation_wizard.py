@@ -71,7 +71,7 @@ class ProjectCreation(models.TransientModel):
                 'publication_date': fields.Datetime.now(),
                 'date_start': self.date_start,
                 'date': self.date,
-                'actual_sale_order_id': self.sale_order_id.id,
+                'actual_sale_order_id': self.sale_order_id.id
             }
 
             project = self.env['project.project'].create(project_vals)
@@ -88,47 +88,36 @@ class ProjectCreation(models.TransientModel):
         else:
             project = self._origin.project_id
 
-            #logger.warning(f"Id del sale: {project.actual_sale_order_id.id}")
+            logger.warning(f"Id del sale: {project.actual_sale_order_id.id}")
 
             self.sale_order_id.project_id = project.id
             project.actual_sale_order_id = self.sale_order_id.id
 
-            # Definir las líneas existentes desde el proyecto
-            existing_lines = project.project_plan_lines  # Asegúrate de que sea el campo correcto
-            new_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
-
-            # Actualizar las líneas existentes
-            updated_lines = [
-                (1, line.id, new_line[2]) 
-                for line in existing_lines
-                for new_line in new_lines_data
-                if line.name == new_line[2]['name']
-            ]
-
-            # Agregar nuevas líneas que no existan en las existentes
-            new_lines = [
-                new_line
-                for new_line in new_lines_data
-                if all(new_line[2]['name'] != line.name for line in existing_lines)
-            ]
-
-            # Combinar líneas actualizadas y nuevas, asegurando el orden por 'sequence'
-            combined_lines = sorted(
-                updated_lines + new_lines,
-                key=lambda x: x[2]['sequence'] if len(x) > 2 and 'sequence' in x[2] else 0
-            )
-
-            # Procesar las líneas de planes
             existing_plan_lines = project.project_plan_lines
             new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
 
-            project.project_plan_lines = self.process_lines(existing_plan_lines, new_plan_lines_data)
+            project.project_plan_lines = [
+                (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+                for line in existing_plan_lines
+                for new_line in new_plan_lines_data
+                if line.name == new_line[2]['name']
+            ] + [
+                new_line for new_line in new_plan_lines_data
+                if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
+            ]
 
-            # Procesar las líneas de pickings
             existing_picking_lines = project.project_picking_lines
             new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
 
-            project.project_picking_lines = self.process_lines(existing_picking_lines, new_picking_lines_data)
+            project.project_picking_lines = [
+                (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+                for line in existing_picking_lines
+                for new_line in new_picking_lines_data
+                if line.name == new_line[2]['name']
+            ] + [
+                new_line for new_line in new_picking_lines_data
+                if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
+            ]
 
             return {
                 'name': 'Project Version History',
@@ -150,29 +139,6 @@ class ProjectCreation(models.TransientModel):
                     'default_picking_type_id': self.picking_type_id.id
                 }
             }
-
-    def process_lines(self, existing_lines, new_lines_data):
-        # List to store the processed lines
-        processed_lines = []
-
-        # Iterate over the existing lines and update them with new data where applicable
-        for existing_line in existing_lines:
-            # Find matching new line based on the 'name' (or other identifier)
-            matching_new_line = next((new_line for new_line in new_lines_data if new_line[2]['name'] == existing_line.name), None)
-            
-            if matching_new_line:
-                # If a match is found, update the existing line's data
-                updated_data = matching_new_line[2]  # Assuming new_line[2] has the data to update
-                processed_lines.append((1, existing_line.id, updated_data))  # 1 for updating existing line
-
-        # Add new lines that don't exist in the current lines
-        for new_line in new_lines_data:
-            # Check if the line doesn't already exist
-            if not any(existing_line.name == new_line[2]['name'] for existing_line in existing_lines):
-                # Add the new line (0 means it's a new line)
-                processed_lines.append((0, 0, new_line[2]))  # 0, 0 means to add a new record
-
-        return processed_lines
 
     def get_or_create_task_for_picking(self, picking_line, project):
         # Intentar encontrar una tarea asociada con este picking
@@ -250,7 +216,6 @@ class ProjectCreation(models.TransientModel):
                 timesheet_data = [(0, 0, {
                     'name': ts_line.description,
                     'estimated_time': ts_line.estimated_time,
-                    'employee_id': self.env.user.employee_id.id,
                 }) for ts_line in timesheet_lines]
 
                 picking_lines = []
