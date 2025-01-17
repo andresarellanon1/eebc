@@ -151,6 +151,29 @@ class ProjectCreation(models.TransientModel):
                 }
             }
 
+    def process_lines(self, existing_lines, new_lines_data):
+        # List to store the processed lines
+        processed_lines = []
+
+        # Iterate over the existing lines and update them with new data where applicable
+        for existing_line in existing_lines:
+            # Find matching new line based on the 'name' (or other identifier)
+            matching_new_line = next((new_line for new_line in new_lines_data if new_line[2]['name'] == existing_line.name), None)
+            
+            if matching_new_line:
+                # If a match is found, update the existing line's data
+                updated_data = matching_new_line[2]  # Assuming new_line[2] has the data to update
+                processed_lines.append((1, existing_line.id, updated_data))  # 1 for updating existing line
+
+        # Add new lines that don't exist in the current lines
+        for new_line in new_lines_data:
+            # Check if the line doesn't already exist
+            if not any(existing_line.name == new_line[2]['name'] for existing_line in existing_lines):
+                # Add the new line (0 means it's a new line)
+                processed_lines.append((0, 0, new_line[2]))  # 0, 0 means to add a new record
+
+        return processed_lines
+
     def get_or_create_task_for_picking(self, picking_line, project):
         # Intentar encontrar una tarea asociada con este picking
         task = self.env['project.task'].search([
