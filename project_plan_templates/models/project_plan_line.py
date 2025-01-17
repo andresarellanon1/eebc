@@ -37,7 +37,7 @@ class ProjectLines(models.Model):
         ]
     )
     code = fields.Char(string="Code")
-    sequence = fields.Integer(default=0)
+    sequence = fields.Integer()
     project_plan_pickings = fields.Many2one('project.plan.pickings', string="Lista de materiales")
     for_create = fields.Boolean(default=True)
     for_modification = fields.Boolean(default=True)
