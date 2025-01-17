@@ -44,8 +44,8 @@
                             <field name="for_create" column_invisible="1"/>
                             <field name="planned_date_begin" widget="daterange"/>
                             <field name="planned_date_end" widget="daterange"/>
-                            <field name="project_plan_pickings" required="1" options="{'create': True}"/> 
-                            <field name="task_timesheet_id" required="1" options="{'create': True}"/>
+                            <field name="project_plan_pickings" options="{'create': True}"/> 
+                            <field name="task_timesheet_id" options="{'create': True}"/>
                         </tree>
                     </field>
                 </page>
