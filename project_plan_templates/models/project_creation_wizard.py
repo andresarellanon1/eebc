@@ -71,7 +71,7 @@ class ProjectCreation(models.TransientModel):
                 'publication_date': fields.Datetime.now(),
                 'date_start': self.date_start,
                 'date': self.date,
-                'sale_order_id': self.sale_order_id.id
+                'actual_sale_order_id': self.sale_order_id.id
             }
 
             project = self.env['project.project'].create(project_vals)
@@ -88,55 +88,10 @@ class ProjectCreation(models.TransientModel):
         else:
             project = self._origin.project_id
 
-            logger.warning(f"Id del sale: {self.sale_order_id.id}")
-            
-            existing_task_names = project.task_ids.mapped('name')
-            curren_task_type = None
-            for line in self.wizard_plan_lines:
-                if line.display_type and line.for_create:
-                    current_task_type = self.get_or_create_task_type(line.name, project)
-
-                if line.use_project_task and not line.display_type and line.for_create:
-                    if not current_task_type:
-                        current_task_type = self.get_or_create_task_type('Extras', project)
-                    if line.name not in existing_task_names and line.use_project_task and line.for_create:
-                        timesheet_lines = self.env['task.time.lines'].search([('task_timesheet_id', '=', line.task_timesheet_id.id)])
-                        timesheet_data = [(0, 0, {'name': ts_line.description, 'estimated_time': ts_line.estimated_time})
-                                        for ts_line in timesheet_lines]
-
-                        picking_lines = []
-                        is_task = False
-
-                        for picking in self.wizard_picking_lines:
-                            if picking.display_type:
-                                is_task = picking.name == line.name
-                            elif is_task:
-                                picking_lines.append((0, 0, {
-                                    'name': picking.product_id.name,
-                                    'product_id': picking.product_id.id,
-                                    'product_uom': picking.product_uom.id,
-                                    'product_packaging_id': picking.product_packaging_id.id,
-                                    'product_uom_qty': picking.product_uom_qty,
-                                    'quantity': picking.quantity,
-                                    'standard_price': picking.standard_price,
-                                    'subtotal': picking.subtotal,
-                                    'display_type': False
-                                }))
-
-                        task_id = self.env['project.task'].create({
-                            'name': line.name,
-                            'project_id': project.id,
-                            'stage_id': current_task_type.id,
-                            'timesheet_ids': timesheet_data,
-                            'planned_date_begin': line.planned_date_begin,
-                            'date_deadline': line.planned_date_end,
-                            'project_picking_lines': picking_lines
-                        })
-
-                        self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
+            logger.warning(f"Id del sale: {project.actual_sale_order_id.id}")
 
             self.sale_order_id.project_id = project.id
-            project.sale_order_id = self.sale_order_id.id
+            project.actual_sale_order_id = self.sale_order_id.id
 
             existing_plan_lines = project.project_plan_lines
             new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
@@ -177,6 +132,11 @@ class ProjectCreation(models.TransientModel):
                     'default_project_picking_lines': [(6, 0, project.project_picking_lines.ids)] if project.project_picking_lines else False,
                     'default_modified_by': self.env.user.id,
                     'default_modification_date': fields.Datetime.now(),
+                    'default_contact_id': self.partner_id.id,
+                    'default_location_id': self.location_id.id,
+                    'default_location_dest_id': self.location_dest_id.id,
+                    'default_scheduled_date': self.scheduled_date,
+                    'default_picking_type_id': self.picking_type_id.id
                 }
             }
 
@@ -199,12 +159,14 @@ class ProjectCreation(models.TransientModel):
 
     def create_project_tasks_pickings(self, task_id, pickings):
         for line in pickings:
+            line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
+
             stock_move_vals = [(0, 0, {
-                'product_id': line.product_id.id,
-                'product_packaging_id': line.product_packaging_id.id,
-                'product_uom_qty': line.quantity,
-                'quantity': line.quantity,
-                'product_uom': line.product_uom.id,
+                'product_id': line_data['product_id'],
+                'product_packaging_id': line_data['product_packaging_id'],
+                'product_uom_qty': line_data['quantity'],
+                'quantity': line_data['quantity'],
+                'product_uom': line_data['product_uom'],
                 'location_id': self.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'name': task_id.name
@@ -280,12 +242,13 @@ class ProjectCreation(models.TransientModel):
                     'project_id': project.id,
                     'stage_id': current_task_type.id,
                     'timesheet_ids': timesheet_data,
+                    'description': line.description,
                     'planned_date_begin': line.planned_date_begin,
                     'date_deadline': line.planned_date_end,
                     'project_picking_lines': picking_lines
                 })
 
-                self.create_project_tasks_pickings(task_id, line.project_plan_pickings.project_picking_lines)
+                self.create_project_tasks_pickings(task_id, picking_lines)
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([

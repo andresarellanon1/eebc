@@ -11,7 +11,7 @@
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="action_open_create_project_wizard" class="btn-primary" type="object" string="Crear Proyecto" invisible="state != 'budget'"/>
-                <button name="action_generate_planning" class="btn-primary" type="object" string="Generar planeación" invisible="state != 'sale'"/>
+                <button name="action_generate_planning" class="btn-primary" type="object" string="Generar planeación" invisible="state not in ('budget', 'draft')"/>
                 <button name="action_open_report" type="object" string="Generar Reporte" class="btn-primary"/>
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="replace">
@@ -40,11 +40,12 @@
                             <field name="name"/>
                             <field name="description"/>
                             <field name="use_project_task"/>
+                            <field name="for_modification" column_invisible="1"/>
                             <field name="for_create" column_invisible="1"/>
                             <field name="planned_date_begin" widget="daterange"/>
                             <field name="planned_date_end" widget="daterange"/>
-                            <field name="project_plan_pickings" required="1" options="{'create': True}"/> 
-                            <field name="task_timesheet_id" required="1" options="{'create': True}"/>
+                            <field name="project_plan_pickings" options="{'create': True}"/> 
+                            <field name="task_timesheet_id" options="{'create': True}"/>
                         </tree>
                     </field>
                 </page>
@@ -56,6 +57,7 @@
                             <field name="display_type" column_invisible="1"/>
                             <field name="product_id"/>
                             <field name="name"/>
+                            <field name="for_modification" column_invisible="1"/>
                             <field name="for_create" column_invisible="1"/>
                             <field name="product_uom"/>
                             <field name="product_packaging_id"/>
@@ -73,6 +75,9 @@
                         </group>
                     </group>
                 </page>
+            </xpath>
+            <xpath expr="//tree//field[@name='name']" position="before">
+                <field name="for_modification" column_invisible="1"/>
             </xpath>
         </field>
     </record>

@@ -11,6 +11,11 @@
                             <group>
                                 <field name="modified_by" readonly="1"/>
                                 <field name="modification_date" readonly="1"/>
+                                <field name="contact_id" invisible="1"/>
+                                <field name="picking_type_id" invisible="1"/>
+                                <field name="location_id" invisible="1"/>
+                                <field name="location_dest_id" invisible="1"/>
+                                
                             </group>
 
                             <notebook>
@@ -21,6 +26,7 @@
                                     <div style="width: 100%;">
                                         <field name="project_plan_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" readonly="1" style="pointer-events:none">
                                             <tree style="width: 100%;" readonly="1" editable="bottom">
+                                                <field name="sequence" widget="handle"/>
                                                 <field name="display_type" column_invisible="True"/>
                                                 <field name="name" readonly="1"/>
                                                 <field name="description" readonly="1"/>
@@ -38,6 +44,7 @@
                                     <div>
                                         <field name="project_picking_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" readonly="1" style="pointer-events:none">
                                             <tree style="width: 100%;" readonly="1" editable="bottom">
+                                                <field name="sequence" widget="handle"/>
                                                 <field name="company_id" column_invisible="1" readonly="1"/>
                                                 <field name="display_type" column_invisible="True" readonly="1"/>
                                                 <field name="product_id" readonly="1"/>
@@ -56,6 +63,17 @@
                                             </group>
                                         </group>
                                     </div>
+                                </page>
+                                <page name="info" string="Info">
+                                    <group>
+                                        <field name="contact_id" readonly="1"/>
+                                        <field name="picking_type_id" readonly="1"/>
+                                        <field name="location_id" readonly="1"/>
+                                        <field name="location_dest_id" readonly="1"/>
+                                        <field name="scheduled_date" readonly="1"/>
+                                            <field name="date_start" readonly="1" string="Calendario del proyecto" widget="daterange" options="{&quot;end_date_field&quot;: &quot;date&quot;, &quot;always_range&quot;: &quot;1&quot;}" required="date_start or date"/>
+                                            <field name="date" readonly="1" required="date_start"/>
+                                    </group>
                                 </page>
                             </notebook>
                         </group>
