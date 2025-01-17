@@ -88,7 +88,7 @@ class ProjectCreation(models.TransientModel):
         else:
             project = self._origin.project_id
 
-            logger.warning(f"Id del sale: {self.actual_sale_order_id.id}")
+            # logger.warning(f"Id del sale: {self.actual_sale_order_id.id}")
 
             self.sale_order_id.project_id = project.id
             project.actual_sale_order_id = self.sale_order_id.id
