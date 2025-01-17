@@ -20,6 +20,16 @@ class ProjectVersionWizard(models.TransientModel):
         string='Inventario'
     )
 
+    wizard_plan_lines = fields.One2many(
+        'project.plan.wizard.line', 'wizard_id',
+        string="Project Plan Lines"
+    )
+
+    wizard_picking_lines = fields.One2many(
+        'project.picking.wizard.line', 'wizard_creation_id',
+        string="Project Picking Lines"
+    )
+
     project_id = fields.Many2one('project.project', string='Proyecto', required=True)
 
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
@@ -90,8 +100,8 @@ class ProjectVersionWizard(models.TransientModel):
             'modification_date': self.modification_date,
             'modified_by': self.modified_by.id,
             'modification_motive': self.modification_motive,
-            'project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
-            'project_picking_lines': [(6, 0, self.project_picking_lines.ids)],
+            'project_plan_lines': [(6, 0, self.wizard_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, self.wizard_picking_lines.ids)],
         })
 
         # Save the updated project information (though no specific changes are made here).
