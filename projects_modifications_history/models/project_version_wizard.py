@@ -29,6 +29,7 @@ class ProjectVersionWizard(models.TransientModel):
     date_start = fields.Datetime(string="Fecha de inicio planeada")
     picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
     date = fields.Datetime()
+    sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
 
     # This action confirms and records changes in the project's version history.
     # It ensures the existence of a project version history, creates one if none exists, 
@@ -41,6 +42,19 @@ class ProjectVersionWizard(models.TransientModel):
     def _compute_total_cost(self):
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+
+    @api.onchange('sale_order_id')
+    def _compute_wizard_lines(self):
+        for record in self:
+            
+            record.wizard_picking_lines = [(5, 0, 0)]
+            record.wizard_plan_lines = [(5, 0, 0)]
+
+            plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
+            picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
+
+            record.wizard_plan_lines = plan_lines
+            record.wizard_picking_lines = picking_lines
 
     def action_confirm_version_history(self):
         self.ensure_one()  # Ensure that only one record is being processed.
@@ -87,3 +101,62 @@ class ProjectVersionWizard(models.TransientModel):
         return {
             'type': 'ir.actions.act_window_close'
         }
+
+    def prep_plan_lines(self, plan):
+        plan_lines = []
+        for line in plan:
+            if line.use_project_task and line.for_create:
+                if line.display_type == 'line_section':
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'display_type':  line.display_type or 'line_section',
+                        'description': False,
+                        'use_project_task': True,
+                        'planned_date_begin': False,
+                        'planned_date_end': False,
+                        'project_plan_pickings': False,
+                        'task_timesheet_id': False,
+                        'for_create': line.for_create
+                    }))
+                else:
+                    plan_lines.append((0, 0, {
+                        'name': line.name,
+                        'description': line.description,
+                        'use_project_task': True,
+                        'planned_date_begin': line.planned_date_begin,
+                        'planned_date_end': line.planned_date_end,
+                        'project_plan_pickings': line.project_plan_pickings.id,
+                        'task_timesheet_id': line.task_timesheet_id.id,
+                        'display_type': False,
+                        'for_create': True
+                    }))
+        return plan_lines
+
+    def prep_picking_lines(self, picking):
+        picking_lines = []
+        for line in picking:
+            if line.display_type == 'line_section':
+                picking_lines.append((0, 0, {
+                    'name': line.name,
+                    'display_type': line.display_type or 'line_section',
+                    'product_id': False,
+                    'product_uom': False,
+                    'product_packaging_id': False,
+                    'product_uom_qty': False,
+                    'quantity': False,
+                    'standard_price': False,
+                    'subtotal': False
+                }))
+            else:
+                picking_lines.append((0, 0, {
+                    'name': line.product_id.name,
+                    'product_id': line.product_id.id,
+                    'product_uom': line.product_uom.id,
+                    'product_packaging_id': line.product_packaging_id.id,
+                    'product_uom_qty': line.product_uom_qty,
+                    'quantity': line.quantity,
+                    'standard_price': line.standard_price,
+                    'subtotal': line.subtotal,
+                    'display_type': False
+                }))
+        return picking_lines

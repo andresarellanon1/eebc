@@ -11,6 +11,7 @@
                             <group>
                                 <field name="modified_by" readonly="1"/>
                                 <field name="modification_date" readonly="1"/>
+                                <field name="sale_order_id" readonly="1"/>
                                 <field name="contact_id" invisible="1"/>
                                 <field name="picking_type_id" invisible="1"/>
                                 <field name="location_id" invisible="1"/>
