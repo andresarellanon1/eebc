@@ -88,36 +88,43 @@ class ProjectCreation(models.TransientModel):
         else:
             project = self._origin.project_id
 
-            # logger.warning(f"Id del sale: {self.actual_sale_order_id.id}")
+            logger.warning(f"Id del sale: {self.actual_sale_order_id.id}")
 
             self.sale_order_id.project_id = project.id
             project.actual_sale_order_id = self.sale_order_id.id
 
+            updated_lines = [
+                (1, line.id, new_line[2]) 
+                for line in existing_lines
+                for new_line in new_lines_data
+                if line.name == new_line[2]['name']
+            ]
+
+            # Agregar nuevas líneas que no existan en las existentes
+            new_lines = [
+                new_line
+                for new_line in new_lines_data
+                if all(new_line[2]['name'] != line.name for line in existing_lines)
+            ]
+
+            # Combinar líneas actualizadas y nuevas, asegurando el orden por 'sequence'
+            return sorted(
+                updated_lines + new_lines,
+                key=lambda x: x[2]['sequence'] if len(x) > 2 and 'sequence' in x[2] else 0
+            )
+
+            # Procesar las líneas de planes
             existing_plan_lines = project.project_plan_lines
             new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
 
-            project.project_plan_lines = [
-                (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
-                for line in existing_plan_lines
-                for new_line in new_plan_lines_data
-                if line.name == new_line[2]['name']
-            ] + [
-                new_line for new_line in new_plan_lines_data
-                if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
-            ]
+            project.project_plan_lines = process_lines(existing_plan_lines, new_plan_lines_data)
 
+            # Procesar las líneas de pickings
             existing_picking_lines = project.project_picking_lines
             new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
 
-            project.project_picking_lines = [
-                (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
-                for line in existing_picking_lines
-                for new_line in new_picking_lines_data
-                if line.name == new_line[2]['name']
-            ] + [
-                new_line for new_line in new_picking_lines_data
-                if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
-            ]
+            project.project_picking_lines = process_lines(existing_picking_lines, new_picking_lines_data)
+
 
             return {
                 'name': 'Project Version History',

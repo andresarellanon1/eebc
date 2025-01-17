@@ -51,15 +51,6 @@ class SaleOrder(models.Model):
 
     #     return res
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        if self.id: 
-            project_plan_lines = self.env['project.plan.line'].search([('sale_order_id', '=', self.id)])
-            for line in project_plan_lines:
-                logger.info(f"Project Plan Line ID: {line.id}, Name: {line.name}, Sequence: {line.sequence}")
-        else:
-            logger.info("Sale Order does not exist yet. Cannot fetch project plan lines.")
-
     def update_picking_lines(self):
         for record in self:
             #record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
@@ -198,6 +189,7 @@ class SaleOrder(models.Model):
             'name': line.name,
             'display_type': line.display_type or 'line_section',
             'product_id': False,
+            'sequence': 0,
             'product_uom': False,
             'product_packaging_id': False,
             'product_uom_qty': False,
@@ -212,6 +204,7 @@ class SaleOrder(models.Model):
             'name': line.name,
             'display_type': line.display_type or 'line_section',
             'description': False,
+            'sequence': 0,
             'use_project_task': True,
             'planned_date_begin': False,
             'planned_date_end': False,
@@ -228,6 +221,7 @@ class SaleOrder(models.Model):
                 'name': plan.name,
                 'description': plan.description,
                 'use_project_task': True,
+                'sequence': 0,
                 'planned_date_begin': fields.Datetime.now(),
                 'planned_date_end': fields.Datetime.now(),
                 'project_plan_pickings': plan.project_plan_pickings.id,
@@ -244,6 +238,7 @@ class SaleOrder(models.Model):
                 'name': picking.product_id.name,
                 'product_id': picking.product_id.id,
                 'product_uom': picking.product_uom.id,
+                'sequence': 0,
                 'product_packaging_id': picking.product_packaging_id.id,
                 'product_uom_qty': picking.product_uom_qty,
                 'quantity': picking.quantity,
