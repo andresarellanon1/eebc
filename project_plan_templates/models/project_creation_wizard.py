@@ -128,8 +128,8 @@ class ProjectCreation(models.TransientModel):
                 'context': {
                     'default_project_id': project.id,
                     'default_project_plan_id': project.project_plan_id.id if project.project_plan_id else False,
-                    'default_project_plan_lines': [(6, 0, project.project_plan_lines.ids)] if project.project_plan_lines else False,
-                    'default_project_picking_lines': [(6, 0, project.project_picking_lines.ids)] if project.project_picking_lines else False,
+                    'default_project_plan_lines': [(6, 0, project.project_plan_lines.sorted('sequence').ids)] if project.project_plan_lines else False,
+                    'default_project_picking_lines': [(6, 0, project.project_picking_lines.sorted('sequence').ids)] if project.project_picking_lines else False,
                     'default_modified_by': self.env.user.id,
                     'default_modification_date': fields.Datetime.now(),
                     'default_contact_id': self.partner_id.id,
