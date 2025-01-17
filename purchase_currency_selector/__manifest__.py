@@ -13,12 +13,12 @@
     'author': 'Quadro Soluciones',
     'depends': ['purchase', 'stock', 'product', 'contacts', 'price_list_product'],
     'data': [
-        'views/account_move_views.xml',
-        'views/purchase_order_views.xml',
-        'views/sale_order_views.xml',
-        'views/sale_order_line_views.xml',
-        'views/inherit_sales_config_settings.xml',
-        'views/inherit_product_pricelist_view.xml'
+        # 'views/account_move_views.xml',
+        # 'views/purchase_order_views.xml',
+        # 'views/sale_order_views.xml',
+        # 'views/sale_order_line_views.xml',
+        # 'views/inherit_sales_config_settings.xml',
+        # 'views/inherit_product_pricelist_view.xml'
     ],
     "license": "LGPL-3",
     'installable': True

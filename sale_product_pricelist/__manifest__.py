@@ -17,12 +17,12 @@
         'price_list_customer'
     ],
     'data': [
-        'views/product_pricelist_line_views.xml',
-        'views/product_pricelist_views.xml',
-        'views/product_template_views.xml',
-        'views/sale_order_line_views.xml',
-        'views/sale_order_views.xml',
-        'security/ir.model.access.csv'
+        # 'views/product_pricelist_line_views.xml',
+        # 'views/product_pricelist_views.xml',
+        # 'views/product_template_views.xml',
+        # 'views/sale_order_line_views.xml',
+        # 'views/sale_order_views.xml',
+        # 'security/ir.model.access.csv'
     ],
     "license": "LGPL-3",
     'installable': True

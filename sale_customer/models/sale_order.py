@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
     quotation_user_id = fields.Many2one(
         comodel_name='res.users',
         string="Elaborado por")
-    
+
     contrat_id = fields.Many2one(
         'limit.contrat',
         string="Contrato")
