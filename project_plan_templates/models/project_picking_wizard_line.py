@@ -3,6 +3,7 @@ from odoo import fields, models, api
 class ProjectPickingWizardLine(models.TransientModel):
     _name = 'project.picking.wizard.line'
     _description = 'Porject picking wizard lines'
+    _order = 'sequence'
 
     wizard_creation_id = fields.Many2one('project.creation.wizard')
 
