@@ -7,10 +7,10 @@
         Automaticamente computa el ratio de conversion para su posterior uso en implementaciones de flujos de compra/venta.
         TODO: Incluir historial de cambios, validaciones de documentos con locked_currency_id abiertos y otras validaciones.
     """,
-    'version': '17.0.1.01',
+    'version': '17.0.1.101',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
-    'depends': ['base'],
+    'depends': ['base', 'purhcase', 'sale'],
     'data': [
         # 'views/account_move_views.xml',
         # 'views/purchase_order_views.xml',
