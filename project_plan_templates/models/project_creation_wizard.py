@@ -71,7 +71,7 @@ class ProjectCreation(models.TransientModel):
                 'publication_date': fields.Datetime.now(),
                 'date_start': self.date_start,
                 'date': self.date,
-                'actual_sale_order_id': self.sale_order_id.id
+                'actual_sale_order_id': self.sale_order_id.id,
             }
 
             project = self.env['project.project'].create(project_vals)
@@ -223,6 +223,7 @@ class ProjectCreation(models.TransientModel):
                 timesheet_data = [(0, 0, {
                     'name': ts_line.description,
                     'estimated_time': ts_line.estimated_time,
+                    'employee_id': self.env.user.employee_id.id,
                 }) for ts_line in timesheet_lines]
 
                 picking_lines = []
