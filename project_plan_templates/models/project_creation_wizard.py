@@ -100,6 +100,9 @@ class ProjectCreation(models.TransientModel):
                 if line.name == new_line[2]['name']
             ]
 
+            existing_plan_lines = []
+            existing_picking_lines = []
+
             # Agregar nuevas líneas que no existan en las existentes
             new_lines = [
                 new_line
