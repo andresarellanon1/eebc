@@ -128,15 +128,16 @@ class ProjectCreation(models.TransientModel):
                 'context': {
                     'default_project_id': project.id,
                     'default_project_plan_id': project.project_plan_id.id if project.project_plan_id else False,
-                    'default_project_plan_lines': [(6, 0, project.project_plan_lines.ids)] if project.project_plan_lines else False,
-                    'default_project_picking_lines': [(6, 0, project.project_picking_lines.ids)] if project.project_picking_lines else False,
+                    # 'default_project_plan_lines': [(6, 0, project.project_plan_lines.ids)] if project.project_plan_lines else False,
+                    # 'default_project_picking_lines': [(6, 0, project.project_picking_lines.ids)] if project.project_picking_lines else False,
                     'default_modified_by': self.env.user.id,
                     'default_modification_date': fields.Datetime.now(),
                     'default_contact_id': self.partner_id.id,
                     'default_location_id': self.location_id.id,
                     'default_location_dest_id': self.location_dest_id.id,
                     'default_scheduled_date': self.scheduled_date,
-                    'default_picking_type_id': self.picking_type_id.id
+                    'default_picking_type_id': self.picking_type_id.id,
+                    'default_sale_order_id': project.actual_sale_order_id.id
                 }
             }
 
