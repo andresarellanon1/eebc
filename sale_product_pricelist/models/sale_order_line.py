@@ -10,6 +10,11 @@ class SaleOrderLine(models.Model):
     product_pricelist_id = fields.Many2one("product.pricelist.line", string="Lista precio")
     pricelist_unit_price = fields.Float('Precio de lista de precio', digits="Product Price", compute="_compute_pl_unit_price", store=True)
 
+    @api.onchange("product_id")
+    def _onchange_product_pricelist(self):
+        for line in self:
+            line.product_template_id._compute_product_pricelist()
+
     @api.depends('product_pricelist_id')
     def _compute_pl_unit_price(self):
         for line in self:

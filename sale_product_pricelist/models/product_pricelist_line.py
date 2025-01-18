@@ -15,7 +15,7 @@ class ProductPricelistLine(models.Model):
     product_templ_id = fields.Many2one('product.template', 'Producto')
     currency_id = fields.Many2one('res.currency', string='Moneda')
     unit_price = fields.Float('Precio unitario', digits="Product Price", compute="_compute_all_unit_prices", store=False)
-    is_special = fields.Boolean(string="Es prioritaria")
+    is_special = fields.Boolean(string="Es prioritaria", related="pricelist_id.is_special")
 
     def _compute_display_name(self):
         for record in self:
@@ -29,7 +29,6 @@ class ProductPricelistLine(models.Model):
             line.unit_price = 0.0
             pricelist_id = line.pricelist_id
             product_id = line.product_templ_id
-
             if 'product_uom_id' in self.env.context:
                 product_uom_id = self.env.context['product_uom_id']
             else:
@@ -52,7 +51,6 @@ class ProductPricelistLine(models.Model):
                 name = f"{record.name} ({record.unit_price})"
             else:
                 name = f"{record.name} ({record.currency_id})"
-
             result.append((record.id, name))
         return result
 

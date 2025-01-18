@@ -11,7 +11,7 @@
     'version': '17.0.1.08',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
-    'depends': ['purchase', 'stock', 'product', 'contacts', 'price_list_product'],
+    'depends': ['purchase', 'stock', 'product', 'contacts', 'price_list_product', "currency_lock"],
     'data': [
         # 'views/account_move_views.xml',
         # 'views/purchase_order_views.xml',

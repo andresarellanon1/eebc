@@ -3,6 +3,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# TODO: REMOVE USELESS OR ODOO-INSTANCE SPECIFIC CODE, MAKE THIS MODEL AS GENERIC AS POSSIBLE
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"

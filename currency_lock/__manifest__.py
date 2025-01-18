@@ -10,7 +10,7 @@
     'version': '17.0.1.101',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
-    'depends': ['base', 'purhcase', 'sale'],
+    'depends': ['base', 'purchase', 'sale'],
     'data': [
         # 'views/account_move_views.xml',
         # 'views/purchase_order_views.xml',

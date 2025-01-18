@@ -3,6 +3,8 @@ from odoo.exceptions import ValidationError
 import logging
 logger = logging.getLogger(__name__)
 
+# TODO: REMOVE USELESS OR ODOO-INSTANCE SPECIFIC CODE, MAKE THIS MODEL AS GENERIC AS POSSIBLE
+
 
 class ResPartner(models.Model):
     _inherit = "res.partner"

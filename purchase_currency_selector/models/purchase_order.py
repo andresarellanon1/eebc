@@ -16,7 +16,7 @@ class PurchaseOrder(models.Model):
     )
 
     @api.onchange("currency_id")
-    def onchange_currency_rate(self):
+    def _onchange_currency_rate(self):
         if self.state == "done":
             return
         else:

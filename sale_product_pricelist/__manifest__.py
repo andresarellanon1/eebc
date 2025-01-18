@@ -14,7 +14,7 @@
         'product',
         'sale_management',
         'product_email_template',
-        'price_list_customer'
+        'partner_priority_pricelist'
     ],
     'data': [
         # 'views/product_pricelist_line_views.xml',

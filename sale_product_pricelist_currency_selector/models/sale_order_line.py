@@ -126,10 +126,9 @@ class SaleOrderLine(models.Model):
                 date.today(),
                 round=False,
             )
-
-        if source_currency == target_currency:  # MXN TO MXN BUT PRODUCT PURCHASED ON USD by last supplier or main supplier
+        # SAME CURRENCY BUT PRODUCT PURCHASED ON LOCKED CURRENCY by last supplier or main supplier
+        if source_currency == target_currency:
             return unit_price
-
         # Convert "safe margin" if source and target currencies differ, USD TO MXN OR MXN TO USD.
         added_value = convert_currency(unit_price * safe_margin, source_currency, target_currency)
         return unit_price + added_value

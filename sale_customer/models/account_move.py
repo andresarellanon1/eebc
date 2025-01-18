@@ -4,6 +4,8 @@ from odoo import api, fields, models
 logger = logging.getLogger(__name__)
 
 
+# TODO: REMOVE USELESS OR ODOO-INSTANCE SPECIFIC CODE, MAKE THIS MODEL AS GENERIC AS POSSIBLE
+
 class AccountMove(models.Model):
     _inherit = "account.move"
 
@@ -49,8 +51,6 @@ class AccountMove(models.Model):
         for move in self:
             logger.warning(move.name)
             for line in move.invoice_line_ids:
-                logger.warning(line.name)
-                logger.warning("relininininininininininini")
                 line._compute_sale_unit_cost()
 
     @api.depends('invoice_line_ids', 'pre_invoice', 'is_government', 'material_change')
@@ -70,7 +70,6 @@ class AccountMove(models.Model):
                 origins = self.env['purchase.order'].browse(purchase_ids)
                 move.origin_purchase_ids = [(6, 0, origins.ids)]
             else:
-                # logger.warning('No purchase orders found, cannot set origin_purchase_ids')
                 move.origin_purchase_ids = [(5, 0, 0)]
 
     def compute_origin_sale_all(self):
@@ -103,7 +102,7 @@ class AccountMove(models.Model):
                         move.origin_sale_ids = [(6, 0, origins.ids)]
                     else:
                         move.origin_sale_ids = [(5, 0, 0)]
-                except Exception as e:
+                except Exception:
                     move.origin_sale_ids = [(5, 0, 0)]
 
     def _get_name_invoice_report(self):

@@ -15,7 +15,7 @@
     'version': '17.0.1.01',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
-    'depends': ['base', 'sale_product_pricelist', 'partner_priority_pricelist'],
+    'depends': ['partner_branches', 'currency_lock', 'sale_product_pricelist', 'partner_priority_pricelist'],
     'data': [
         # 'views/account_move_views.xml',
         # 'views/purchase_order_views.xml',
