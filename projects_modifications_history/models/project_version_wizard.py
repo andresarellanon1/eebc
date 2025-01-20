@@ -79,7 +79,6 @@ class ProjectVersionWizard(models.TransientModel):
 
         logger.warning(f"Id del sale: {project.actual_sale_order_id.id}")
 
-        self.sale_order_id.project_id = project.id
         project.actual_sale_order_id = self.sale_order_id.id
 
         existing_plan_lines = project.project_plan_lines
