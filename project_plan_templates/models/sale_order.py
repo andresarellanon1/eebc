@@ -124,6 +124,9 @@ class SaleOrder(models.Model):
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
         for sale in self:
+            sale.order_line = [(5, 0, 0)]
+            sale.project_plan_lines = [(5, 0, 0)]
+            sale.project_picking_lines = [(5, 0, 0)]
             logger.warning(f"Encontro la sale order: {sale.project_id.actual_sale_order_id}")
             if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
 
