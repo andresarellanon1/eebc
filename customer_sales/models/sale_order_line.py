@@ -65,6 +65,7 @@ class SaleOrderLine(models.Model):
 
     @api.depends('move_ids', 'move_ids.picking_id.state', 'product_id', 'company_id', 'currency_id', 'product_uom', 'product_uom_qty')
     def _compute_purchase_price(self):
+        logger.warning("==== _compute_purchase_price ====")
         for line in self:
             product = line.product_id.with_company(line.company_id)
 
