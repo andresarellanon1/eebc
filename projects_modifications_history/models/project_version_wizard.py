@@ -123,8 +123,8 @@ class ProjectVersionWizard(models.TransientModel):
             'modification_date': self.modification_date,
             'modified_by': self.modified_by.id,
             'modification_motive': self.modification_motive,
-            'project_plan_lines': [(6, 0, plan_line_ids)],
-            'project_picking_lines': [(6, 0, picking_line_ids)],
+            'project_plan_lines': [(6, 0, self.wizard_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, self.wizard_picking_lines.ids)],
         })
 
         # Save the updated project information (though no specific changes are made here).
