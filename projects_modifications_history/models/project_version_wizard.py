@@ -65,8 +65,8 @@ class ProjectVersionWizard(models.TransientModel):
             plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
             picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
 
-            record.wizard_plan_lines = plan_lines
-            record.wizard_picking_lines = picking_lines
+            record.project_plan_lines = plan_lines
+            record.project_picking_lines = picking_lines
 
     def action_confirm_version_history(self):
         self.ensure_one()  # Ensure that only one record is being processed.
@@ -98,8 +98,8 @@ class ProjectVersionWizard(models.TransientModel):
 
         # Create a new entry in the project version lines for the modification details.
 
-        if self.wizard_plan_lines:
-            for line in self.wizard_plan_lines:
+        if self.project_plan_lines:
+            for line in self.project_plan_lines:
                 logger.info(
                     "Wizard Plan Line - Name: %s, Chapter: %s",
                     line.name,
@@ -115,8 +115,8 @@ class ProjectVersionWizard(models.TransientModel):
             'modification_date': self.modification_date,
             'modified_by': self.modified_by.id,
             'modification_motive': self.modification_motive,
-            'project_plan_lines': [(6, 0, self.wizard_plan_lines.ids)],
-            'project_picking_lines': [(6, 0, self.wizard_picking_lines.ids)],
+            'project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, self.project_picking_lines.ids)],
         })
 
         # Save the updated project information (though no specific changes are made here).
