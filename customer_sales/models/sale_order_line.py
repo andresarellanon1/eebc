@@ -65,7 +65,6 @@ class SaleOrderLine(models.Model):
 
     @api.depends('move_ids', 'move_ids.picking_id.state', 'product_id', 'company_id', 'currency_id', 'product_uom', 'product_uom_qty')
     def _compute_purchase_price(self):
-        logger.warning("==== _compute_purchase_price ====")
         for line in self:
             product = line.product_id.with_company(line.company_id)
 
@@ -74,7 +73,7 @@ class SaleOrderLine(models.Model):
             #     logger.warning(" > > if not line.has_valued_move_ids < < ")
             #     lines_without_moves |= line
 
-            if product and product.categ_id.property_cost_method == 'averange':
+            if product and product.categ_id.property_cost_method == 'average':
                 purch_price = product._compute_average_price(0, line.product_uom_qty, line.move_ids)
 
                 if line.product_uom and line.product_uom != product.uom_id:
