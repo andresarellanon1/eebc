@@ -189,14 +189,21 @@ class ProjectVersionWizard(models.TransientModel):
                 }))
         return picking_lines
 
-    def update_project_lines(self):
+    def update_project_with_version_data(self):
+        self.ensure_one()
+
         project = self._origin.project_id
+        if not project:
+            logger.error("No se encontró el proyecto asociado.")
+            raise ValueError("No se encontró el proyecto asociado.")
+
+        logger.warning(f"Id del sale: {project.actual_sale_order_id.id}")
 
         self.sale_order_id.project_id = project.id
         project.actual_sale_order_id = self.sale_order_id.id
 
         existing_plan_lines = project.project_plan_lines
-        new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
+        new_plan_lines_data = self.prep_plan_lines(self.project_plan_lines)
 
         project.project_plan_lines = [
             (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
@@ -209,7 +216,7 @@ class ProjectVersionWizard(models.TransientModel):
         ]
 
         existing_picking_lines = project.project_picking_lines
-        new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
+        new_picking_lines_data = self.prep_picking_lines(self.project_picking_lines)
 
         project.project_picking_lines = [
             (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
