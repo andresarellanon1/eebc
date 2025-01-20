@@ -7,6 +7,8 @@ logger = logging.getLogger(__name__)
 class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
+    branch_id = fields.Many2one('res.partner', string='Sucursal', domain="[('is_branch','=',True)]")
+
     @api.depends('item_ids')
     def _compute_filtered_item_ids(self):
         for rec in self:

@@ -47,4 +47,4 @@ class AccountMove(models.Model):
             return original_line.price_unit
         else:
             # We use custom field here instead of base field 'standard_price'. Check docstring on the compute method of this field for more detailds
-            return self.product_id.accounting_standard_price
+            return self.product_id.sale_unit_cost
