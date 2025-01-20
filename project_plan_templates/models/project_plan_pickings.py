@@ -41,7 +41,7 @@ class ProjectPlanPickingLine(models.Model):
     _description = 'Project picking lines'
     _order = 'sequence'
 
-    name = fields.Char(required=True, string="Nombre")
+    name = fields.Char(string="Nombre")
     
     project_id = fields.Many2one('project.project', string="Proyecto")
     picking_id = fields.Many2one('project.plan.pickings', string="Plantilla de proyecto")
