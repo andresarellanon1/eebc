@@ -16,7 +16,7 @@ class ProductPricelistLine(models.Model):
     currency_id = fields.Many2one('res.currency', string='Moneda')
     unit_price = fields.Float('Precio unitario', digits="Product Price", compute="_compute_all_unit_prices", store=False)
     is_special = fields.Boolean(string="Es prioritaria")
-    branch_id = fields.Many2one('res.partner', string='Sucursal', related="pricelist_id.branch_id", readonly=True)
+    branch_id = fields.Many2one('res.partner', string='Sucursal', related="pricelist_id.branch_id")
 
     def _compute_display_name(self):
         for record in self:

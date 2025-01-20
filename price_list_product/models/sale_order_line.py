@@ -7,9 +7,11 @@ logger = logging.getLogger(__name__)
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    product_pricelist_id = fields.Many2one("product.pricelist.line", string="Lista precio")
+    product_pricelist_id = fields.Many2one("product.pricelist.line",
+                                           string="Lista precio",
+                                           domain="[('product_templ_id', '=', product_template_id), ('currency_id', '=', currency_id), ('is_special', '=', False), ('branch_id', '=', order_id.branch_id)]")
     pricelist_unit_price = fields.Float('Precio de lista de precio', digits="Product Price", compute="_compute_pl_unit_price", store=True)
-    branch_id = fields.Many2one('res.partner', string='Sucursal', related="order_id.branch_id", readonly=True)
+    # branch_id = fields.Many2one('res.partner', string='Sucursal', related="order_id.branch_id")
 
     @api.depends('product_pricelist_id')
     def _compute_pl_unit_price(self):

@@ -7,7 +7,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     dummy_field = fields.Integer(compute="_compute_dummy_field", store=False)
-    branch_id = fields.Many2one('res.partner', string='Sucursal', domain="[('is_branch','=',True)]")
+    branch_id = fields.Many2one('res.partner', string='Sucursal', domain="[('is_branch','=',True)]", default=False)
 
     def _compute_dummy_field(self):
         for sol in self.order_line:
