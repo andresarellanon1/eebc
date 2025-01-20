@@ -1,8 +1,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import UserError
 import logging
-
-_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 class ProjectVersionWizard(models.TransientModel):
 
@@ -106,13 +105,6 @@ class ProjectVersionWizard(models.TransientModel):
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id)
 
         # Create a new entry in the project version lines for the modification details.
-
-        for line in self.wizard_plan_lines:
-            _logger.info(
-                "Wizard Plan Line - Name: %s, Chapter: %s",
-                line.name,
-                line.chapter
-            )
 
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
