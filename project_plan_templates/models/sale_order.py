@@ -113,6 +113,10 @@ class SaleOrder(models.Model):
                                 plan_pickings.append((4, project_picking.id))
                         line.for_modification = False
 
+                for plan in sale.project_plan_lines:
+                    if plan.for_modification:
+                        plan.for_modification = False
+
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
 
@@ -215,7 +219,7 @@ class SaleOrder(models.Model):
             'project_plan_pickings': False,
             'task_timesheet_id': False,
             'for_create': for_create,
-            'for_modification': False
+            'for_modification': True
         })
 
     def prep_plan_lines(self, line):
@@ -233,7 +237,7 @@ class SaleOrder(models.Model):
                 'task_timesheet_id': plan.task_timesheet_id.id,
                 'display_type': False,
                 'for_create': True,
-                'for_modification': False
+                'for_modification': plan.for_modification
             }))
         return plan_lines
 
