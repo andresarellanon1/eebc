@@ -1,5 +1,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import UserError
+import logging
+logger = logging.getLogger(__name__)
 
 class ProjectVersionWizard(models.TransientModel):
 
