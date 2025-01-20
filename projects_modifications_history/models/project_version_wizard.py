@@ -106,6 +106,18 @@ class ProjectVersionWizard(models.TransientModel):
 
         # Create a new entry in the project version lines for the modification details.
 
+        if wizard_plan_lines:
+            for line in self.wizard_plan_lines:
+                logger.info(
+                    "Wizard Plan Line - Name: %s, Chapter: %s",
+                    line.name,
+                    line.chapter
+                )
+        else:
+            logger.info(
+                    "No hay datos en Wizard Plan Line"
+                )
+
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
             'modification_date': self.modification_date,
