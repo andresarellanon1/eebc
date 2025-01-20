@@ -83,7 +83,7 @@ class ProjectVersionWizard(models.TransientModel):
         project.actual_sale_order_id = self.sale_order_id.id
 
         existing_plan_lines = project.project_plan_lines
-        new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
+        new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
 
         project.project_plan_lines = [
             (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
@@ -96,7 +96,7 @@ class ProjectVersionWizard(models.TransientModel):
         ]
 
         existing_picking_lines = project.project_picking_lines
-        new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
+        new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
         project.project_picking_lines = [
             (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
