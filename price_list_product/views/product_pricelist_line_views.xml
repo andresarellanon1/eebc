@@ -10,7 +10,6 @@
                 <field name="unit_price" digits="[12,6]" />
                 <field name="currency_id" />
                 <field name="is_special" />
-                <field name="branch_id" />
             </tree>
         </field>
     </record>
@@ -36,7 +35,6 @@
                             <field name="uom_id" />
                             <field name="currency_id" />
                             <field name="is_special" />
-                            <field name="branch_id" />
                         </group>
                     </group>
                 </sheet>
