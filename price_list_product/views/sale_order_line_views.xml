@@ -6,7 +6,6 @@
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']//tree" position="inside">
-                <field name="branch_id" invisible="True" />
                 <field name="product_pricelist_id"
                     domain="[('product_templ_id', '=', product_template_id), 
                      ('currency_id', '=', currency_id), 
