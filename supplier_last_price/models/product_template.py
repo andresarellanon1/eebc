@@ -91,21 +91,21 @@ class ProductTemplate(models.Model):
                 template.main_supplier_id = template.seller_ids.filtered(
                     lambda s: s.is_main_supplier
                 )[:1]
-                template._compute_list_price()
+                # template._compute_list_price()
 
     @api.depends("main_supplier_id.price")
     def _compute_main_supplier_last_price(self):
         for template in self:
             if template.main_supplier_id:
                 template.main_supplier_last_price = template.main_supplier_id.price
-                template._compute_list_price()
+                # template._compute_list_price()
 
     @api.depends("main_supplier_id.currency_id")
     def _compute_main_supplier_last_order_currency_id(self):
         for template in self:
             if template.main_supplier_id:
                 template.main_supplier_last_order_currency_id = template.main_supplier_id.currency_id
-                template._compute_list_price()
+                # template._compute_list_price()
 
     @api.depends("supplier_history")
     def _compute_last_supplier_id(self):
@@ -113,7 +113,7 @@ class ProductTemplate(models.Model):
             if template.supplier_history:
                 sorted_history = template.supplier_history.sorted(key=lambda r: r.datetime, reverse=True)
                 template.last_supplier_id = sorted_history[0].product_supplierinfo_id
-                template._compute_list_price()
+                # template._compute_list_price()
 
     @api.depends("supplier_history")
     def _compute_last_supplier_datetime(self):
@@ -123,21 +123,21 @@ class ProductTemplate(models.Model):
                 sorted_history = template.supplier_history.sorted(key=lambda r: r.datetime, reverse=True)
                 if sorted_history[0].datetime:
                     template.last_supplier_datetime = sorted_history[0].datetime
-                template._compute_list_price()
+                # template._compute_list_price()
 
     @api.depends("last_supplier_id.price")
     def _compute_last_supplier_last_price(self):
         for template in self:
             if template.last_supplier_id:
                 template.last_supplier_last_price = template.last_supplier_id.price
-                template._compute_list_price()
+                # template._compute_list_price()
 
     @api.depends("last_supplier_id.currency_id")
     def _compute_last_supplier_last_order_currency_id(self):
         for template in self:
             if template.last_supplier_id:
                 template.last_supplier_last_order_currency_id = template.last_supplier_id.currency_id
-                template._compute_list_price()
+                # template._compute_list_price()
 
     def _compute_safe_margin_add(self):
         for product in self:

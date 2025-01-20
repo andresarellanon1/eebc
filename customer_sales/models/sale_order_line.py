@@ -19,10 +19,9 @@ class SaleOrderLine(models.Model):
 
     def _get_fifo_unit_price(self, product_id, demand_qty):
         valuation_layers = self.env['stock.valuation.layer'].search(
-            [('product_id', '=', product_id.id)],
-            [('branch_id', '=', self.branch_id.id)],
-            order='create_date'
-        )
+            [('product_id', '=', product_id.id),
+             ('company_id', '=', self.env.company.id)
+             ], order='create_date')
 
         if not valuation_layers:
             return 0  # Devuelve 0 si no hay capas de valoración disponibles
