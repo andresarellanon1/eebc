@@ -34,17 +34,17 @@ class AccountMove(models.Model):
     # COST USED FOR ACCOUNTING
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
-    
+
         if not self.product_id:
             return self.price_unit  # this was probably manually typed into the price field on the invoice line
-    
+
         original_line = next(
             (line for line in self.move_id.reversed_entry_id.line_ids
              if line.display_type == 'cogs' and line.product_id == self.product_id and line.product_uom_id == self.product_uom_id and line.price_unit >= 0),
             None)
-    
+
         if original_line:
             return original_line.price_unit
         else:
             # We use custom field here instead of base field 'standard_price'. Check docstring on the compute method of this field for more detailds
-            return self.product_id.accounting_standard_price
+            return self.product_id.sale_unit_cost

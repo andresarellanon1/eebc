@@ -49,8 +49,6 @@ class AccountMove(models.Model):
         for move in self:
             logger.warning(move.name)
             for line in move.invoice_line_ids:
-                logger.warning(line.name)
-                logger.warning("relininininininininininini")
                 line._compute_sale_unit_cost()
 
     @api.depends('invoice_line_ids', 'pre_invoice', 'is_government', 'material_change')

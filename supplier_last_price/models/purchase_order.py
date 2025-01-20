@@ -102,7 +102,6 @@ class PurchaseOrder(models.Model):
                         if supplier.allow_price_recompute:
                             if line.product_id.product_tmpl_id.uom_po_id != line.product_uom:
                                 default_uom = line.product_id.product_tmpl_id.uom_po_id
-
                                 supplier.price = line.product_uom._compute_price(line.price_unit, default_uom)
                             # Updates price_unit if configured to do so
                             else:
@@ -110,19 +109,19 @@ class PurchaseOrder(models.Model):
 
                         # Computes the list price of the product after updating prices of the supplier.
                         # If allow price recompute is active, at this point the product list price will be updated to the latest currency-price_unit of the supplier.
-                        line.product_id.product_tmpl_id._compute_list_price()
-
+                        # line.product_id.product_tmpl_id._compute_list_price()
+                        #
                         # conversion_date = line.date_approve or date.today()
-
+                        #
                         # if line.landed_cost:
                         #     conversion_date = line.landed_cost.date
-                        #
+                        # #
                         # # Use the conversion date to compute the standard price used to valuate the stock layers. Used for margins.
                         # line.product_id.product_tmpl_id._compute_standard_price(conversion_date)
-                        #
-                        # # Compute the averange price. Used for accounting costs.
+                        # #
+                        # # # Compute the averange price. Used for accounting costs.
                         # line.product_id.product_tmpl_id._compute_accounting_standard_price()
-
+                        #
                         self.env['product.supplierinfo_history'].create({
                             'datetime': line.order_id.write_date,
                             'price_unit': line.price_unit,

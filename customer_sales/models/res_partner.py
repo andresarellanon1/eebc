@@ -72,11 +72,11 @@ class ResPartner(models.Model):
 
     customer_number_reference = fields.Char(string="Referencia del cliente.")
 
-    orders_residual = fields.Monetary(string = 'Ordenes por facturar', compute = 'orders_amount_residual')
+    orders_residual = fields.Monetary(string='Ordenes por facturar', compute='orders_amount_residual')
 
-    invoice_residual = fields.Monetary(string = 'Facturas por cobrar', compute = 'invoice_residual_amount')
+    invoice_residual = fields.Monetary(string='Facturas por cobrar', compute='invoice_residual_amount')
 
-    total_residual = fields.Monetary(string = 'Total por cobrar', compute = '_compute_total')
+    total_residual = fields.Monetary(string='Total por cobrar', compute='_compute_total')
 
     customer_credit_suspend = fields.Boolean(
         default=False,
@@ -160,9 +160,9 @@ class ResPartner(models.Model):
         for partner in self:
             total = 0.0
             orders = self.env['sale.order'].search([
-                ('partner_id', '=', partner.id), #cliente
-                ('state', '=', 'sale'), #ordenes confirmadas
-                ('invoice_status', '=', 'to invoice') #por facturar
+                ('partner_id', '=', partner.id),  # cliente
+                ('state', '=', 'sale'),  # ordenes confirmadas
+                ('invoice_status', '=', 'to invoice')  # por facturar
             ])
             for order in orders:
                 total += order.amount_total
@@ -207,15 +207,14 @@ class ResPartner(models.Model):
             if not record.customer_manual_suspend and (credit >= record.credit_limit):
                 print("credito suspendido")
                 # logger.warning(f'Entra al if, suspendiendo crédito. Suspendido previamente: {record.customer_credit_suspend}')
-                #record.write({'customer_credit_suspend': True})
+                # record.write({'customer_credit_suspend': True})
 
     def invoice_residual_amount(self):
         for partner in self:
             credit = partner.credit
             partner.invoice_residual = credit
 
-    @api.depends("orders_residual","invoice_residual")
+    @api.depends("orders_residual", "invoice_residual")
     def _compute_total(self):
         for record in self:
             record.total_residual = record.orders_residual + record.invoice_residual
-

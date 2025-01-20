@@ -8,35 +8,39 @@
             <xpath expr="//field[@name='item_ids']" position="after">
                 <field name="filtered_item_ids" nolabel="1" context="{'default_base':'list_price'}"
                     invisible="not context.get('is_filtered', False)">
-                    <tree groups="!product.group_sale_pricelist" string="Reglas de Lista de Precio" editable="bottom" create="0">
-                        <field name="product_tmpl_id" string="Productos" required="1"/>
-                        <field name="product_id" string="Variantes" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]"
-                            options="{'no_create': 1}"/>
-                        <field name="min_quantity"/>
-                        <field name="fixed_price" string="Precio"/>
-                        <field name="currency_id" column_invisible="True"/>
-                        <field name="pricelist_id" column_invisible="True"/>
+                    <tree groups="!product.group_sale_pricelist" string="Reglas de Lista de Precio"
+                        editable="bottom" create="0">
+                        <field name="product_tmpl_id" string="Productos" required="1" />
+                        <field name="product_id" string="Variantes"
+                            groups="product.group_product_variant"
+                            domain="[('product_tmpl_id', '=', product_tmpl_id)]"
+                            options="{'no_create': 1}" />
+                        <field name="min_quantity" />
+                        <field name="fixed_price" string="Precio" />
+                        <field name="currency_id" column_invisible="True" />
+                        <field name="pricelist_id" column_invisible="True" />
                         <!-- Pricelist ID is here only for related fields to be correctly computed -->
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <field name="base" column_invisible="True"/>
-                        <field name="applied_on" column_invisible="True"/>
-                        <field name="company_id" column_invisible="True"/>
+                        <field name="date_start" />
+                        <field name="date_end" />
+                        <field name="base" column_invisible="True" />
+                        <field name="applied_on" column_invisible="True" />
+                        <field name="company_id" column_invisible="True" />
                     </tree>
                     <!-- When in advanced pricelist mode : pricelist rules
                         Should open in a form view and not be editable inline anymore.
                     -->
-                    <tree groups="product.group_sale_pricelist" string="Reglas de Lista de Precio" create="0">
-                        <field name="product_tmpl_id" column_invisible="True"/>
-                        <field name="name" string="Aplicable en"/>
-                        <field name="min_quantity"/>
-                        <field name="price" string="Precio"/>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <field name="base" column_invisible="True"/>
-                        <field name="price_discount" column_invisible="True"/>
-                        <field name="applied_on" column_invisible="True"/>
-                        <field name="compute_price" column_invisible="True"/>
+                    <tree groups="product.group_sale_pricelist" string="Reglas de Lista de Precio"
+                        create="0">
+                        <field name="product_tmpl_id" column_invisible="True" />
+                        <field name="name" string="Aplicable en" />
+                        <field name="min_quantity" />
+                        <field name="price" string="Precio" />
+                        <field name="date_start" />
+                        <field name="date_end" />
+                        <field name="base" column_invisible="True" />
+                        <field name="price_discount" column_invisible="True" />
+                        <field name="applied_on" column_invisible="True" />
+                        <field name="compute_price" column_invisible="True" />
                     </tree>
                 </field>
             </xpath>

@@ -1,6 +1,6 @@
 {
     "name": "Customer Sales",
-    "version": "17.0.2.67",
+    "version": "17.0.2.675",
     "depends": [
         "base",
         "sale",
@@ -12,6 +12,7 @@
         "stock",
         "stock_account",
         "base_address_extended",
+        "price_list_product",
         "weekdays"
     ],
     "author": "Quadro Soluciones",

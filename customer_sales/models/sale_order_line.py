@@ -1,6 +1,5 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo import models, api, fields
 import logging
 from datetime import date
 logger = logging.getLogger(__name__)
@@ -20,9 +19,9 @@ class SaleOrderLine(models.Model):
 
     def _get_fifo_unit_price(self, product_id, demand_qty):
         valuation_layers = self.env['stock.valuation.layer'].search(
-            [('product_id', '=', product_id.id)],
-            order='create_date'
-        )
+            [('product_id', '=', product_id.id),
+             ('company_id', '=', self.env.company.id)
+             ], order='create_date')
 
         if not valuation_layers:
             return 0  # Devuelve 0 si no hay capas de valoración disponibles
@@ -74,7 +73,7 @@ class SaleOrderLine(models.Model):
             #     logger.warning(" > > if not line.has_valued_move_ids < < ")
             #     lines_without_moves |= line
 
-            if product and product.categ_id.property_cost_method == 'averange':
+            if product and product.categ_id.property_cost_method == 'average':
                 purch_price = product._compute_average_price(0, line.product_uom_qty, line.move_ids)
 
                 if line.product_uom and line.product_uom != product.uom_id:
