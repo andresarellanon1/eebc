@@ -150,7 +150,7 @@ class Notices(models.Model):
         
         for record in self:
             approved_history = record.history_ids.filtered(
-                lambda h: h.state == 'draft' and not h.stock_move_id.move_line_ids
+                lambda h: h.state == 'draft' and not h.stock_move_id.move_line_ids.picking_id.move_ids_without_package.lot_ids
             )
             _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')
             record.quantity = sum(approved_history.mapped('quantity'))
