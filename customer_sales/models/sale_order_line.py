@@ -1,6 +1,5 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo import models, api, fields
 import logging
 from datetime import date
 logger = logging.getLogger(__name__)
