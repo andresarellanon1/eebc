@@ -95,10 +95,11 @@ class Notices(models.Model):
         for record in self.history_ids:
             # Sumar la cantidad disponible de cada lote asociado al aviso
             _logger.warning("valor de stock_move_id : %s",record.stock_move_id)
-            for line in  record.stock_move_id.move_line_ids:
-                total_quantity += line.quantity
-        
-        _logger.warning("valor de total lot quantity : %s",total_quantity )
+            if record.stock_move_id.move_line_ids.picking_id.move_ids_without_package.lot_ids
+                for line in  record.stock_move_id.move_line_ids:
+                    total_quantity += line.quantity
+            
+            _logger.warning("valor de total lot quantity : %s",total_quantity )
 
         self.total_lot_quantity = total_quantity
     
