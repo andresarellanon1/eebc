@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 class BranchStockValuationLayer(models.Model):
     _inherit = 'stock.valuation.layer'
 
-    branch_id = fields.Many2one('res.branch',
+    branch_id = fields.Many2one('res.partner',
                                 readonly=True,
                                 store=True,
                                 related='stock_move_id.branch_id')

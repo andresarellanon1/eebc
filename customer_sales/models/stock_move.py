@@ -9,7 +9,7 @@ class BranchStockMove(models.Model):
     """inherited stock.move"""
     _inherit = 'stock.move'
 
-    branch_id = fields.Many2one('res.branch', readonly=True, store=True,
+    branch_id = fields.Many2one('res.partner', readonly=True, store=True,
                                 related='picking_id.branch_id')
 
     def _compute_price_unit(self):

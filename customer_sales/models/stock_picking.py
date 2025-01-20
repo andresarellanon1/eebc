@@ -9,5 +9,5 @@ class StockPicking(models.Model):
     """inherited stock.picking"""
     _inherit = "stock.picking"
 
-    branch_id = fields.Many2one("res.branch",
+    branch_id = fields.Many2one("res.partner",
                                 string='Branch',)

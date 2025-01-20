@@ -6,14 +6,14 @@
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
 
-			<xpath expr="//field[@name='currency_id']" position="after">
-				<field name="material_change" widget="boolean_toggle"
-					readonly="False"
-					groups="morvil_security.group_morvil_extra_material_change" />
-				<field name="material_change" widget="boolean_toggle"
-					readonly="state == 'sale'"
-					groups="!morvil_security.group_morvil_extra_material_change" />
-			</xpath>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="material_change" widget="boolean_toggle"
+                    readonly="False"
+                    groups="morvil_security.group_morvil_extra_material_change" />
+                <field name="material_change" widget="boolean_toggle"
+                    readonly="state == 'sale'"
+                    groups="!morvil_security.group_morvil_extra_material_change" />
+            </xpath>
 
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="domain">
@@ -23,7 +23,7 @@
 
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="quotation_user_id" />
-            </xpath> 
+            </xpath>
 
             <xpath expr="//field[@name='partner_invoice_id']" position="attributes">
                 <attribute name="domain">
@@ -42,7 +42,7 @@
             </xpath>
 
             <xpath expr="//field[@name='urgency_type']" position="after">
-                <field name="contrat_id" widget="many2one"/>
+                <field name="contrat_id" widget="many2one" />
             </xpath>
 
             <xpath expr="//field[@name='partner_id']" position="before">
