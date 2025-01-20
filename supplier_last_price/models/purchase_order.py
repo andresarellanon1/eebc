@@ -114,14 +114,14 @@ class PurchaseOrder(models.Model):
 
                         # conversion_date = line.date_approve or date.today()
 
-                        # if line.landed_cost:
-                        #     conversion_date = line.landed_cost.date
+                        if line.landed_cost:
+                            conversion_date = line.landed_cost.date
                         #
                         # # Use the conversion date to compute the standard price used to valuate the stock layers. Used for margins.
-                        # line.product_id.product_tmpl_id._compute_standard_price(conversion_date)
+                        line.product_id.product_tmpl_id._compute_standard_price(conversion_date)
                         #
                         # # Compute the averange price. Used for accounting costs.
-                        # line.product_id.product_tmpl_id._compute_accounting_standard_price()
+                        line.product_id.product_tmpl_id._compute_accounting_standard_price()
 
                         self.env['product.supplierinfo_history'].create({
                             'datetime': line.order_id.write_date,

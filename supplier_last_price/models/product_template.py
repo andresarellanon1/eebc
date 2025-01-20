@@ -75,14 +75,14 @@ class ProductTemplate(models.Model):
         readonly=True
     )
 
-    # accounting_standard_price = fields.Float(
-    #     string="Costo contable",
-    #     help='Se computa desde el historico de ventas. Ignora los proveedores, usa directamente todas las compras que contengan este producto.',
-    #     compute="_compute_accounting_standard_price",
-    #     digits="Product Price",
-    #     store=True,
-    #     readonly=True,
-    # )
+    accounting_standard_price = fields.Float(
+        string="Costo contable",
+        help='Se computa desde el historico de ventas. Ignora los proveedores, usa directamente todas las compras que contengan este producto.',
+        compute="_compute_accounting_standard_price",
+        digits="Product Price",
+        store=True,
+        readonly=True,
+    )
 
     @api.depends("seller_ids.is_main_supplier")
     def _compute_main_supplier_id(self):
@@ -262,93 +262,79 @@ class ProductTemplate(models.Model):
 
                 product.standard_price = price
 
-    """
-       # @api.depends('main_supplier_id', 'main_supplier_id.price', 'last_supplier_id', 'last_supplier_id.price')
-       # def _compute_accounting_standard_price(self):
-       #     Computes the product template standard cost based on completed and received purchase orders.
-       #     Considers quantities, unit prices, and landed costs. Uses today's date for currency conversion if no landed cost is assigned per line.
-       #     Used for accounting purposes, given that we need to rotate the last price on the original 'standard_price' field to populate the unit value of the
-       #     valuation layers we decided to have a new dedicated field for soting the cost used on accounting. This coust is the historical average of ALL the purchases.
-       #
-       #     WARNING; THE AVERAGE IS BASED ON THE WHOLE HISTORICAL RECORD OF PURHCASES, only distiguishes done and confirmed purchases.
-       #
-       #     Args:
-       #         landed_date: The date of the stock.landed.cost record related to the purchase.order.line
-       #     Returns:
-       #         None
-       #
-       #     for product in self:
-       #         # Fetch all purchase order lines related to the product that are in completed and received orders
-       #         order_lines = self.env['purchase.order.line'].search([
-       #             ('product_id.product_tmpl_id', '=', product.id),
-       #             ('order_id.state', 'in', ['purchase', 'done']),  # Only consider completed orders
-       #             ('order_id.picking_ids.state', '=', 'done'),  # Only consider orders with received pickings
-       #         ])
-       #
-       #         total_price = 0.0
-       #         total_quantity = 0.0
-       #
-       #         for line in order_lines:
-       #             price = line.price_unit
-       #             quantity = line.product_qty
-       #
-       #             # Subtract returned quantities
-       #             returned_quantity = sum(move.product_uom_qty for move in line.move_ids if move.state == 'done' and move.to_refund)
-       #             net_quantity = quantity - returned_quantity
-       #
-       #             if net_quantity <= 0:
-       #                 continue
-       #
-       #             landed_cost_date = line.landed_cost.date if line.landed_cost else fields.Date.context_today(self)
-       #             currency_id = line.currency_id
-       #
-       #             if currency_id.id != product.cost_currency_id.id:
-       #                 price = currency_id._convert(
-       #                     price,
-       #                     product.cost_currency_id,
-       #                     self.env.company,
-       #                     landed_cost_date,  # Use the landed cost date or today if not available
-       #                     round=False,
-       #                 )
-       #
-       #             total_price += price * net_quantity
-       #             total_quantity += net_quantity
-       #
-       #         if total_quantity > 0:
-       #             avg = total_price / total_quantity
-       #             logger.warning(f"AVG ACCOUNTING COST: {total_price} / {total_quantity} = {avg}")
-       #             product.accounting_standard_price = avg
-       #         else:
-       #             # If no historical records, fall back to main or last supplier pricing, this will use the fixed price on the supplier record
-       #             # and convert the currency for today
-       #             if product.main_supplier_id:
-       #                 price = product.main_supplier_id.price
-       #                 main_supplier_currency_id = product.main_supplier_id.currency_id
-       #
-       #                 if main_supplier_currency_id.id != product.cost_currency_id.id:
-       #                     price = main_supplier_currency_id._convert(
-       #                         price,
-       #                         product.cost_currency_id,
-       #                         self.env.company,
-       #                         fields.Date.context_today(self),
-       #                         round=False,
-       #                     )
-       #
-       #                 product.accounting_standard_price = price
-       #                 return
-       #
-       #             if product.last_supplier_id:
-       #                 price = product.last_supplier_id.price
-       #                 last_supplier_currency_id = product.last_supplier_id.currency_id
-       #
-       #                 if last_supplier_currency_id.id != product.cost_currency_id.id:
-       #                     price = last_supplier_currency_id._convert(
-       #                         price,
-       #                         product.cost_currency_id,
-       #                         self.env.company,
-       #                         fields.Date.context_today(self),
-       #                         round=False,
-       #                     )
-       #
-       #                 product.accounting_standard_price = price
-"""
+    @api.depends('main_supplier_id', 'main_supplier_id.price', 'last_supplier_id', 'last_supplier_id.price')
+    def _compute_accounting_standard_price(self):
+        """
+        Computes the product template standard cost based on completed and received purchase orders.
+        Considers quantities, unit prices, and landed costs. Uses today's date for currency conversion if no landed cost is assigned per line.
+        Used for accounting purposes, given that we need to rotate the last price on the original 'standard_price' field to populate the unit value of the
+        valuation layers we decided to have a new dedicated field for soting the cost used on accounting. This coust is the historical average of ALL the purchases.
+
+        WARNING; THE AVERAGE IS BASED ON THE WHOLE HISTORICAL RECORD OF PURHCASES, only distiguishes done and confirmed purchases.
+
+        Args:
+            landed_date: The date of the stock.landed.cost record related to the purchase.order.line
+        Returns:
+            None
+            """
+
+        for product in self:
+            # Fetch all purchase order lines related to the product that are in completed and received orders
+            order_lines = self.env['purchase.order.line'].search([
+                ('product_id.product_tmpl_id', '=', product.id),
+                ('order_id.state', 'in', ['purchase', 'done']),  # Only consider completed orders
+                ('order_id.picking_ids.state', '=', 'done'),  # Only consider orders with received pickings
+            ])
+            total_price = 0.0
+            total_quantity = 0.0
+            for line in order_lines:
+                price = line.price_unit
+                quantity = line.product_qty
+                # Subtract returned quantities
+                returned_quantity = sum(move.product_uom_qty for move in line.move_ids if move.state == 'done' and move.to_refund)
+                net_quantity = quantity - returned_quantity
+                if net_quantity <= 0:
+                    continue
+                landed_cost_date = line.landed_cost.date if line.landed_cost else fields.Date.context_today(self)
+                currency_id = line.currency_id
+                if currency_id.id != product.cost_currency_id.id:
+                    price = currency_id._convert(
+                        price,
+                        product.cost_currency_id,
+                        self.env.company,
+                        landed_cost_date,  # Use the landed cost date or today if not available
+                        round=False,
+                    )
+                total_price += price * net_quantity
+                total_quantity += net_quantity
+            if total_quantity > 0:
+                avg = total_price / total_quantity
+                product.accounting_standard_price = avg
+            else:
+                # If no historical records, fall back to main or last supplier pricing, this will use the fixed price on the supplier record
+                # and convert the currency for today
+                if product.main_supplier_id:
+                    price = product.main_supplier_id.price
+                    main_supplier_currency_id = product.main_supplier_id.currency_id
+                    if main_supplier_currency_id.id != product.cost_currency_id.id:
+                        price = main_supplier_currency_id._convert(
+                            price,
+                            product.cost_currency_id,
+                            self.env.company,
+                            fields.Date.context_today(self),
+                            round=False,
+                        )
+                    product.accounting_standard_price = price
+                    return
+                if product.last_supplier_id:
+                    price = product.last_supplier_id.price
+                    last_supplier_currency_id = product.last_supplier_id.currency_id
+                    if last_supplier_currency_id.id != product.cost_currency_id.id:
+                        price = last_supplier_currency_id._convert(
+                            price,
+                            product.cost_currency_id,
+                            self.env.company,
+                            fields.Date.context_today(self),
+                            round=False,
+                        )
+                    product.accounting_standard_price = price
