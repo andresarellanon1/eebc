@@ -11,7 +11,7 @@ class SaleOrderLine(models.Model):
                                            string="Lista precio")
     pricelist_unit_price = fields.Float('Precio de lista de precio', digits="Product Price", compute="_compute_pl_unit_price", store=True)
     # branch_id = fields.Many2one('res.partner', string='Sucursal', related="order_id.branch_id")
-    branch_id = fields.Many2one('res.partner', string='Sucursal', domain="[('is_branch','=',True)]")
+    # branch_id = fields.Many2one('res.partner', string='Sucursal', domain="[('is_branch','=',True)]")
 
     @api.depends('product_pricelist_id')
     def _compute_pl_unit_price(self):
