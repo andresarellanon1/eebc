@@ -98,8 +98,8 @@ class ProjectVersionWizard(models.TransientModel):
         logger.warning(f"Wizard Picking Lines: {self.wizard_picking_lines}")
 
         # Ensure `wizard_plan_lines` and `wizard_picking_lines` are saved.
-        plan_line_ids = self.wizard_plan_lines.mapped('id')
-        picking_line_ids = self.wizard_picking_lines.mapped('id')
+        plan_line_ids = self.plan_lines.mapped('id')
+        picking_line_ids = self.picking_lines.mapped('id')
 
         # Create any newly added tasks for the project.
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id)
