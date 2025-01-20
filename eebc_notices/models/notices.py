@@ -96,7 +96,7 @@ class Notices(models.Model):
             # Sumar la cantidad disponible de cada lote asociado al aviso
             _logger.warning("valor de total lot product_qty : %s",lot.product_qty )
 
-            total_quantity += lot.product_qty
+            total_quantity += lot.quant_ids.inventory_quantity_auto_apply
         
         _logger.warning("valor de total lot quantity : %s",total_quantity )
 
