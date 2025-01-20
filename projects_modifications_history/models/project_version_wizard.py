@@ -71,7 +71,7 @@ class ProjectVersionWizard(models.TransientModel):
         self.ensure_one()  # Ensure that only one record is being processed.
         self.sale_order_id.state = 'sale'
         project = self.env['project.project'].browse(self.project_id.id)  # Fetch the project by its ID.
-        self.update_project_lines()
+        self.update_project_with_version_data()
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([
             ('project_id', '=', self.project_id.id)
