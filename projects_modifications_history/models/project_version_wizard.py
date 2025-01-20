@@ -64,8 +64,8 @@ class ProjectVersionWizard(models.TransientModel):
             plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
             picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
 
-            record.project_plan_lines = plan_lines
-            record.project_picking_lines = picking_lines
+            record.wizard_plan_lines = plan_lines
+            record.wizard_picking_lines = picking_lines
 
     def action_confirm_version_history(self):
         self.ensure_one()  # Ensure that only one record is being processed.
@@ -96,18 +96,6 @@ class ProjectVersionWizard(models.TransientModel):
         #project.create_project_tasks(self.location_id.id, self.location_dest_id.id)
 
         # Create a new entry in the project version lines for the modification details.
-
-        if self.project_plan_lines:
-            for line in self.project_plan_lines:
-                logger.info(
-                    "Wizard Plan Line - Name: %s, Chapter: %s",
-                    line.name,
-                    line.chapter
-                )
-        else:
-            logger.info(
-                    "No hay datos en Wizard Plan Line"
-                )
 
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
@@ -203,7 +191,7 @@ class ProjectVersionWizard(models.TransientModel):
         project.actual_sale_order_id = self.sale_order_id.id
 
         existing_plan_lines = project.project_plan_lines
-        new_plan_lines_data = self.prep_plan_lines(self.project_plan_lines)
+        new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
 
         project.project_plan_lines = [
             (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
@@ -216,7 +204,7 @@ class ProjectVersionWizard(models.TransientModel):
         ]
 
         existing_picking_lines = project.project_picking_lines
-        new_picking_lines_data = self.prep_picking_lines(self.project_picking_lines)
+        new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
 
         project.project_picking_lines = [
             (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
