@@ -199,7 +199,8 @@ class SaleOrder(models.Model):
             'quantity': False,
             'standard_price': False,
             'subtotal': False,
-            'for_create': for_create
+            'for_create': for_create,
+            'for_modification': False
         })
     
     def prep_plan_section_line(self, line, for_create):
@@ -213,7 +214,8 @@ class SaleOrder(models.Model):
             'planned_date_end': False,
             'project_plan_pickings': False,
             'task_timesheet_id': False,
-            'for_create': for_create
+            'for_create': for_create,
+            'for_modification': False
         })
 
     def prep_plan_lines(self, line):
@@ -230,7 +232,8 @@ class SaleOrder(models.Model):
                 'project_plan_pickings': plan.project_plan_pickings.id,
                 'task_timesheet_id': plan.task_timesheet_id.id,
                 'display_type': False,
-                'for_create': True
+                'for_create': True,
+                'for_modification': False
             }))
         return plan_lines
 
@@ -248,7 +251,8 @@ class SaleOrder(models.Model):
                 'standard_price': picking.standard_price,
                 'subtotal': picking.subtotal,
                 'display_type': False,
-                'for_create': True
+                'for_create': True,
+                'for_modification': False
             }))
         return picking_lines
 
