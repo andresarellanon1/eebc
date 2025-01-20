@@ -8,7 +8,7 @@
             Depende del módulo price_list_product para calcular los precios por línea.
             Es necesario crear una lista de precios en la divisa de la empresa y su Equivalente en la divisa objetivo desde la configuración base de odoo para usar la funcionalidad completa de este módulo.
     """,
-    'version': '17.0.1.09',
+    'version': '17.0.1.100',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': ['purchase', 'stock', 'product', 'contacts', 'price_list_product'],

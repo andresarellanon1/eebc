@@ -122,21 +122,21 @@ class SaleOrderLine(models.Model):
         def _find_equivalent_pricelist(line):
             """
             Finds the equivalent pricelist for the order line's product template with the correct currency,
-            and also checks if the pricelist location matches the current company where the user is logged in.
+            and also checks if the pricelist company_id matches the current company where the user is logged in.
 
             Args:
                 line: The sale order line for which the pricelist needs to be found.
 
             Returns:
                 The equivalent product pricelist line based on the product template, 
-                pricelist name, order currency, and the company location.
+                pricelist name, order currency, and the company company_id.
             """
             return self.env["product.pricelist.line"].search(
                 [
                     ("product_templ_id", "=", line.product_template_id.id),
                     ("name", "=", line.product_pricelist_id.name),
                     ("currency_id", "=", line.order_id.locked_currency_id.id),
-                    ("pricelist_id.location", "=", self.env.company.id)
+                    ("pricelist_id.company_id", "=", self.env.company.id)
                 ],
                 limit=1
             )
@@ -187,7 +187,7 @@ class SaleOrderLine(models.Model):
         Computes the price list for each order line based on default or customer-selected price lists.
         This method no longer hardcodes the default price list; instead, it dynamically retrieves the default 
         pricelist from the user's company settings. Additionally, it ensures that the search includes the 
-        company (location) where the user is currently logged in.
+        company (company_id) where the user is currently logged in.
 
         For each order line:
         - Searches for the appropriate price list based on product, currency, and company.
@@ -201,13 +201,13 @@ class SaleOrderLine(models.Model):
                             or if the customer-selected or default price list is not available.
 
         """
-        def _get_pricelist(product_template, pricelist_id, currency, company):
+        def _get_pricelist(product_template, pricelist_id, currency):
             return self.env["product.pricelist.line"].search(
                 [
                     ("product_templ_id", "=", product_template),
                     ("pricelist_id", "=", pricelist_id),
                     ("currency_id", "=", currency),
-                    ("pricelist_id.location", "=", company)
+                    ("pricelist_id.company_id", "=", self.env.company.id)
                 ],
                 limit=1)
 
@@ -216,7 +216,8 @@ class SaleOrderLine(models.Model):
                 [
                     ("product_templ_id", "=", product_template),
                     ("pricelist_id", "=", pricelist_id),
-                    ("currency_id", "=", currency)
+                    ("currency_id", "=", currency),
+                    ("pricelist_id.company_id", "=", self.env.company.id)
                 ],
                 limit=1)
 
@@ -228,14 +229,11 @@ class SaleOrderLine(models.Model):
             product_pricelist_id = False
 
             default_pricelist_id = self.env.user.company_id.default_product_pricelist_id.id
-            actual_company = self.env.company.id
 
             default_pricelist_id = int(default_pricelist_id) if default_pricelist_id else False
             default_product_pricelist_id = _get_default_pricelist(line.product_template_id.id, default_pricelist_id, line.order_id.locked_currency_id.id) if default_pricelist_id else False
-
-            priority_customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.priority_pricelist_id.id, line.order_id.locked_currency_id.id, actual_company) if line.order_id.partner_id.priority_pricelist_id else False
-
-            customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.property_product_pricelist.id, line.order_id.locked_currency_id.id, actual_company) if line.order_id.partner_id.property_product_pricelist else False
+            priority_customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.priority_pricelist_id.id, line.order_id.locked_currency_id.id) if line.order_id.partner_id.priority_pricelist_id else False
+            customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.property_product_pricelist.id, line.order_id.locked_currency_id.id) if line.order_id.partner_id.property_product_pricelist else False
 
             if (not default_product_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
