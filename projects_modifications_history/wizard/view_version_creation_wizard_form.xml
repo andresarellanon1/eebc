@@ -25,8 +25,8 @@
                                 </page>
                                 <page name="tasks" string="Tasks">
                                     <div style="width: 100%;">
-                                        <field name="wizard_plan_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" readonly="1" style="pointer-events:none">
-                                            <tree style="width: 100%;" readonly="1" editable="bottom">
+                                        <field name="wizard_plan_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none">
+                                            <tree style="width: 100%;" editable="bottom">
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="display_type" column_invisible="True"/>
                                                 <field name="name" readonly="1"/>
@@ -43,8 +43,8 @@
                                 </page>
                                 <page name="stock" string="Stock">
                                     <div>
-                                        <field name="wizard_picking_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" readonly="1" style="pointer-events:none">
-                                            <tree style="width: 100%;" readonly="1" editable="bottom">
+                                        <field name="wizard_picking_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none">
+                                            <tree style="width: 100%;" editable="bottom">
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="company_id" column_invisible="1" readonly="1"/>
                                                 <field name="display_type" column_invisible="True" readonly="1"/>
