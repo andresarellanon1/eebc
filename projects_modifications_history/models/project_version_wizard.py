@@ -189,34 +189,34 @@ class ProjectVersionWizard(models.TransientModel):
                 }))
         return picking_lines
 
-        def update_project_lines(self):
-            project = self._origin.project_id
+    def update_project_lines(self):
+        project = self._origin.project_id
 
-            self.sale_order_id.project_id = project.id
-            project.actual_sale_order_id = self.sale_order_id.id
+        self.sale_order_id.project_id = project.id
+        project.actual_sale_order_id = self.sale_order_id.id
 
-            existing_plan_lines = project.project_plan_lines
-            new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
+        existing_plan_lines = project.project_plan_lines
+        new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
 
-            project.project_plan_lines = [
-                (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
-                for line in existing_plan_lines
-                for new_line in new_plan_lines_data
-                if line.name == new_line[2]['name']
-            ] + [
-                new_line for new_line in new_plan_lines_data
-                if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
-            ]
+        project.project_plan_lines = [
+            (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+            for line in existing_plan_lines
+            for new_line in new_plan_lines_data
+            if line.name == new_line[2]['name']
+        ] + [
+            new_line for new_line in new_plan_lines_data
+            if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
+        ]
 
-            existing_picking_lines = project.project_picking_lines
-            new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
+        existing_picking_lines = project.project_picking_lines
+        new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
 
-            project.project_picking_lines = [
-                (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
-                for line in existing_picking_lines
-                for new_line in new_picking_lines_data
-                if line.name == new_line[2]['name']
-            ] + [
-                new_line for new_line in new_picking_lines_data
-                if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
-            ]
+        project.project_picking_lines = [
+            (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+            for line in existing_picking_lines
+            for new_line in new_picking_lines_data
+            if line.name == new_line[2]['name']
+        ] + [
+            new_line for new_line in new_picking_lines_data
+            if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
+        ]
