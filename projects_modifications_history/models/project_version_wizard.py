@@ -106,7 +106,7 @@ class ProjectVersionWizard(models.TransientModel):
 
         # Create a new entry in the project version lines for the modification details.
 
-        if wizard_plan_lines:
+        if self.wizard_plan_lines:
             for line in self.wizard_plan_lines:
                 logger.info(
                     "Wizard Plan Line - Name: %s, Chapter: %s",
