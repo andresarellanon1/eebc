@@ -61,7 +61,7 @@ class ProjectCreation(models.TransientModel):
 
         self.sale_order_id.state = 'sale'
 
-        if wizard_plan_lines:
+        if self.wizard_plan_lines:
             for line in self.wizard_plan_lines:
                 logger.info(
                     "Wizard Plan Line - Name: %s, Chapter: %s",
