@@ -1,10 +1,8 @@
 import logging
-from odoo.tools import format_amount, format_date, formatLang, groupby
-
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools import groupby
+from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_is_zero
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -12,50 +10,79 @@ logger = logging.getLogger(__name__)
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
-    landed_cost_number = fields.Char(string="Pedimento")
-
+    landed_cost_number = fields.Char(string="Pedimento", compute="_compute_landed_cost_number", store=False)
     is_multi_landed_cost = fields.Boolean(
         default=False,
         string="Tiene varios pedimentos",
         help="""
-                                          Esta opción habilitará el uso de varios pedimentos en esta orden.
-                                          El usuario deberá entonces hacerse responsable de:
-                                          1. Asignar manualmente los pedimentos a cada línea.
-                                          2. Asignar manualmente los traslados al pedimento usando el botón "ver costos destino" en el documento de traslado.
-                                          """,
-    )
-
-    # IDEA: Cada pedimento agregado genera un documento de traslado nuevo (No implementar hasta que se confirme).
-
+            Esta opción habilitará el uso de varios pedimentos en esta orden.
+            El usuario deberá entonces hacerse responsable de:
+                1. Asignar manualmente los pedimentos a cada línea.
+                2. Asignar manualmente los traslados al pedimento usando el botón "ver costos destino" en el documento de traslado.
+           """)
+    # REFACTOR IDEA: Cada pedimento agregado genera un documento de traslado nuevo (No implementar hasta que se confirme).
     stock_landed_cost_ids = fields.Many2many("stock.landed.cost", string="Landed Costs")
 
-    @api.onchange("stock_landed_cost_ids")
-    def _onchange_landed_cost(self):
+    # === overwritten === #
+    def button_confirm(self):
         for order in self:
-            if len(self.stock_landed_cost_ids) > 0:
-                order.landed_cost_number = order.stock_landed_cost_ids[
-                    0
-                ].l10n_mx_edi_customs_number
+            if order.state not in ['draft', 'sent']:
+                continue
+            order.order_line._validate_analytic_distribution()
+            order._add_supplier_to_product()
+            # Deal with double validation process
+            if order._approval_allowed():
+                order.button_approve()
             else:
-                order.landed_cost_number = ""
+                order.write({'state': 'to approve'})
+            if order.partner_id not in order.message_partner_ids:
+                order.message_subscribe([order.partner_id.id])
+            order._update_landed_in_lines()
+            order._update_landed_pickings()
+            return True
 
     def write(self, vals):
         res = super(PurchaseOrder, self).write(vals)
         self._update_landed_in_lines()
         return res
 
+    @api.depends("stock_landed_cost_ids")
+    def _compute_landed_cost_number(self):
+        """
+            Computes the local landed_cost_number field if only 1 record of 'landed.cost' is linked to the 'purchase.order', otherwise leave empty.
+        """
+        for order in self:
+            if len(order.stock_landed_cost_ids) > 0:
+                order.landed_cost_number = order.stock_landed_cost_ids[
+                    0
+                ].l10n_mx_edi_customs_number
+            else:
+                order.landed_cost_number = ""
+
+    @api.model
     def _update_landed_in_lines(self):
+        """
+            Link the 'landed.cost' (if only 1 linked to the 'purchase.order') to each order_line.
+        """
         for order in self:
             if order.is_multi_landed_cost:
                 return
             for line in order.order_line:
-                # Enforce the first landed cost to apply to all lines
                 if len(order.stock_landed_cost_ids) > 0:
                     line.landed_cost = order.stock_landed_cost_ids[0]
                 else:
                     line.landed_cost = False
 
+    @api.model
     def _update_landed_pickings(self):
+        """
+            Updates the landed costs related to the 'purchase.order' related 'stock.piciking' records.
+
+            If only 1 landed.cost:
+            - Searches for valid 'stock.pickings'.
+            - Links 'stock.pickings' to the 'landed.cost'.
+            - If the 'landed.cost' is still in draft, validates it.
+        """
         for order in self:
             if order.is_multi_landed_cost:
                 return

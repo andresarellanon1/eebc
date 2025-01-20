@@ -9,7 +9,7 @@ class ResPartner(models.Model):
     sales_currency_id = fields.Many2one(
         string="Divisa de venta",
         comodel_name='res.currency',
-        default=lambda self: self.env.ref('base.MXN').id
+        default=lambda self: self.env.company.currency_id.id
     )
 
     priority_pricelist_id = fields.Many2one(

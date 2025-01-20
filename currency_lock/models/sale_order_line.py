@@ -7,9 +7,9 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     target_currency_id = fields.Many2one(
+        comodel_name="res.currency",
         string="Divisa Objetivo",
         help='Divisa Objetivo. Depende de la Divisa Objetivo de la orden padre.',
-        comodel_name='res.currency'
     )
 
     @api.model_create_multi
@@ -17,5 +17,4 @@ class SaleOrderLine(models.Model):
         lines = super(SaleOrderLine, self).create(vals_list)
         for line in lines:
             line.target_currency_id = line.order_id.target_currency_id
-
         return lines

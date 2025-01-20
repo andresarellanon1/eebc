@@ -8,13 +8,13 @@ class ProductPricelistLine(models.Model):
     _name = 'product.pricelist.line'
     _description = 'Linea de lista de precios para producto'
 
-    name = fields.Char('Nombre lista')
-    display_name = fields.Char('Nombre', compute="_compute_display_name")
-    pricelist_id = fields.Many2one('product.pricelist', 'Lista')
-    uom_id = fields.Many2one('uom.uom', 'Unidad predeterminada')
+    name = fields.Char('Nombre linea de lista por producto')
+    display_name = fields.Char('Nombre', compute="_compute_display_name", store=False, readonly=True)
+    pricelist_id = fields.Many2one('product.pricelist', string='Lista')
+    uom_id = fields.Many2one('uom.uom', 'Unidad predeterminada', related="product_templ_id.uom_id")
     product_templ_id = fields.Many2one('product.template', 'Producto')
-    currency_id = fields.Many2one('res.currency', string='Moneda')
-    unit_price = fields.Float('Precio unitario', digits="Product Price", compute="_compute_all_unit_prices", store=False)
+    currency_id = fields.Many2one('res.currency', string='Moneda', related="pricelist_id.currency_id")
+    unit_price = fields.Float('Precio unitario', digits="Precio Unitario", compute="_compute_unit_price", store=False)
     is_special = fields.Boolean(string="Es prioritaria", related="pricelist_id.is_special")
 
     def _compute_display_name(self):
@@ -24,7 +24,12 @@ class ProductPricelistLine(models.Model):
             else:
                 record.display_name = record.name
 
-    def _compute_all_unit_prices(self):
+    @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
+    def _compute_unit_price(self):
+        """
+            Searches for a product_uom_id context variable to use that uom_id instead of the default.
+            If not found, uses default product template uom to compute the unit price from the pricelist.
+        """
         for line in self:
             line.unit_price = 0.0
             pricelist_id = line.pricelist_id
@@ -33,17 +38,18 @@ class ProductPricelistLine(models.Model):
                 product_uom_id = self.env.context['product_uom_id']
             else:
                 product_uom_id = line.product_templ_id.uom_id
-
             unit_price = pricelist_id._compute_price_rule(
                 products=product_id,
                 quantity=1,
                 uom_id=product_uom_id,
                 date=date.today())
-
             if product_id:
                 line.unit_price = unit_price[product_id.id][0] or 0.0
 
     def name_get(self):
+        """
+            Generates fancy display name
+        """
         result = []
         for record in self:
             name = ""
@@ -55,6 +61,9 @@ class ProductPricelistLine(models.Model):
         return result
 
     def open_product_pricelist(self):
+        """
+            Helper to launch filter product.pricelist.items action from the wizard-popup found openned to inspect this line.
+        """
         origin_res_model = self.env.context.get('origin_res_model', False)
         origin_res_id = self.env.context.get('origin_res_id', False)
 

@@ -4,13 +4,12 @@
     'description': """
         El objetivo del modulo es permitir la persistencia de un campo configurable de divisa secundaria para la empresa.
         El campo se configura a nivel de empresa y se hereda a todos los documentos (sale.order & purchase.order) y sus lineas.
-        Automaticamente computa el ratio de conversion para su posterior uso en implementaciones de flujos de compra/venta.
-        TODO: Incluir historial de cambios, validaciones de documentos con locked_currency_id abiertos y otras validaciones.
+        Computa el ratio de conversion al seleccionar una divisa distinta a la de la empresa para los documentos compra/venta y facturas de compra/venta.
     """,
-    'version': '17.0.1.101',
+    'version': '17.0.1.999',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
-    'depends': ['base', 'purchase', 'sale'],
+    'depends': ['base', 'purchase', 'sale', 'account', 'account_accountant'],
     'data': [
         # 'views/account_move_views.xml',
         # 'views/purchase_order_views.xml',

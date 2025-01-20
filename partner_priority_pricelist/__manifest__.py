@@ -9,10 +9,10 @@
     'version': '17.0.1.06',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
-    'depends': ['contacts'],
+    'depends': ['contacts', 'product'],
     'data': [
-        'views/res_partner_views.xml',
-        'views/product_pricelist_views.xml',
+        # 'views/res_partner_views.xml',
+        # 'views/product_pricelist_views.xml',
     ],
     "license": "LGPL-3",
     'installable': True

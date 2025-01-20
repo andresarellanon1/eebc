@@ -4,13 +4,10 @@
     "depends": [
         "base",
         "sale",
-        "sale_stock",
-        "sale_stock_margin",
         "contacts",
         "contacts_enterprise",
+        "account",
         "account_accountant",
-        "stock",
-        "stock_account",
         "base_address_extended",
         "weekdays"
     ],

@@ -6,7 +6,7 @@
         Muestra una widget de selección para la lista de precios en el documento de venta y el documento de factura de cliente.
         Actualiza el precio unitario de la línea en cuestión correspondiente con la lista de precios seleccionada en cualquiera de estos dos documentos.
     """,
-    'version': '17.0.2.36',
+    'version': '17.0.2.401',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [

@@ -13,6 +13,9 @@ class StockLandedCost(models.Model):
 
     @api.onchange('purchase_order_ids')
     def onchange_purchase_orders(self):
+        """
+            When a purchase order is manually linked to a landed cost we want to automatically run our 'purchase.order' linking method for order_lines.
+        """
         for record in self:
             for order in record.purchase_order_ids:
                 order._update_landed_in_lines()

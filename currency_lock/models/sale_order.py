@@ -5,18 +5,27 @@ logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
+    """
+    This model extends the functionality of `sale.order` to add features for handling target currencies, safe margins,
+    and locked exchange rates. It provides methods to compute and manage these custom fields and overrides standard
+    behaviors to integrate seamlessly with Odoo's sales order workflow.
+    """
     _inherit = "sale.order"
+
+    target_currency_id = fields.Many2one(
+        string="Divisa Objetivo",
+        comodel_name="res.currency",
+        default=lambda self: self.env.company.currency_id.id,
+        compute="_compute_locked_currency_rate"
+    )
 
     locked_currency_rate = fields.Float(
         string="Tipo de cambio seguro",
         digits="Payment Terms",
         help="El tipo de cambio se calcula de acuerdo al tipo de cambio oficial del día en curso. Una vez confirmado el documento no se ‘bloquea’ permanentemente o hasta que se devuelva el documento a borrador.",
-    )
-
-    target_currency_id = fields.Many2one(
-        string="Divisa Objetivo",
-        comodel_name="res.currency",
-        default=lambda self: self.env.company.locked_currency_id.id,
+        compute="_compute_locked_currency_rate",
+        default=lambda self: self.env.company.currency_id.inverse_rate,
+        readonly=True,
     )
 
     safe_margin = fields.Float(
@@ -26,49 +35,62 @@ class SaleOrder(models.Model):
         compute='_compute_safe_margin',
     )
 
+    @api.depends("company_id", "company_id.safe_margin")
     def _compute_safe_margin(self):
+        """
+            Computes the safe margin value for the sale order based on the company's safe margin configuration.
+        """
         for order in self:
-            order.safe_margin = self.env.company_id.safe_margin
+            order.safe_margin = self.env.company.safe_margin
 
-    @api.onchange("safe_margin")
-    def onchange_safe_margin(self):
+    @api.depends("safe_margin", "target_currency_id", "target_currency_id.inverse_rate")
+    def _compute_locked_currency_rate(self):
+        """
+            Set the locked currency rate using the inverse rate of the target currency, adjusted by the new safe margin.
+        """
         for order in self:
-            target_currency = order.target_currency_id if order.target_currency_id else self.env.company.currency_id
-            order.locked_currency_rate = target_currency.inverse_rate + order.safe_margin
+            if order.state == "sale":
+                continue
+            order.locked_currency_rate = order.target_currency_id.inverse_rate + order.safe_margin
 
     @api.depends("pricelist_id", "company_id")
     def _compute_currency_id(self):
         """
-        NOTE: This override prevents currency from being computed on previously loaded modules
-        WARNING: This is critical to allow the target_currency_id to be transfered to the currency_id of the 'sale.order' document
+            Overrides the computation of the `currency_id` field to ensure it is derived from the `target_currency_id`.
+            Prevents recalculation of the currency for pre-existing records, enabling the smooth transfer of
+            the target currency to the sale order's currency.
         """
         for order in self:
             order.currency_id = order.target_currency_id
 
     @api.onchange("target_currency_id")
-    def onchange_currency_rate(self):
+    def onchange_target_currency_id(self):
+        """
+            Updates the field `currency_id` when the target currency changes.
+        """
         for order in self:
             if order.state == "sale":
-                return
-
+                continue
             order.currency_id = order.target_currency_id
-            order.locked_currency_rate = order.target_currency_id.inverse_rate + order.safe_margin
-            order._compute_pricelist_prices()
 
-    @api.onchange("partner_id")
+    @api.onchange("partner_id", "target_currency_id")
     def onchange_customer_partner_id(self):
+        """
+            Updates the field `target_currency_id` when the customer (`partner_id`) is changed.
+            Sets the target currency to the customer's sales currency and
+            recomputes the exchange rate and prices unless the sale order is already confirmed.
+        """
         for order in self:
+            if order.state == "sale":
+                continue
             order.target_currency_id = order.partner_id.sales_currency_id
             order.currency_id = order.target_currency_id
-            target_currency = order.target_currency_id if order.target_currency_id else self.env.company.currency_id
-            order.locked_currency_rate = target_currency.inverse_rate + order.safe_margin
             order._compute_pricelist_prices()
 
     def _compute_pricelist_prices(self):
         """
-        Override to implement custom pricelist computing
-        e.g.
-        for line in order.order_line:
-                line._compute_pricelist_price_unit()
+            Placeholder method for custom logic to compute prices based on the selected pricelist. Intended to recalculate
+            prices for order lines dynamically. This method should be overridden in specific implementations as needed.
+            This module should be shipped witha lil-brother-module to perform custom price unit calculation using a pricelist or a custom algorithm.
         """
         return

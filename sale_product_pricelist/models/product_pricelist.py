@@ -13,8 +13,14 @@ class ProductPricelist(models.Model):
     #         self._compute_product_pricelist_lines()
     #     return res
 
+    # NOTE: NEED TESTING
     @api.depends('item_ids')
     def _compute_product_pricelist_lines(self):
+        """
+            Calls the _compute_product_pricelist() of the corresponding product templates that are applied.
+            Triggers the computation for all related templates regardless of the actual changes to the lines.
+            If lines where deleted, updated or created: Trigger all the related product template _compute_product_pricelist().
+        """
         for pricelist in self:
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
