@@ -70,7 +70,7 @@ class ProjectVersionWizard(models.TransientModel):
 
     def action_confirm_version_history(self):
         self.ensure_one()  # Ensure that only one record is being processed.
-
+        self.sale_order_id.state = 'sale'
         project = self.env['project.project'].browse(self.project_id.id)  # Fetch the project by its ID.
 
         # Check if a version history already exists for the current project.
@@ -130,6 +130,7 @@ class ProjectVersionWizard(models.TransientModel):
                 if line.display_type == 'line_section':
                     plan_lines.append((0, 0, {
                         'name': line.name,
+                        'sequence': line.sequence,
                         'display_type':  line.display_type or 'line_section',
                         'description': False,
                         'use_project_task': True,
@@ -142,6 +143,7 @@ class ProjectVersionWizard(models.TransientModel):
                 else:
                     plan_lines.append((0, 0, {
                         'name': line.name,
+                        'sequence': line.sequence,
                         'description': line.description,
                         'use_project_task': True,
                         'planned_date_begin': line.planned_date_begin,
@@ -159,6 +161,7 @@ class ProjectVersionWizard(models.TransientModel):
             if line.display_type == 'line_section':
                 picking_lines.append((0, 0, {
                     'name': line.name,
+                    'sequence': line.sequence,
                     'display_type': line.display_type or 'line_section',
                     'product_id': False,
                     'product_uom': False,
@@ -171,6 +174,7 @@ class ProjectVersionWizard(models.TransientModel):
             else:
                 picking_lines.append((0, 0, {
                     'name': line.product_id.name,
+                    'sequence': line.sequence,
                     'product_id': line.product_id.id,
                     'product_uom': line.product_uom.id,
                     'product_packaging_id': line.product_packaging_id.id,

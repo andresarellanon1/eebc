@@ -59,8 +59,6 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
-        self.sale_order_id.state = 'sale'
-
         for line in self.wizard_plan_lines:
             logger.info(
                 "Wizard Plan Line - Name: %s, Chapter: %s",
@@ -69,6 +67,8 @@ class ProjectCreation(models.TransientModel):
             )
             
         if not self.project_id:
+            self.sale_order_id.state = 'sale'
+
             project_vals = {
                 'name': self.project_name,
                 'description': self.description,
