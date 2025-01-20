@@ -61,12 +61,17 @@ class ProjectCreation(models.TransientModel):
 
         self.sale_order_id.state = 'sale'
 
-        for line in self.wizard_plan_lines:
+        if wizard_plan_lines:
+            for line in self.wizard_plan_lines:
+                logger.info(
+                    "Wizard Plan Line - Name: %s, Chapter: %s",
+                    line.name,
+                    line.chapter
+                )
+        else:
             logger.info(
-                "Wizard Plan Line - Name: %s, Chapter: %s",
-                line.name,
-                line.chapter
-            )
+                    "No hay datos en Wizard Plan Line"
+                )
             
         if not self.project_id:
             project_vals = {
