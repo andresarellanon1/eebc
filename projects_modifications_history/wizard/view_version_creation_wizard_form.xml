@@ -23,9 +23,9 @@
                                 <page name="motive" string="Modification motive">
                                     <field name="modification_motive"/>
                                 </page>
-                                <page name="tasks" string="Tasks">
+                                <page name="tasks" string="Planeacion">
                                     <div style="width: 100%;">
-                                        <field name="project_plan_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none">
+                                        <field name="wizard_plan_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none">
                                             <tree style="width: 100%;" editable="bottom">
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="display_type" column_invisible="True"/>
@@ -41,9 +41,9 @@
                                         </field>
                                     </div>
                                 </page>
-                                <page name="stock" string="Stock">
+                                <page name="stock" string="Materiales">
                                     <div>
-                                        <field name="project_picking_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none">
+                                        <field name="wizard_picking_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none">
                                             <tree style="width: 100%;" editable="bottom">
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="company_id" column_invisible="1" readonly="1"/>
@@ -65,7 +65,7 @@
                                         </group>
                                     </div>
                                 </page>
-                                <page name="info" string="Info">
+                                <page name="info" string="Info" invisible="1">
                                     <group>
                                         <field name="contact_id" readonly="1"/>
                                         <field name="picking_type_id" readonly="1"/>
