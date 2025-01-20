@@ -99,8 +99,7 @@ class ProjectCreation(models.TransientModel):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'context': {
-                    'default_project_id': project.id,
-                    'default_project_plan_id': project.project_plan_id.id if project.project_plan_id else False,
+                    'default_project_id': self.project_id.id,
                     'default_modified_by': self.env.user.id,
                     'default_modification_date': fields.Datetime.now(),
                     'default_contact_id': self.partner_id.id,
