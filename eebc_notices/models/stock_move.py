@@ -167,7 +167,33 @@ class StockMove(models.Model):
                 move.show_incoming_button = False
                 move.show_outgoing_button = False
 
+    def _generate_serial_numbers(self, next_serial, next_serial_count=False, location_id=False):
+        """ This method will generate `lot_name` from a string (field
+        `next_serial`) and create a move line for each generated `lot_name`.
+        """
+        self.ensure_one()
+        _logger.warning('valor de location id en generate serial numbers: %s', location_id)
 
+        if not location_id:
+            _logger.warning('valor de location id en generate serial numbers: %s', location_id)
+            location_id = self.location_dest_id
+        lot_names = self.env['stock.lot'].generate_lot_names(next_serial, next_serial_count or self.next_serial_count)
+        _logger.warning('valor de lot_names en generate serial numbers: %s', lot_names)
+
+        field_data = [{'lot_name': lot_name['lot_name'], 'quantity': 1} for lot_name in lot_names]
+        _logger.warning('valor de field_data en generate serial numbers: %s', field_data)
+
+        if self.picking_type_id.use_existing_lots:
+            _logger.warning('2')
+
+            self._create_lot_ids_from_move_line_vals(field_data, self.product_id.id, self.company_id.id)
+        move_lines_commands = self._generate_serial_move_line_commands(field_data)
+        _logger.warning('valor de move_lines_commands en generate serial numbers: %s', move_lines_commands)
+
+        self.move_line_ids = move_lines_commands
+        _logger.warning('valor de move_line_ids en generate serial numbers: %s', self.move_line_ids)
+
+        return True
 
  
 

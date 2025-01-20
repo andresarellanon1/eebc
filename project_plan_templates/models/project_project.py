@@ -11,7 +11,7 @@ class ProjectProject(models.Model):
     project_plan_lines = fields.One2many('project.plan.line', 'origin_project_id', string="Project plan lines")
     
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Movimientos de inventario")
-    project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines", compute="_compute_picking_lines", store=True)
+    project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
     plan_total_cost = fields.Float(string="Costo total", default=0.0)
     sale_order_id = fields.Many2one('sale.order', string='Orden de venta', readonly=False, store=True)
     actual_sale_order_id = fields.Many2one('sale.order', string="Orden de venta", store=True)
@@ -100,14 +100,14 @@ class ProjectProject(models.Model):
 
                             existing_task.timesheet_ids = timesheet_data
 
-    @api.depends('project_plan_lines')
-    def _compute_picking_lines(self):
-        for record in self:
-            record.project_picking_lines = [(5, 0, 0)]
-            record.project_picking_lines = record.sale_order_id.get_picking_lines(record.project_plan_lines)
-            for line in record.project_plan_lines:
-                _logger.warning(line.id)
-                _logger.warning(line.sequence)
+    # @api.depends('project_plan_lines')
+    # def _compute_picking_lines(self):
+    #     for record in self:
+    #         record.project_picking_lines = [(5, 0, 0)]
+    #         record.project_picking_lines = record.sale_order_id.get_picking_lines(record.project_plan_lines)
+    #         for line in record.project_plan_lines:
+    #             _logger.warning(line.id)
+    #             _logger.warning(line.sequence)
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
