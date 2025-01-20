@@ -92,11 +92,11 @@ class Notices(models.Model):
     def _compute_total_lot_quantity(self):
         _logger.warning("entramos a nuestro compute de lot_ids total")
         total_quantity = 0
-        for lot in self.lot_ids:
+        for record in self.history_ids:
             # Sumar la cantidad disponible de cada lote asociado al aviso
-            _logger.warning("valor de total lot product_qty : %s",lot.product_qty )
-
-            total_quantity += lot.quant_ids.inventory_quantity_auto_apply
+            _logger.warning("valor de stock_move_id : %s",record.stock_move_id)
+            for line in  record.stock_move_id.move_line_ids:
+                total_quantity += line.quantity
         
         _logger.warning("valor de total lot quantity : %s",total_quantity )
 
