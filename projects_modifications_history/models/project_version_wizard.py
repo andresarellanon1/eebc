@@ -58,9 +58,6 @@ class ProjectVersionWizard(models.TransientModel):
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
         for record in self:
-            
-            record.project_picking_lines = [(5, 0, 0)]
-            record.project_plan_lines = [(5, 0, 0)]
 
             plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
             picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
@@ -98,9 +95,6 @@ class ProjectVersionWizard(models.TransientModel):
 
         # Create a new entry in the project version lines for the modification details.
 
-        plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
-        picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
-
         if self.project_plan_lines:
             for line in self.project_plan_lines:
                 logger.info(
@@ -118,8 +112,8 @@ class ProjectVersionWizard(models.TransientModel):
             'modification_date': self.modification_date,
             'modified_by': self.modified_by.id,
             'modification_motive': self.modification_motive,
-            'project_plan_lines': [(6, 0, plan_lines)],
-            'project_picking_lines': [(6, 0, picking_lines)],
+            'project_plan_lines': [(6, 0, self.project_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, self.project_picking_lines.ids)],
         })
 
         # Save the updated project information (though no specific changes are made here).
