@@ -149,7 +149,9 @@ class Notices(models.Model):
         _logger.warning('Entramos a compute de quantity')
         
         for record in self:
-            approved_history = record.history_ids.filtered(lambda h: h.state == 'draft')
+            approved_history = record.history_ids.filtered(
+                lambda h: h.state == 'draft' and not h.stock_move_id.move_line_ids
+            )
             _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')
             record.quantity = sum(approved_history.mapped('quantity'))
 
