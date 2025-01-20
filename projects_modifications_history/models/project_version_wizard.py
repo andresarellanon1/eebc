@@ -93,14 +93,6 @@ class ProjectVersionWizard(models.TransientModel):
         if not self.modification_motive:
             raise UserError(f'Hace falta agregar el motivo de la modificacion.')
 
-        # Debugging: Log wizard plan and picking lines.
-        logger.warning(f"Wizard Plan Lines: {self.wizard_plan_lines}")
-        logger.warning(f"Wizard Picking Lines: {self.wizard_picking_lines}")
-
-        # Ensure `wizard_plan_lines` and `wizard_picking_lines` are saved.
-        plan_line_ids = self.wizard_plan_lines.mapped('id')
-        picking_line_ids = self.wizard_picking_lines.mapped('id')
-
         # Create any newly added tasks for the project.
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id)
 
@@ -123,8 +115,8 @@ class ProjectVersionWizard(models.TransientModel):
             'modification_date': self.modification_date,
             'modified_by': self.modified_by.id,
             'modification_motive': self.modification_motive,
-            'project_plan_lines': [(6, 0, plan_line_ids)],
-            'project_picking_lines': [(6, 0, picking_line_ids)],
+            'project_plan_lines': [(6, 0, self.wizard_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, self.wizard_picking_lines.ids)],
         })
 
         # Save the updated project information (though no specific changes are made here).
