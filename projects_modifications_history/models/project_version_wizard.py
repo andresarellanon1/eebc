@@ -98,8 +98,8 @@ class ProjectVersionWizard(models.TransientModel):
 
         # Create a new entry in the project version lines for the modification details.
 
-        plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
-        picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
+        plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+        picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
         if self.project_plan_lines:
             for line in self.project_plan_lines:
