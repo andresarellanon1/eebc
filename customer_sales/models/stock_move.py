@@ -22,5 +22,5 @@ class BranchStockMoveLine(models.Model):
     """inherited stock move line"""
     _inherit = 'stock.move.line'
 
-    branch_id = fields.Many2one('res.branch', readonly=True, store=True,
+    branch_id = fields.Many2one('res.partner', readonly=True, store=True,
                                 related='move_id.branch_id')
