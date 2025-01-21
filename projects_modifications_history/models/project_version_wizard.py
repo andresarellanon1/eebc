@@ -70,7 +70,6 @@ class ProjectVersionWizard(models.TransientModel):
     def action_confirm_version_history(self):
         self.ensure_one()
         self.sale_order_id.state = 'sale'
-        project = self.env['project.project'].browse(self.project_id.id)  # Fetch the project by its ID.
         
         project = self._origin.project_id
         if not project:
