@@ -141,6 +141,8 @@ class ProjectVersionWizard(models.TransientModel):
             'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
         })
 
+        self.sale_order_id.clean_duplicates_after_modification()
+
         # Save the updated project information (though no specific changes are made here).
         project.write({})
 
