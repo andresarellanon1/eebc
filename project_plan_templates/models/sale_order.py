@@ -70,72 +70,74 @@ class SaleOrder(models.Model):
     def action_generate_planning(self):
         self.ensure_one()
         
-        for sale in self:
-            if sale.is_project:
-                if not sale.project_name and not sale.edit_project:
-                    raise ValidationError(
-                        f"se requiere el nombre del proyecto"
-                    ) 
+        if self.state != 'sale':
+            for sale in self:
+                if sale.is_project:
+                    if not sale.project_name and not sale.edit_project:
+                        raise ValidationError(
+                            f"se requiere el nombre del proyecto"
+                        ) 
 
-                plan_pickings = []
-                plan_lines = []
-                for line in sale.order_line:
-                    if line.for_modification:
-                        if line.display_type == 'line_section':
-                            plan_lines.append(self.prep_plan_section_line(line, True))
-                        else:
-                            if line.product_id.project_plan_id:
-                                plan_lines.append(self.prep_plan_section_line(line, False))
-                                plan_lines += self.prep_plan_lines(line)
+                    plan_pickings = []
+                    plan_lines = []
+                    for line in sale.order_line:
+                        if line.for_modification:
+                            if line.display_type == 'line_section':
+                                plan_lines.append(self.prep_plan_section_line(line, True))
+                            else:
+                                if line.product_id.project_plan_id:
+                                    plan_lines.append(self.prep_plan_section_line(line, False))
+                                    plan_lines += self.prep_plan_lines(line)
 
-                            for project_picking in line.product_id.project_plan_id.project_plan_pickings:
-                                plan_pickings.append((4, project_picking.id))
-                        line.for_modification = False
+                                for project_picking in line.product_id.project_plan_id.project_plan_pickings:
+                                    plan_pickings.append((4, project_picking.id))
+                            line.for_modification = False
 
-                for plan in sale.project_plan_lines:
-                    if plan.for_modification:
-                        plan.for_modification = False
+                    for plan in sale.project_plan_lines:
+                        if plan.for_modification:
+                            plan.for_modification = False
 
-                sale.project_plan_pickings = plan_pickings
-                sale.project_plan_lines = plan_lines
+                    sale.project_plan_pickings = plan_pickings
+                    sale.project_plan_lines = plan_lines
 
-                sale.update_picking_lines()
+                    sale.update_picking_lines()
 
-            sale.state = 'budget'
+                sale.state = 'budget'
             
 
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
-        for sale in self:
-            sale.order_line = [(5, 0, 0)]
-            sale.project_plan_lines = [(5, 0, 0)]
-            sale.project_picking_lines = [(5, 0, 0)]
-            logger.warning(f"Encontro la sale order: {sale.project_id.actual_sale_order_id}")
-            if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
+        if self.state != 'sale':
+            for sale in self:
+                sale.order_line = [(5, 0, 0)]
+                sale.project_plan_lines = [(5, 0, 0)]
+                sale.project_picking_lines = [(5, 0, 0)]
+                logger.warning(f"Encontro la sale order: {sale.project_id.actual_sale_order_id}")
+                if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
 
-                previous_order = sale.project_id.actual_sale_order_id
+                    previous_order = sale.project_id.actual_sale_order_id
 
-                sale.partner_id = previous_order.partner_id
-                sale.project_name = previous_order.project_name
+                    sale.partner_id = previous_order.partner_id
+                    sale.project_name = previous_order.project_name
 
-                sale.order_line = [(0, 0, {
-                    'product_id': line.product_id.id,
-                    'display_type': line.display_type,
-                    'name': line.name,
-                    'product_uom_qty': line.product_uom_qty,
-                    'price_unit': line.price_unit,
-                    'discount': line.discount,
-                    'for_modification': False
-                }) for line in previous_order.order_line]
+                    sale.order_line = [(0, 0, {
+                        'product_id': line.product_id.id,
+                        'display_type': line.display_type,
+                        'name': line.name,
+                        'product_uom_qty': line.product_uom_qty,
+                        'price_unit': line.price_unit,
+                        'discount': line.discount,
+                        'for_modification': False
+                    }) for line in previous_order.order_line]
 
-                # Copiar project_plan_lines directamente
-                # Preparar y asignar líneas de plan
-                plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
-                sale.project_plan_lines = plan_lines
+                    # Copiar project_plan_lines directamente
+                    # Preparar y asignar líneas de plan
+                    plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
+                    sale.project_plan_lines = plan_lines
 
-                # Preparar y asignar líneas de picking
-                picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
-                sale.project_picking_lines = picking_lines
+                    # Preparar y asignar líneas de picking
+                    picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
+                    sale.project_picking_lines = picking_lines
 
     def _prepare_plan_lines(self, lines):
         """Prepara las líneas de plan para asignarlas al pedido."""
