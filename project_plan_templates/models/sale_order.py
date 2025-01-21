@@ -297,15 +297,46 @@ class SaleOrder(models.Model):
                 }
             }
 
-    def remove_duplicates(self, lines, key_field='name'):
-        unique_lines = {}
-        result = []
+    def remove_duplicates(self, lines, key_field):
+        seen = set()
+        unique_lines = []
         for line in lines:
-            key = line[2].get(key_field)
-            if key not in unique_lines:
-                unique_lines[key] = line
-                result.append(line)
-        return result
+            key = line[key_field] if isinstance(line, dict) else getattr(line, key_field, None)
+            if key not in seen:
+                unique_lines.append(line)
+                seen.add(key)
+        return unique_lines
+
+    def clean_duplicates_after_modification(self):
+        """
+        Limpia las líneas duplicadas después de modificar un proyecto.
+        """
+        for sale in self:
+            # Limpiar duplicados en las líneas de plan
+            sale.project_plan_lines = self.remove_duplicates(sale.project_plan_lines, 'name')
+
+            # Limpiar duplicados en las líneas de picking
+            picking_lines_cleaned = []
+            seen = set()
+            for line in sale.project_picking_lines:
+                key = f"{line.name}-{line.product_id.id}-{line.sequence}"  # Llave única para evitar duplicados
+                if key not in seen:
+                    picking_lines_cleaned.append((0, 0, {
+                        'name': line.name,
+                        'product_id': line.product_id.id,
+                        'product_uom': line.product_uom.id,
+                        'sequence': line.sequence,
+                        'product_packaging_id': line.product_packaging_id.id,
+                        'product_uom_qty': line.product_uom_qty,
+                        'quantity': line.quantity,
+                        'standard_price': line.standard_price,
+                        'subtotal': line.subtotal,
+                        'display_type': line.display_type,
+                        'for_create': line.for_create,
+                        'for_modification': line.for_modification,
+                    }))
+                    seen.add(key)
+            sale.project_picking_lines = picking_lines_cleaned
         
         
     def action_open_report(self):
