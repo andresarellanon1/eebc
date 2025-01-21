@@ -320,25 +320,8 @@ class SaleOrder(models.Model):
             lines_to_remove = sale.project_plan_lines.filtered('for_modification')
             lines_to_remove.unlink()
 
-            # Eliminar líneas de picking con for_modification=True
-            picking_lines_cleaned = []
-            for line in sale.project_picking_lines:
-                if not line.for_modification:  # Solo mantener las líneas donde for_modification es False
-                    picking_lines_cleaned.append((0, 0, {
-                        'name': line.name,
-                        'product_id': line.product_id.id,
-                        'product_uom': line.product_uom.id,
-                        'sequence': line.sequence,
-                        'product_packaging_id': line.product_packaging_id.id,
-                        'product_uom_qty': line.product_uom_qty,
-                        'quantity': line.quantity,
-                        'standard_price': line.standard_price,
-                        'subtotal': line.subtotal,
-                        'display_type': line.display_type,
-                        'for_create': line.for_create,
-                        'for_modification': line.for_modification,
-                    }))
-            sale.project_picking_lines = picking_lines_cleaned
+            lines_to_remove_picking = sale.project_picking_lines.filtered('for_modification')
+            lines_to_remove_picking.unlink()
         
         
     def action_open_report(self):
