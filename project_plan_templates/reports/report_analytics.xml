@@ -6,30 +6,14 @@
             <t t-call="web.external_layout">
                 <t t-foreach="docs" t-as="doc">
 
-                    <style>
-                        .report-content {
-                            display: flex;
-                            flex-direction: row; /* Alineación horizontal de las columnas */
-                            justify-content: space-between; /* Espacio entre los elementos */
-                            width: 100%; /* Asegura que ocupe todo el ancho disponible */
-                        }
-
-                        .left-column {
-                            flex: 1; /* La columna izquierda ocupa la mitad del espacio */
-                        }
-
-                        .right-column {
-                            flex: 1; /* La columna derecha ocupa la mitad del espacio */
-                            text-align: right; /* Alinea el contenido a la derecha */
-                        }
                     </style>
 
-                    <div class="report-content">
-                        <div class="left-column">
-                            <p><strong>Proyecto:</strong> <span t-esc="doc.project_name"/></p>
+                    <div style="display:flex; flex-direction: column; justify-content:space-between;">
+                        <div>
+                            <p><strong>Proyecto:</strong> <span t-esc="doc.project_id.name"/></p>
                             <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
                         </div>
-                        <div class="right-column">
+                        <div>
                             <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
                             <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
                         </div>
