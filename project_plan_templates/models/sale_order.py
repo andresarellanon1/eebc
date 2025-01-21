@@ -30,6 +30,20 @@ class SaleOrder(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
     edit_project = fields.Boolean(string="Modificar proyecto", default=False)
 
+    is_editable = fields.Boolean(
+        string='Editable',
+        compute='_compute_is_editable',
+        store=True
+    )
+
+    @api.depends('state')
+    def _compute_is_editable(self):
+        """
+        Determina si el pedido es editable según su estado.
+        """
+        for sale in self:
+            sale.is_editable = sale.state in ['draft', 'budget']
+
     def update_picking_lines(self):
         for record in self:
             #record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
