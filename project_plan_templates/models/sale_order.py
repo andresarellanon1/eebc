@@ -263,14 +263,39 @@ class SaleOrder(models.Model):
         if self.project_id:
             context['default_project_id'] = self.project_id.id
 
-        return {
-            'name': 'Projects creation',  
-            'view_mode': 'form',  
-            'res_model': 'project.creation.wizard',  
-            'type': 'ir.actions.act_window',  
-            'target': 'new',  
-            'context': context,
-        }
+        if self.edit_project:
+            return {
+                'name': 'Project Version History',
+                'view_mode': 'form',
+                'res_model': 'project.version.wizard',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context':{
+                    'default_project_id': self.project_id.id,
+                    'default_modified_by': self.env.user.id,
+                    'default_modification_date': fields.Datetime.now(),
+                    'default_location_id': self.project_id.location_id.id,
+                    'default_location_dest_id': self.project_id.location_dest_id.id,
+                    'default_scheduled_date': self.project_id.scheduled_date,
+                    'default_picking_type_id': self.project_id.default_picking_type_id.id,
+                    'default_sale_order_id': self.id
+                }
+            }
+        else:
+
+            return {
+                'name': 'Projects creation',  
+                'view_mode': 'form',  
+                'res_model': 'project.creation.wizard',  
+                'type': 'ir.actions.act_window',  
+                'target': 'new',  
+                'context': {
+                    'default_sale_order_id': self.id,
+                    'default_actual_sale_order_id': self.id,
+                    'default_project_name': project_name,
+                    'default_description': project_description
+                }
+            }
         
         
     def action_open_report(self):
