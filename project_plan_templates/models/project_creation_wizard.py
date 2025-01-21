@@ -64,64 +64,64 @@ class ProjectCreation(models.TransientModel):
                     "No hay datos en Wizard Plan Line"
                 )
             
-        if not self.project_id:
-            self.sale_order_id.state = 'sale'
+        # if not self.project_id:
+        self.sale_order_id.state = 'sale'
 
-            project_vals = {
-                'name': self.project_name,
-                'description': self.description,
-                'project_plan_lines': self.prep_plan_lines(self.wizard_plan_lines),
-                'project_picking_lines': self.prep_picking_lines(self.wizard_picking_lines),
-                'default_picking_type_id': self.picking_type_id.id,
-                'publication_date': fields.Datetime.now(),
-                'date_start': self.date_start,
-                'date': self.date,
-                'actual_sale_order_id': self.sale_order_id.id
-            }
+        project_vals = {
+            'name': self.project_name,
+            'description': self.description,
+            'project_plan_lines': self.prep_plan_lines(self.wizard_plan_lines),
+            'project_picking_lines': self.prep_picking_lines(self.wizard_picking_lines),
+            'default_picking_type_id': self.picking_type_id.id,
+            'publication_date': fields.Datetime.now(),
+            'date_start': self.date_start,
+            'date': self.date,
+            'actual_sale_order_id': self.sale_order_id.id
+        }
 
-            project = self.env['project.project'].create(project_vals)
-            logger.warning(f"Id del proyecto: {project.id}")
-            self.create_project_tasks(project)
+        project = self.env['project.project'].create(project_vals)
+        logger.warning(f"Id del proyecto: {project.id}")
+        self.create_project_tasks(project)
 
-            existing_history = self.env['project.version.history'].search([
-                ('project_id', '=', project.id)
-            ], limit=1)
+        existing_history = self.env['project.version.history'].search([
+            ('project_id', '=', project.id)
+        ], limit=1)
 
-            if not existing_history:
-                history = self.env['project.version.history'].create({
-                    'project_id': project.id,
-                    'modified_by': self.env.user.id,
-                    'modification_motive': 'Se ha creado el proyecto',
-                    'project_name': project.name,
-                })
+        if not existing_history:
+            history = self.env['project.version.history'].create({
+                'project_id': project.id,
+                'modified_by': self.env.user.id,
+                'modification_motive': 'Se ha creado el proyecto',
+                'project_name': project.name,
+            })
 
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'project.project',
-                'res_id': project.id,
-                'view_mode': 'form',
-                'target': 'current',
-            }
-        else:
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+        
 
-            return {
-                'name': 'Project Version History',
-                'view_mode': 'form',
-                'res_model': 'project.version.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'context': {
-                    'default_project_id': self.project_id.id,
-                    'default_modified_by': self.env.user.id,
-                    'default_modification_date': fields.Datetime.now(),
-                    'default_contact_id': self.partner_id.id,
-                    'default_location_id': self.location_id.id,
-                    'default_location_dest_id': self.location_dest_id.id,
-                    'default_scheduled_date': self.scheduled_date,
-                    'default_picking_type_id': self.picking_type_id.id,
-                    'default_sale_order_id': self.sale_order_id.id
-                }
-            }
+            # return {
+            #     'name': 'Project Version History',
+            #     'view_mode': 'form',
+            #     'res_model': 'project.version.wizard',
+            #     'type': 'ir.actions.act_window',
+            #     'target': 'new',
+            #     'context': {
+            #         'default_project_id': self.project_id.id,
+            #         'default_modified_by': self.env.user.id,
+            #         'default_modification_date': fields.Datetime.now(),
+            #         'default_contact_id': self.partner_id.id,
+            #         'default_location_id': self.location_id.id,
+            #         'default_location_dest_id': self.location_dest_id.id,
+            #         'default_scheduled_date': self.scheduled_date,
+            #         'default_picking_type_id': self.picking_type_id.id,
+            #         'default_sale_order_id': self.sale_order_id.id
+            #     }
+            # }
 
     def get_or_create_task_for_picking(self, picking_line, project):
         # Intentar encontrar una tarea asociada con este picking
