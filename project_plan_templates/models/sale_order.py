@@ -297,7 +297,7 @@ class SaleOrder(models.Model):
                 }
             }
 
-    def remove_duplicates(lines, key_field='name'):
+    def remove_duplicates(self, lines, key_field='name'):
         unique_lines = {}
         result = []
         for line in lines:
