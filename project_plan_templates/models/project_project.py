@@ -100,15 +100,6 @@ class ProjectProject(models.Model):
 
                             existing_task.timesheet_ids = timesheet_data
 
-    # @api.depends('project_plan_lines')
-    # def _compute_picking_lines(self):
-    #     for record in self:
-    #         record.project_picking_lines = [(5, 0, 0)]
-    #         record.project_picking_lines = record.sale_order_id.get_picking_lines(record.project_plan_lines)
-    #         for line in record.project_plan_lines:
-    #             _logger.warning(line.id)
-    #             _logger.warning(line.sequence)
-
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
             ('name', '=', stage_id),
