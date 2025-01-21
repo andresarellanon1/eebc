@@ -76,7 +76,9 @@ class ProjectCreation(models.TransientModel):
             'publication_date': fields.Datetime.now(),
             'date_start': self.date_start,
             'date': self.date,
-            'actual_sale_order_id': self.sale_order_id.id
+            'actual_sale_order_id': self.sale_order_id.id,
+            'location_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id
         }
 
         project = self.env['project.project'].create(project_vals)
