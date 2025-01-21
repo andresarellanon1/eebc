@@ -90,7 +90,7 @@ class ProjectCreation(models.TransientModel):
             if not existing_history:
                 history = self.env['project.version.history'].create({
                     'project_id': project.id,
-                    'modified_by': self.env.user_id.id,
+                    'modified_by': self.env.user.id,
                     'modification_motive': 'Se ha creado el proyecto',
                     'project_name': project.name,
                 })
