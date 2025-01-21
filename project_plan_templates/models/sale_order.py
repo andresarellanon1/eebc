@@ -218,7 +218,7 @@ class SaleOrder(models.Model):
                 'for_create': True,
                 'for_modification': plan.for_modification
             }))
-        return plan_lines
+        return self.remove_duplicates(plan_lines, key_field='name')
 
     def prep_picking_lines(self, line):
         picking_lines = []
@@ -296,6 +296,16 @@ class SaleOrder(models.Model):
                     'default_description': project_description
                 }
             }
+
+    def remove_duplicates(lines, key_field='name'):
+    unique_lines = {}
+    result = []
+    for line in lines:
+        key = line[2].get(key_field)
+        if key not in unique_lines:
+            unique_lines[key] = line
+            result.append(line)
+    return result
         
         
     def action_open_report(self):
