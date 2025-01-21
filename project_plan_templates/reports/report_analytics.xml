@@ -6,8 +6,6 @@
             <t t-call="web.external_layout">
                 <t t-foreach="docs" t-as="doc">
 
-                    </style>
-
                     <div style="display:flex; flex-direction: column; justify-content:space-between;">
                         <div>
                             <p><strong>Proyecto:</strong> <span t-esc="doc.project_id.name"/></p>
