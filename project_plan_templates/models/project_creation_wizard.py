@@ -83,6 +83,18 @@ class ProjectCreation(models.TransientModel):
             logger.warning(f"Id del proyecto: {project.id}")
             self.create_project_tasks(project)
 
+            existing_history = self.env['project.version.history'].search([
+                ('project_id', '=', project.id)
+            ], limit=1)
+
+            if not existing_history:
+                history = self.env['project.version.history'].create({
+                    'project_id': project.id,
+                    'modified_by': self.env.user_id.id,
+                    'modification_motive': 'Se ha creado el proyecto',
+                    'project_name': project.name,
+                })
+
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'project.project',
