@@ -298,14 +298,14 @@ class SaleOrder(models.Model):
             }
 
     def remove_duplicates(lines, key_field='name'):
-    unique_lines = {}
-    result = []
-    for line in lines:
-        key = line[2].get(key_field)
-        if key not in unique_lines:
-            unique_lines[key] = line
-            result.append(line)
-    return result
+        unique_lines = {}
+        result = []
+        for line in lines:
+            key = line[2].get(key_field)
+            if key not in unique_lines:
+                unique_lines[key] = line
+                result.append(line)
+        return result
         
         
     def action_open_report(self):
