@@ -232,7 +232,7 @@ class SaleOrder(models.Model):
                 'for_create': True,
                 'for_modification': plan.for_modification
             }))
-        return self.remove_duplicates(plan_lines, key_field='name')
+        return plan_lines
 
     def prep_picking_lines(self, line):
         picking_lines = []
