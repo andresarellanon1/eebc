@@ -317,10 +317,8 @@ class SaleOrder(models.Model):
         Solo limpia las líneas con for_modification=True.
         """
         for sale in self:
-            # Eliminar líneas de plan con for_modification=True
-            sale.project_plan_lines = [
-                line for line in sale.project_plan_lines if not line.for_modification
-            ]
+            lines_to_remove = sale.project_plan_lines.filtered('for_modification')
+            lines_to_remove.unlink()
 
             # Eliminar líneas de picking con for_modification=True
             picking_lines_cleaned = []
