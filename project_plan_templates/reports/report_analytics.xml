@@ -8,20 +8,19 @@
 
                     <style>
                         .report-content {
-                            display: -webkit-flex; /* Usado por Webkit */
                             display: flex;
-                            justify-content: space-between;
+                            flex-direction: row; /* Alineación horizontal de las columnas */
+                            justify-content: space-between; /* Espacio entre los elementos */
+                            width: 100%; /* Asegura que ocupe todo el ancho disponible */
                         }
 
                         .left-column {
-                            -webkit-flex: 1; /* Flex para Webkit */
-                            flex: 1;
+                            flex: 1; /* La columna izquierda ocupa la mitad del espacio */
                         }
 
                         .right-column {
-                            -webkit-flex: 1; /* Flex para Webkit */
-                            flex: 1;
-                            text-align: right;
+                            flex: 1; /* La columna derecha ocupa la mitad del espacio */
+                            text-align: right; /* Alinea el contenido a la derecha */
                         }
                     </style>
 
