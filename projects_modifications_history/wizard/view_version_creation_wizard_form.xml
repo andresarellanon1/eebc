@@ -31,10 +31,10 @@
                                                 <field name="display_type" column_invisible="True"/>
                                                 <field name="name" readonly="1"/>
                                                 <field name="description" readonly="1"/>
+                                                <field name="for_modification" column_invisible="1"/>
                                                 <field name="use_project_task" readonly="1"/>
                                                 <field name="planned_date_begin" widget="daterange" readonly="1"/>
                                                 <field name="planned_date_end" widget="daterange" readonly="1"/>
-                                                
                                                 <field name="project_plan_pickings" options="{'create': True}" readonly="1"/> 
                                                 <field name="task_timesheet_id" options="{'create': True}" readonly="1"/>
                                             </tree>
@@ -51,6 +51,7 @@
                                                 <field name="product_id" readonly="1"/>
                                                 <field name="name" readonly="1"/>
                                                 <field name="product_uom" readonly="1"/>
+                                                <field name="for_modification" column_invisible="1"/>
                                                 <field name="product_packaging_id" readonly="1"/>
                                                 <field name="quantity" readonly="1"/>
                                                 <field name="reservado" readonly="1"/>
@@ -80,7 +81,7 @@
                         </group>
 
                         <footer>
-                            <button name="action_confirm_version_history" string="Save Project" type="object" class="btn-primary" />
+                            <button name="action_confirm_version_history" string="Salvar proyecto" type="object" class="btn-primary" />
                             <button string="Cancel" class="btn-secondary" special="cancel" />
                         </footer>
                     </sheet>
