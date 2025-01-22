@@ -30,8 +30,6 @@ class SaleOrderLine(models.Model):
     def product_id_change(self):
         for line in self:
             line.target_currency_id = line.order_id.target_currency_id
-            if line.product_template_id:
-                line.product_template_id.get_product_pricelist()
             line._select_default_pricelist()
             line._compute_pricelist_price_unit()
 
