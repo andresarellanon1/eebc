@@ -11,7 +11,7 @@
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="action_open_create_project_wizard" class="btn-primary" type="object" string="Crear Proyecto" invisible="state != 'budget'"/>
-                <button name="action_generate_planning" class="btn-primary" type="object" string="Generar planeación" invisible="state not in ('budget', 'draft')"/>
+                <button name="action_generate_planning" class="btn-primary" type="object" string="Generar planeación" invisible="state not in ('budget', 'draft') or is_project = False"/>
                 <button name="action_open_report" type="object" string="Generar Reporte" class="btn-primary" invisible="state not in ('budget', 'sale', 'process', 'done')" />
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="replace">
