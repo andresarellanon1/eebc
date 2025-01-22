@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record model="ir.ui.view"
         id="sale_customer_credit_validations_res_config_settings_sale_form_view">
         <field name="name">sale.customer.credit.validations.res.config.settings.sale.form.view</field>
@@ -8,14 +7,6 @@
         <field name="inherit_id" ref="sale.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//setting[@id='pricelist_configuration']" position="after">
-                <setting id="setting_enable_min_sale_price_validation"
-                    help="El precio introducido manualmente en las líneas de orden de venta no puede ser menor al precio de la lista de precio más barata para el producto correspondiente.">
-                    <field name="enable_min_sale_price_validation" />
-                </setting>
-                <setting id="setting_enable_delivery_datetime_computation"
-                    help="Calcula automáticamente la fecha de entrega al confirmar una orden de venta con base a la zona de entrega del cliente, los horarios de la zona de entrega y los horarios de entrega del cliente.">
-                    <field name="enable_delivery_datetime_computation" />
-                </setting>
                 <setting id="setting_enable_partner_credit_limit_block"
                     help="Activar esta casilla para prevenir la confirmación de cotizaciones cuando el límite de crédito del cliente ya fue sobrepasado o si el valor de la cotización en curso va a sobrepasarlo. Requiere que se active el límite de crédito en el cliente para funcionar.">
                     <field name="enable_partner_credit_limit_block" />
@@ -25,20 +16,7 @@
                     help="Habilita la funcionalidad llave de crédito para confirmar contizaciones a clientes que sobrepasaron su límite de crédito o van a sobrepasarlo con la cotización en curso. Se activa por cliente y es de un solo uso, debe activarse cada vez. La advertencia de límite de crédito excedido se mantiene visible aún con la llave de crédito activa.">
                     <field name="enable_partner_limit_key" />
                 </setting>
-                <setting id="setting_enable_payment_term_cash"
-                    help="Habilita la validacion de terminos de pago">
-                    <field name="enable_payment_term_cash" />
-                </setting>
-                <setting id="enable_invoice_validate_remaining_qty"
-                    help="Validar que no se facturen ordenes de venta cuando las existencias totales despues de vender sean menores a zero.">
-                    <field name="enable_invoice_validate_remaining_qty" />
-                </setting>
-                <setting id="safe_margin"
-                    help="Agrega el equivalente a esta cantidad de pesos por cada dólar convertido. Para efectos prácticos esto es como tomar el tipo de cambio del día y sumarle esta cantidad.">
-                    <field name="safe_margin" />
-                </setting>
             </xpath>
         </field>
     </record>
-
 </odoo>
