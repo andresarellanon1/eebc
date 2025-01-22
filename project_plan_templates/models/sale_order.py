@@ -254,6 +254,7 @@ class SaleOrder(models.Model):
         return picking_lines
 
     def action_open_create_project_wizard(self):
+        
         self.ensure_one()
 
         logger.warning(f"Sale Order ID: {self.id}")
