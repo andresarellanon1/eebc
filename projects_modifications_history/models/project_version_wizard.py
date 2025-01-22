@@ -69,7 +69,6 @@ class ProjectVersionWizard(models.TransientModel):
 
     def action_confirm_version_history(self):
         self.ensure_one()
-
         project = self._origin.project_id
         if not project:
             logger.error("No se encontró el proyecto asociado.")
