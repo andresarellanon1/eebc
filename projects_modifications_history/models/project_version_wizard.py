@@ -69,7 +69,6 @@ class ProjectVersionWizard(models.TransientModel):
 
     def action_confirm_version_history(self):
         self.ensure_one()
-        self.sale_order_id.state = 'sale'
 
         project = self._origin.project_id
         if not project:
@@ -144,7 +143,7 @@ class ProjectVersionWizard(models.TransientModel):
 
         # Eliminar duplicados después de la modificación
         self.sale_order_id.clean_duplicates_after_modification()
-
+        self.sale_order_id.state = 'sale'
         # Close the wizard window after completing the action.
         return {
             'type': 'ir.actions.act_window_close'
