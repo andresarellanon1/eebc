@@ -33,7 +33,6 @@ class ProjectVersionWizard(models.TransientModel):
     )
 
     project_id = fields.Many2one('project.project', string='Proyecto', required=True)
-
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada de entrega')
