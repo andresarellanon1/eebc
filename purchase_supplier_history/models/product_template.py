@@ -72,34 +72,42 @@ class ProductTemplate(models.Model):
         readonly=True
     )
 
-    @api.depends("seller_ids.is_main_supplier")
+    @api.depends("seller_ids", "seller_ids.is_main_supplier")
     def _compute_main_supplier_id(self):
         for template in self:
             if template.seller_ids:
                 template.main_supplier_id = template.seller_ids.filtered(
                     lambda s: s.is_main_supplier
                 )[:1]
+            else:
+                template.main_supplier_id = False
 
-    @api.depends("main_supplier_id.price")
+    @api.depends("seller_ids", "main_supplier_id.price")
     def _compute_main_supplier_last_price(self):
         for template in self:
             if template.main_supplier_id:
                 template.main_supplier_last_price = template.main_supplier_id.price
+            else:
+                template.main_supplier_last_price = 0.00
 
-    @api.depends("main_supplier_id.currency_id")
+    @api.depends("seller_ids", "main_supplier_id.currency_id")
     def _compute_main_supplier_last_order_currency_id(self):
         for template in self:
             if template.main_supplier_id:
                 template.main_supplier_last_order_currency_id = template.main_supplier_id.currency_id
+            else:
+                template.main_supplier_last_order_currency_id = False
 
-    @api.depends("supplier_history")
+    @api.depends("seller_ids", "supplier_history")
     def _compute_last_supplier_id(self):
         for template in self:
             if template.supplier_history:
                 sorted_history = template.supplier_history.sorted(key=lambda r: r.datetime, reverse=True)
                 template.last_supplier_id = sorted_history[0].product_supplierinfo_id
+            else:
+                template.last_supplier_id = False
 
-    @api.depends("supplier_history")
+    @api.depends("seller_ids", "supplier_history")
     def _compute_last_supplier_datetime(self):
         for template in self:
             template.last_supplier_datetime = False
@@ -107,15 +115,21 @@ class ProductTemplate(models.Model):
                 sorted_history = template.supplier_history.sorted(key=lambda r: r.datetime, reverse=True)
                 if sorted_history[0].datetime:
                     template.last_supplier_datetime = sorted_history[0].datetime
+                else:
+                    template.last_supplier_datetime = False
 
-    @api.depends("last_supplier_id.price")
+    @api.depends("seller_ids", "last_supplier_id.price")
     def _compute_last_supplier_last_price(self):
         for template in self:
             if template.last_supplier_id:
                 template.last_supplier_last_price = template.last_supplier_id.price
+            else:
+                template.last_supplier_last_price = False
 
-    @api.depends("last_supplier_id.currency_id")
+    @api.depends("seller_ids", "last_supplier_id.currency_id")
     def _compute_last_supplier_last_order_currency_id(self):
         for template in self:
             if template.last_supplier_id:
                 template.last_supplier_last_order_currency_id = template.last_supplier_id.currency_id
+            else:
+                template.last_supplier_last_order_currency_id = False
