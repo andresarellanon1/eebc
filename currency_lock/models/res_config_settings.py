@@ -7,6 +7,7 @@ class Company(models.Model):
     safe_margin = fields.Float(
         string="Margen seguro",
         digits="Product Price",
+        readonly=False,
         help="Agrega el equivalente a esta cantidad de pesos por cada dólar convertido. Para efectos prácticos esto es como tomar el tipo de cambio del día y sumarle esta cantidad.",
         default=0.00,
     )
@@ -19,6 +20,7 @@ class ResConfigSettings(models.TransientModel):
         string="Margen seguro",
         digits="Product Price",
         default_model='res.config.settings',
+        readonly=False,
         default=0,
         related='company_id.safe_margin',
         help="Agrega el equivalente a esta cantidad de pesos por cada dólar convertido. Para efectos prácticos esto es como tomar el tipo de cambio del día y sumarle esta cantidad."
