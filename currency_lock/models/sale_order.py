@@ -16,8 +16,7 @@ class SaleOrder(models.Model):
         string="Divisa Objetivo",
         comodel_name="res.currency",
         default=lambda self: self.env.company.currency_id.id,
-        compute="_compute_locked_currency_rate",
-        store=True
+        compute="_compute_locked_currency_rate"
     )
 
     locked_currency_rate = fields.Float(
@@ -25,8 +24,7 @@ class SaleOrder(models.Model):
         digits="Payment Terms",
         help="El tipo de cambio se calcula de acuerdo al tipo de cambio oficial del día en curso. Una vez confirmado el documento no se ‘bloquea’ permanentemente o hasta que se devuelva el documento a borrador.",
         compute="_compute_locked_currency_rate",
-        default=lambda self: self.env.company.currency_id.inverse_rate,
-        readonly=True,
+        default=lambda self: self.env.company.currency_id.inverse_rate
     )
 
     safe_margin = fields.Float(

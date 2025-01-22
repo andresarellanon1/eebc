@@ -10,7 +10,6 @@ class PurchaseOrder(models.Model):
     target_currency_id = fields.Many2one(
         comodel_name="res.currency",
         string="Divisa Objetivo",
-        compute="_compute_locked_currency_rate",
         store=True,
         default=lambda self: self.env.company.currency_id.id,
     )
@@ -19,9 +18,9 @@ class PurchaseOrder(models.Model):
         string="Tipo de cambio",
         digits="Payment Terms",
         help="El tipo de cambio se calcula de acuerdo a la divisa seleccionada y al tipo de cambio oficial del día.",
+        compute="_compute_locked_currency_rate",
         default=lambda self: self.env.company.currency_id.inverse_rate,
         store=True,
-        force_save=True,
         readonly=True,
     )
 
