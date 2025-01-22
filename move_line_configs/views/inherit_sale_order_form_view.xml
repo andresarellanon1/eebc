@@ -3,16 +3,19 @@
     <record id="inherit_sale_order_view_form" model="ir.ui.view">
         <field name="name">inherit.sale.order.view.form</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='partner_details']/field[@name='partner_shipping_id']" position="after">
-                <field name="use_large_description" invisible="state in ('estimation', 'budget')"/>
+            <xpath expr="//group[@name='partner_details']/field[@name='partner_shipping_id']"
+                position="after">
+                <field name="use_large_description" invisible="state in ('estimation', 'budget')" />
             </xpath>
             <xpath expr="//tree//field[@name='name']" position="before">
-                <field name="use_large_description" column_invisible="1"/>
+                <field name="use_large_description" column_invisible="1" />
             </xpath>
             <xpath expr="//tree//field[@name='product_uom_qty']" position="before">
-                <field name="complete_description" widget="section_and_note_text" column_invisible="use_large_description == False"/>
+                <field name="use_large_description" column_invisible="True" />
+                <field name="complete_description" widget="section_and_note_text"
+                    column_invisible="not use_large_description" />
             </xpath>
         </field>
     </record>
