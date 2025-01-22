@@ -101,8 +101,8 @@ class ProjectCreation(models.TransientModel):
 
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
-            'modification_date': self.modification_date,
-            'modified_by': self.modified_by.id,
+            'modification_date': fields.Datetime.now(),
+            'modified_by': self.env.user.id,
             'modification_motive': 'Se ha creado el proyecto',
             'project_plan_lines': [(6, 0, self.sale_order_id.project_plan_lines.ids)],
             'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
