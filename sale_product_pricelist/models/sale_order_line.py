@@ -212,6 +212,7 @@ class SaleOrderLine(models.Model):
                 raise ValidationError("No se pudo cargar la lista de precios del cliente ni la predeterminada para:\n"
                                       f"producto ‘[{line.product_template_id.default_code}] {line.product_template_id.name}’ con la moneda ‘{line.order_id.currency_id.name}’.\n"
                                       "Para continuar, cree una lista de precios que cumpla con los requisitos o desactive esta validación.")
+            logger.warning(f"Selected pricelist line: {product_pricelist_id}")
             line.product_pricelist_id = product_pricelist_id
 
     def _compute_line_uom_factor(self):

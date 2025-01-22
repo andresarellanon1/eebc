@@ -22,7 +22,7 @@ class ProductTemplate(models.Model):
         string='Aparece en listas de precios')
 
     @api.depends_context('company')
-    @api.depends("company_id", "pricelist_item_count", "pricelist_item_count")
+    @api.depends("company_id", "pricelist_item_count")
     def _compute_include_template_pricelist_ids(self):
         for product_template in self:
             # Agregate all applicable pricelist for the given product template:
@@ -36,7 +36,8 @@ class ProductTemplate(models.Model):
                 pricelists_ids.append(pricelist_id.id)
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.append(pricelist_id.id)
-            product_template.include_template_pricelist_ids = [(6, 0, self.env['product.pricelist'].search([('id', 'in', pricelists_ids)]))]
+            logger.warning(f"Found pricelists {pricelists_ids} for product {product_template}")
+            product_template.include_template_pricelist_ids = [(6, 0, pricelists_ids)]
 
     @api.depends_context('company')
     @api.depends("company_id", "list_price", "standard_price", "include_template_pricelist_ids")
