@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="ir.ui.view"
-        id="sale_customer_credit_validations_res_config_settings_sale_form_view">
-        <field name="name">sale.customer.credit.validations.res.config.settings.sale.form.view</field>
+    <record model="ir.ui.view" id="customer_credit_settings_inherit">
+        <field name="name">customer.credit.settings.inherit</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="sale.res_config_settings_view_form" />
         <field name="arch" type="xml">

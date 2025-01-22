@@ -1,6 +1,6 @@
 {
     "name": "Customer Sales Credit",
-    "version": "17.0.3.004",
+    "version": "17.0.3.005",
     "depends": [
         "base",
         "sale",
