@@ -1,6 +1,6 @@
 {
     "name": "Sale Branch Valuation",
-    "version": "17.0.3.002",
+    "version": "17.0.3.003",
     "depends": [
         "base",
         "sale",

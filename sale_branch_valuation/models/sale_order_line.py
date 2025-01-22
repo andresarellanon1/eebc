@@ -70,33 +70,33 @@ class SaleOrderLine(models.Model):
     #     # Return the average unit price
     #     return total_cost / demand_qty if demand_qty > 0 else 0.0
 
-    @api.depends('move_ids', 'move_ids.picking_id.state', 'product_id', 'company_id', 'currency_id', 'product_uom', 'product_uom_qty')
-    def _compute_purchase_price(self):
-        lines_without_moves = self.browse()
-        for line in self:
-            product = line.product_id.with_company(line.company_id)
-
-            # Only god knows why this is here... commented out the block
-            if not line.has_valued_move_ids():
-                lines_without_moves |= line
-            # if product and product.categ_id.property_cost_method == 'averange':
-            purch_price = product._compute_average_price(line.qty_invoiced, line.product_uom_qty, line.move_ids)
-            if line.product_uom and line.product_uom != product.uom_id:
-                purch_price = product.uom_id._compute_price(purch_price, line.product_uom)
-            line.purchase_price = line._convert_to_sol_currency(
-                purch_price,
-                product.cost_currency_id,
-            )
-        return super(SaleOrderLine, lines_without_moves)._compute_purchase_price()
-        # elif product and product.categ_id.property_cost_method == 'fifo':
-        # there is no fifo, it's always average_cost
-        # purch_price = line._get_branch_average_unit_price(product, line.product_uom_qty, line.qty_invoiced)
-        # if line.product_uom and line.product_uom != product.uom_id:
-        #     purch_price = product.uom_id._compute_price(purch_price, line.product_uom)
-        # line.purchase_price = line._convert_to_sol_currency(
-        #     purch_price,
-        #     product.cost_currency_id,
-        # )
+    # @api.depends('move_ids', 'move_ids.picking_id.state', 'product_id', 'company_id', 'currency_id', 'product_uom', 'product_uom_qty')
+    # def _compute_purchase_price(self):
+    #     lines_without_moves = self.browse()
+    #     for line in self:
+    #         product = line.product_id.with_company(line.company_id)
+    #
+    #         # Only god knows why this is here... commented out the block
+    #         if not line.has_valued_move_ids():
+    #             lines_without_moves |= line
+    #         # if product and product.categ_id.property_cost_method == 'averange':
+    #         purch_price = product._compute_average_price(line.qty_invoiced, line.product_uom_qty, line.move_ids)
+    #         if line.product_uom and line.product_uom != product.uom_id:
+    #             purch_price = product.uom_id._compute_price(purch_price, line.product_uom)
+    #         line.purchase_price = line._convert_to_sol_currency(
+    #             purch_price,
+    #             product.cost_currency_id,
+    #         )
+    #     return super(SaleOrderLine, lines_without_moves)._compute_purchase_price()
+    # elif product and product.categ_id.property_cost_method == 'fifo':
+    # there is no fifo, it's always average_cost
+    # purch_price = line._get_branch_average_unit_price(product, line.product_uom_qty, line.qty_invoiced)
+    # if line.product_uom and line.product_uom != product.uom_id:
+    #     purch_price = product.uom_id._compute_price(purch_price, line.product_uom)
+    # line.purchase_price = line._convert_to_sol_currency(
+    #     purch_price,
+    #     product.cost_currency_id,
+    # )
 # === Just for reading and studying purposes we keep this 2 blocks commented === #
     # NOTE: never used, just for concept of RAW average cost
     # def calculate_average_cost(self):
