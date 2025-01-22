@@ -6,6 +6,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="company_id" invisible="True" />
                 <field name="locked_currency_rate"
                     invisible="currency_id == company_id.currency_id"
                     readonly="1"

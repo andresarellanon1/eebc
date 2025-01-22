@@ -22,6 +22,7 @@
                 </attribute>
             </xpath>
             <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="company_id" invisible="True" />
                 <field name="locked_currency_id" readonly="state != 'draft'" force_save="1" />
                 <field name="safe_margin" readonly="state != 'draft'" />
                 <field name="locked_currency_rate"
