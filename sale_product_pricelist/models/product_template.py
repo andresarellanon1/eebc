@@ -23,7 +23,7 @@ class ProductTemplate(models.Model):
 
     @api.depends_context('company')
     @api.depends("company_id", "pricelist_item_count", "pricelist_item_count")
-    def _conmpute_include_template_pricelist_ids(self):
+    def _compute_include_template_pricelist_ids(self):
         for product_template in self:
             # Agregate all applicable pricelist for the given product template:
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('product_tmpl_id', '=', product_template.id), ('company_id', '=', self.env.company.id)])
