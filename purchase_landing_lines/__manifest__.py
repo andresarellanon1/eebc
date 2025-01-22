@@ -8,7 +8,7 @@
             tanto las capas de valoración de inventario (stock.valuation.layer) como los movimientos (stock.move) generados con orígen en esa compra;
             usan la fecha del "costo destino" para hacer conversiones de divisa.
     """,
-    "version": "17.0.3.001",
+    "version": "17.0.3.002",
     "website": "https://quadrosoluciones.com",
     "author": "Quadro Soluciones",
     "depends": [

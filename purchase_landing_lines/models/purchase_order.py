@@ -25,21 +25,10 @@ class PurchaseOrder(models.Model):
 
     # === overwritten === #
     def button_confirm(self):
-        for order in self:
-            if order.state not in ['draft', 'sent']:
-                continue
-            order.order_line._validate_analytic_distribution()
-            order._add_supplier_to_product()
-            # Deal with double validation process
-            if order._approval_allowed():
-                order.button_approve()
-            else:
-                order.write({'state': 'to approve'})
-            if order.partner_id not in order.message_partner_ids:
-                order.message_subscribe([order.partner_id.id])
-            order._update_landed_in_lines()
-            order._update_landed_pickings()
-            return True
+        res = super(PurchaseOrder, self).button_confirm()
+        self._update_landed_pickings()
+        self._update_landed_in_lines()
+        return res
 
     def write(self, vals):
         res = super(PurchaseOrder, self).write(vals)

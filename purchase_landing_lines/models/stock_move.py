@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    price_unit = fields.Float('Unit Price', copy=False, digits='Product Price')
+    # price_unit = fields.Float('Unit Price', copy=False, digits='Product Price')
 
     # def _get_price_unit(self):
     #     """

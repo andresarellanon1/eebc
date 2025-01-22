@@ -22,7 +22,7 @@ class ProductTemplate(models.Model):
         string='Aparece en listas de precios')
 
     @api.depends_context('company')
-    @api.depends("company_id", "pricelist_item_count")
+    @api.depends("pricelist_item_count")
     def _compute_include_template_pricelist_ids(self):
         for product_template in self:
             # Agregate all applicable pricelist for the given product template:
@@ -37,10 +37,10 @@ class ProductTemplate(models.Model):
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.append(pricelist_id.id)
             logger.warning(f"Found pricelists {pricelists_ids} for product {product_template}")
-            product_template.include_template_pricelist_ids = [(6, 0, pricelists_ids)]
+            product_template.sudo().write({'include_template_pricelist_ids': [(6, 0, pricelists_ids)]})
 
     @api.depends_context('company')
-    @api.depends("company_id", "list_price", "standard_price", "include_template_pricelist_ids")
+    @api.depends("list_price", "standard_price", "include_template_pricelist_ids")
     def _compute_product_pricelist_line_ids(self):
         """
             Re-computes the price unit for all the 'product.pricelist.line' linked to this 'product.template'.
@@ -75,7 +75,7 @@ class ProductTemplate(models.Model):
                         'currency_id': pricelist.currency_id.id,
                         'is_special': pricelist.is_special
                     }).id)
-            product_template.product_pricelist_line_ids = [(6, 0, product_pricelist)]
+            product_template.sudo().write({'product_pricelist_line_ids': [(6, 0, product_pricelist)]})
 
     def get_min_sale_price(self, currency_id):
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
