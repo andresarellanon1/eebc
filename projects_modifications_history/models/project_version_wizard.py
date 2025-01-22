@@ -69,7 +69,7 @@ class ProjectVersionWizard(models.TransientModel):
 
     def action_confirm_version_history(self):
         self.ensure_one()
-        
+
         project = self._origin.project_id
         if not project:
             logger.error("No se encontró el proyecto asociado.")
@@ -145,7 +145,7 @@ class ProjectVersionWizard(models.TransientModel):
         })
 
         # Eliminar duplicados después de la modificación
-        self.sale_order_id.clean_duplicates_after_modification()
+        #self.sale_order_id.clean_duplicates_after_modification()
         self.sale_order_id.state = 'sale'
         # Close the wizard window after completing the action.
         return {
