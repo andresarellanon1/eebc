@@ -64,7 +64,7 @@ class SaleOrder(models.Model):
                 else:
                     picking_lines.append(self.prep_picking_section_line(picking, False))
 
-                picking.for_modification = False
+                # picking.for_modification = False
                 
         return picking_lines
     
