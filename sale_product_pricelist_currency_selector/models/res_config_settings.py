@@ -8,6 +8,8 @@ class Company(models.Model):
         'product.pricelist',
         string='Default Product Pricelist',
         help="This pricelist will be used as the default system-wide.",
+        default=lambda self: self.env['product.pricelist'].browse(1),
+        store=True
     )
 
 
@@ -17,8 +19,8 @@ class ResConfigSettings(models.TransientModel):
     default_product_pricelist_id = fields.Many2one(
         'product.pricelist',
         string='Default Product Pricelist',
-        default=1,
         related='company_id.default_product_pricelist_id',
+        readonly=False,
         help="This pricelist will be used as the default system-wide."
     )
 

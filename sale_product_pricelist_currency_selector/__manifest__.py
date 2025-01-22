@@ -17,7 +17,7 @@
     'author': 'Quadro Soluciones',
     'depends': ['sale', 'currency_lock', 'sale_product_pricelist'],
     'data': [
-        'views/res_config_settings.xml',
+        # 'views/res_config_settings.xml',
     ],
     "license": "LGPL-3",
     'installable': True
