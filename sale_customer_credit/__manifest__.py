@@ -1,6 +1,6 @@
 {
     "name": "Customer Sales Credit",
-    "version": "17.0.3.001",
+    "version": "17.0.3.002",
     "depends": [
         "base",
         "sale",
@@ -8,7 +8,7 @@
         "contacts",
         "contacts_enterprise",
         "account_accountant",
-        "base_address_extended"
+        "base_address_extended",
         "partner_customer",
     ],
     "author": "Quadro Soluciones",
