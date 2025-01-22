@@ -70,7 +70,7 @@ class ProjectVersionWizard(models.TransientModel):
     def action_confirm_version_history(self):
         self.ensure_one()
         self.sale_order_id.state = 'sale'
-        
+
         project = self._origin.project_id
         if not project:
             logger.error("No se encontró el proyecto asociado.")
@@ -84,6 +84,7 @@ class ProjectVersionWizard(models.TransientModel):
         existing_plan_lines = project.project_plan_lines
         new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
 
+        # Actualizar o eliminar líneas en project_plan_lines
         project.project_plan_lines = [
             (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
             for line in existing_plan_lines
@@ -97,6 +98,7 @@ class ProjectVersionWizard(models.TransientModel):
         existing_picking_lines = project.project_picking_lines
         new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
+        # Actualizar o eliminar líneas en project_picking_lines
         project.project_picking_lines = [
             (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
             for line in existing_picking_lines
@@ -107,10 +109,10 @@ class ProjectVersionWizard(models.TransientModel):
             if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
         ]
 
+        project.write({})
+
         # Check if a version history already exists for the current project.
-        existing_history = self.env['project.version.history'].search([
-            ('project_id', '=', self.project_id.id)
-        ], limit=1)
+        existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id)], limit=1)
 
         # If no version history exists, create a new one.
         if not existing_history:
@@ -125,13 +127,12 @@ class ProjectVersionWizard(models.TransientModel):
 
         # Ensure that a modification motive is provided; raise an error if missing.
         if not self.modification_motive:
-            raise UserError(f'Hace falta agregar el motivo de la modificacion.')
+            raise UserError(f'Hace falta agregar el motivo de la modificación.')
 
         # Create any newly added tasks for the project.
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
 
         # Create a new entry in the project version lines for the modification details.
-
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
             'modification_date': self.modification_date,
@@ -141,8 +142,7 @@ class ProjectVersionWizard(models.TransientModel):
             'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
         })
 
-        # Save the updated project information (though no specific changes are made here).
-        project.write({})
+        # Eliminar duplicados después de la modificación
         self.sale_order_id.clean_duplicates_after_modification()
 
         # Close the wizard window after completing the action.
