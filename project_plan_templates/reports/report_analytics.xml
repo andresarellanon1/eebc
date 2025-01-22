@@ -6,11 +6,15 @@
             <t t-call="web.external_layout">
                 <t t-foreach="docs" t-as="doc">
 
-                    <div class="report-content">                
-                        <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
-                        <p><strong>Proyecto:</strong> <span t-esc="doc.project_name"/></p>
-                        <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
-                        <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <p><strong>Proyecto:</strong> <span t-esc="doc.project_id.name"/></p>
+                            <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
+                        </div>
+                        <div>
+                            <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
+                            <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
+                        </div>
                     </div>
 
                     <div class="report-header text-center">
