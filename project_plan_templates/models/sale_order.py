@@ -197,7 +197,7 @@ class SaleOrder(models.Model):
             'standard_price': False,
             'subtotal': False,
             'for_create': for_create,
-            'for_modification': False
+            'for_modification': line.for_modification
         })
     
     def prep_plan_section_line(self, line, for_create):
@@ -249,7 +249,7 @@ class SaleOrder(models.Model):
                 'subtotal': picking.subtotal,
                 'display_type': False,
                 'for_create': True,
-                'for_modification': False
+                'for_modification': line.for_modification
             }))
         return picking_lines
 
