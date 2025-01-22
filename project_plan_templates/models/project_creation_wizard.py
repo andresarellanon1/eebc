@@ -96,6 +96,15 @@ class ProjectCreation(models.TransientModel):
                 'project_name': project.name,
             })
 
+        self.env['project.version.lines'].create({
+            'project_version_history_id': history.id,
+            'modification_date': self.modification_date,
+            'modified_by': self.modified_by.id,
+            'modification_motive': 'Se ha creado el proyecto',
+            'project_plan_lines': [(6, 0, self.sale_order_id.project_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
+        })
+
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'project.project',
@@ -199,6 +208,7 @@ class ProjectCreation(models.TransientModel):
 
                 timesheet_data = [(0, 0, {
                     'name': ts_line.description,
+                    'work_shift': ts_line.work_shift,
                     'estimated_time': ts_line.estimated_time,
                 }) for ts_line in timesheet_lines]
 
