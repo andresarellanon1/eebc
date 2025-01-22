@@ -1,7 +1,6 @@
 <odoo>
-    <record id="sale_product_pricelist_currency_selector_inherit_sales_config_settings"
-        model="ir.ui.view">
-        <field name="name">sale.product.pricelist.currency.selector.inherit.sales.config.settings</field>
+    <record id="pricelist_currency_selector_settings_inherit" model="ir.ui.view">
+        <field name="name">pricelist.currency.selector.settings.inherit</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="sale.res_config_settings_view_form" />
         <field name="arch" type="xml">
