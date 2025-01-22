@@ -8,7 +8,7 @@ class AccountMove(models.Model):
 
     sale_cost = fields.Float('Costo total', compute="_compute_sale_cost", store=False)
 
-    @api.depends('invoice_line_ids', 'pre_invoice', 'is_government', 'material_change')
+    @api.depends('invoice_line_ids')
     def _compute_sale_cost(self):
         for move in self:
             cost = 0.00
