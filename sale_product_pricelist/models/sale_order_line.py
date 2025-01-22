@@ -193,7 +193,7 @@ class SaleOrderLine(models.Model):
             product_pricelist_id = False
             order_company = line.order_id.company_id.id
             default_pricelist_id = self.env.user.company_id.selected_product_pricelist_id.id
-            priority_customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.priority_pricelist_id.id, line.order_id.target_currency_id.id) if line.order_id.partner_id.priority_pricelist_id else False
+            priority_customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.priority_pricelist_id.id, line.order_id.target_currency_id.id, order_company) if line.order_id.partner_id.priority_pricelist_id else False
             customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.property_product_pricelist.id, line.order_id.target_currency_id.id, order_company) if line.order_id.partner_id.property_product_pricelist else False
             if (not default_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
@@ -202,7 +202,7 @@ class SaleOrderLine(models.Model):
                 "Para continuar, cree una lista de precios predeterminada que cumpla con los requisitos o desactive esta validación."
                 raise ValidationError(msg)
             if priority_customer_selected_pricelist and (not product_pricelist_id):
-                product_pricelist_id = _get_pricelist(line.product_template_id.id, priority_customer_selected_pricelist.name, priority_customer_selected_pricelist.currency_id.id, jorder_company)
+                product_pricelist_id = _get_pricelist(line.product_template_id.id, priority_customer_selected_pricelist.name, priority_customer_selected_pricelist.currency_id.id, order_company)
             if customer_selected_pricelist and (not product_pricelist_id):
                 # Search for the price list line that matches the customer-selected price list
                 product_pricelist_id = _get_pricelist(line.product_template_id.id, customer_selected_pricelist.name, customer_selected_pricelist.currency_id.id, order_company)
