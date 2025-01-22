@@ -5,21 +5,185 @@
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <t t-foreach="docs" t-as="doc">
+                    <style>
+                        
+                        p {
+                            margin:0;
+                            font-size: 12px;
+                        }
+                        
+                    </style>
+
+                    <!-- Encabezado -->    
 
                     <div style="display: flex; justify-content: space-between;">
                         <div>
-                            <p><strong>Proyecto:</strong> <span t-esc="doc.project_id.name"/></p>
-                            <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
+                            <strong><p>Cliente: <span>DESARROLLOS TERRAVIVA, S. DE R.L. DE C.V.</span></p></strong>
+                            <strong><p>Proyecto: <span>obra24-230 RED DE ELECTRIFICACION DEL FRACC. RANCHO SAN VICENTE</span></p></strong>
                         </div>
                         <div>
-                            <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
-                            <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
+                            <strong><p>Cotización: <span t-esc="doc.name"/></p></strong>
+                            <strong><p>Fecha: <span t-esc="doc.date_order"/></p></strong>
+                            <strong><p>Elaboró: <span>RamonAlcantar</span></p></strong>
                         </div>
                     </div>
 
-                    <div class="report-header text-center">
-                        <h1>Análisis de precios unitarios</h1>
+                    <div class="report-header text-center" style="border: 2px solid black;">
+                        <p><strong>Análisis de precios unitarios</strong></p>
                     </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <div style="width: 60%;">
+                            <div style="display: flex;">
+                                <div style="margin-right: 60px;">
+                                    <p>Clave:</p>
+                                </div>
+                                
+                                <div style="text-align: left;">
+                                    <p>1.1.26</p>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 10px;">
+                                <p>1.1.26 SUM. E INST. DE POSTE DE CONCRETO T.C. 13-600. +</p>
+                            </div>
+                            
+                        </div>
+                        <div style="width: 30%; display: flex; justify-content: space-between">
+                            <div>
+                                <p>Unidad: </p>
+                                <p>Cantidad: </p>
+                                <p>Precio unitario: </p>
+                                <p>Total: </p>
+                            </div>
+                            
+                            <div style="text-align: right;">
+                                <p>PZA</p>
+                                <p>8.00</p>
+                                <p>16,240.00</p>
+                                <p>129,920.00</p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Inventario -->    
+
+                    <div style="width: 100%;">
+                      <table style="border-collapse: collapse;">
+                          <thead>
+                              <tr style="border-collapse: collapse;">
+                                  <th style="width: 5%; border: 2px solid black;">C</th>
+                                  <th style="width: 10%; border: 2px solid black; text-align: left">Clave</th>
+                                  <th style="width: 35%; border: 2px solid black; text-align: left">Descripción</th>
+                                  <th style="width: 10%; border: 2px solid black;">Unidad</th>
+                                  <th style="width: 10%; border: 2px solid black; text-align: right">Cantidad</th>
+                                  <th style="width: 15%; border: 2px solid black; text-align: right">Costo Unitario</th>
+                                  <th style="width: 15%; border: 2px solid black; text-align: right">Total</th>
+                              </tr>
+                              <tr>
+                                <td colspan="7" style="font-weight: bold;">Materiales</td>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td> </td>
+                                  <td>8003</td>
+                                  <td>8002 POSTE DE CONCRETO TIPO COSTA 13-600</td>
+                                  <td style="text-align: center">PZA</td>
+                                  <td style="text-align: right">1.0000000</td>
+                                  <td style="text-align: right">9,700.00</td>
+                                  <td style="text-align: right">9,700.00</td>
+                              </tr>
+                            
+                              <tr style="border-top: 20px solid white;">
+                                  <td colspan="6" style="font-weight: bold;">Total de materiales</td>
+                                  <td style="text-align: right; font-weight: bold;">9,700.00</td>
+                              </tr>
+                            
+                              <tr style="border-top: 10px solid white;">
+                                  <td colspan="6" style="font-weight: bold;">Mano de obra</td>
+                              </tr>
+                                                       
+                              <tr>
+                                  <td> </td>
+                                  <td>CI</td>
+                                  <td>CI-2 CUADRILLA INSTALADORA</td>
+                                  <td style="text-align: center">jor</td>
+                                  <td style="text-align: right">1.5000000</td>
+                                  <td style="text-align: right">1,000.00</td>
+                                  <td style="text-align: right">1,500.00</td>
+                              </tr>
+                              
+                              <tr style="border-top: 20px solid white;">
+                                  <td colspan="6" style="font-weight: bold;">Total de Mano de obra</td>
+                                  <td style="text-align: right; font-weight: bold;">1,500.00</td>
+                              </tr>
+                              
+                              <tr>
+                                  <td> </td>
+                                  <td></td>
+                                  <td style="font-weight: bold;">Costo directo</td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td style="text-align: right; font-weight: bold;">11,200.00</td>
+                              </tr>
+                            
+                              <tr>
+                                  <td> </td>
+                                  <td></td>
+                                  <td style="font-weight: bold;">Utilidad</td>
+                                  <td></td>
+                                  <td></td>
+                                  <td style="text-align: right; font-weight: bold;">45.0000%</td>
+                                  <td style="text-align: right; font-weight: bold;">5,040.00</td>
+                              </tr>
+                            
+                              <tr>
+                                  <td> </td>
+                                  <td></td>
+                                  <td style="font-weight: bold;">Precio unitario</td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td style="text-align: right; font-weight: bold;">16,240.00</td>
+                              </tr>
+                            
+                              <tr>
+                                  <td> </td>
+                                  <td></td>
+                                  <td style="font-weight: bold;">IVA (8.00%)</td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td style="text-align: right; font-weight: bold;">1,299.20</td>
+                              </tr>
+                            
+                              <tr>
+                                  <td> </td>
+                                  <td></td>
+                                  <td style="font-weight: bold;">Total</td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td style="text-align: right; font-weight: bold;">17,539.20</td>
+                              </tr>
+                            
+                              <tr style="border-top: 20px solid white; text-align: center;">
+                                <td colspan="6" style="font-weight: bold;">(* DIECISIETE MIL QUINIENTOS TRINTA Y NUEVE PESOS 20/100 MXN*)</td>
+                              </tr>
+                            
+                              <tr style="border-top: 25px solid white;">
+                              <tr style="border-top: 2px solid black;">
+                                
+                          </tbody>
+                      </table>
+                  </div>
+
+
+
+                    <!--Inventario-->
 
                     <table class="table table-condensed">
                         <tbody>
@@ -170,3 +334,4 @@
         </t>
     </template>
 </odoo>
+
