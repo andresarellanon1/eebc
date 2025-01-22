@@ -18,7 +18,6 @@ class ResConfigSettings(models.TransientModel):
     default_product_pricelist_id = fields.Many2one(
         'product.pricelist',
         string='Default Product Pricelist',
-        default_model='res.config.settings',
         default=lambda self: self.env['product.pricelist'].browse(1),
         related='company_id.default_product_pricelist_id',
         readonly=False,
