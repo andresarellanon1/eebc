@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']//tree" position="inside">
-                <field name="locked_currency_id" invisible="1" column_invisible="1" />
+                <field name="target_currency_id" invisible="1" column_invisible="1" />
                 <field name="product_pricelist_id"
                     domain="[
                      ('product_templ_id', '=', product_template_id), 

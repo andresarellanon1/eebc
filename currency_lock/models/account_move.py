@@ -10,7 +10,7 @@ class AccountMove(models.Model):
         string="Divisa Objetivo",
         comodel_name="res.currency",
         default=lambda self: self.env.company.currency_id.id,
-        compute="_compute_locked_currency_id",
+        compute="_compute_target_currency_id",
         readonly=True,
     )
     locked_currency_rate = fields.Float(
@@ -35,7 +35,7 @@ class AccountMove(models.Model):
         return moves
 
     @api.depends("sale_order_count")
-    def _compute_locked_currency_id(self):
+    def _compute_target_currency_id(self):
         for move in self:
             if move.state == "posted":
                 continue
@@ -45,7 +45,7 @@ class AccountMove(models.Model):
                 source_order_ids = line.sale_line_ids.order_id.ids
                 source_orders = self.env["sale.order"].search([("id", "in", source_order_ids)])
                 order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
-                move.locked_currency_id = order.locked_currency_id
+                move.target_currency_id = order.target_currency_id
 
     @api.depends("currency_id")
     def _compute_locked_currency_rate(self):
@@ -58,4 +58,4 @@ class AccountMove(models.Model):
                 source_order_ids = line.sale_line_ids.order_id.ids
                 source_orders = self.env["sale.order"].search([("id", "in", source_order_ids)])
                 order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
-                move.locked_currency_rate = self.env["res.currency"].search([("id", "=", order.locked_currency_id.id)], limit=1).inverse_rate
+                move.locked_currency_rate = self.env["res.currency"].search([("id", "=", order.target_currency_id.id)], limit=1).inverse_rate

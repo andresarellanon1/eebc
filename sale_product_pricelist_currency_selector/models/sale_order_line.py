@@ -39,7 +39,7 @@ class SaleOrderLine(models.Model):
     def _update_price_for_pricelist(self):
         """
         Updates price unit for the order line based on the pricelist.
-        Always uses using the correct pricelist of the locked_currency_id is not the company.currency_id
+        Always uses using the correct pricelist of the target_currency_id is not the company.currency_id
         It looks for the first match of an "Equivalent" pricelist in the target currency.
         Raises:
             ValidationError: If a suitable price list cannot be found for the product template with the correct currency.
