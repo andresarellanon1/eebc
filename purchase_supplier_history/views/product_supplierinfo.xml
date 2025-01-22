@@ -19,7 +19,7 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="domain">
-                    [('is_supplier', '=', true)]
+                    [('is_supplier', '=', True)]
                 </attribute>
             </xpath>
             <xpath expr="//field[@name='min_qty']" position="attributes">

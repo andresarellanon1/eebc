@@ -21,7 +21,7 @@
         dependiendo de si este comportamiento está activado mediante un campo booleano. Este funcionamiento es heredado del
         módulo `product_supplier_history`.
     """,
-    'version': '17.0.1.001',
+    'version': '17.0.1.002',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [
@@ -36,7 +36,6 @@
         'contacts',
         'account',
         'account_accountant',
-        'purchase_supplier_history',
     ],
     'data': [
     ],

@@ -6,7 +6,7 @@
             Agrega funcionalidad para calcular los últimos precios de compra cuando se agregan líneas de orden de compra para un producto.
             Agrega un historial de compras (modelo nuevo) a la vista detallada del product.template.
     """,
-    'version': '17.0.1.001',
+    'version': '17.0.1.002',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [
