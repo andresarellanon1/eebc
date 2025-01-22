@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='unspsc']" position="before">
                 <group name="pricelist_template" string="Listas de precios">
-                    <field name="product_pricelist_id" readonly="1" nolabel="1" colspan="2"
+                    <field name="product_pricelist_line_ids" readonly="1" nolabel="1" colspan="2"
                         context="{'origin_res_id': active_id, 'origin_res_model': active_model}">
                         <tree string="Lista de precios">
                             <field name="pricelist_id" />

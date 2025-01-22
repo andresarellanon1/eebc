@@ -7,7 +7,7 @@
         Actualiza el precio unitario de la línea en cuestión correspondiente con la lista de precios seleccionada en cualquiera de estos dos documentos.
         Multisucursal.
     """,
-    'version': '17.0.3.001',
+    'version': '17.0.3.002',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [
