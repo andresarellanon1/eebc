@@ -83,6 +83,9 @@ class ProjectVersionWizard(models.TransientModel):
         existing_plan_lines = project.project_plan_lines
         new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
 
+        for new_line in new_plan_lines_data:
+            logger.info(f"Nuevo plan line: {new_line}")
+
         # Actualizar o eliminar líneas en project_plan_lines
         project.project_plan_lines = [
             (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
