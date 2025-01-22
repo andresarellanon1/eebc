@@ -133,6 +133,9 @@ class ProjectVersionWizard(models.TransientModel):
         # Create any newly added tasks for the project.
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
 
+        for sale in self.sale_order_id.project_picking_lines:
+            sale.for_modification = False
+
         # Create a new entry in the project version lines for the modification details.
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
