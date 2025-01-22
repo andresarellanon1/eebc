@@ -32,7 +32,6 @@ class ProjectCreation(models.TransientModel):
     note = fields.Char()
 
     plan_total_cost = fields.Float(string="Costo total",  compute='_compute_total_cost', default=0.0)
-
     picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
