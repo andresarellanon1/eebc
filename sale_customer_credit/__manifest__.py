@@ -1,6 +1,6 @@
 {
     "name": "Customer Sales Credit",
-    "version": "17.0.3.002",
+    "version": "17.0.3.003",
     "depends": [
         "base",
         "sale",
@@ -18,9 +18,8 @@
             Campos para clientes. Se agregan campos y validaciones de credito a flujos de venta.
     """,
     "data": [
-        "views/res_partner_views.xml",
-        "views/account_move_views.xml",
-        "views/sale_order_views.xml",
+        "views/res_partner.xml",
+        "views/sale_order.xml",
     ],
     "license": "LGPL-3",
 }
