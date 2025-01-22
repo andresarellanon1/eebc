@@ -1,6 +1,6 @@
 {
     "name": "Customer Sales",
-    "version": "17.0.1.001",
+    "version": "17.0.1.002",
     "depends": [
         "base",
         "sale",
