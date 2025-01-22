@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
         'product.pricelist.line',
         'product_templ_id',
         compute="_compute_product_pricelist_line_ids",
-        store=True,
+        store=False,
         string='Lineas de lista de precios')
 
     include_template_pricelist_ids = fields.Many2many(
@@ -40,7 +40,7 @@ class ProductTemplate(models.Model):
             product_template.sudo().write({'include_template_pricelist_ids': [(6, 0, pricelists_ids)]})
 
     @api.depends_context('company')
-    @api.depends("list_price", "standard_price", "include_template_pricelist_ids")
+    @api.depends("list_price", "standard_price")
     def _compute_product_pricelist_line_ids(self):
         """
             Re-computes the price unit for all the 'product.pricelist.line' linked to this 'product.template'.

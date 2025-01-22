@@ -5,15 +5,15 @@ logger = logging.getLogger(__name__)
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
-
-    purchase_price = fields.Float(
-        string="Costo Unitario",
-        compute="_compute_purchase_price",
-        digits='Product Price',
-        store=True,
-        readonly=False,
-        copy=False,
-        groups="base.group_user")
+    #
+    # purchase_price = fields.Float(
+    #     string="Costo Unitario",
+    #     compute="_compute_purchase_price",
+    #     digits='Product Price',
+    #     store=True,
+    #     readonly=False,
+    #     copy=False,
+    #     groups="base.group_user")
 
     # def _get_branch_average_unit_price(self, product_id, demand_qty, qty_invoiced=0):
     #     """
