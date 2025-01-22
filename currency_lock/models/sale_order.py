@@ -16,7 +16,8 @@ class SaleOrder(models.Model):
         string="Divisa Objetivo",
         comodel_name="res.currency",
         default=lambda self: self.env.company.currency_id.id,
-        compute="_compute_locked_currency_rate"
+        compute="_compute_locked_currency_rate",
+        store=True
     )
 
     locked_currency_rate = fields.Float(
