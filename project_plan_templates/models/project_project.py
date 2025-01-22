@@ -100,6 +100,25 @@ class ProjectProject(models.Model):
 
                             existing_task.timesheet_ids = timesheet_data
 
+                        picking_lines = []
+                        is_task = False
+
+                        for picking in self.project_picking_lines:
+                            if picking.display_type:
+                                is_task = picking.name == line.name
+                            elif is_task:
+                                picking_lines.append((0, 0, {
+                                    'name': picking.product_id.name,
+                                    'product_id': picking.product_id.id,
+                                    'product_uom': picking.product_uom.id,
+                                    'product_packaging_id': picking.product_packaging_id.id,
+                                    'product_uom_qty': picking.product_uom_qty,
+                                    'quantity': picking.quantity,
+                                    'standard_price': picking.standard_price,
+                                    'subtotal': picking.subtotal,
+                                    'display_type': False
+                                }))
+
                         self.create_project_tasks_pickings(existing_task, picking_lines, location_id, location_dest_id, scheduled_date)
 
     def get_or_create_task_type(self, stage_id, project):
