@@ -24,9 +24,10 @@ class SaleOrderLine(models.Model):
             line._select_default_pricelist()
             line._compute_pricelist_price_unit()
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty', 'order_id.safe_margin')
+    @api.depends('product_id', 'product_uom', 'product_uom_qty', 'order_id.safe_margin', 'product_pricelist_id')
     def _compute_price_unit(self):
         """
+            Overwritten
             We use a custom algorithm to compute the price unit of the line,
             However, calling super() is the best way to ensure the input of the algorithm is always consistent with the value i expect it to be
             In this case, i want the value to be the exact same value odoo puts in the price_unit field of the sale.order.line by default.
@@ -51,7 +52,8 @@ class SaleOrderLine(models.Model):
                     raise ValidationError(
                         f"No se pudo calcular prcio unitario debido a la divisa.\n"
                         f"No se encontró una lista de precios para el producto ‘{line.product_template_id.name}’"
-                        f"con la moneda ‘{line.order_id.target_currency_id.name}’.\n"
+                        f"con la moneda ‘{line.order_id.target_currency_id.name}’\n"
+                        f"para la empresa ‘{line.order_id.company_id.name}’.\n"
                         f"Sin esta equivalencia, no es posible realizar el cambio de divisa.\n\n"
                         f"Por favor, elimine la línea de producto que causa este error de validación o cree la lista de precios correspondiente."
                     )
@@ -61,7 +63,7 @@ class SaleOrderLine(models.Model):
                                                    source_currency=self.env.company.currency_id,
                                                    target_currency=line.order_id.target_currency_id)
             if line.product_pricelist_id.uom_id.id != line.product_uom.id:
-                line._compute_line_uom_now()
+                line._compute_line_uom_factor()
 
     def _update_price_for_company_currency(self):
         """
@@ -81,13 +83,13 @@ class SaleOrderLine(models.Model):
                                                    source_currency=self.env.company.currency_id,
                                                    target_currency=line.order_id.target_currency_id)
             if line.product_pricelist_id.uom_id.id != line.product_uom.id:
-                line._compute_line_uom_now()
+                line._compute_line_uom_factor()
 
     def _find_equivalent_pricelist(self):
         for line in self:
             """
             Finds the equivalent pricelist for the order line's product template with the correct currency,
-            and also checks if the pricelist location matches the current company where the user is logged in .
+            and also checks if the pricelist company matches the current company where the user is logged in .
 
             Returns:
                 record: The matching pricelist.
@@ -97,7 +99,7 @@ class SaleOrderLine(models.Model):
                     ("product_templ_id", "=", line.product_template_id.id),
                     ("name", "=", line.product_pricelist_id.name),
                     ("currency_id", "=", line.order_id.target_currency_id.id),
-                    ("pricelist_id.branch_id", "=", line.order_id.branch_id)
+                    ("company_id", "=", line.order_id.company_id.id)
                 ],
                 limit=1
             )
@@ -169,20 +171,21 @@ class SaleOrderLine(models.Model):
                             or if the customer - selected or default price list is not available.
 
         """
-        def _get_pricelist(product_template, pricelist_id, currency):
+        def _get_pricelist(product_template, pricelist_id, currency, company_id):
             return self.env["product.pricelist.line"].search([("product_templ_id", "=", product_template),
                                                               ("pricelist_id", "=", pricelist_id),
-                                                              ("currency_id", "=", currency)],
+                                                              ("currency_id", "=", currency),
+                                                              ("company_id", "=", company_id)],
                                                              limit=1)
         for line in self:
             if not line.product_template_id:
                 line.product_pricelist_id = False
                 continue
             product_pricelist_id = False
-            actual_company = self.env.company.id
+            order_company = line.order_id.company_id.id
             default_pricelist_id = self.env.user.company_id.default_product_pricelist_id.id
             priority_customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.priority_pricelist_id.id, line.order_id.target_currency_id.id) if line.order_id.partner_id.priority_pricelist_id else False
-            customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.property_product_pricelist.id, line.order_id.target_currency_id.id, actual_company) if line.order_id.partner_id.property_product_pricelist else False
+            customer_selected_pricelist = _get_pricelist(line.product_template_id.id, line.order_id.partner_id.property_product_pricelist.id, line.order_id.target_currency_id.id, order_company) if line.order_id.partner_id.property_product_pricelist else False
             if (not default_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
                 "No se encontró una lista de precios predeterminada para:\n"
@@ -190,10 +193,10 @@ class SaleOrderLine(models.Model):
                 "Para continuar, cree una lista de precios predeterminada que cumpla con los requisitos o desactive esta validación."
                 raise ValidationError(msg)
             if priority_customer_selected_pricelist and (not product_pricelist_id):
-                product_pricelist_id = _get_pricelist(line.product_template_id.id, priority_customer_selected_pricelist.name, priority_customer_selected_pricelist.currency_id.id, actual_company)
+                product_pricelist_id = _get_pricelist(line.product_template_id.id, priority_customer_selected_pricelist.name, priority_customer_selected_pricelist.currency_id.id, jorder_company)
             if customer_selected_pricelist and (not product_pricelist_id):
                 # Search for the price list line that matches the customer-selected price list
-                product_pricelist_id = _get_pricelist(line.product_template_id.id, customer_selected_pricelist.name, customer_selected_pricelist.currency_id.id, actual_company)
+                product_pricelist_id = _get_pricelist(line.product_template_id.id, customer_selected_pricelist.name, customer_selected_pricelist.currency_id.id, order_company)
             if default_pricelist_id and (not product_pricelist_id):
                 product_pricelist_id = default_pricelist_id
             if not product_pricelist_id:
@@ -202,7 +205,7 @@ class SaleOrderLine(models.Model):
                                       "Para continuar, cree una lista de precios que cumpla con los requisitos o desactive esta validación.")
             line.product_pricelist_id = product_pricelist_id
 
-    def _compute_line_uom_now(self):
+    def _compute_line_uom_factor(self):
         """
         == = Critical Warning for Developers == =
         Calling this method more than once with identical values for both 'default' and 'selected' unit of measures(uom) can lead to a severe bug.

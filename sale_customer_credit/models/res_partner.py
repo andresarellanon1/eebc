@@ -6,9 +6,9 @@ logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    orders_residual = fields.Monetary(string='Ordenes por facturar', compute='orders_amount_residual')
-    invoice_residual = fields.Monetary(string='Facturas por cobrar', compute='invoice_residual_amount')
-    total_residual = fields.Monetary(string='Total por cobrar', compute='_compute_total')
+    orders_residual = fields.Monetary(string='Ordenes por facturar', compute='_compute_orders_residual')
+    invoice_residual = fields.Monetary(string='Facturas por cobrar', compute='_compute_invoice_residual')
+    total_residual = fields.Monetary(string='Total por cobrar', compute='_compute_total_residual')
     customer_credit_suspend = fields.Boolean(
         default=False,
         string="Crédito suspendido.",
@@ -23,28 +23,24 @@ class ResPartner(models.Model):
         help="Abrir la llave de crédito.")
 
     def _check_credit_limit(self, amount):
-        for record in self:
-            credit = record.credit + amount
-            if not record.customer_manual_suspend and (credit >= record.credit_limit):
-                return True
-            else:
-                return False
-
-    def invoice_residual_amount(self):
         for partner in self:
-            credit = partner.credit
-            partner.invoice_residual = credit
+            credit = partner.total_residual + amount
+            return (not partner.customer_manual_suspend) and (credit <= partner.credit_limit)
+
+    def _compute_invoice_residual(self):
+        for partner in self:
+            partner.invoice_residual = partner.credit
 
     @api.depends("orders_residual", "invoice_residual")
-    def _compute_total(self):
+    def _compute_total_residual(self):
         for record in self:
             record.total_residual = record.orders_residual + record.invoice_residual
 
-    def orders_amount_residual(self):
+    def _compute_orders_residual(self):
         for partner in self:
             total = 0.0
             orders = self.env['sale.order'].search([
-                ('partner_id', '=', partner.id),  # cliente
+                ('partner_id', '=', partner.id),
                 ('state', '=', 'sale'),  # ordenes confirmadas
                 ('invoice_status', '=', 'to invoice')  # por facturar
             ])

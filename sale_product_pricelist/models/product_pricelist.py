@@ -7,41 +7,6 @@ logger = logging.getLogger(__name__)
 class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
-    # def write(self, vals):
-    #     res = super(ProductPricelist, self).write(vals)
-    #     if 'item_ids' in vals:
-    #         self._compute_product_pricelist_lines()
-    #     return res
-
-    # NOTE: NEED TESTING
-    @api.depends('item_ids')
-    def _compute_product_pricelist_lines(self):
-        """
-            Calls the _compute_product_pricelist() of the corresponding product templates that are applied.
-            Triggers the computation for all related templates regardless of the actual changes to the lines.
-            If lines where deleted, updated or created: Trigger all the related product template _compute_product_pricelist().
-        """
-        for pricelist in self:
-            items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
-            items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
-            items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('pricelist_id', '=', pricelist.id)])
-            items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global')])
-
-            if items_direct_relation.product_tmpl_id:
-                product_template = self.env["product.template"].search([('id', '=', items_direct_relation.product_tmpl_id.id)])
-                product_template._compute_product_pricelist()
-
-            if items_direct_relation_variant.product_id:
-                product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
-                product.product_tmplt_id._compute_product_pricelist()
-
-            if items_category_relation.categ_id:
-                product_templates = self.env["product.template"].search([('categ_id', '=', items_category_relation.categ_id.id)])
-                product_templates._compute_product_pricelist()
-
-            if items_all_stock.items_category_relation:
-                self.env["product.template"].browse([])._compute_product_pricelist()
-
     @api.depends('item_ids')
     def _compute_filtered_item_ids(self):
         for pricelist in self:

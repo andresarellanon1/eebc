@@ -12,17 +12,12 @@
         Multi sucursal:
             Encuentra solamente listas de precio correspondientes a la sucursal del vendedor de la orden.
     """,
-    'version': '17.0.1.01',
+    'version': '17.0.2.001',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
-    'depends': ['partner_branches', 'currency_lock', 'sale_product_pricelist', 'partner_priority_pricelist'],
+    'depends': ['sale', 'currency_lock', 'sale_product_pricelist'],
     'data': [
-        # 'views/account_move_views.xml',
-        # 'views/purchase_order_views.xml',
-        # 'views/sale_order_views.xml',
-        # 'views/sale_order_line_views.xml',
-        # 'views/inherit_sales_config_settings.xml',
-        # 'views/inherit_product_pricelist_view.xml'
+        'views/sales_config_settings.xml',
     ],
     "license": "LGPL-3",
     'installable': True

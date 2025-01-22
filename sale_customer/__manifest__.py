@@ -1,6 +1,6 @@
 {
     "name": "Customer Sales",
-    "version": "17.0.1.01",
+    "version": "17.0.1.001",
     "depends": [
         "base",
         "sale",
@@ -15,13 +15,11 @@
     "website": "https://quadrosoluciones.com/",
     "category": "other",
     "description": """
-            Campos para clientes.
-            Funcionalidad minima y validaciones varias.
+            Campos para clientes. Agrega campos que se originan del sistema del cliente.
+            Este modulo existe para albergar campos y datos de naturaleza ajena a odoo, originados de una "entrada" de datos del cliente.
     """,
     "data": [
-        "views/res_partner_views.xml",
-        "views/account_move_views.xml",
-        "views/sale_order_views.xml",
+        "views/sale_order.xml",
     ],
     "license": "LGPL-3",
 }

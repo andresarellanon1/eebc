@@ -20,11 +20,3 @@ class AccountMove(models.Model):
 
             move.customer_reference = ','.join(line_order_references)
         return moves
-
-    # get the correct name for the report of invoice
-    # def _get_name_invoice_report(self):
-    #     self.ensure_one()
-    #     if self.move_type in ['out_invoice', 'out_refund']:
-    #         return 'morvil_report_invoice.morvil_out_invoice_template'
-    #     else:
-    #         return 'account.report_invoice_document'

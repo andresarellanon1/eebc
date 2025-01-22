@@ -1,7 +1,5 @@
 import logging
-
 from odoo import api, fields, models
-
 logger = logging.getLogger(__name__)
 
 
@@ -15,7 +13,6 @@ class AccountMove(models.Model):
         compute="_compute_locked_currency_id",
         readonly=True,
     )
-
     locked_currency_rate = fields.Float(
         string="Tipo de cambio bloqueado",
         digits="Payment Terms",
@@ -29,13 +26,12 @@ class AccountMove(models.Model):
     def create(self, vals_list):
         moves = super(AccountMove, self).create(vals_list)
         for move in moves:
-            if move.sale_order_count > 0:
-                for line in move.line_ids:
-                    source_order_id = line.sale_line_ids.order_id
-                    source_order = self.env["sale.order"].search([("id", "=", source_order_id.id)])
-                    move.locked_currency_rate = source_order.locked_currency_rate
-            else:
-                move._compute_currency_rate()
+            if move.sale_order_count <= 0:
+                continue
+            for line in move.line_ids:
+                source_order_id = line.sale_line_ids.order_id
+                source_order = self.env["sale.order"].search([("id", "=", source_order_id.id)])
+                move.locked_currency_rate = source_order.locked_currency_rate
         return moves
 
     @api.depends("sale_order_count")
@@ -43,21 +39,23 @@ class AccountMove(models.Model):
         for move in self:
             if move.state == "posted":
                 continue
-            if move.sale_order_count > 0:
-                for line in move.line_ids:
-                    source_order_ids = line.sale_line_ids.order_id.ids
-                    source_orders = self.env["sale.order"].search([("id", "in", source_order_ids)])
-                    order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
-                    move.locked_currency_id = order.locked_currency_id
+            if move.sale_order_count <= 0:
+                continue
+            for line in move.line_ids:
+                source_order_ids = line.sale_line_ids.order_id.ids
+                source_orders = self.env["sale.order"].search([("id", "in", source_order_ids)])
+                order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
+                move.locked_currency_id = order.locked_currency_id
 
     @api.depends("currency_id")
     def _compute_locked_currency_rate(self):
         for move in self:
             if move.state == "posted":
                 continue
-            if move.sale_order_count > 0:
-                for line in move.line_ids:
-                    source_order_ids = line.sale_line_ids.order_id.ids
-                    source_orders = self.env["sale.order"].search([("id", "in", source_order_ids)])
-                    order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
-                    move.locked_currency_rate = self.env["res.currency"].search([("id", "=", order.locked_currency_id.id)], limit=1).inverse_rate
+            if move.sale_order_count <= 0:
+                continue
+            for line in move.line_ids:
+                source_order_ids = line.sale_line_ids.order_id.ids
+                source_orders = self.env["sale.order"].search([("id", "in", source_order_ids)])
+                order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
+                move.locked_currency_rate = self.env["res.currency"].search([("id", "=", order.locked_currency_id.id)], limit=1).inverse_rate

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sol_product_pricelist" model="ir.ui.view">
+        <field name="name">sale.order.line.pricelist.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']//tree" position="inside">
+                <field name="locked_currency_id" invisible="1" column_invisible="1" />
+                <field name="product_pricelist_id"
+                    domain="[
+                     ('product_templ_id', '=', product_template_id), 
+                     ('currency_id', '=', currency_id), 
+                     ('company_id', '=', company_id), 
+                     ('is_special', '=', False)]"
+                    options="{'no_create': True, 'no_create_edit':True, 'no_quick_create':True, 'no_open': True}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

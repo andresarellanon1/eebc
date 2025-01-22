@@ -1,24 +1,21 @@
 {
     'name': "Partner Customer Extension",
-    'version': '17.0.0.01',
+    'version': '17.0.3.001',
     'depends': [
         "sale",
-        "contacts",
-        "contacts_enterprise",
-        "base_address_extended",
+        "contacts"
     ],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
     'description': """
         Utilidades para las implementaciones de Quadro Soluciones.
-        Configuraciones y campos a los contactos.
+        Configuraciones y campos a los contactos de clientes.
         Computa las direcciones al cambiar el partner de las sale orders.
     """,
     "data": [
         "views/res_partner.xml",
-        "views/sale_order_views.xml",
-        "views/res_country_views.xml",
+        "views/sale_order.xml",
     ],
     "application": False,
     "installable": True,

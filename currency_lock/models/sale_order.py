@@ -31,10 +31,13 @@ class SaleOrder(models.Model):
     safe_margin = fields.Float(
         string="Margen seguro",
         digits="Product Price",
+        store=True,
+        readonly=False,
         help="Agrega el equivalente a esta cantidad de pesos por cada dólar convertido. Para efectos prácticos esto es como tomar el tipo de cambio del día y sumarle esta cantidad.",
         compute='_compute_safe_margin',
     )
 
+    @api.depends_context('company')
     @api.depends("company_id", "company_id.safe_margin")
     def _compute_safe_margin(self):
         """
@@ -63,18 +66,8 @@ class SaleOrder(models.Model):
         for order in self:
             order.currency_id = order.target_currency_id
 
-    @api.onchange("target_currency_id")
-    def onchange_target_currency_id(self):
-        """
-            Updates the field `currency_id` when the target currency changes.
-        """
-        for order in self:
-            if order.state == "sale":
-                continue
-            order.currency_id = order.target_currency_id
-
     @api.onchange("partner_id", "target_currency_id")
-    def onchange_customer_partner_id(self):
+    def _onchange_parnter_or_locked_currency(self):
         """
             Updates the field `target_currency_id` when the customer (`partner_id`) is changed.
             Sets the target currency to the customer's sales currency and

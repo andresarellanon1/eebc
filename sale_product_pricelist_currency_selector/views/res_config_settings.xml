@@ -1,0 +1,15 @@
+<odoo>
+    <record id="sale_product_pricelist_currency_selector_inherit_sales_config_settings"
+        model="ir.ui.view">
+        <field name="name">sale.product.pricelist.currency.selector.inherit.sales.config.settings</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_pricelist_setting']" position="after">
+                <label for="default_product_pricelist_id" />
+                <field name="default_product_pricelist_id" widget="many2one"
+                    options="{'no_create': True}" class="o_light_label" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

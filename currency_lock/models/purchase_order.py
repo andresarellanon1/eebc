@@ -11,6 +11,7 @@ class PurchaseOrder(models.Model):
         comodel_name="res.currency",
         string="Divisa Objetivo",
         compute="_compute_locked_currency_rate",
+        store=True,
         default=lambda self: self.env.company.currency_id.id,
     )
 
@@ -19,6 +20,8 @@ class PurchaseOrder(models.Model):
         digits="Payment Terms",
         help="El tipo de cambio se calcula de acuerdo a la divisa seleccionada y al tipo de cambio oficial del día.",
         default=lambda self: self.env.company.currency_id.inverse_rate,
+        store=True,
+        force_save=True,
         readonly=True,
     )
 
@@ -26,11 +29,10 @@ class PurchaseOrder(models.Model):
     def _compute_locked_currency_rate(self):
         for order in self:
             if order.state == "done":
-                return
-            else:
-                order.locked_currency_rate = order.target_currency_id.inverse_rate
-                for line in order.order_line:
-                    line._product_id_change()
+                continue
+            order.locked_currency_rate = order.target_currency_id.inverse_rate
+            for line in order.order_line:
+                line._product_id_change()
 
     @api.onchange("target_currency_id")
     def onchange_target_currency_id(self):
