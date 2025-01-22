@@ -81,7 +81,7 @@ class ProjectVersionWizard(models.TransientModel):
         project.sale_order_id = self.sale_order_id.id
 
         existing_plan_lines = project.project_plan_lines
-        new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+        new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
 
         for new_line in new_plan_lines_data:
             logger.info(f"Nuevo plan line: {new_line}")
@@ -98,7 +98,7 @@ class ProjectVersionWizard(models.TransientModel):
         ]
 
         existing_picking_lines = project.project_picking_lines
-        new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
+        new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
 
         # Actualizar o eliminar líneas en project_picking_lines
         project.project_picking_lines = [
@@ -145,7 +145,7 @@ class ProjectVersionWizard(models.TransientModel):
         })
 
         # Eliminar duplicados después de la modificación
-        #self.sale_order_id.clean_duplicates_after_modification()
+        self.sale_order_id.clean_duplicates_after_modification()
         self.sale_order_id.state = 'sale'
         # Close the wizard window after completing the action.
         return {
