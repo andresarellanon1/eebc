@@ -83,28 +83,31 @@ class ProjectVersionWizard(models.TransientModel):
         existing_plan_lines = project.project_plan_lines
         new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
 
-        new_plan_lines_to_add = [
+        # Actualizar o eliminar líneas en project_plan_lines
+        project.project_plan_lines = [
+            (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+            for line in existing_plan_lines
+            for new_line in new_plan_lines_data
+            if line.name == new_line[2]['name']
+        ] + [
             new_line for new_line in new_plan_lines_data
             if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
-        ]
-
-        project.project_plan_lines = [
-            (0, 0, new_line[2]) for new_line in new_plan_lines_to_add
         ]
 
         existing_picking_lines = project.project_picking_lines
         new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
-        new_picking_lines_to_add = [
+        # Actualizar o eliminar líneas en project_picking_lines
+        project.project_picking_lines = [
+            (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+            for line in existing_picking_lines
+            for new_line in new_picking_lines_data
+            if line.name == new_line[2]['name']
+        ] + [
             new_line for new_line in new_picking_lines_data
             if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
         ]
 
-        project.project_picking_lines = [
-            (0, 0, new_line[2]) for new_line in new_picking_lines_to_add
-        ]
-
-        # Guardar los cambios en el proyecto
         project.write({})
 
         # Check if a version history already exists for the current project.
@@ -149,7 +152,7 @@ class ProjectVersionWizard(models.TransientModel):
     def prep_plan_lines(self, plan):
         plan_lines = []
         for line in plan:
-            if line.use_project_task and line.for_create:
+            if line.use_project_task:
                 if line.display_type == 'line_section':
                     plan_lines.append((0, 0, {
                         'name': line.name,
