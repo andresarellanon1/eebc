@@ -3,7 +3,7 @@
     'description': """
             Este modulo comprende las configuraciones para la generacion de plantillas de proyectos.
     """,
-    'version': '17.0.0.02',
+    'version': '17.0.1.001',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [

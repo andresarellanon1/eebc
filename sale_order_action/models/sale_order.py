@@ -26,7 +26,6 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_id')
     def _compute_user_id(self):
-        _logger.warning('Es nuestro compute')
         for order in self:
             # Asigna siempre al usuario logueado como el user_id
             order.user_id = self.env.user

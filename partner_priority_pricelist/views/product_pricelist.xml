@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="price_list_customer_product_pricelist_form" model="ir.ui.view">
+        <field name="name">price.list.customer.product.pricelist</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="before">
+                <field name="is_special" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

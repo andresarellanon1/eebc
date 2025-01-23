@@ -1,28 +1,21 @@
 {
     'name': "Partner Customer Extension",
-    'version': '17.0.0.01',
+    'version': '17.0.3.001',
     'depends': [
-        "base",
         "sale",
-        "sale_stock",
-        "sale_stock_margin",
-        "contacts",
-        "contacts_enterprise",
-        "account_accountant",
-        "stock",
-        "stock_account",
-        "base_address_extended",
+        "contacts"
     ],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
     'description': """
-        Este modulo conforma las configuraciones de los clientes.
+        Utilidades para las implementaciones de Quadro Soluciones.
+        Configuraciones y campos a los contactos de clientes.
+        Computa las direcciones al cambiar el partner de las sale orders.
     """,
     "data": [
         "views/res_partner.xml",
-        "views/sale_order_views.xml",
-        "views/res_country_views.xml",
+        "views/sale_order.xml",
     ],
     "application": False,
     "installable": True,

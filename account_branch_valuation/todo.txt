@@ -1,0 +1,2 @@
+agregar valoracion de inventarios (costos y capas) en este modulo (personalizaciones por branch)
+SOLO PARA ACCOUNT MOVES Y COSAS CONTABLES.

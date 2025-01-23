@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="customer_sales_account_move_form_view">
+        <field name="name">customer.sales.account.move.form.view</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_residual']" position="after">
+                <field name="sale_cost" />
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']"
+                position="after">
+                <field name="sale_unit_cost" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

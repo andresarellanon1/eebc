@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
     <menuitem id="notice_menu_root"
         name="Avisos"
-        web_icon="eebc_notices,static/description/avisos_icon.png"
-
-        sequence="240">  
+        web_icon="eebc_notices,static/description/icon.png"
+        sequence="240">
     </menuitem>
-
- <menuitem id="notice_notices_menu"
+    <menuitem id="notice_notices_menu"
         name="Aviso"
         parent="notice_menu_root"
         action="action_open_notices"
-        sequence="1">  
+        sequence="1">
     </menuitem>
 
 </odoo>

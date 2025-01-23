@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="supplier_last_price_purchase_order_form_view">
+        <field name="name">supplier.last.price.purchase.order.form.view</field>
+        <field name="model">purchase.order</field>
+        <field name="priority">999</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">
+                    [('is_supplier', '=', True)]
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
