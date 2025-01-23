@@ -79,39 +79,37 @@ class ProjectVersionWizard(models.TransientModel):
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
 
-        existing_plan_lines = project.project_plan_lines
+        existing_plan_lines = self.project_plan_lines
         new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
 
-        for new_line in new_plan_lines_data:
-            logger.info(f"Nuevo plan line: {new_line}")
-
-        # Actualizar o eliminar líneas en project_plan_lines
-        project.project_plan_lines = [
-            (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
-            for line in existing_plan_lines
-            for new_line in new_plan_lines_data
-            if line.name == new_line[2]['name']
-        ] + [
-            new_line for new_line in new_plan_lines_data
-            if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
+        existing_plan_refs = set(existing_plan_lines.mapped('reference_field'))  # Cambia 'reference_field' por el campo único
+        plan_lines_to_add = [
+            (0, 0, line_data)
+            for line_data in new_plan_lines_data
+            if line_data.get('reference_field') not in existing_plan_refs
         ]
 
-        existing_picking_lines = project.project_picking_lines
+        # 2. Líneas de picking (`project_picking_lines`)
+        existing_picking_lines = self.project_picking_lines
         new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
-        # Actualizar o eliminar líneas en project_picking_lines
-        project.project_picking_lines = [
-            (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
-            for line in existing_picking_lines
-            for new_line in new_picking_lines_data
-            if line.name == new_line[2]['name']
-        ] + [
-            new_line for new_line in new_picking_lines_data
-            if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
+        existing_picking_refs = set(existing_picking_lines.mapped('reference_field'))  # Cambia 'reference_field'
+        picking_lines_to_add = [
+            (0, 0, line_data)
+            for line_data in new_picking_lines_data
+            if line_data.get('reference_field') not in existing_picking_refs
         ]
 
-        project.write({})
+        # 3. Escritura en el proyecto si hay líneas nuevas para agregar
+        updates = {}
+        if plan_lines_to_add:
+            updates['project_plan_lines'] = plan_lines_to_add
+        if picking_lines_to_add:
+            updates['project_picking_lines'] = picking_lines_to_add
 
+        if updates:
+            project.write(updates)
+        
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id)], limit=1)
 
