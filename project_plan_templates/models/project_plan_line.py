@@ -41,6 +41,7 @@ class ProjectLines(models.Model):
     project_plan_pickings = fields.Many2one('project.plan.pickings', string="Lista de materiales")
     for_create = fields.Boolean(default=True)
     for_modification = fields.Boolean(default=True)
+    service_qty = fields.Float(string="Cantidad")
 
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []

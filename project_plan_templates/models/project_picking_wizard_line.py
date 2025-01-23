@@ -6,6 +6,7 @@ class ProjectPickingWizardLine(models.TransientModel):
     _order = 'sequence'
 
     wizard_creation_id = fields.Many2one('project.creation.wizard')
+    wizard_version_history_id = fields.Many2one('project.version.wizard')
 
     name = fields.Char(string="Name")
     product_id = fields.Many2one('product.product', string="Product")
@@ -32,6 +33,7 @@ class ProjectPickingWizardLine(models.TransientModel):
     product_uom = fields.Many2one('uom.uom', string='Unidad de medida')
     company_id = fields.Many2one('res.company', string="Empresa")
     product_uom_qty = fields.Float(string="Demanda")
+    for_modification = fields.Boolean()
 
     @api.depends('product_id')
     def _compute_standard_price(self):
