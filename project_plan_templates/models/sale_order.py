@@ -213,7 +213,7 @@ class SaleOrder(models.Model):
             'task_timesheet_id': False,
             'for_create': for_create,
             'for_modification': True,
-            'service_qty': line.product_uom_qty
+            'service_qty': 0
         })
 
     def prep_plan_lines(self, line):
