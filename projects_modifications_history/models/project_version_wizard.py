@@ -82,22 +82,27 @@ class ProjectVersionWizard(models.TransientModel):
         existing_plan_lines = self.project_plan_lines
         new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
 
-        existing_plan_refs = set(existing_plan_lines.mapped('reference_field'))  # Cambia 'reference_field' por el campo único
+        existing_plan_refs = set(existing_plan_lines.mapped('name'))
         plan_lines_to_add = [
             (0, 0, line_data)
             for line_data in new_plan_lines_data
-            if line_data.get('reference_field') not in existing_plan_refs
+            if line_data.get('name') not in existing_plan_refs
         ]
 
         # 2. Líneas de picking (`project_picking_lines`)
         existing_picking_lines = self.project_picking_lines
         new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
-        existing_picking_refs = set(existing_picking_lines.mapped('reference_field'))  # Cambia 'reference_field'
+        existing_picking_refs = set(
+            (line.name, line.quantity)
+            for line in existing_picking_lines
+        )
+
+        # Generar claves compuestas para las nuevas líneas y agregar solo las que no existan
         picking_lines_to_add = [
             (0, 0, line_data)
             for line_data in new_picking_lines_data
-            if line_data.get('reference_field') not in existing_picking_refs
+            if (line_data.get('name'), line_data.get('quantity')) not in existing_picking_refs
         ]
 
         # 3. Escritura en el proyecto si hay líneas nuevas para agregar
