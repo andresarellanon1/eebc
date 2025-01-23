@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="plan_picking_template_view_tree" model="ir.ui.view">
+            <field name="name">plan.picking.template.tree</field>
+            <field name="model">project.plan.pickings</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="creation_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="plan_picking_template_view_form" model="ir.ui.view">
+            <field name="name">plan.picking.template.view.from</field>
+            <field name="model">project.plan.pickings</field>
+            <field name="arch" type="xml">
+                <form string="Plantillas de movimientos de inventario">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" class="w-100" required="1"/>
+                            </h1>
+                            <group>
+                                <group>
+                                    <field name="creator_id"/>
+                                </group>
+                                <group>
+                                    <field name="creation_date"/>
+                                </group>
+                            </group>
+                        </div>
+                        <notebook>
+                            <page name="description" string="Descripción">
+                                <field name="description" options="{'resizable': false}"/>
+                            </page>
+                            <page name="picking_lines" string="Materiales">
+                                <field name="project_picking_lines" nolabel="1">
+                                    <tree editable="editable_bottom" style="width: 100%;">
+                                        <field name="company_id" column_invisible="1"/>
+                                        <field name="name" column_invisible="1"/>
+                                        <field name="product_id"/>
+                                        <field name="product_uom"/>
+                                        <field name="product_packaging_id"/>
+                                        <field name="quantity"/>
+                                        <field name="standard_price"/>
+                                        <field name="subtotal"/>
+                                        <!--<field name="quantity"/>
+                                        <field name="standard_price"/>
+                                        <field name="subtotal"/>-->
+                                    </tree>
+                                </field>
+                                <!--<group>
+                                    <group colspan="4">
+                                    </group>
+                                    <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                                        <field name="plan_total_cost"/>
+                                    </group>
+                                </group>-->
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_project_creation_wizard_form" model="ir.ui.view">
+            <field name="name">project.creation.wizard.form</field>
+            <field name="model">project.creation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Confirm Project Creation">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="project_name" />
+                            </h1>
+                        </div>
+                            <group>
+                                <group>
+                                    <field name="project_id" readonly="1"/>
+                                    <field name="sale_order_id" readonly="1"/>
+                                    <field name="partner_id"/>
+                                    <field name="picking_type_id"/>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
+                                </group>
+                                <group>
+                                    <field name="scheduled_date"/>
+                                    <field name="date_start" string="Calendario del proyecto" 
+                                        widget="daterange" 
+                                        options="{&quot;end_date_field&quot;: &quot;date&quot;, &quot;always_range&quot;: &quot;1&quot;}" 
+                                        required="date_start or date"/>
+                                    <field name="date" invisible="1" required="date_start"/>
+                                </group>
+                            </group>
+                            <notebook>
+                                <page name="description" string="Descripción">
+                                    <field name="description" />
+                                </page>
+                                <page name="planning" string="Tareas del proyecto">
+                                    <div>
+                                        <field name="wizard_plan_lines" widget="section_and_note_one2many" mode="tree,kanban" nolabel="1">
+                                            <tree editable="bottom" style="width: 100%;">
+                                                <control>
+                                                    <create name="add_product_control" string="Add a product"/>
+                                                    <create name="add_section_control" string="Añadir sección" context="{'default_display_type': 'line_section'}"/>
+                                                </control>
+                                                <field name="display_type" column_invisible="True"/>
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="name"/>
+                                                <field name="description"/>
+                                                <field name="service_qty"/>
+                                                <field name="use_project_task" column_invisible="1"/>
+                                                <field name="for_create" column_invisible="1"/>
+                                                <field name="planned_date_begin" widget="daterange"/>
+                                                <field name="planned_date_end" widget="daterange"/>
+                                                <field name="project_plan_pickings" options="{'create': True}"/>
+                                                <field name="task_timesheet_id" options="{'create': True}"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+                                </page>
+                                <page name="Stock" string="Inventario">
+                                    <div>
+                                        <field name="wizard_picking_lines" widget="section_and_note_one2many" mode="tree,kanban">
+                                            <tree editable="editable_bottom" style="width: 100%;">
+                                                <field name="company_id" column_invisible="1"/>
+                                                <field name="display_type" column_invisible="True"/>
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="name"/>
+                                                <field name="product_id"/>
+                                                <field name="product_uom"/>
+                                                <field name="product_packaging_id"/>
+                                                <field name="quantity"/>  
+                                                <field name="standard_price"/> 
+                                                <field name="subtotal"/>  
+                                            </tree>
+                                        </field>
+                                        <group>
+                                            <group colspan="4">
+                                                <field colspan="2" name="note" nolabel="1"/>  
+                                            </group>
+                                            <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                                                <field name="plan_total_cost"/> 
+                                            </group>
+                                        </group>
+                                    </div>
+                                </page>
+                            </notebook>
+                        <footer>
+                            <button name="action_confirm_create_project" string="Create Project"
+                                type="object" class="btn-primary" />
+                            <button string="Cancel" class="btn-secondary" special="cancel" />
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

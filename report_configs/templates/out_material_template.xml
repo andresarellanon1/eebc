@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="out_material_template">
+            <t t-foreach="docs" t-as="factura">
+                <t t-call="web.html_container">
+                    <t t-call="report_configs.external_layout_invoice_custom">
+                        <t t-call="report_configs.report_styles"/>
+                        <div class="page">
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0; ">
+                                <thead class="p- table-borderless text-center" style="background-color: rgb(255, 204, 0); color: rgba(0,58,112,255); font-size: 21px; padding: 2px important!">
+                                    <tr>
+                                        <th style="width: 58%; "/>
+                                        <th style="width: 45%; background-color: white; font-weight: 900 ">
+                                            REQUISICION DE MATERIAL
+                                        </th>
+                                        <th style="width: 17%; font-weight: 900">
+                                            19198
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <table class="table-borderless" style="width: 100%; border-collapse: collapse; border: none; font-size: 13px;">
+                                        <tr>
+                                            <td style="font-weight: bold;">Cliente:</td>
+                                            <td>51100 RESIDENCIALES CADENA</td>
+                                        </tr>
+                                        <tr>
+                                            <td/>
+                                            <td>BLVD. LAZARO CARDENAS 1601 INT. L4,5Y6 COL. RANCHO LA BODEGA</td>
+                                        </tr>
+                                        <tr>
+                                            <td/>
+                                            <td>MEXICALI BCN MEXICO C.P. 21379</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                               <div class="col-6" style="text-align: right;">
+                                    <table class="table-borderless" style="border-collapse: collapse; border: none; font-size: 13px; margin-left: auto;">
+                                        <tr>
+                                            <td style="text-align: right;">Fecha:</td>
+                                            <td style="font-weight: bold; text-align: left;">10/09/2024</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right; white-space: nowrap;">Solicitado para:</td>
+                                            <td style="font-weight: bold; text-align: left;">Obra</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;">Importar a:</td>
+                                            <td style="font-weight: bold; text-align: left;">Frontera</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <table class="table" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                <thead style="border-bottom: 2px solid black;">
+                                    <tr>
+                                        <th style="width: 5%; text-align: center; border: 2px solid black;">Pda.</th>
+                                        <th style="width: 10%; text-align: center; border: 2px solid black;">Cantidad</th>
+                                        <th style="width: 10%; text-align: center; border: 2px solid black;">Unidad</th>
+                                        <th style="width: 45%; text-align: left; border: 2px solid black;">Artículo/Descripción</th>
+                                        <th style="width: 15%; text-align: right; border: 2px solid black;">P. Unitario</th>
+                                        <th style="width: 15%; text-align: right; border: 2px solid black;">Importe</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: center; border: none; line-height: 1;">1</td>
+                                        <td style="text-align: center; border: none; line-height: 1;">2,000</td>
+                                        <td style="text-align: center; border: none; line-height: 1;">PZA</td>
+                                        <td style="border: none; line-height: 1;">
+                                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; border: none;">
+                                                <tr>
+                                                    <td class="table-borderless" style="width: 15%; text-align: left; border: none;">8318</td>
+                                                    <td class="table-borderless" style="width: 85%; text-align: left; border: none;">POZO DE VISITA 260X260X150 CM CFE-PVMTBX-TC NORMA 2008</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="text-align: right; border: none; line-height: 1;">21,700.00</td>
+                                        <td style="text-align: right; border: none; line-height: 1;">43,400.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; border: none; line-height: 1;">2</td>
+                                        <td style="text-align: center; border: none; line-height: 1;">3,000</td>
+                                        <td style="text-align: center; border: none; line-height: 1;">PZA</td>
+                                        <td style="border: none; line-height: 1;">
+                                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; border: none;">
+                                                <tr>
+                                                    <td style="width: 15%; text-align: left; border: none;">8345</td>
+                                                    <td style="width: 85%; text-align: left; border: none;">POZO DE VISITA 260X260X150 CM PVM TAX CFE-2008</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="text-align: right; border: none; line-height: 1;">28,800.00</td>
+                                        <td style="text-align: right; border: none; line-height: 1;">86,400.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; border: none; line-height: 1;">3</td>
+                                        <td style="text-align: center; border: none; line-height: 1;">5,000</td>
+                                        <td style="text-align: center; border: none; line-height: 1;">PZA</td>
+                                        <td style="border: none; line-height: 1;">
+                                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; border: none;">
+                                                <tr>
+                                                    <td style="width: 15%; text-align: left; border: none;">8301</td>
+                                                    <td style="width: 85%; text-align: left; border: none;">REG. CONCRETO MT CFE TN-RMTB4 (1.50X1.50X0.90 M)</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="text-align: right; border: none; line-height: 1;">6,850.00</td>
+                                        <td style="text-align: right; border: none; line-height: 1;">34,250.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; border: none; line-height: 1;">4</td>
+                                        <td style="text-align: center; border: none; line-height: 1;">17,000</td>
+                                        <td style="text-align: center; border: none; line-height: 1;">PZA</td>
+                                        <td style="border: none; line-height: 1;">
+                                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; border: none;">
+                                                <tr>
+                                                    <td style="width: 15%; text-align: left; border: none;">8302</td>
+                                                    <td style="width: 85%; text-align: left; border: none;">REG. CONCRETO MT N-CFE TN-RMTA-4 C/ARO TAPA 1.5X1.5X0.90</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="text-align: right; border: none; line-height: 1;">10,504.00</td>
+                                        <td style="text-align: right; border: none; line-height: 1;">178,568.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; border: none; font-size: 14px;">
+                              <tr>
+                                    <td style="vertical-align: top;">
+                                        <strong>Observaciones: </strong> COTIZACION ACONCAGUA NO. 6710
+                                    </td>
+                                  <td style="text-align: right; vertical-align: top;">
+                                      <div style="border: 1px solid black; border-radius: 10px;">
+                                          <table class="table-borderless" style="width: 100%; border: none;">
+                                              <tr>
+                                                  <td><strong>SUBTOTAL :</strong></td>
+                                                  <td>342,618.00</td>
+                                              </tr>
+                                              <tr>
+                                                  <td><strong>IVA: 8% :</strong></td>
+                                                  <td>27,409.44</td>
+                                              </tr>
+                                              <tr>
+                                                  <td><strong>TOTAL EN PESOS :</strong></td>
+                                                  <td>370,027.44</td>
+                                              </tr>
+                                          </table>
+                                      </div>
+                                  </td>
+                              </tr>
+                            </table>
+                            <div class="footer">
+                            <hr style="border: 1px solid black;"/>
+                            <p style="font-size: 11px;">
+                                Los precios de esta requisición son válidos por 30 Día(s).<br/>
+                                <span>Término de Venta: </span><span>CRÉDITO</span><br/>
+                                Tiempo de entrega: 22 DÍAS HÁBILES<br/>
+                                L.A.B.: NUESTRO ALMACÉN
+                            </p>
+                            <table class="table-borderless" style="width: 100%; margin-top: 20px; border: none; font-size: 13px;">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <div style="border-bottom: 1px solid black; margin: -12px 10px 0 10px; justify-content: center; padding-bottom: 1px;">
+                                            ING. MARIO CARRILLO AYALA
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <div style="border-bottom: 1px solid black; margin: 0 10px; justify-content: center; padding-bottom: 1px;">
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <div style="border-bottom: 1px solid black; margin: 0 10px; justify-content: center; padding-bottom: 1px;">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 33%; text-align: center;">SOLICITA</td>
+                                    <td style="width: 33%; text-align: center;">AUTORIZA</td>
+                                    <td style="width: 33%; text-align: center;">GERENTE / JEFE DE ÁREA</td>
+                                </tr>
+                            </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

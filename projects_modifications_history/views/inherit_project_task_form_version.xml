@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_project_task_form_version" model="ir.ui.view">
+        <field name="name">inherit.project.task.form.version</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[2]" position="after">
+                <button name="action_save_version" type="object" class="oe_highlight" string="Salvar proyecto"/>
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>

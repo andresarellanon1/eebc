@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_project_task_form_inherited2" model="ir.ui.view">
+        <field name="name">inherit.project.task.form.inherited2</field>  
+        <field name="model">project.task</field>  
+        <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>  
+
+        <field name="arch" type="xml">
+            <xpath expr="//tree//field[@name='unit_amount']" position="before">
+                <field name="work_shift"/> 
+                <field name="estimated_time" widget="timesheet_uom"/> 
+            </xpath>
+        </field>
+    </record>
+</odoo>

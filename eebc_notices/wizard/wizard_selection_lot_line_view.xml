@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="wizard_select_lot_line_view" model="ir.ui.view">
+        <field name="name">Wizard Selection Lot Line</field>
+        <field name="model">wizard.selection.lot.line</field>
+        <field name="arch" type="xml">
+             <form string="Select Lote">
+                <group name="asignacion_lote" string="Establezca cantidad">
+                    <field name="lot_id" options="{'no_create': True, 'no_open': True}" readonly="1"/>
+                    <field name="quantity"/>
+                    <!-- <field name="lot_quantity_available" readonly="1"/> -->
+
+                </group>
+                
+             </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_project_project_kanban" model="ir.ui.view">
+        <field name="name">view.project.project.kanban</field>
+        <field name="model">project.project</field>
+        <field name="type">kanban</field>
+        <field name="arch" type="xml">
+            <kanban>
+               <xpath expr="//div[@class='oe_kanban_bottom_right']/field[@name='user_id']" position="after">
+                    <field name="default_picking_type_id"/>
+                </xpath> 
+            </kanban>
+        </field>
+    </record>
+</odoo>

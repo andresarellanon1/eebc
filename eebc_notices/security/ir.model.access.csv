@@ -1,0 +1,17 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+notices_model_access_right_user,notices_model_access_right,model_notices_notices,,1,1,1,1
+notices_history_model_access_right_user,notices_history_model_access_right,model_notices_history,,1,1,1,1
+
+
+access_notice_file_wizard,access_notice_file_wizard,model_notice_file_wizard,base.group_system,1,1,1,0
+access_select_notice_wizard,access_select_notice_wizard,model_select_notice_wizard,base.group_system,1,1,1,0
+access_wizard_selection_line,access_wizard_selection_line,model_wizard_selection_line,base.group_system,1,1,1,0
+access_wizard_selection_lot_line,access_wizard_selection_lot_line,model_wizard_selection_lot_line,base.group_system,1,1,1,0
+
+
+
+
+
+
+
+

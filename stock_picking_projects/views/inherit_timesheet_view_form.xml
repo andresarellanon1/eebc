@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_timesheet_view_form" model="ir.ui.view">
+        <field name="name">inherit.timesheet.view.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group//field[@name='company_id']" position="replace">
+                <field name="pickin_ids" widget="many2many_tags" options="{'no_create': True}" string="Operaciones de Inventario"/>
+                <field name="site_supervisor_id" widget="many2one_avatar_user"/>
+                <field name="subcontractor_id" widget="many2one_avatar_user" invisible = "is_subcontractor != True"/>
+                <field name="is_subcontractor" widget="checkbox" string="Subcontratista"/>
+                <field name="taxes_id" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//group//field[@name='date']" position="after">
+                <field name="bid_code"/>
+            </xpath>
+            <xpath expr="//group//field[@name='user_id']" position="after">
+                <field name="default_picking_type_id"/>
+                <field name="custom_currency_id" readonly="0"/>
+                <field name="exchange_rate"/>
+                <field name="creation_date"/>
+                <field name="submission_date"/>
+                <field name="publication_date"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

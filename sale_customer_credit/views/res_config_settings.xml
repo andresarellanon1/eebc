@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="customer_credit_settings_inherit">
+        <field name="name">customer.credit.settings.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='pricelist_configuration']" position="after">
+                <setting id="setting_enable_partner_credit_limit_block"
+                    help="Activar esta casilla para prevenir la confirmación de cotizaciones cuando el límite de crédito del cliente ya fue sobrepasado o si el valor de la cotización en curso va a sobrepasarlo. Requiere que se active el límite de crédito en el cliente para funcionar.">
+                    <field name="enable_partner_credit_limit_block" />
+                </setting>
+                <setting id="setting_enable_partner_limit_key"
+                    invisible="not enable_partner_credit_limit_block"
+                    help="Habilita la funcionalidad llave de crédito para confirmar contizaciones a clientes que sobrepasaron su límite de crédito o van a sobrepasarlo con la cotización en curso. Se activa por cliente y es de un solo uso, debe activarse cada vez. La advertencia de límite de crédito excedido se mantiene visible aún con la llave de crédito activa.">
+                    <field name="enable_partner_limit_key" />
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

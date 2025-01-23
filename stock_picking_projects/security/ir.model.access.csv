@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+eebc.account_analytic_line,account_analytic_line,stock_picking_projects.model_account_analytic_line,,1,1,1,1
+eebc.product_product,product_product,stock_picking_projects.model_product_product,,1,1,1,1
+eebc.project_project,project_project,stock_picking_projects.model_project_project,,1,1,1,1
+eebc.project_task,project_task,stock_picking_projects.model_project_task,,1,1,1,1
+eebc.stock_picking,stock_picking,stock_picking_projects.model_stock_picking,,1,1,1,1

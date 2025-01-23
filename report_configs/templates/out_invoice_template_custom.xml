@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="out_invoice_template_custom">
+            <t t-foreach="docs" t-as="factura">
+                <t t-call="web.html_container">
+                    <t t-call="report_configs.external_layout_invoice_custom">
+                        <t t-call="report_configs.report_styles"/>
+                        <div class="page">
+                            <table class="table-borderless" style="width: 100%; border-collapse: collapse; margin:0; ">
+                                <thead class="p- table-borderless text-center"
+                                       style="background-color: rgb(255, 204, 0); color: rgb(51, 51, 153); font-size: 21px; padding: 2px important!">
+                                    <tr>
+                                        <th style="width: 58%; "/>
+                                        <th style="width: 25%; background-color: white; font-weight: 900 ">
+                                            F A C T U R A
+                                        </th>
+                                        <th style="width: 17%; font-weight: 900">
+                                            M - 177074
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <span class="span-n">
+                                <strong>R.F.C.: EEB8111231Q4 RÉGIMEN FISCAL: 601</strong>
+                            </span>
+                            <br/>
+                            <br/>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-auto col_tags">
+                                        <span class="span-n">NO. CLIENTE:</span>
+                                        <br/>
+
+                                        <!--<span
+                                        t-field="property.expected_price"/> -->
+                                        <span class="span-n">NOMBRE:</span>
+                                        <br/>
+
+                                        <span class="span-n">R.F.C:</span>
+                                        <br/>
+
+                                        <span class="span-n">DOMICILIO FISCAL:</span>
+                                        <br/>
+
+                                        <span class="span-n">USO DEL CFDI:</span>
+                                        <br/>
+
+                                        <span class="span-n">FORMA PAGO:</span>
+                                        <br/>
+
+                                        <span class="span-n">RÉGIMEN FISCAL:</span>
+                                        <br/>
+
+                                    </div>
+                                    <div class="col-auto col_fields" style="padding-right:15px">
+                                        <span class="span-n">50582</span>
+                                        <br/>
+                                        <!--<span
+                                        t-field="property.expected_price"/> -->
+
+                                        <span class="span-n">ABVA CONSTRUCCION Y MANTENIMIENTO</span>
+                                        <br/>
+
+                                        <span class="span-n">ACM180118MF1</span>
+                                        <br/>
+
+                                        <span class="span-n">21600</span>
+                                        <br/>
+
+                                        <span class="span-n">G03</span>
+                                        <br/>
+
+                                        <span class="span-n">03 - TRANSFERENCIA ELECTRONICA DE FONDOS</span>
+                                        <br/>
+
+                                        <span class="span-n">626</span>
+                                        <br/>
+
+                                    </div>
+                                    <div class="col-auto col_tags">
+                                        <span class="span-n">FECHA/HORA:</span>
+                                        <br/>
+                                        <!--<span
+                                        t-field="property.expected_price"/> -->
+
+                                        <span class="span-n">NUM.PEDIDO:</span>
+                                        <br/>
+
+                                        <span class="span-n">ORDEN COMPRA:</span>
+                                        <br/>
+
+                                        <span class="span-n">METODO PAGO:</span>
+                                        <br/>
+
+                                        <span class="span-n">VENDEDOR:</span>
+                                        <br/>
+
+                                        <span class="span-n">EXPORTACIÓN:</span>
+                                        <br/>
+                                    </div>
+                                    <div class="col-auto col_fields" style="background-color:#ededed;">
+                                        <span class="span-n">2024-09-10T14:47:41</span>
+                                        <br/>
+                                        <!--<span
+                                        t-field="property.expected_price"/> -->
+
+                                        <span class="span-n">2874</span>
+                                        <br/>
+
+                                        <span class="span-n">n/a</span>
+                                        <br/>
+
+                                        <span class="span-n">PUE</span>
+                                        <br/>
+
+                                        <span class="span-n">LUIS MANUEL RAMOS CASTRO</span>
+                                        <br/>
+
+                                        <span class="span-n">01</span>
+                                        <br/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-size:12px; page-break-inside: avoid">
+                                <table class="table">
+                                    <thead id="encabezados-tabla" style="border-color: #f0f0f0;">
+                                        <th style="width: 5%;color:#ffffff;">No.</th>
+                                        <th style="width: 9%;color:#ffffff;">CLAVE</th>
+                                        <th style="width: 9%;color:#ffffff;">CANTIDAD</th>
+                                        <th style="width: 9%;color:#ffffff;">UNIDAD</th>
+                                        <th style="width: 39%;color:#ffffff;">DESCRIPCION</th>
+                                        <th style="width: 9%;color:#ffffff;">OBJ.IMP</th>
+                                        <th style="width: 10%;color:#ffffff;">PRECIO</th>
+                                        <th style="width: 10%;color:#ffffff;">IMPORTE</th>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="contador_productos" t-value="0"/>
+                                        <t t-set="total_importe" t-value="0"/>
+                                        <t t-foreach="factura.invoice_line_ids" t-as="linea" t-index="i">
+                                            <t t-if="linea.display_type == 'product'">
+                                                <t t-set="contador_productos" t-value="contador_productos + 1"/>
+                                            </t>
+                                            <t t-if="linea.display_type == 'line_section'">
+                                                <tr>
+                                                    <td colspan="8"
+                                                        style="font-weight: bold; background-color: #f5f5f5; text-align: center;">
+                                                        <t t-esc="linea.name"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="linea.display_type == 'line_note'">
+                                                <tr>
+                                                    <td colspan="8"
+                                                        style="font-style: italic; background-color: #fafafa;">
+                                                        <t t-esc="linea.name"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="linea.display_type == 'product'">
+
+                                                <tr>
+
+                                                    <td>
+                                                        <t t-esc="contador_productos"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_id.default_code or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.quantity or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_uom_id.name or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.product_id.name or ''"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="linea.tax_ids and ', '.join([tax.name for tax in linea.tax_ids]) or ''"/>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <t t-esc="linea.price_unit or ''"/>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <t t-set="importe"
+                                                           t-value="(linea.price_unit or 0) * (linea.quantity or 0)"/>
+                                                        <t t-esc="importe"/>
+                                                        <t t-set="total_importe" t-value="total_importe + importe"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <table class="table" style="font-size: 10px;">
+                                <tbody>
+                                    <tr>
+                                        <td scope="row">
+                                            <span class="span-n">Convenio: Si su pago es por BANCOMER usar Convenio :
+                                                0001551647
+                                            </span>
+                                            <p>Referencia : M0000000050582</p>
+                                        </td>
+                                        <td rowspan="2" style="font-size: 10px;" class="col-3">
+                                            <p style="display: table; width: 100%;">
+                                                <span style="display: table-cell; text-align: left;">SUBTOTAL</span>
+                                                <span style="display: table-cell; text-align: right;">$
+                                                    <t t-esc="total_importe"/>
+                                                </span>
+                                            </p>
+                                            <p style="display: table; width: 100%;">
+                                                <span style="display: table-cell; text-align: left;">DESCUENTO</span>
+                                                <span style="display: table-cell; text-align: right;">$</span>
+                                            </p>
+                                            <p style="display: table; width: 100%;">
+                                                <span style="display: table-cell; text-align: left;">SUBTOTAL</span>
+                                                <span style="display: table-cell; text-align: right;">$</span>
+                                            </p>
+                                            <p style="display: table; width: 100%;">
+                                                <span style="display: table-cell; text-align: left;">IVA TRASLADADO
+                                                </span>
+                                                <span style="display: table-cell; text-align: right;">$</span>
+                                            </p>
+                                            <p style="display: table; width: 100%;">
+                                                <span style="display: table-cell; text-align: left;">IVA RETENIDO</span>
+                                                <span style="display: table-cell; text-align: right;">$</span>
+                                            </p>
+                                            <p style="display: table; width: 100%;">
+                                                <span style="display: table-cell; text-align: left;">TOTAL</span>
+                                                <span style="display: table-cell; text-align: right;">$</span>
+                                            </p>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            <span class="span-n">
+                                                GARANTIAS:EQUIPOS ELECTRICOS DE BAJA CALIFORNIA; garantiza que los
+                                                productos entregados deben estar libres de defecto en material, mano de
+                                                obra y
+                                                fabricación. Esta garantía tiene vigencia de 12 meses a partir de su
+                                                fecha de facturación. El Cliente se compromete a reportar cualquier
+                                                defecto en un período de 10
+                                                (diez) dias, el no hacerlo, invalida la garantía. Una vez terminado el
+                                                período de garantía, el cliente libera a EQUIPOS ELECTRICOS DE BAJA
+                                                CALIFORNIA de cualquier
+                                                responsabilidad. En caso de que la garantía sea efectiva, las partes
+                                                acuerdan que EQUIPOS ELECTRICOS DE BAJA CALIFORNIA re-emplazará o
+                                                reparará o devolverá
+                                                el precio pagado por el articulo defectuoso según acuerden. La compañía
+                                                no se hace responsable de daños incidentales, especiales, indirectos o
+                                                consecuenciales
+                                                que pudieran ocurrir.
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row" colspan="2">
+                                            <span class="span-n">
+                                                POR ESTE PAGARE DEBO(EMOS) Y PAGARE(MOS) INCONDICIONALMENTE A LA ORDEN
+                                                DE EQUIPOS ELECTRICOS DE BAJA CALIFORNIA LA CANTIDAD DE $ 4,801.68 SON:
+                                                CUATRO MIL OCHOCIENTOS UN PESOS 68/100 M.N.
+                                                VALOR RECIBIDO EN MERCANCIAS A MI(NUESTRA) ENTERA SATISFACCION, EN CASO
+                                                DE NO PAGAR AL VENCIMIENTO CAUSARA INTERESES MORATORIOS AL 6% MENSUAL.
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row" colspan="2">
+                                            <div style="overflow: hidden;">
+                                                <p style="float: left; width: 24%; margin-right: 1%; margin-bottom: 10px;">
+                                                    No. de Certificado del CSD:
+                                                    <span>00001000000701173867</span>
+                                                </p>
+                                                <p style="float: left; width: 24%; margin-right: 1%; margin-bottom: 10px;">
+                                                    No. de Certificado del SAT:
+                                                    <span>00001000000505371432</span>
+                                                </p>
+                                                <p style="float: left; width: 24%; margin-right: 1%; margin-bottom: 10px;">
+                                                    Folio Fiscal:
+                                                    <span>AB87796A-ECAC-4EF0-B42B-57A0321E976F</span>
+                                                </p>
+                                                <p style="float: left; width: 24%; margin-right: 0; margin-bottom: 10px;">
+                                                    Fecha y Hora de Certificación:
+                                                    <span>2024-09-10T16:47:57</span>
+                                                </p>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            <p style="word-break: break-all;">
+                                                SELLO DIGITAL DEL CFDI:
+                                                bALTzFMgTa6F/N+25GiXSP/1oW9mZ4XCXqWVC51DeN2AxD3XzWdNVSaRLViwpeJMZ0jeihQG5kkjnzXU9OwVL5+kXeJK7V7Y1yhYifL+2u+s1aR3bQ8Oylt9dM55oZit8QgDRFbSEX5pdLkqDnSUePssLHYP6XlSOaEgkHc85HnfwstIzApHy1gJGGBEf57Bc1YGdeEuTbi94TxGFeHqnWiP5N2mjNCRk8oB+zJVsDZMgKHuld5ZMiPexk3S95omZ1jwMLeyYxw4GyNOkucHwT7tHYSu7UJmQ2pFf3gpE4Wk+WIJWHnJ8ThSPmbtzh48xh4pcdQvDUG0QkhkbR3e9A==
+                                            </p>
+                                        </td>
+                                        <td rowspan="3">
+                                            <img src="https://placehold.co/120"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            <p style="word-break: break-all;">
+                                                SELLO DIGITAL DEL SAT:
+                                                nXNFMiMm539H29zQtjt9fqmIPvUsLt441h0JUbBNE3wJDROGQPsAlpfMVQFIpwNRHVlLculkYdS1jQqlPFfzSFY+QxqBVLuGtWtLz0xyNukyfQdzNd71/Q0mLW5y/1jk+PJctlwPbfCaP735f0GE61BPphaBhbC2bhlPwctRH951EFG4QJF6835AOHiXAON51PzsDLvVQGNsEjyHObj5JwCw141ytHAJ9n5rSGDfBYWAJ/U/i2xuBD8CokEV0pxBdJkZsKehpYNel+T/NRR20629mdYsS7SPpI0BkXMjErmQtwglCmXIaLxy9jESn54lezx9ieGnt3sTBKq8j8walw==
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            <p style="word-break: break-all;">
+                                                CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACIÓN DIGITAL DEL SAT:
+                                                ||1.1|AB87796A-ECAC-4EF0-B42B-57A0321E976F|2024-09-10T16:47:57|ASE0209252Q1|bALTzFMgTa6F/N+25GiXSP/1oW9mZ4XCXqWVC51DeN2AxD3XzWdNVSaRLViwpeJMZ0jeihQG5kkjnzXU9OwVL5+kXeJK7V7Y1yhYifL+2u+s1aR3bQ8Oylt9dM55oZit8QgDRFbSEX5pdLkqDnSUePssLHYP6XlSOaEgkHc85HnfwstIzApHy1gJGGBEf57Bc1YGdeEuTbi94TxGFeHqnWiP5N2mjNCRk8oB+zJVsDZMgKHuld5ZMiPexk3S95omZ1jwMLeyYxw4GyNOkucHwT7tHYSu7UJmQ2pFf3gpE4Wk+WIJWHnJ8ThSPmbtzh48xh4pcdQvDUG0QkhkbR3e9A==|00001000000505371432||
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
