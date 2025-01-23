@@ -3,12 +3,12 @@
     'description': """
             Este modulo comprende las configuraciones de.
     """,
-    'version': '17.0.0.01',
+    'version': '17.0.1.002',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [
-                'stock','project'
-               ],
+        'stock', 'project', 'purchase_supplier_history'
+    ],
     'data': [
         "views/view_project_project_kanban.xml",
         "views/inherit_project_view_form.xml",
