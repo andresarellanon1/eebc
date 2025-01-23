@@ -1,6 +1,6 @@
 {
     'name': "Purchase Order Type",
-    'version': '17.0.1.001',
+    'version': '17.0.1.002',
     'depends': [
         "purchase_stock"
     ],
@@ -13,10 +13,10 @@
         Este módulo puede catalogarse como QoL (Quality of Life).
     """,
     "data": [
-        # "security/res.groups.xml",
-        # "security/ir.model.access.csv",
-        # "views/purchase_order_type.xml",
-        # "views/inherit_views.xml"
+        "security/res.groups.xml",
+        "security/ir.model.access.csv",
+        "views/purchase_order_type.xml",
+        "views/inherit_views.xml"
     ],
     "application": False,
     "installable": True,
