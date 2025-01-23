@@ -276,7 +276,8 @@ class ProjectCreation(models.TransientModel):
                         'project_plan_pickings': False,
                         'task_timesheet_id': False,
                         'for_create': line.for_create,
-                        'for_modification': line.for_modification
+                        'for_modification': line.for_modification,
+                        'service_qty': 0
                     }))
                 else:
                     plan_lines.append((0, 0, {
@@ -289,7 +290,8 @@ class ProjectCreation(models.TransientModel):
                         'task_timesheet_id': line.task_timesheet_id.id,
                         'display_type': False,
                         'for_create': True,
-                        'for_modification': line.for_modification
+                        'for_modification': line.for_modification,
+                        'service_qty': line.service_qty
                     }))
         return plan_lines
 
