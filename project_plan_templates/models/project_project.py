@@ -66,7 +66,8 @@ class ProjectProject(models.Model):
                                     'quantity': picking.quantity,
                                     'standard_price': picking.standard_price,
                                     'subtotal': picking.subtotal,
-                                    'display_type': False
+                                    'display_type': False,
+                                    'for_modification': picking.for_modification
                                 }))
 
                         task_id = self.env['project.task'].create({
