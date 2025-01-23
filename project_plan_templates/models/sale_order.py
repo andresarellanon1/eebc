@@ -246,7 +246,7 @@ class SaleOrder(models.Model):
                 'sequence': 0,
                 'product_packaging_id': picking.product_packaging_id.id,
                 'product_uom_qty': picking.product_uom_qty,
-                'quantity': picking.quantity * line.product_uom_qty,
+                'quantity': picking.quantity * line.service_qty,
                 'standard_price': picking.standard_price,
                 'subtotal': picking.subtotal,
                 'display_type': False,
