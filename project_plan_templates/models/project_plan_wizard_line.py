@@ -30,3 +30,4 @@ class ProjectPlanWizardLine(models.TransientModel):
     project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario")
     for_create = fields.Boolean()
     for_modification = fields.Boolean()
+    service_qty = fields.Float(string="Cantidad")
