@@ -24,6 +24,7 @@ class ProjectLines(models.Model):
     partner_id = fields.Many2many('res.users', string="Usuarios asignados")
     task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
     sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
+    sale_order_picking_id = fields.Many2one('project.picking.lines', string="Picking")
 
     
     planned_date_begin = fields.Datetime(default=fields.Date.context_today, string="Fecha de inicio")
@@ -36,9 +37,11 @@ class ProjectLines(models.Model):
         ]
     )
     code = fields.Char(string="Code")
-    sequence = fields.Integer(default=0)
-    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Movimientos de inventario")
+    sequence = fields.Integer()
+    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Lista de materiales")
     for_create = fields.Boolean(default=True)
+    for_modification = fields.Boolean(default=True)
+    service_qty = fields.Float(string="Cantidad")
 
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []

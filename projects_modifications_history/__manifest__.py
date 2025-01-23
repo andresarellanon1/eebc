@@ -3,12 +3,12 @@
     'description': """
             Este modulo comprende el historial para cambios en los proyectos.
     """,
-    'version': '17.0.0.1',
+    'version': '17.0.1.001',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [
-                'project','project_plan_templates'
-               ],
+        'project', 'project_plan_templates'
+    ],
     'data': [
         "security/ir.model.access.csv",
         "views/menus.xml",

@@ -1,0 +1,4 @@
+Agregar filtros por company al selector
+Agregar otras validaciones que se consideren necesarias para mejorar la calidad del modulo.
+Borrar la carpeta data y no dar de alta tipos de operacion en este modulo.
+

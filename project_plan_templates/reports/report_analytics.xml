@@ -1,73 +1,168 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <template id="report_analytics" name="Reporte de Materiales">
+   
+    <template id="report_analytics" name="Reporte de Materiales">    
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <t t-foreach="docs" t-as="doc">
+
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <p><strong>Proyecto:</strong> <span t-esc="doc.project_id.name"/></p>
+                            <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
+                        </div>
+                        <div>
+                            <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
+                            <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
+                        </div>
+                    </div>
+
                     <div class="report-header text-center">
                         <h1>Análisis de precios unitarios</h1>
                     </div>
 
-                    <div class="report-content">
-                        <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
-                        <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
-                        <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
-                    </div>
-
                     <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Unidad de Medida</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
                         <tbody>
-                            <t t-foreach="doc.order_line" t-as="line">
-                                <!-- Verificar si hay producto, cantidad y precio -->
-                                <t t-if="line.product_id and line.product_uom_qty and line.price_unit">
-                                    <tr>
-                                        <td><span t-esc="line.product_id.name or 'Sin producto'"/></td>
-                                        <td><span t-esc="line.product_uom.name or 'Sin producto'"/></td>
-                                        <td><span t-esc="line.product_uom_qty or 'Sin cantidad'"/></td>
-                                        <td><span t-esc="line.price_unit or 'Sin precio'"/></td>
-                                        <td><span t-esc="line.price_subtotal or 'Sin precio'"/></td>
-                                    </tr>
-                                </t>
-                            </t>
-                        </tbody>
-                    </table>
-
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Unidad de Medida</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="doc.project_picking_lines" t-as="line">
+                            <thead>
                                 <tr>
-                                    <!-- Mostrar el contenido de la tarea o línea directamente -->
-                                    <t t-if="not line.product_id">
-                                        <!-- Si no hay producto, mostrar el contenido de la línea -->
-                                        <td colspan="6"><strong><span t-esc="line.name or 'Sin descripción'"/></strong></td>
-                                    </t>
-                                    <!-- Si hay producto, mostrar los detalles del material -->
-                                    <t t-else="">
-                                        <td><span t-esc="line.product_id.name"/></td>
-                                        <td><span t-esc="line.product_uom.name"/></td>
-                                        <td><span t-esc="line.quantity"/></td>
-                                        <td><span t-esc="line.standard_price"/></td>
-                                        <td><span t-esc="line.subtotal"/></td>
-                                    </t>
+                                    <th>Producto</th>
+                                    <th>Unidad de Medida</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Total</th>
                                 </tr>
+                                
+                            </thead>
+                            
+                            <t t-set="total_subtotal_mat" t-value="0"/>
+                            <t t-set="total_subtotal_man" t-value="0"/>
+                            <t t-set="order_lines_used" t-value="[]"/> 
+
+                            <t t-foreach="doc.project_picking_lines" t-as="line">
+                                <t t-if="line.for_create == True">
+                                    <t t-if="line.product_id">
+                                        <tr>
+                                            <td><span t-esc="line.product_id.name"/></td>
+                                            <td><span t-esc="line.product_uom.name"/></td>
+                                            <td><span t-esc="line.quantity"/></td>
+                                            <td><span t-esc="line.standard_price"/></td>
+                                            <td><span t-esc="line.subtotal"/></td>
+                                            <t t-set="total_subtotal_mat" t-value="total_subtotal_mat + line.subtotal"/>
+                                        </tr>  
+                                    </t>
+                                    <t t-else="">
+                                        <tr>
+                                            <th colspan="4" style="text-align: right; " class="bg-transparent">Total:</th>
+                                            <td style="text-align: left;" class="bg-transparent">
+                                                <span t-esc="total_subtotal_mat"/>
+                                            </td>
+                                            <t t-set="total_subtotal_mat" t-value="0"/>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5">
+                                                <strong><span t-esc="line.name or 'Sin descripción'"/></strong>
+                                            </td>
+                                        </tr>
+                    
+                                        <t t-foreach="doc.project_plan_lines" t-as="task_line">
+                                            <t t-if="task_line.name == line.name and task_line.task_timesheet_id">
+                                                <t t-foreach="task_line.task_timesheet_id" t-as="time_line">
+                                                    <t t-foreach="time_line.task_time_lines" t-as="time_lines">
+                                                        <tr>
+                                                            <td><span t-esc="time_lines.description"/></td>
+                                                            <td>Jornada</td>
+                                                            <td><span t-esc="time_lines.work_shift"/></td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                                <tr>
+                                                    <th colspan="4" style="text-align: right; " class="bg-transparent">Total:</th>
+                                                    <td style="text-align: left;" class="bg-transparent">
+                                                        <span t-esc="total_subtotal_man"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </t>
+                                
+                                
+                                <t t-if="line.for_create == False">
+                                    <tr>
+                                        <td colspan="5" style="background-color: #FFFFFF; color: #FFFFFF; text-align: center;  border: 1px solid #FFFFFF;">
+                                             x 
+                                        </td>
+                                    </tr>  
+                                    <t t-set="order_line_match" t-value="False"/>
+
+                                    <t t-foreach="doc.order_line" t-as="order_line">
+                                        <t t-if="not order_line_match and order_line.product_id.name == line.name and order_line.id not in order_lines_used">
+                                            <tr>
+                                                <td style="vertical-align: top; font-weight: bold; width: 30%; border-right: 1px solid #ddd;">
+                                                    <span t-esc="order_line.product_id.name or 'Sin producto'"/>
+                                                </td>
+                                                <td style="vertical-align: top; width: 100%;" colspan="4">
+                                                    <table class="table table-borderless" style="margin: 0; width: 100%;">
+                                                    <tr>
+                                                        <th style="text-align: left; font-weight: normal; padding: 0;" class="bg-transparent">Unidad de Medida:</th>
+                                                        <td style="text-align: left; padding: 0;" class="bg-transparent">
+                                                            <span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="text-align: left; font-weight: normal; padding: 0;" class="bg-transparent">Cantidad:</th>
+                                                        <td style="text-align: left; padding: 0;" class="bg-transparent">
+                                                            <span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="text-align: left; font-weight: normal; padding: 0;" class="bg-transparent">Precio Unitario:</th>
+                                                        <td style="text-align: left; padding: 0;" class="bg-transparent">
+                                                            <span t-esc="order_line.price_unit or '0'"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="text-align: left; font-weight: normal; padding: 0;" class="bg-transparent">Total:</th>
+                                                        <td style="text-align: left; padding: 0;" class="bg-transparent">
+                                                            <span t-esc="order_line.price_subtotal or '0'"/>
+                                                        </td>
+                                                    </tr>
+
+                                                </table>
+                                                </td>
+                                                <tr>
+                                                    <td colspan="5" style="background-color: #FFFFFF; color: #FFFFFF; text-align: center;  border: 1px solid #FFFFFF;">
+                                                         x 
+                                                    </td>
+                                                </tr>
+
+                                                <thead>
+                                                    <tr>
+                                                        <th>Producto</th>
+                                                        <th>Unidad de Medida</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Precio Unitario</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                            </tr>
+                                            <t t-set="order_lines_used" t-value="order_lines_used + [order_line.id]"/>
+                                            <t t-set="order_line_match" t-value="True"/>
+                                        </t>
+                                        
+                                    </t>
+                                </t>
+                                
                             </t>
+                            <tr>
+                                <th colspan="4" style="text-align: right; " class="bg-transparent">Total:</th>
+                                <td style="text-align: left;" class="bg-transparent">
+                                    <span t-esc="total_subtotal_mat"/>
+                                </td>
+                                <t t-set="total_subtotal_mat" t-value="0"/>
+                            </tr>
                         </tbody>
                     </table>
                 </t>

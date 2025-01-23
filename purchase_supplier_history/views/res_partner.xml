@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="supplier_res_partner_form_view">
+        <field name="name">supplierres.partner.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale']" position="before">
+                <group>
+                    <field name="is_supplier" invisible="not is_company" />
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='purchase']" position="attributes">
+                <attribute name="invisible">not is_supplier</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="supplier_res_partner_purchase_form_view">
+        <field name="name">supplier.res.partner.purchase.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="purchase.view_partner_property_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='purchase']" position="attributes">
+                <attribute name="invisible">not is_supplier</attribute>
+            </xpath>
+            <xpath expr="//field[@name='buyer_id']" position="after">
+                <field name="lead_time"
+                    placeholder="Tiempo de entrega" />
+                <field name="supplier_number_reference"
+                    placeholder="No. referencia de proveedor" />
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="supplier_res_partner_kanban_view">
+        <field name="name">supplier.res.partner.kanban.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="before">
+                <field name="is_supplier" invisible="1" />
+            </xpath>
+            <xpath expr="//li[@t-if='record.email.raw_value']" position="after">
+                <li invisible="not is_supplier">
+                    <span>Referencia de proveedor: <field name="supplier_number_reference" />
+                    </span>
+                </li>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="supplier_res_partner_search_view">
+        <field name="name">supplier.res.partner.search.view</field>
+        <field name="model">res.partner</field>
+        <field name="priority">36</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="supplier_number_reference" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

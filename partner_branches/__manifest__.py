@@ -1,6 +1,6 @@
 {
     "name": "Partner Branches",
-    "version": "17.0.1.23",
+    "version": "17.0.3.001",
     "depends": [
         "stock",
         "partner_customer",

@@ -1,0 +1,24 @@
+<record model="ir.ui.view" id="sale_customer_credit_res_partner_form_view">
+    <field name="name">sale.customer.credit.res.partner.form.view</field>
+    <field name="model">res.partner</field>
+    <field name="priority">36</field>
+    <field name="inherit_id" ref="account.view_partner_property_form" />
+    <field name="arch" type="xml">
+        <xpath expr="//group[@name='credit_limits']" position="after">
+            <group name="customer_credit" string="Ajustes del credito">
+                <field name="customer_manual_suspend" />
+                <field name="customer_credit_suspend" placeholder="¿Suspender crédito?"
+                    readonly="not customer_manual_suspend" />
+                <field name="customer_credit_key" placeholder="Llave de crédito" />
+
+            </group>
+            <group name="orders_limit" string="Importes adeudados">
+                <field name="orders_residual" placeholder="Ordenes por facturar" />
+                <field name="invoice_residual" placeholder="Facturas por cobrar" />
+                <field name="total_residual" placeholder="Total adeudado" />
+            </group>
+        </xpath>
+    </field>
+</record>
+
+

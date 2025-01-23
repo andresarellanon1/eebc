@@ -14,6 +14,7 @@ class ProjectPlanPickings(models.Model):
     
     
     project_picking_lines = fields.One2many('project.picking.lines', 'picking_id', string="Productos")
+    
     active = fields.Boolean(string="Activo", default=True)
     project_id = fields.Many2one('project.project', string="Proyecto")
 
@@ -40,13 +41,15 @@ class ProjectPlanPickingLine(models.Model):
     _description = 'Project picking lines'
     _order = 'sequence'
 
-    name = fields.Char(required=True, string="Nombre")
+    name = fields.Char(string="Nombre")
     
     project_id = fields.Many2one('project.project', string="Proyecto")
     picking_id = fields.Many2one('project.plan.pickings', string="Plantilla de proyecto")
     product_id = fields.Many2one('product.product', string="Producto")
     sale_order_id = fields.Many2one('sale.order')
     task_id = fields.Many2one('project.task', string="Tarea")
+
+    project_plan_lines = fields.One2many('project.plan.line', 'sale_order_picking_id')
     
    
     quantity = fields.Float(string="Cantidad")
@@ -59,7 +62,7 @@ class ProjectPlanPickingLine(models.Model):
     project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas")
     stock_move_id = fields.Many2one('stock.move', string='Inventario')
     
-    standard_price = fields.Float(string="Precio")
+    standard_price = fields.Float(string="Precio", compute="_compute_standar_price", store=True)
     subtotal = fields.Float(string="Subtotal", compute='_compute_subtotal')
     total_cost = fields.Float(string="Costo total")
 
@@ -74,6 +77,9 @@ class ProjectPlanPickingLine(models.Model):
     product_uom = fields.Many2one('uom.uom', string='Unidad de medida')
     company_id = fields.Many2one('res.company', string="Empresa")
     product_uom_qty = fields.Float(string="Demanda")
+    for_create = fields.Boolean(default=True)
+    for_modification = fields.Boolean(default=True)
+    
 
     # @api.constrains('product_id')
     # def _check_product_id(self):
@@ -93,12 +99,15 @@ class ProjectPlanPickingLine(models.Model):
             if record.used_quantity > quantity:
                 raise ValidationError("Cantidad excedida, ordene mas o ingrese la cantidad correcta")
 
+    @api.depends('product_id')
+    def _compute_standard_price(self):
+        self.standard_price = self.product_id.standard_price
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
             self.product_uom = self.product_id.uom_id
             self.name = self.product_id.name
-            self.standard_price = self.product_id.standard_price
 
     def reservado_update(self, task_inventory_lines):
         for record in self:
