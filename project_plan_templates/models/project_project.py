@@ -121,7 +121,7 @@ class ProjectProject(models.Model):
                                     'for_modification': picking.for_modification
                                 }))
 
-                        self.create_project_tasks_pickings(existing_task, picking_lines, location_id, location_dest_id, scheduled_date)
+                        #self.create_project_tasks_pickings(existing_task, picking_lines, location_id, location_dest_id, scheduled_date)
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
