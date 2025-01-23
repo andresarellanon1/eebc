@@ -67,8 +67,14 @@ class ProjectVersionWizard(models.TransientModel):
             record.wizard_picking_lines = picking_lines
 
     def action_confirm_version_history(self):
+        """
+        Método que confirma la versión del historial de un proyecto, 
+        actualiza las líneas de planificación y picking del proyecto,
+        y gestiona las modificaciones asociadas al historial del proyecto.
+        """
         self.ensure_one()
 
+        # Verificar que el proyecto está relacionado
         project = self._origin.project_id
         if not project:
             logger.error("No se encontró el proyecto asociado.")
@@ -76,10 +82,12 @@ class ProjectVersionWizard(models.TransientModel):
 
         logger.warning(f"Id del sale: {project.actual_sale_order_id.id}")
 
+        # Actualizar el pedido de venta asociado al proyecto
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
 
-        existing_plan_lines = self.project_plan_lines
+        # Actualizar las líneas de planificación
+        existing_plan_lines = project.project_plan_lines
         new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
 
         existing_plan_refs = set(existing_plan_lines.mapped('name'))
@@ -89,8 +97,8 @@ class ProjectVersionWizard(models.TransientModel):
             if line_data.get('name') not in existing_plan_refs
         ]
 
-        # 2. Líneas de picking (`project_picking_lines`)
-        existing_picking_lines = self.project_picking_lines
+        # Actualizar las líneas de picking
+        existing_picking_lines = project.project_picking_lines
         new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
         existing_picking_refs = set(
@@ -98,14 +106,13 @@ class ProjectVersionWizard(models.TransientModel):
             for line in existing_picking_lines
         )
 
-        # Generar claves compuestas para las nuevas líneas y agregar solo las que no existan
         picking_lines_to_add = [
             (0, 0, line_data)
             for line_data in new_picking_lines_data
             if (line_data.get('name'), line_data.get('quantity')) not in existing_picking_refs
         ]
 
-        # 3. Escritura en el proyecto si hay líneas nuevas para agregar
+        # Escritura en el proyecto solo si hay líneas nuevas para agregar
         updates = {}
         if plan_lines_to_add:
             updates['project_plan_lines'] = plan_lines_to_add
@@ -114,11 +121,10 @@ class ProjectVersionWizard(models.TransientModel):
 
         if updates:
             project.write(updates)
-        
-        # Check if a version history already exists for the current project.
+
+        # Buscar o crear un historial de versiones del proyecto
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id)], limit=1)
 
-        # If no version history exists, create a new one.
         if not existing_history:
             history = self.env['project.version.history'].create({
                 'project_id': self.project_id.id,
@@ -127,19 +133,20 @@ class ProjectVersionWizard(models.TransientModel):
                 'project_name': self.project_id.name,
             })
         else:
-            history = existing_history  # Use the existing history if found.
+            history = existing_history
 
-        # Ensure that a modification motive is provided; raise an error if missing.
+        # Validar que se haya proporcionado un motivo de modificación
         if not self.modification_motive:
-            raise UserError(f'Hace falta agregar el motivo de la modificación.')
+            raise UserError('Hace falta agregar el motivo de la modificación.')
 
-        # Create any newly added tasks for the project.
+        # Crear tareas nuevas para el proyecto
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
 
+        # Actualizar el estado de las líneas de picking del pedido de venta
         for sale in self.sale_order_id.project_picking_lines:
             sale.for_modification = False
 
-        # Create a new entry in the project version lines for the modification details.
+        # Crear una nueva entrada en las líneas del historial de versiones del proyecto
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
             'modification_date': self.modification_date,
@@ -149,10 +156,13 @@ class ProjectVersionWizard(models.TransientModel):
             'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
         })
 
-        # Eliminar duplicados después de la modificación
+        # Eliminar duplicados en el pedido de venta después de la modificación
         self.sale_order_id.clean_duplicates_after_modification()
+
+        # Cambiar el estado del pedido de venta a 'sale'
         self.sale_order_id.state = 'sale'
-        # Close the wizard window after completing the action.
+
+        # Cerrar la ventana del wizard
         return {
             'type': 'ir.actions.act_window_close'
         }
