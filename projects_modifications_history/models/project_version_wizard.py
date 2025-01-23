@@ -176,7 +176,8 @@ class ProjectVersionWizard(models.TransientModel):
                         'planned_date_end': False,
                         'project_plan_pickings': False,
                         'task_timesheet_id': False,
-                        'for_create': line.for_create
+                        'for_create': line.for_create,
+                        'service_qty': 0
                     }))
                 else:
                     plan_lines.append((0, 0, {
@@ -189,7 +190,8 @@ class ProjectVersionWizard(models.TransientModel):
                         'project_plan_pickings': line.project_plan_pickings.id,
                         'task_timesheet_id': line.task_timesheet_id.id,
                         'display_type': False,
-                        'for_create': True
+                        'for_create': True,
+                        'service_qty': line.service_qty
                     }))
         return plan_lines
 

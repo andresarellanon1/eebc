@@ -212,7 +212,8 @@ class SaleOrder(models.Model):
             'project_plan_pickings': False,
             'task_timesheet_id': False,
             'for_create': for_create,
-            'for_modification': True
+            'for_modification': True,
+            'service_qty': plan.product_uom_qty
         })
 
     def prep_plan_lines(self, line):
@@ -230,7 +231,8 @@ class SaleOrder(models.Model):
                 'task_timesheet_id': plan.task_timesheet_id.id,
                 'display_type': False,
                 'for_create': True,
-                'for_modification': plan.for_modification
+                'for_modification': plan.for_modification,
+                'service_qty': line.product_uom_qty
             }))
         return plan_lines
 
@@ -244,7 +246,7 @@ class SaleOrder(models.Model):
                 'sequence': 0,
                 'product_packaging_id': picking.product_packaging_id.id,
                 'product_uom_qty': picking.product_uom_qty,
-                'quantity': picking.quantity,
+                'quantity': picking.quantity * line.product_uom_qty,
                 'standard_price': picking.standard_price,
                 'subtotal': picking.subtotal,
                 'display_type': False,
