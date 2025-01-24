@@ -22,6 +22,7 @@
         <record id="menu_project_config" model="ir.ui.menu">
             <field name="name">Plantillas</field> 
             <field name="parent_id" ref="project.menu_main_pm" /> 
+            <field name="web_icon" eval="project_plan_templates/static/description/icon.png" />
             <field name="sequence" eval="20" /> 
         </record>
 
@@ -35,7 +36,7 @@
 
         <menuitem
             id="project_picking_option"
-            name="Plantillas de movimientos de inventario"
+            name="Plantillas de materiales"
             action="plan_picking_templates_action" 
             parent="menu_project_config" 
             sequence="20" 

@@ -99,7 +99,7 @@ class ProjectPlanPickingLine(models.Model):
             if record.used_quantity > quantity:
                 raise ValidationError("Cantidad excedida, ordene mas o ingrese la cantidad correcta")
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'product_id.standard_price')
     def _compute_standard_price(self):
         for record in self:
             record.standard_price = record.product_id.standard_price
