@@ -21,7 +21,7 @@ class ProductTemplate(models.Model):
         string="Proveedor principal",
         help='Se selecciona desde el registro de proveedor.',
         compute="_compute_main_supplier_id",
-        store=False,
+        store=True,
         readonly=True,
     )
 
@@ -51,7 +51,7 @@ class ProductTemplate(models.Model):
         string="Ultimo proveedor",
         help='Se computa desde el historial de proveedores.',
         compute="_compute_last_supplier_id",
-        store=True,  # Keep true to allow defaulting to the last supplier
+        store=True,
         readonly=True,
     )
     last_supplier_last_price = fields.Float(

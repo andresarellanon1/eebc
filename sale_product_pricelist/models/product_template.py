@@ -34,7 +34,7 @@ class ProductTemplate(models.Model):
             return pricelists_ids
 
     @api.depends_context('company')
-    @api.depends("list_price", "standard_price", "pricelist_item_count")
+    @api.depends("categ_id", "list_price", "standard_price")
     def _compute_product_pricelist_line_ids(self):
         """
             Re-computes the price unit for all the 'product.pricelist.line' linked to this 'product.template'.

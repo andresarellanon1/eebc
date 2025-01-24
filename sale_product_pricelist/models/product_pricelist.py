@@ -7,7 +7,12 @@ logger = logging.getLogger(__name__)
 class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
-    @api.depends('item_ids')
+    def write(self):
+        res = super(ProductPricelist, self).write()
+        for line in self:
+            line._compute_product_pricelist_lines()
+        return res
+
     def _compute_product_pricelist_lines(self):
         for pricelist in self:
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
