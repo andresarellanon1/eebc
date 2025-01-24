@@ -7,8 +7,8 @@ logger = logging.getLogger(__name__)
 class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
-    def write(self):
-        res = super(ProductPricelist, self).write()
+    def write(self, vals):
+        res = super(ProductPricelist, self).write(vals)
         for line in self:
             line._compute_product_pricelist_lines()
         return res
