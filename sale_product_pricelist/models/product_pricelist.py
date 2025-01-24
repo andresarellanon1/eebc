@@ -21,18 +21,22 @@ class ProductPricelist(models.Model):
             items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global')])
 
             if items_direct_relation.product_tmpl_id:
+                logger.warning("items_direct_relation.product_tmpl_id")
                 product_template = self.env["product.template"].search([('id', '=', items_direct_relation.product_tmpl_id.id)])
                 product_template._compute_product_pricelist_line_ids()
 
             if items_direct_relation_variant.product_id:
+                logger.warning("items_direct_relation_variant.product_id")
                 product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
                 product.product_tmplt_id._compute_product_pricelist_line_ids()
 
             if items_category_relation.categ_id:
+                logger.warning("items_category_relation.categ_id")
                 product_templates = self.env["product.template"].search([('categ_id', '=', items_category_relation.categ_id.id)])
                 product_templates._compute_product_pricelist_line_ids()
 
             if len(items_all_stock) > 0:
+                logger.warning("if len(items_all_stock) > 0")
                 self.env["product.template"]._compute_product_pricelist_line_ids()
 
     @api.depends('item_ids')
