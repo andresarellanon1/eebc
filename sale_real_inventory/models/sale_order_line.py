@@ -21,6 +21,9 @@ class SaleOrderLine(models.Model):
         for line in self:
             stock_location_wh = line.order_id.warehouse_id.lot_stock_id
             location = self.env['stock.location'].search([('id', '=', stock_location_wh.id)], limit=1)
+
+            logger.warning(f"locacion: {location.name}")
+
             if not location:
                 # Si no existe la ubicación, establece la cantidad disponible como 0
                 line.available_product_quantity = 0
