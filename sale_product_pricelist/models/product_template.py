@@ -18,20 +18,19 @@ class ProductTemplate(models.Model):
     def _get_include_template_pricelist_ids(self):
         for product_template in self:
             company_id = product_template.company_id or self.env.company
-            logger.warning(f"found company_id  {company_id.name}")
             # Agregate all applicable pricelist for the given product template:
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('product_tmpl_id', '=', product_template.id), ('company_id', '=', company_id.id)])
             items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('categ_id', '=', product_template.categ_id.id), ('company_id', '=', company_id.id)])
             items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('company_id', '=', company_id.id)])
-            pricelists_ids = []
+            pricelists_ids = set()
             for pricelist_id in items_direct_relation.pricelist_id:
-                pricelists_ids.append(pricelist_id)
+                pricelists_ids.add(pricelist_id)
             for pricelist_id in items_category_relation.pricelist_id:
-                pricelists_ids.append(pricelist_id)
+                pricelists_ids.add(pricelist_id)
             for pricelist_id in items_all_stock.pricelist_id:
-                pricelists_ids.append(pricelist_id)
+                pricelists_ids.add(pricelist_id)
             logger.warning(f"found pricelists {pricelists_ids}")
-            return pricelists_ids
+            return list(pricelists_ids)
 
     @api.depends_context('company')
     @api.depends("categ_id", "list_price", "standard_price")
