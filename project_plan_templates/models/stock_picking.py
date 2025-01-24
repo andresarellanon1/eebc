@@ -11,7 +11,7 @@ class StockPicking(models.Model):
     new_selection = fields.Selection(string='Nueva selección', copy=False,selection=[('estimacion','Estimación'),('traslado','Traslado')])
     transport_type = fields.Selection( string="Tipo de transporte",selection=[('00', 'No usa carreteras federales'), ('01', 'Autotransporte Federal')])
     
-    custom_document_identification = fields.Char(string="Customs Document Identification")
+    custom_document_identification = fields.Char(string="Identificacion del documento")
     lat_origin = fields.Float(string="Latitud de origen")
     long_origin = fields.Float(string="Longitud de origen")
     lat_dest = fields.Float(string="Latitud de destino")
