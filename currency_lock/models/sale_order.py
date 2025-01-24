@@ -51,8 +51,9 @@ class SaleOrder(models.Model):
         """
         for order in self:
             if order.state == "sale":
-                continue
-            order.locked_currency_rate = order.target_currency_id.inverse_rate + order.safe_margin
+                order.locked_currency_rate = order.locked_currency_rate
+            else:
+                order.locked_currency_rate = order.target_currency_id.inverse_rate + order.safe_margin
 
     @api.depends("pricelist_id", "company_id")
     def _compute_currency_id(self):

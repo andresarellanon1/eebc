@@ -6,7 +6,7 @@
         El campo se configura a nivel de empresa y se hereda a todos los documentos (sale.order & purchase.order) y sus lineas.
         Computa el ratio de conversion al seleccionar una divisa distinta a la de la empresa para los documentos compra/venta y facturas de compra/venta.
     """,
-    'version': '17.0.3.006',
+    'version': '17.0.3.007',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': ['base', 'product', 'purchase', 'sale', 'account', 'account_accountant'],
