@@ -59,7 +59,7 @@ class ProductTemplate(models.Model):
                     'is_special': pricelist.is_special
                 })
             # 2. Unlink and delete all
-            product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
+            # product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
             # 3. Link and create all
             product_template.sudo().write({'product_pricelist_line_ids': [(6, 0, vals) for vals in pricelist_line_vals]})
             # 4. If nothing to link, write to `False`
