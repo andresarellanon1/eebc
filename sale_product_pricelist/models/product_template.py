@@ -37,6 +37,7 @@ class ProductTemplate(models.Model):
                 pricelists_ids.append(pricelist_id.id)
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.append(pricelist_id.id)
+            logger.warning(f"found pricelists {pricelists_ids}")
             product_template.sudo().write({'include_template_pricelist_ids': [(6, 0, pricelists_ids)]})
 
     @api.depends_context('company')
