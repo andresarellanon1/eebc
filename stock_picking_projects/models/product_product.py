@@ -10,17 +10,16 @@ class ProductProduct(models.Model):
     # total_cost = fields.Float(string='Costo total', store=True)
     # supplier_cost = fields.Float(string='Costo', store=True)
     total_cost = fields.Float(string='Costo total', compute="_compute_total_cost", store=True)
-    supplier_cost = fields.Float(string='Costo', compute="_compute_total_cost", store=True)
-    currency = fields.Char(string="Currency")
+    supplier_cost = fields.Float(string='Costo del proveedor', compute="_compute_total_cost", store=True)
+    currency = fields.Char(string="Tipo de cambio")
     cambio = fields.Boolean(string="Cambio", default=False)
-    display_supplier_cost = fields.Char(string="Costo")
+    display_supplier_cost = fields.Char(string="Costo en letra")
     display_total_cost = fields.Char(string="Total producto")
     
     project_id = fields.Many2one(
         'project.project', 
         string='Proyecto',
-        store = True,
-        copied = True
+        store = True
     )
 
     @api.onchange('product_tmpl_id')

@@ -60,9 +60,9 @@ class ProjectPlanPickingLine(models.Model):
    
     picking_name = fields.Char(string="Inventario")
     project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas")
-    stock_move_id = fields.Many2one('stock.move', string='Inventario')
+    stock_move_id = fields.Many2one('stock.move', string='Movimiento de inventario')
     
-    standard_price = fields.Float(string="Precio", compute="_compute_standar_price", store=True)
+    standard_price = fields.Float(string="Precio", compute="_compute_standard_price", store=True)
     subtotal = fields.Float(string="Subtotal", compute='_compute_subtotal')
     total_cost = fields.Float(string="Costo total")
 
@@ -99,9 +99,11 @@ class ProjectPlanPickingLine(models.Model):
             if record.used_quantity > quantity:
                 raise ValidationError("Cantidad excedida, ordene mas o ingrese la cantidad correcta")
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'product_id.standard_price')
     def _compute_standard_price(self):
-        self.standard_price = self.product_id.standard_price
+        for record in self:
+            if not record.sale_order_id:
+                record.standard_price = record.product_id.standard_price
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

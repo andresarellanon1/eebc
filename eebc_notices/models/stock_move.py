@@ -23,6 +23,22 @@ class StockMove(models.Model):
 
 
 
+    def action_assign_serial(self):
+        _logger.warning('Estamos en el action_assign_serial heredado')
+
+        has_aviso = any('aviso' in attr.name for attr in self.product_id.attribute_line_ids.mapped('attribute_id'))
+
+        _logger.warning('valor de has_aviso en action_assign_serial: %s', has_aviso)
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.act_assign_serial_numbers")
+        action['context'] = {
+            'default_product_id': self.product_id.id,
+            'default_move_id': self.id,
+            'is_aviso': has_aviso
+        }
+        return action
+
+
     @api.model_create_multi
     def create(self, vals_list):
         _logger.warning('valor de vals list para crear stock.move: %s', vals_list)

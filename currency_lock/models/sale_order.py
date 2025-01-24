@@ -15,35 +15,35 @@ class SaleOrder(models.Model):
     target_currency_id = fields.Many2one(
         string="Divisa Objetivo",
         comodel_name="res.currency",
-        default=lambda self: self.env.company.currency_id.id,
-        compute="_compute_locked_currency_rate"
+        default=lambda self: self.env.company.currency_id.id
     )
 
     locked_currency_rate = fields.Float(
         string="Tipo de cambio seguro",
         digits="Payment Terms",
-        help="El tipo de cambio se calcula de acuerdo al tipo de cambio oficial del día en curso. Una vez confirmado el documento no se ‘bloquea’ permanentemente o hasta que se devuelva el documento a borrador.",
+        help="El tipo de cambio se calcula de acuerdo al tipo de cambio oficial del día en curso. Una vez confirmado el documento; se ‘bloquea’ permanentemente o hasta que se devuelva el documento a borrador.",
         compute="_compute_locked_currency_rate",
-        default=lambda self: self.env.company.currency_id.inverse_rate
+        default=lambda self: self.env.company.currency_id.inverse_rate,
+        readonly=False,
+        store=True
     )
 
     safe_margin = fields.Float(
         string="Margen seguro",
         digits="Product Price",
-        store=True,
-        readonly=False,
         help="Agrega el equivalente a esta cantidad de pesos por cada dólar convertido. Para efectos prácticos esto es como tomar el tipo de cambio del día y sumarle esta cantidad.",
         compute='_compute_safe_margin',
+        store=True,
+        readonly=False,
     )
 
-    @api.depends_context('company')
     @api.depends("company_id", "company_id.safe_margin")
     def _compute_safe_margin(self):
         """
             Computes the safe margin value for the sale order based on the company's safe margin configuration.
         """
         for order in self:
-            order.safe_margin = self.env.company.safe_margin
+            order.safe_margin = order.company_id.safe_margin
 
     @api.depends("safe_margin", "target_currency_id", "target_currency_id.inverse_rate")
     def _compute_locked_currency_rate(self):
@@ -52,10 +52,11 @@ class SaleOrder(models.Model):
         """
         for order in self:
             if order.state == "sale":
-                continue
-            order.locked_currency_rate = order.target_currency_id.inverse_rate + order.safe_margin
+                order.locked_currency_rate = order.locked_currency_rate
+            else:
+                order.locked_currency_rate = order.target_currency_id.inverse_rate + order.safe_margin
 
-    @api.depends("pricelist_id", "company_id")
+    @api.depends("pricelist_id", "company_id", "target_currency_id")
     def _compute_currency_id(self):
         """
             Overrides the computation of the `currency_id` field to ensure it is derived from the `target_currency_id`.
@@ -65,18 +66,31 @@ class SaleOrder(models.Model):
         for order in self:
             order.currency_id = order.target_currency_id
 
-    @api.onchange("partner_id", "target_currency_id")
-    def _onchange_parnter_or_locked_currency(self):
+    @api.onchange("partner_id")
+    def _onchange_parnter(self):
         """
+            Unless the sale order is already confirmed.
             Updates the field `target_currency_id` when the customer (`partner_id`) is changed.
             Sets the target currency to the customer's sales currency and
-            recomputes the exchange rate and prices unless the sale order is already confirmed.
+            recomputes the exchange rate and prices.
+            Updates the pricelist prices for the whole sale order.
         """
         for order in self:
             if order.state == "sale":
                 continue
             order.target_currency_id = order.partner_id.sales_currency_id
-            order.currency_id = order.target_currency_id
+            order._compute_pricelist_prices()
+
+    @api.onchange("target_currency_id")
+    def _onchange_locked_currency(self):
+        """
+            Binds the currency id to match the target target currency id.
+            Updates the pricelist prices for the whole sale order.
+        """
+        for order in self:
+            if order.state == "sale":
+                continue
+            order.currency_id = order.target_currency_id  # Redudante pero no me voy a arriesgar... El currency_id de la sale order se comporta raro aveces.
             order._compute_pricelist_prices()
 
     def _compute_pricelist_prices(self):
