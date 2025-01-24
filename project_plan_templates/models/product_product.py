@@ -4,4 +4,4 @@ class ProductProduct(models.Model):
 
     _inherit = 'product.product'
 
-    project_quantity = fields.Integer(string="Cantidad")
+    project_quantity = fields.Integer(string="Cantidad en el proyecto")

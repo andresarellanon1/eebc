@@ -71,53 +71,10 @@ class ProjectVersionWizard(models.TransientModel):
 
         project = self._origin.project_id
         if not project:
-            logger.error("No se encontró el proyecto asociado.")
             raise ValueError("No se encontró el proyecto asociado.")
-
-        logger.warning(f"Id del sale: {project.actual_sale_order_id.id}")
 
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
-
-        existing_plan_lines = project.project_plan_lines
-        new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
-
-        plan_lines_to_add = []
-        for new_line in new_plan_lines_data:
-            existing_line = existing_plan_lines.filtered(lambda l: l.name == new_line[2]['name'])
-            if existing_line:
-                # Actualizar línea existente
-                plan_lines_to_add.append((1, existing_line.id, new_line[2]))
-            else:
-                # Agregar nueva línea
-                plan_lines_to_add.append(new_line)
-
-        # Obtener líneas existentes y nuevas para picking
-        existing_picking_lines = project.project_picking_lines
-        new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
-
-        logger.info(f"Nuevas líneas de picking: {new_picking_lines_data}")
-
-        # Crear o actualizar líneas de picking
-        picking_lines_to_add = []
-        for new_line in new_picking_lines_data:
-            existing_line = existing_picking_lines.filtered(lambda l: l.name == new_line[2]['name'])
-            if existing_line:
-                # Actualizar línea existente
-                picking_lines_to_add.append((1, existing_line.id, new_line[2]))
-            else:
-                # Agregar nueva línea
-                picking_lines_to_add.append(new_line)
-
-        # Escribir los cambios en el proyecto
-        updates = {}
-        if plan_lines_to_add:
-            updates['project_plan_lines'] = plan_lines_to_add
-        if picking_lines_to_add:
-            updates['project_picking_lines'] = picking_lines_to_add
-
-        if updates:
-            project.write(updates)
 
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id)], limit=1)
@@ -136,7 +93,9 @@ class ProjectVersionWizard(models.TransientModel):
         # Ensure that a modification motive is provided; raise an error if missing.
         if not self.modification_motive:
             raise UserError(f'Hace falta agregar el motivo de la modificación.')
-
+        # Eliminar duplicados después de la modificación
+        self.sale_order_id.clean_duplicates_after_modification()
+        self.update_project_planning_lines()
         # Create any newly added tasks for the project.
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
 
@@ -153,8 +112,6 @@ class ProjectVersionWizard(models.TransientModel):
             'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
         })
 
-        # Eliminar duplicados después de la modificación
-        self.sale_order_id.clean_duplicates_after_modification()
         self.sale_order_id.state = 'sale'
         # Close the wizard window after completing the action.
         return {
@@ -225,3 +182,45 @@ class ProjectVersionWizard(models.TransientModel):
                     'display_type': False
                 }))
         return picking_lines
+
+    def update_project_planning_lines(self):
+        project = self._origin.project_id
+        existing_plan_lines = project.project_plan_lines
+        new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+
+        plan_lines_to_add = []
+        for new_line in new_plan_lines_data:
+            existing_line = existing_plan_lines.filtered(lambda l: l.name == new_line[2]['name'])
+            if existing_line:
+                # Actualizar línea existente
+                plan_lines_to_add.append((1, existing_line.id, new_line[2]))
+            else:
+                # Agregar nueva línea
+                plan_lines_to_add.append(new_line)
+
+        # Obtener líneas existentes y nuevas para picking
+        existing_picking_lines = project.project_picking_lines
+        new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
+
+        logger.info(f"Nuevas líneas de picking: {new_picking_lines_data}")
+
+        # Crear o actualizar líneas de picking
+        picking_lines_to_add = []
+        for new_line in new_picking_lines_data:
+            existing_line = existing_picking_lines.filtered(lambda l: l.name == new_line[2]['name'])
+            if existing_line:
+                # Actualizar línea existente
+                picking_lines_to_add.append((1, existing_line.id, new_line[2]))
+            else:
+                # Agregar nueva línea
+                picking_lines_to_add.append(new_line)
+
+        # Escribir los cambios en el proyecto
+        updates = {}
+        if plan_lines_to_add:
+            updates['project_plan_lines'] = plan_lines_to_add
+        if picking_lines_to_add:
+            updates['project_picking_lines'] = picking_lines_to_add
+
+        if updates:
+            project.write(updates)
