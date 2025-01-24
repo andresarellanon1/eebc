@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <xpath expr="//setting[@id='pricelist_configuration']" position="after">
                 <setting id="safe_margin"
-                    help="Agrega el equivalente a esta cantidad de pesos por cada dólar convertido. Para efectos prácticos esto es como tomar el tipo de cambio del día y sumarle esta cantidad.">
+                    help="Agrega el equivalente a esta cantidad de pesos por cada dólar convertido. Para efectos prácticos esto es como tomar el tipo de cambio del día y sumarle esta cantidad. Aplica para cotizaciones y no cambia despues de confirmar el documento.">
                     <field name="safe_margin" />
                 </setting>
             </xpath>

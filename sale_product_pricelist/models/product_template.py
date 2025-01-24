@@ -25,10 +25,11 @@ class ProductTemplate(models.Model):
     @api.depends("pricelist_item_count")
     def _compute_include_template_pricelist_ids(self):
         for product_template in self:
+            company_id = product_template or self.env.company.id
             # Agregate all applicable pricelist for the given product template:
-            items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('product_tmpl_id', '=', product_template.id), ('company_id', '=', self.env.company.id)])
-            items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('categ_id', '=', product_template.categ_id.id), ('company_id', '=', self.env.company.id)])
-            items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('company_id', '=', self.env.company.id)])
+            items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('product_tmpl_id', '=', product_template.id), ('company_id', '=', company_id.id)])
+            items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('categ_id', '=', product_template.categ_id.id), ('company_id', '=', company_id.id)])
+            items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('company_id', '=', company_id.id)])
             pricelists_ids = []
             for pricelist_id in items_direct_relation.pricelist_id:
                 pricelists_ids.append(pricelist_id.id)
@@ -36,7 +37,6 @@ class ProductTemplate(models.Model):
                 pricelists_ids.append(pricelist_id.id)
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.append(pricelist_id.id)
-            logger.warning(f"Found pricelists {pricelists_ids} for product {product_template}")
             product_template.sudo().write({'include_template_pricelist_ids': [(6, 0, pricelists_ids)]})
 
     @api.depends_context('company')
@@ -75,9 +75,14 @@ class ProductTemplate(models.Model):
                         'currency_id': pricelist.currency_id.id,
                         'is_special': pricelist.is_special
                     }).id)
+            # NOTE: Comand `0`: Unlink-all and Link-all
             product_template.sudo().write({'product_pricelist_line_ids': [(6, 0, product_pricelist)]})
 
     def get_min_sale_price(self, currency_id):
+        """
+            Helper to use in validations.
+            Returns the lowest price out of all pricelist lines.
+        """
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         for product_template in self:
             lowest_value = 0.0000
