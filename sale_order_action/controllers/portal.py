@@ -18,7 +18,7 @@ class CustomerPortalInherited(CustomerPortal):
 
     @http.route(['/my/orders/<int:order_id>/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, order_id, access_token=None, name=None, signature=None):
-        
+
         _logger.warning('ENTRAMOS A NUESTRO portal_quote_accept HEREDADOO')
         # get from query string if not on json param
         access_token = access_token or request.httprequest.args.get('access_token')
@@ -62,4 +62,3 @@ class CustomerPortalInherited(CustomerPortal):
             'force_refresh': True,
             'redirect_url': order_sudo.get_portal_url(query_string=query_string),
         }
-

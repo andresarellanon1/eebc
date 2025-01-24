@@ -8,8 +8,8 @@
         Este modulo es para los avisos.
 
     """,
-    'depends': ['purchase', 'account','base','sale_stock','stock'],
- 
+    'depends': ['purchase', 'account', 'base', 'sale_stock', 'stock'],
+
     "data": [
         "security/ir.model.access.csv",
         "views/notices_views.xml",
@@ -19,11 +19,11 @@
         "wizard/select_notice_wizard_view.xml",
         "wizard/wizard_selection_line_view.xml",
         "wizard/wizard_selection_lot_line_view.xml",
-        
 
 
 
-        
+
+
     ],
     # 'assets': {
     #     'web.assets_backend': [
@@ -34,4 +34,3 @@
     "installable": True,
     "license": "LGPL-3",
 }
-

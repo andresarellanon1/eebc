@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_pl_tree_view" model="ir.ui.view">
+        <field name="name">Lista de precios</field>
+        <field name="model">product.pricelist.line</field>
+        <field name="arch" type="xml">
+            <tree string="Listas de precios" create="false" delete="false">
+                <field name="name" />
+                <field name="uom_id" />
+                <field name="unit_price" digits="[12,6]" />
+                <field name="currency_id" />
+                <field name="is_special" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_pricelist_line_view_form" model="ir.ui.view">
+        <field name="name">product.pricelist.line.view.form</field>
+        <field name="model">product.pricelist.line</field>
+        <field name="arch" type="xml">
+            <form string="Lista de precio">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="company_id" readonly="True" />
+                            <field name="name" />
+                            <field name="pricelist_id" />
+                            <field name="product_templ_id" />
+                            <field name="unit_price" />
+                            <button name="open_product_pricelist" string="Abrir regla de precios"
+                                type="object"
+                                class="oe_highlight" colspan="2" />
+                        </group>
+                        <group>
+                            <field name="display_name" />
+                            <field name="uom_id" />
+                            <field name="currency_id" />
+                            <field name="is_special" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

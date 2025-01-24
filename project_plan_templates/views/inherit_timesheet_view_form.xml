@@ -7,6 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='tag_ids']" position="after">
                 <field name="sale_order_id" readonly="1"/>
+                <field name="location_id" invisible="1"/>
+                <field name="location_dest_id" invisible="1"/>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 
@@ -22,7 +24,9 @@
                                 <field name="display_type" column_invisible="True"/>
                                 <field name="name"/>
                                 <field name="description"/>
-                                <field name="use_project_task"/>
+                                <field name="service_qty"/>
+                                <field name="use_project_task" column_invisible="1"/>
+                                <field name="for_modification" column_invisible="1"/>
                                 <field name="for_create" column_invisible="1"/>
                                 <field name="planned_date_begin" widget="daterange"/>
                                 <field name="planned_date_end" widget="daterange"/>
@@ -43,6 +47,7 @@
                                 <field name="product_id"/>
                                 <field name="name"/>
                                 <field name="product_uom"/>
+                                <field name="for_modification" column_invisible="1"/>
                                 <field name="product_packaging_id"/>
                                 <field name="quantity"/>
                                 <field name="reservado"/>

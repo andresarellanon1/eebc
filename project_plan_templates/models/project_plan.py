@@ -67,7 +67,6 @@ class ProjectPlan(models.Model):
         picking_lines = []
 
         for picking in line:
-            picking_lines.append(self.prep_picking_section_line(picking))
             picking_lines += self.prep_picking_lines(picking)
                 
         return picking_lines
