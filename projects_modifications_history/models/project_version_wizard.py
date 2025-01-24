@@ -78,7 +78,7 @@ class ProjectVersionWizard(models.TransientModel):
 
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
-        self.update_project_planning_lines(self)
+        self.update_project_planning_lines()
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id)], limit=1)
 
