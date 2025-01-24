@@ -8,6 +8,29 @@ class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
     @api.depends('item_ids')
+    def _compute_product_pricelist_lines(self):
+        for pricelist in self:
+            items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
+            items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
+            items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('pricelist_id', '=', pricelist.id)])
+            items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global')])
+
+            if items_direct_relation.product_tmpl_id:
+                product_template = self.env["product.template"].search([('id', '=', items_direct_relation.product_tmpl_id.id)])
+                product_template._compute_product_pricelist_line_ids()
+
+            if items_direct_relation_variant.product_id:
+                product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
+                product.product_tmplt_id._compute_product_pricelist_line_ids()
+
+            if items_category_relation.categ_id:
+                product_templates = self.env["product.template"].search([('categ_id', '=', items_category_relation.categ_id.id)])
+                product_templates._compute_product_pricelist_line_ids()
+
+            if items_all_stock.items_category_relation:
+                self.env["product.template"].browse()._compute_product_pricelist_line_ids()
+
+    @api.depends('item_ids')
     def _compute_filtered_item_ids(self):
         for pricelist in self:
             pricelist.filtered_item_ids = False
