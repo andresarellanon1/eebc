@@ -18,7 +18,7 @@ class ProductPricelist(models.Model):
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
             items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('pricelist_id', '=', pricelist.id)])
-            items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global')])
+            items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('pricelist_id', '=', pricelist.id)])
 
             if items_direct_relation.product_tmpl_id:
                 logger.warning("items_direct_relation.product_tmpl_id")
