@@ -103,9 +103,6 @@ class ProjectVersionWizard(models.TransientModel):
         for sale in self.sale_order_id.project_picking_lines:
             sale.for_modification = False
 
-        for sale in self.sale_order_id.project_plan_lines:
-            sale.for_modification = False
-
         # Create a new entry in the project version lines for the modification details.
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
