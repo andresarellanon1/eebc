@@ -21,7 +21,7 @@ class ProjectProject(models.Model):
     site_supervisor_id = fields.Many2one('res.users', string="Supervisor")
     subcontractor_id = fields.Many2one('res.users', string="Subcontratista")
     is_subcontractor = fields.Boolean(string='Tiene subcontratista?')
-    costo_total_final = fields.Float(string="Costo final", compute="_final_cost", store=True,)
+    costo_total_final = fields.Float(string="Costo total final", compute="_final_cost", store=True,)
     display_costo_total_final = fields.Char(string="Costo total", compute="_total_final_cost", store=True,)
     custom_currency_id = fields.Many2one('res.currency', string='Divisa')
 
