@@ -210,7 +210,7 @@ class SaleOrder(models.Model):
             'project_plan_pickings': False,
             'task_timesheet_id': False,
             'for_create': for_create,
-            'for_modification': True,
+            'for_modification': False,
             'service_qty': 0
         })
 
@@ -229,7 +229,7 @@ class SaleOrder(models.Model):
                 'task_timesheet_id': plan.task_timesheet_id.id,
                 'display_type': False,
                 'for_create': True,
-                'for_modification': plan.for_modification,
+                'for_modification': False,
                 'service_qty': line.product_uom_qty
             }))
         return plan_lines
