@@ -23,16 +23,18 @@ class SaleOrder(models.Model):
         digits="Payment Terms",
         help="El tipo de cambio se calcula de acuerdo al tipo de cambio oficial del día en curso. Una vez confirmado el documento no se ‘bloquea’ permanentemente o hasta que se devuelva el documento a borrador.",
         compute="_compute_locked_currency_rate",
-        default=lambda self: self.env.company.currency_id.inverse_rate
+        default=lambda self: self.env.company.currency_id.inverse_rate,
+        readonly=False,
+        store=True
     )
 
     safe_margin = fields.Float(
         string="Margen seguro",
         digits="Product Price",
-        store=True,
-        readonly=False,
         help="Agrega el equivalente a esta cantidad de pesos por cada dólar convertido. Para efectos prácticos esto es como tomar el tipo de cambio del día y sumarle esta cantidad.",
         compute='_compute_safe_margin',
+        store=True,
+        readonly=False,
     )
 
     @api.depends_context('company')
@@ -55,6 +57,7 @@ class SaleOrder(models.Model):
             else:
                 order.locked_currency_rate = order.target_currency_id.inverse_rate + order.safe_margin
 
+    @api.depends_context('company')
     @api.depends("pricelist_id", "company_id")
     def _compute_currency_id(self):
         """
