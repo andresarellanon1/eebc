@@ -22,7 +22,7 @@
         <record id="menu_project_config" model="ir.ui.menu">
             <field name="name">Plantillas</field> 
             <field name="parent_id" ref="project.menu_main_pm" /> 
-            <field name="web_icon" eval="project_plan_templates/static/description/icon.png" />
+            <field name="web_icon" type="binary" file="project_plan_templates/static/description/icon.png"/>
             <field name="sequence" eval="20" /> 
         </record>
 
