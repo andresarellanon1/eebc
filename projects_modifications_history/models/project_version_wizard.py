@@ -71,11 +71,14 @@ class ProjectVersionWizard(models.TransientModel):
 
         project = self._origin.project_id
         if not project:
+            logger.error("No se encontró el proyecto asociado.")
             raise ValueError("No se encontró el proyecto asociado.")
+
+        logger.warning(f"Id del sale: {project.actual_sale_order_id.id}")
 
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
-
+        self.update_project_planning_lines(self)
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id)], limit=1)
 
@@ -93,9 +96,7 @@ class ProjectVersionWizard(models.TransientModel):
         # Ensure that a modification motive is provided; raise an error if missing.
         if not self.modification_motive:
             raise UserError(f'Hace falta agregar el motivo de la modificación.')
-        # Eliminar duplicados después de la modificación
-        self.update_project_planning_lines()
-        self.sale_order_id.clean_duplicates_after_modification()
+
         # Create any newly added tasks for the project.
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
 
@@ -112,7 +113,10 @@ class ProjectVersionWizard(models.TransientModel):
             'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
         })
 
+        # Eliminar duplicados después de la modificación
+        self.sale_order_id.clean_duplicates_after_modification()
         self.sale_order_id.state = 'sale'
+        
         # Close the wizard window after completing the action.
         return {
             'type': 'ir.actions.act_window_close'
@@ -184,7 +188,6 @@ class ProjectVersionWizard(models.TransientModel):
         return picking_lines
 
     def update_project_planning_lines(self):
-        project = self._origin.project_id
         existing_plan_lines = project.project_plan_lines
         new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
 
