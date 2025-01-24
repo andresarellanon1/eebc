@@ -60,12 +60,12 @@ class ProductTemplate(models.Model):
                     'is_special': pricelist.is_special
                 })
             # 2. Unlink and delete all
-            if len(applied_pricelists > 0):
-                product_template.sudo().write({'product_pricelist_line_ids': [(3, 0)]})
-            # 3. Link all
+            product_template.sudo().write({'product_pricelist_line_ids': [(3, 0)]})
+            # 3. Link and create all
             product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, pricelist_line_vals)]})
             # 4. If nothing to link, write to `False`
-            product_template.sudo().write({'product_pricelist_line_ids': False})
+            if len(pricelist_line_vals) <= 0:
+                product_template.sudo().write({'product_pricelist_line_ids': False})
 
     def get_min_sale_price(self, currency_id):
         """
