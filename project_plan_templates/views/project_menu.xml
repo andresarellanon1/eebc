@@ -21,10 +21,39 @@
 
         <record id="menu_project_config" model="ir.ui.menu">
             <field name="name">Plantillas</field> 
-            <field name="parent_id" ref="project.menu_main_pm" /> 
-            <field name="web_icon" type="binary" file="project_plan_templates/static/description/icon.png"/>
+            <field name="parent_id" ref="project.menu_main_pm" />
             <field name="sequence" eval="20" /> 
         </record>
+
+        <menuitem id='project_menu_root'
+            name="Planeación de proyectos"
+            web_icon="project_plan_templates,static/description/icon.png"
+            sequence="240">
+        </menuitem>
+
+        <menuitem
+            id="menu_project_config_new_option2"
+            name="Plantillas de tareas de proyecto"
+            action="plan_template_action" 
+            parent="project_menu_root" 
+            sequence="20" 
+        />
+
+        <menuitem
+            id="project_picking_option2"
+            name="Plantillas de materiales"
+            action="plan_picking_templates_action" 
+            parent="project_menu_root" 
+            sequence="20" 
+        />
+
+        <menuitem 
+            id="timesheet_option2"
+            name="Plantillas de hojas de horas"
+            action="plan_timesheet_templates_action" 
+            parent="project_menu_root" 
+            sequence="20" 
+        />
 
         <menuitem
             id="menu_project_config_new_option"
