@@ -7,14 +7,14 @@ _logger = logging.getLogger(__name__)
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
-    project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly="True")
+    project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly=True)
     project_plan_lines = fields.One2many('project.plan.line', 'origin_project_id', string="Project plan lines")
     
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Movimientos de inventario")
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
     plan_total_cost = fields.Float(string="Costo total", default=0.0)
     sale_order_id = fields.Many2one('sale.order', string='Orden de venta', readonly=False, store=True)
-    actual_sale_order_id = fields.Many2one('sale.order', string="Orden de venta", store=True)
+    actual_sale_order_id = fields.Many2one('sale.order', string="Orden actual de venta", store=True)
 
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
