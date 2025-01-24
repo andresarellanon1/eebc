@@ -32,7 +32,7 @@ class ProductPricelist(models.Model):
                 product_templates = self.env["product.template"].search([('categ_id', '=', items_category_relation.categ_id.id)])
                 product_templates._compute_product_pricelist_line_ids()
 
-            if items_all_stock.items_category_relation:
+            if len(items_all_stock) > 0:
                 self.env["product.template"].browse()._compute_product_pricelist_line_ids()
 
     @api.depends('item_ids')
