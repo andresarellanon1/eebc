@@ -37,7 +37,7 @@ class ProductPricelist(models.Model):
 
             if len(items_all_stock) > 0:
                 logger.warning("if len(items_all_stock) > 0")
-                self.env["product.template"].browse()._compute_product_pricelist_line_ids()
+                self.env["product.template"].search([])._compute_product_pricelist_line_ids()
 
     @api.depends('item_ids')
     def _compute_filtered_item_ids(self):
