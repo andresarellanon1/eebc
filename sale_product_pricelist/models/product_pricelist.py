@@ -33,7 +33,7 @@ class ProductPricelist(models.Model):
                 product_templates._compute_product_pricelist_line_ids()
 
             if len(items_all_stock) > 0:
-                self.env["product.template"].browse()._compute_product_pricelist_line_ids()
+                self.env["product.template"]._compute_product_pricelist_line_ids()
 
     @api.depends('item_ids')
     def _compute_filtered_item_ids(self):
