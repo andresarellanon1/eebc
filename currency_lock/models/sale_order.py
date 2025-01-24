@@ -15,8 +15,7 @@ class SaleOrder(models.Model):
     target_currency_id = fields.Many2one(
         string="Divisa Objetivo",
         comodel_name="res.currency",
-        default=lambda self: self.env.company.currency_id.id,
-        compute="_compute_locked_currency_rate"
+        default=lambda self: self.env.company.currency_id.id
     )
 
     locked_currency_rate = fields.Float(
