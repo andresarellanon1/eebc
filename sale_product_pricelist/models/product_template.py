@@ -25,11 +25,11 @@ class ProductTemplate(models.Model):
             items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('company_id', '=', company_id.id)])
             pricelists_ids = []
             for pricelist_id in items_direct_relation.pricelist_id:
-                pricelists_ids.append(pricelist_id.id)
+                pricelists_ids.append(pricelist_id)
             for pricelist_id in items_category_relation.pricelist_id:
-                pricelists_ids.append(pricelist_id.id)
+                pricelists_ids.append(pricelist_id)
             for pricelist_id in items_all_stock.pricelist_id:
-                pricelists_ids.append(pricelist_id.id)
+                pricelists_ids.append(pricelist_id)
             logger.warning(f"found pricelists {pricelists_ids}")
             return pricelists_ids
 
