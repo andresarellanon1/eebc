@@ -23,12 +23,12 @@ class ProjectVersionWizard(models.TransientModel):
     )
 
     wizard_plan_lines = fields.One2many(
-        comodel_name='project.plan.wizard.line', 'wizard_version_id',
+        'project.plan.wizard.line', 'wizard_version_id',
         string="Project Plan Lines"
     )
 
     wizard_picking_lines = fields.One2many(
-        comodel_name='project.picking.wizard.line', 'wizard_version_history_id',
+        'project.picking.wizard.line', 'wizard_version_history_id',
         string="Project Picking Lines"
     )
 
