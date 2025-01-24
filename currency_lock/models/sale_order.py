@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
     locked_currency_rate = fields.Float(
         string="Tipo de cambio seguro",
         digits="Payment Terms",
-        help="El tipo de cambio se calcula de acuerdo al tipo de cambio oficial del día en curso. Una vez confirmado el documento no se ‘bloquea’ permanentemente o hasta que se devuelva el documento a borrador.",
+        help="El tipo de cambio se calcula de acuerdo al tipo de cambio oficial del día en curso. Una vez confirmado el documento; se ‘bloquea’ permanentemente o hasta que se devuelva el documento a borrador.",
         compute="_compute_locked_currency_rate",
         default=lambda self: self.env.company.currency_id.inverse_rate,
         readonly=False,
@@ -56,7 +56,6 @@ class SaleOrder(models.Model):
             else:
                 order.locked_currency_rate = order.target_currency_id.inverse_rate + order.safe_margin
 
-    @api.depends_context('company')
     @api.depends("pricelist_id", "company_id", "target_currency_id")
     def _compute_currency_id(self):
         """
