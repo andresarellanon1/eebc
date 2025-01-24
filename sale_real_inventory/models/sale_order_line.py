@@ -38,7 +38,8 @@ class SaleOrderLine(models.Model):
             quants = self.env['stock.quant'].search([
                 ('product_id', '=', line.product_id.id),
                 ('location_id', 'child_of', location.id),
-                ('location_id.usage', '=', 'internal')  # Solo ubicaciones internas
+                ('location_id.usage', '=', 'internal'),
+                ('company_id', '=', line.company_id.id) 
             ])
 
             # Suma las cantidades disponibles y restadas las reservadas
