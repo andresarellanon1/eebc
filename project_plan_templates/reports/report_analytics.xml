@@ -8,27 +8,29 @@
                     
                     <style>
                         
+                        body {
+                            padding-bottom: 20px;
+                        }
+                        
                         p {
                             margin:0;
                             font-size: 12px;
                         }
-                        
-                        td, th {
+
+                        tr, td, th, table {
+                            background-color: transparent !important;
+                            border: none !important;
                             font-size: 12px;
                         }
-                        
-                        tr {
-                            background-color: transparent !important;
-                        }
-                        
+                    
                     </style>
 
                     <!-- Encabezado -->    
 
-                    <div style="display: flex; justify-content: space-between;">
+                    <div style="display: -webkit-box; -webkit-box-pack: justify;">
                         <div>
                             <strong><p>Cliente: <span t-esc="doc.partner_id.name"/></p></strong>
-                            <strong><p>Proyecto: <span t-esc="doc.project_id.name"/></p></strong>
+                            <strong><p>Proyecto: <span t-esc="doc.project_name"/></p></strong>
                         </div>
                         <div>
                             <strong><p>Cotización: <span t-esc="doc.name"/></p></strong>
@@ -46,7 +48,7 @@
                     <!--Servicio-->
                     <t t-foreach="doc.order_line" t-as="line">
                         <t t-if="line.display_type != 'line_section'">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <div style="display: -webkit-box; -webkit-box-pack: justify; margin-bottom: 10px;">
         
                                 <div style="width: 70%;">
                                     <div style="display: flex;">
@@ -67,7 +69,7 @@
                                     
                                 </div>
         
-                                <div style="width: 30%; display: flex; justify-content: space-between">
+                                <div style="width: 30%; display: -webkit-box; -webkit-box-pack: justify;">
         
                                     <div>
                                         <p>Unidad: </p>
@@ -90,156 +92,223 @@
 
                     <!--Materiales-->
                             
-                                <div style="width: 100%;">
-                                    <table style="border-collapse: collapse;">
-                                        <thead>
-            
-                                            <tr style="border-collapse: collapse;">
-                                                <th style="width: 5%; border: 2px solid black;">C</th>
-                                                <th style="width: 10%; border: 2px solid black; text-align: left">Clave</th>
-                                                <th style="width: 45%; border: 2px solid black; text-align: left">Descripción</th>
-                                                <th style="width: 10%; border: 2px solid black;">Unidad</th>
-                                                <th style="width: 10%; border: 2px solid black; text-align: right">Cantidad</th>
-                                                <th style="width: 15%; border: 2px solid black; text-align: right">Costo Unitario</th>
-                                                <th style="width: 15%; border: 2px solid black; text-align: right">Total</th>
-                                            </tr>
-            
-                                        </thead>
-            
-                                        <tbody>
-                                            
-                                            <tr>
-                                                <td colspan="7" style="font-weight: bold;">Materiales</td>
-                                            </tr>
-                                            
-                                            <t t-foreach="doc.project_picking_lines" t-as="material">
-                                                <t t-if="not stop">
-                                                    
-                                                    <t t-if="material.name == line.product_template_id.name">
-                                                        <t t-if="not fill">
-                                                            <t t-set="fill" t-value="True"/>
-                                                        </t>
-                                                        <t-else>
+                            <div style="width: 100%;">
+                                <table style="border-collapse: collapse;">
+                                    <thead>
+        
+                                        <tr style="border-collapse: collapse;">
+                                            <th style="width: 5%; border: 2px solid black;">C</th>
+                                            <th style="width: 10%; border: 2px solid black; text-align: left">Clave</th>
+                                            <th style="width: 45%; border: 2px solid black; text-align: left">Descripción</th>
+                                            <th style="width: 10%; border: 2px solid black;">Unidad</th>
+                                            <th style="width: 10%; border: 2px solid black; text-align: right">Cantidad</th>
+                                            <th style="width: 15%; border: 2px solid black; text-align: right">Costo Unitario</th>
+                                            <th style="width: 15%; border: 2px solid black; text-align: right">Total</th>
+                                        </tr>
+        
+                                    </thead>
+        
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <td colspan="7" style="font-weight: bold;">Materiales</td>
+                                        </tr>
+                                        
+                                        <t t-set="total_materiales" t-value="0.0"/>
+                                        
+                                        <t t-foreach="doc.project_picking_lines" t-as="material">
+                                            <t t-if="not stop">
+                                                
+                                                <t t-if="material.display_type == 'line_section'">
+                                        
+                                                    <t t-if="fill">
+                                                        
+                                                        <t t-if="material.for_create == False">
+                                                            
                                                             <t t-set="stop_loop" t-value="True"/>
-                                                        </t-else>
+                                                            <t t-set="fill" t-value="False"/>
+                                                        </t>
                                                     </t>
                                                     
-                                                    <t t-if="fill">
-                                                        <t t-if="material.display_type != 'line_section'">
-                                                            <tr>
-                                                                <td> </td>
-                                                                <td>Pendiente</td>
-                                                                <td><span t-esc="material.product_id.name"/></td>
-                                                                <td style="text-align: center"><span t-esc="material.product_id.uom_id.name"/></td>
-                                                                <td style="text-align: right"><span t-esc="material.quantity"/></td>
-                                                                <td style="text-align: right"><span t-esc="material.standard_price"/></td>
-                                                                <td style="text-align: right"><span t-esc="material.subtotal"/></td>
-                                                            </tr>
-                                                        </t>
+                                                    <t t-if="material.name == line.product_template_id.name">
+                                                      
+                                                        <t t-set="fill" t-value="True"/>
+                                                    </t>
+                                                    
+                                                </t>
+                                                
+                                                <t t-if="fill">
+                                                    <t t-if="material.display_type != 'line_section'">
+                                                        <tr>
+                                                            <td> </td>
+                                                            <td>Pendiente</td>
+                                                            <td><span t-esc="material.product_id.name"/></td>
+                                                            <td style="text-align: center"><span t-esc="material.product_id.uom_id.name"/></td>
+                                                            <td style="text-align: right"><span t-esc="material.quantity"/></td>
+                                                            <td style="text-align: right"><span t-esc="material.standard_price"/></td>
+                                                            <td style="text-align: right"><span t-esc="material.subtotal"/></td>
+                                                        </tr>
+                                                        
+                                                        <t t-set="total_materiales" t-value="total_materiales + material.subtotal"/>
+
                                                     </t>
                                                 </t>
                                             </t>
-                                            
-                                         
-                                            <tr style="border-top: 20px solid white;">
-                                                <td colspan="6" style="font-weight: bold;">Total de materiales</td>
-                                                <td style="text-align: right; font-weight: bold;">9,700.00</td>
-                                            </tr>
-                                             
-
-                    <!--Fin de Materiales-->
-                            
-                    
-                     <!--Mano de obra-->
-        
-                                        <tr style="border-top: 10px solid white;">
-                                            <td colspan="6" style="font-weight: bold;">Mano de obra</td>
-                                        </tr>
-                                        <t t-foreach="doc.project_plan_lines.task_timesheet_id.task_time_lines" t-as="manoObra">  
-                                            <t t-foreach="manoObra.task_timesheet_id.task_time_lines" t-as="horas">  
-                                                <tr>
-                                                    <td> </td>
-                                                    <td>Pendiente</td>
-                                                    <td><span t-esc="horas.description"/></td>
-                                                    <td style="text-align: center">jor</td>
-                                                    <td style="text-align: right">1.5000000</td>
-                                                    <td style="text-align: right">1,000.00</td>
-                                                    <td style="text-align: right">1,500.00</td>
-                                                </tr>
-                                            </t>
                                         </t>
                                         
-                                        <tr style="border-top: 20px solid white;">
-                                            <td colspan="6" style="font-weight: bold;">Total de Mano de obra</td>
-                                            <td style="text-align: right; font-weight: bold;">1,500.00</td>
-                                        </tr>
-                              
-                    <!--Fin de Mano de obra-->
-                    
-                    <!--Totales-->
-                                        <tr>
-                                            <td> </td>
-                                            <td/>
-                                            <td style="font-weight: bold;">Costo directo</td>
-                                            <td/>
-                                            <td/>
-                                            <td/>
-                                            <td style="text-align: right; font-weight: bold;">11,200.00</td>
-                                        </tr>
-                                    
-                                        <tr>
-                                            <td> </td>
-                                            <td/>
-                                            <td style="font-weight: bold;">Utilidad</td>
-                                            <td/>
-                                            <td/>
-                                            <td style="text-align: right; font-weight: bold;">45.0000%</td>
-                                            <td style="text-align: right; font-weight: bold;">5,040.00</td>
-                                        </tr>
-                                    
-                                        <tr>
-                                            <td> </td>
-                                            <td/>
-                                            <td style="font-weight: bold;">Precio unitario</td>
-                                            <td/>
-                                            <td/>
-                                            <td/>
-                                            <td style="text-align: right; font-weight: bold;">16,240.00</td>
-                                        </tr>
-                            
-                                        <tr>
-                                            <td> </td>
-                                            <td/>
-                                            <td style="font-weight: bold;">IVA (8.00%)</td>
-                                            <td/>
-                                            <td/>
-                                            <td/>
-                                            <td style="text-align: right; font-weight: bold;">1,299.20</td>
-                                        </tr>
-                                    
-                                        <tr>
-                                            <td> </td>
-                                            <td/>
-                                            <td style="font-weight: bold;">Total</td>
-                                            <td/>
-                                            <td/>
-                                            <td/>
-                                            <td style="text-align: right; font-weight: bold;">17,539.20</td>
-                                        </tr>
+                                        <t t-set="fill" t-value="False"/>
+                                        <t t-set="stop_loop" t-value="False"/>
                                         
-                                        <tr>
-                                            <td colspan="7" style="padding-top: 20px; font-weight: bold; text-align: center;">(* DIECISIETE MIL QUINIENTOS TRINTA Y NUEVE PESOS 20/100 MXN*)</td>
+                                        <tr style="border-top: 20px solid white;">
+                                            <td colspan="6" style="font-weight: bold;">Total de materiales</td>
+                                            <td style="text-align: right; font-weight: bold;"><span t-esc="total_materiales"/></td>
                                         </tr>
-                    <!--Fin de Totales-->
-                                        <tr style="border-top: 25px solid white;"/>
-                                        <tr style="border-top: 2px solid black;">
-                                            <td style="padding-bottom: 20px;"/>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </t>
-            
+                                         
+
+                                    <!--Fin de Materiales-->
+                                            
+                                    
+                                    <!--Mano de obra-->
+    
+                                    <tr style="border-top: 10px solid white;">
+                                        <td colspan="6" style="font-weight: bold;">Mano de obra</td>
+                                    </tr>
+                                    <t t-foreach="doc.project_plan_lines" t-as="manoObra">  
+                                        
+                                        <t t-if="not stop">
+                                                
+                                            <t t-if="manoObra.display_type == 'line_section'">
+                                    
+                                                <t t-if="fill">
+                                                    
+                                                    <t t-if="manoObra.for_create == False">
+                                                        
+                                                        <t t-set="stop_loop" t-value="True"/>
+                                                        <t t-set="fill" t-value="False"/>
+                                                    </t>
+                                                </t>
+                                                
+                                                <t t-if="manoObra.name == line.product_template_id.name">
+                                                  
+                                                    <t t-set="fill" t-value="True"/>
+                                                </t>
+                                            </t>
+                                            
+                                            <t t-if="fill">
+                                                <t t-if="manoObra.display_type != 'line_section'">
+                                                    <t t-foreach="manoObra.task_timesheet_id.task_time_lines" t-as="horas">  
+                                                        <tr>
+                                                            <td> </td>
+                                                            <td>Pendiente</td>
+                                                            <td><span t-esc="horas.description"/></td>
+                                                            <td style="text-align: center">jor</td>
+                                                            <td style="text-align: right"><span t-esc="horas.work_shift"/></td>
+                                                            <td style="text-align: right"><span>PENDIENTE</span></td>
+                                                            <td style="text-align: right"><span>PENDIENTE</span></td>
+                                                        </tr>
+                                                    </t>
+                                                    
+                                                </t>
+                                            </t>
+                                                
+                                        </t>
+                                        
+                                        
+                                    </t>
+                                    
+                                    <t t-set="fill" t-value="False"/>
+                                    <t t-set="stop_loop" t-value="False"/>
+                                    
+                                    <tr style="border-top: 20px solid white;">
+                                        <td colspan="6" style="font-weight: bold;">Total de Mano de obra</td>
+                                        <td style="text-align: right; font-weight: bold;">PENDIENTE</td>
+                                    </tr>
+                          
+                                    <!--Fin de Mano de obra-->
+                                    
+                                    <!--Totales-->
+                
+                                    <t t-set="total_manoObra" t-value="0"/>
+                
+                                     <!-- Calcular Costo Directo -->
+                                    <t t-set="costo_directo" t-value="total_materiales + total_manoObra"/>
+                                
+                                    <!-- Calcular Utilidad (porcentaje) -->
+                                    <t t-set="utilidad" t-value="0"/> <!-- Utilidad 0% por ahora -->
+                                
+                                    <!-- Calcular Precio Unitario -->
+                                    <t t-set="precio_unitario" t-value="costo_directo + utilidad"/>
+                                
+                                    <!-- Calcular IVA -->
+                                    <t t-set="iva_porcentaje" t-value="16"/> <!-- IVA al 16% -->
+                                    <t t-set="iva_calculado" t-value="precio_unitario * iva_porcentaje"/>
+                                
+                                    <!-- Calcular Total (Precio Unitario + IVA) -->
+                                    <t t-set="total_con_iva" t-value="precio_unitario + iva_calculado"/>
+
+                                    <tr>
+                                        <td> </td>
+                                        <td/>
+                                        <td style="font-weight: bold;">Costo directo</td>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <td style="text-align: right; font-weight: bold;"><span t-esc="costo_directo"/></td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td> </td>
+                                        <td/>
+                                        <td style="font-weight: bold;">Utilidad</td>
+                                        <td/>
+                                        <td/>
+                                        <td style="text-align: right; font-weight: bold;">PENDIENTE%</td>
+                                        <td style="text-align: right; font-weight: bold;"><span t-esc="utilidad"/></td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td> </td>
+                                        <td/>
+                                        <td style="font-weight: bold;">Precio unitario</td>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <td style="text-align: right; font-weight: bold;"><span t-esc="precio_unitario"/></td>
+                                    </tr>
+                        
+                                    <tr>
+                                        <td> </td>
+                                        <td/>
+                                        <td style="font-weight: bold;"><span t-esc="iva_porcentaje"/></td>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <td style="text-align: right; font-weight: bold;"><span t-esc="iva_calculado"/></td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td> </td>
+                                        <td/>
+                                        <td style="font-weight: bold;">Total</td>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <td style="text-align: right; font-weight: bold;"><span t-esc="total_con_iva"/></td>
+                                    </tr>
+                                    
+                                    <!--<tr>-->
+                                    <!--    <td colspan="7" style="padding-top: 20px; font-weight: bold; text-align: center;">(* PENDIENTES PESOS 20/100 MXN*)</td>-->
+                                    <!--</tr>-->
+                                    <!--Fin de Totales-->
+                                    <tr style="border-top: 25px solid white;"/>
+                                    <tr style="border-top: 2px solid black;">
+                                        <td style="padding-bottom: 20px;"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>            
             </t>
         </t>
     </tbody>
