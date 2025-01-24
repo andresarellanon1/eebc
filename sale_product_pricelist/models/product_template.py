@@ -31,9 +31,10 @@ class ProductTemplate(models.Model):
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.append(pricelist_id.id)
             logger.warning(f"found pricelists {pricelists_ids}")
+            return pricelists_ids
 
     @api.depends_context('company')
-    @api.depends("list_price", "standard_price")
+    @api.depends("list_price", "standard_price", "pricelist_item_count")
     def _compute_product_pricelist_line_ids(self):
         """
             Re-computes the price unit for all the 'product.pricelist.line' linked to this 'product.template'.
