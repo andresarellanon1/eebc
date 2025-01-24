@@ -101,7 +101,6 @@ class ProjectPlanPickingLine(models.Model):
 
     @api.depends('product_id')
     def _compute_standard_price(self):
-        self.ensure_one()
         for record in self:
             record.standard_price = record.product_id.standard_price
 
