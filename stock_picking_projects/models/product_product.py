@@ -19,8 +19,7 @@ class ProductProduct(models.Model):
     project_id = fields.Many2one(
         'project.project', 
         string='Proyecto',
-        store = True,
-        copied = True
+        store = True
     )
 
     @api.onchange('product_tmpl_id')

@@ -12,14 +12,13 @@ class SaleOrder(models.Model):
     project_name = fields.Char(string="Titulo de proyecto")
     plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
-    state = fields.Selection([
-        ('draft', 'Cotización'),
-        ('budget', 'Presupuesto'),
-        ('sale', 'Orden de venta'),
-        ('process', 'En proceso'),
-        ('done', 'Hecho'),
-        ('cancel', 'Cancelado')
-    ], string='Estado', readonly=True, copy=False, tracking=True, default='draft')
+    state = fields.Selection(
+        selection_add=[
+            ('budget', 'Presupuesto'),
+            ('process', 'En proceso'),
+        ],
+        ondelete={'budget': 'set default', 'process': 'set default'},
+    )
 
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
@@ -124,7 +123,6 @@ class SaleOrder(models.Model):
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
             sale.project_picking_lines = [(5, 0, 0)]
-            logger.warning(f"Encontro la sale order: {sale.project_id.actual_sale_order_id}")
             if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
 
                 previous_order = sale.project_id.actual_sale_order_id
@@ -258,8 +256,6 @@ class SaleOrder(models.Model):
     def action_open_create_project_wizard(self):
         
         self.ensure_one()
-
-        logger.warning(f"Sale Order ID: {self.id}")
 
         project_name = []
         project_description = []

@@ -29,8 +29,7 @@ class ProjectPlan(models.Model):
     product_template_id = fields.Many2one(
         'product.template',
         string="Servicio",
-        ondelete='restrict',  
-        inverse_name='project_plan_id'
+        ondelete='restrict',
     )
 
     service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
