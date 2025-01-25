@@ -194,8 +194,8 @@ class ProjectVersionWizard(models.TransientModel):
         project.project_plan_lines = [(5, 0, 0)]
         project.project_picking_lines = [(5, 0, 0)]
 
-        plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
-        picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
+        plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+        picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
         # Crear las nuevas líneas en el proyecto
         project.project_plan_lines = plan_lines
