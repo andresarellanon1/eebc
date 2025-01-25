@@ -98,20 +98,17 @@ class SaleOrderLine(models.Model):
     def _find_equivalent_pricelist(self):
         """
             Finds the equivalent pricelist for the order line's product template with the correct currency,
-            and also checks if the pricelist company matches the current company where the user is logged in .
+            and also checks if the pricelist company matches the current parent order company.
 
             Returns the first matching pricelist.
         """
         for line in self:
-            return self.env["product.pricelist.line"].search(
-                [
-                    ("product_templ_id", "=", line.product_template_id.id),
-                    ("name", "=", line.product_pricelist_id.name),
-                    ("currency_id", "=", line.target_currency_id.id),
-                    ("company_id", "=", line.order_id.company_id.id)
-                ],
-                limit=1
-            )
+            return self.env["product.pricelist.line"].search([
+                ("product_templ_id", "=", line.product_template_id.id),
+                ("name", "=", line.product_pricelist_id.name),
+                ("currency_id", "=", line.target_currency_id.id),
+                ("company_id", "=", line.order_id.company_id.id)
+            ], limit=1)
 
     def _get_price_unit(self, unit_price, safe_margin, source_currency, target_currency, company_id):
         """
@@ -191,8 +188,12 @@ class SaleOrderLine(models.Model):
                 continue
             product_pricelist_id = False
             default_pricelist_id = line.company_id.selected_product_pricelist_id.id
-            priority_customer_selected_pricelist = _get_pricelist(line.product_template_id, line.order_id.partner_id.priority_pricelist_id, line.order_id.target_currency_id, line.company_id) if line.order_id.partner_id.priority_pricelist_id else False
-            customer_selected_pricelist = _get_pricelist(line.product_template_id, line.order_id.partner_id.property_product_pricelist, line.order_id.target_currency_id, line.company_id) if line.order_id.partner_id.property_product_pricelist else False
+            priority_customer_selected_pricelist = _get_pricelist(line.product_template_id,
+                                                                  line.order_id.partner_id.priority_pricelist_id,
+                                                                  line.order_id.target_currency_id, line.company_id) if line.order_id.partner_id.priority_pricelist_id else False
+            customer_selected_pricelist = _get_pricelist(line.product_template_id,
+                                                         line.order_id.partner_id.property_product_pricelist,
+                                                         line.order_id.target_currency_id, line.company_id) if line.order_id.partner_id.property_product_pricelist else False
             if (not default_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
                 "No se encontró una lista de precios predeterminada para:\n"
@@ -200,10 +201,15 @@ class SaleOrderLine(models.Model):
                 "Para continuar, cree una lista de precios predeterminada que cumpla con los requisitos o desactive esta validación."
                 raise ValidationError(msg)
             if priority_customer_selected_pricelist and (not product_pricelist_id):
-                product_pricelist_id = _get_pricelist(line.product_template_id, priority_customer_selected_pricelist.name, priority_customer_selected_pricelist.currency_id, line.company_id)
+                product_pricelist_id = _get_pricelist(line.product_template_id,
+                                                      priority_customer_selected_pricelist,
+                                                      priority_customer_selected_pricelist.currency_id,
+                                                      line.company_id)
             if customer_selected_pricelist and (not product_pricelist_id):
                 # NOTE: Search for the price list line that matches the customer-selected price list
-                product_pricelist_id = _get_pricelist(line.product_template_id, customer_selected_pricelist.name, customer_selected_pricelist.currency_id, line.company_id)
+                product_pricelist_id = _get_pricelist(line.product_template_id,
+                                                      customer_selected_pricelist.name,
+                                                      customer_selected_pricelist.currency_id, line.company_id)
             if default_pricelist_id and (not product_pricelist_id):
                 product_pricelist_id = default_pricelist_id
             if not product_pricelist_id:
@@ -214,7 +220,7 @@ class SaleOrderLine(models.Model):
 
     def _compute_line_uom_factor(self):
         """
-        == = Critical Warning for Developers == =
+        ===> Critical Warning for Developers <===
         Calling this method more than once with identical values for both 'default' and 'selected' unit of measures(uom) can lead to a severe bug.
         Consequently, the unit price will undergo exponential multiplication with each subsequent invocation of this method.
         It is imperative to diligently monitor any code segment that interacts with this model to detect and prevent occurrences of this bug.
