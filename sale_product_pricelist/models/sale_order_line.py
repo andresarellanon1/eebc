@@ -187,13 +187,15 @@ class SaleOrderLine(models.Model):
                 line.product_pricelist_id = False
                 continue
             product_pricelist_id = False
-            default_pricelist_id = line.company_id.selected_product_pricelist_id.id
+            # === Pricelists declaration === #
+            default_pricelist_id = line.company_id.selected_product_pricelist_id
             priority_customer_selected_pricelist = _get_pricelist(line.product_template_id,
                                                                   line.order_id.partner_id.priority_pricelist_id,
                                                                   line.order_id.target_currency_id, line.company_id) if line.order_id.partner_id.priority_pricelist_id else False
             customer_selected_pricelist = _get_pricelist(line.product_template_id,
                                                          line.order_id.partner_id.property_product_pricelist,
                                                          line.order_id.target_currency_id, line.company_id) if line.order_id.partner_id.property_product_pricelist else False
+            # NOTE: At least one of the 3 pricelist options available
             if (not default_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
                 "No se encontró una lista de precios predeterminada para:\n"
@@ -208,7 +210,7 @@ class SaleOrderLine(models.Model):
             if customer_selected_pricelist and (not product_pricelist_id):
                 # NOTE: Search for the price list line that matches the customer-selected price list
                 product_pricelist_id = _get_pricelist(line.product_template_id,
-                                                      customer_selected_pricelist.name,
+                                                      customer_selected_pricelist,
                                                       customer_selected_pricelist.currency_id, line.company_id)
             if default_pricelist_id and (not product_pricelist_id):
                 product_pricelist_id = default_pricelist_id
