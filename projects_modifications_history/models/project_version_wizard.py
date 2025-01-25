@@ -100,8 +100,8 @@ class ProjectVersionWizard(models.TransientModel):
         # Create any newly added tasks for the project.
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
 
-        for sale in self.sale_order_id.project_picking_lines:
-            sale.for_modification = False
+        # for sale in self.sale_order_id.project_picking_lines:
+        #     sale.for_modification = False
 
         # Create a new entry in the project version lines for the modification details.
         self.env['project.version.lines'].create({
@@ -193,16 +193,10 @@ class ProjectVersionWizard(models.TransientModel):
             return
 
         # Eliminar líneas existentes del proyecto
-        project.project_plan_lines.unlink()
-        project.project_picking_lines.unlink()
-
-        # Preparar las nuevas líneas a partir del sale.order
-        new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
-        new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
+        project.project_plan_lines = [(5, 0, 0)]
+        project.project_picking_lines = [(5, 0, 0)]
 
         # Crear las nuevas líneas en el proyecto
-        if new_plan_lines_data:
-            project.project_plan_lines = [(0, 0, line[2]) for line in new_plan_lines_data]
+        project.project_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
 
-        if new_picking_lines_data:
-            project.project_picking_lines = [(0, 0, line[2]) for line in new_picking_lines_data]
+        project.project_picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
