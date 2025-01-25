@@ -179,18 +179,3 @@ class ProjectProject(models.Model):
             }
 
             self.env['stock.picking'].create(stock_picking_vals)
-
-    def update_project_planning_lines(self):
-        for project in self:
-
-            # Eliminar líneas existentes del proyecto
-            project.project_plan_lines = [(5, 0, 0)]
-            project.project_picking_lines = [(5, 0, 0)]
-
-            plan_lines = self.prep_plan_lines(project.sale_order_id.project_plan_lines)
-            picking_lines = self.prep_picking_lines(project.sale_order_id.project_picking_lines)
-
-            # Crear las nuevas líneas en el proyecto
-            project.project_plan_lines = plan_lines
-
-            project.project_picking_lines = picking_lines
