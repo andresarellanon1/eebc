@@ -71,14 +71,11 @@ class ProjectVersionWizard(models.TransientModel):
 
         project = self._origin.project_id
         if not project:
-            logger.error("No se encontró el proyecto asociado.")
             raise ValueError("No se encontró el proyecto asociado.")
-
-        logger.warning(f"Id del sale: {project.actual_sale_order_id.id}")
 
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
-        self.update_project_planning_lines()
+        
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id)], limit=1)
 
@@ -116,6 +113,7 @@ class ProjectVersionWizard(models.TransientModel):
         # Eliminar duplicados después de la modificación
         self.sale_order_id.clean_duplicates_after_modification()
         self.sale_order_id.state = 'sale'
+        project.update_project_planning_lines()
         
         # Close the wizard window after completing the action.
         return {
@@ -187,16 +185,3 @@ class ProjectVersionWizard(models.TransientModel):
                 }))
         return picking_lines
 
-    def update_project_planning_lines(self):
-        project = self._origin.project_id
-        if not project:
-            return
-
-        # Eliminar líneas existentes del proyecto
-        project.project_plan_lines = [(5, 0, 0)]
-        project.project_picking_lines = [(5, 0, 0)]
-
-        # Crear las nuevas líneas en el proyecto
-        project.project_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
-
-        project.project_picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
