@@ -111,7 +111,7 @@ class ProjectVersionWizard(models.TransientModel):
         })
 
         # Eliminar duplicados después de la modificación
-        self.sale_order_id.clean_duplicates_after_modification()
+        
         self.sale_order_id.state = 'sale'
         self.update_project_planning_lines()
         
@@ -201,3 +201,5 @@ class ProjectVersionWizard(models.TransientModel):
         project.project_plan_lines = plan_lines
 
         project.project_picking_lines = picking_lines
+
+        self.sale_order_id.clean_duplicates_after_modification()
