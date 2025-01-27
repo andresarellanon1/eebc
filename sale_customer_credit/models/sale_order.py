@@ -1,6 +1,6 @@
 from odoo import api, fields, models
 import logging
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 logger = logging.getLogger(__name__)
@@ -14,6 +14,22 @@ class SaleOrder(models.Model):
         compute="_compute_is_paid_via_transaction",
         store=True
     )
+
+    from odoo.exceptions import UserError
+
+    @api.model
+    def create(self, vals):
+        # Primero, obtenemos el cliente relacionado con la factura o movimiento
+        partner_id = vals.get('partner_id')
+        partner = self.env['res.partner'].browse(partner_id)
+
+        # Comprobamos el límite de crédito del cliente
+        if partner.credit_limit and partner.credit > partner.usage_partner_credit_limit:
+            raise UserError(_("El límite de crédito del cliente ha sido excedido. No se puede proceder con la transacción."))
+
+        # Llamada al método de creación original si no hay problemas
+        return super(AccountMove, self).create(vals)
+
 
     @api.depends('transaction_ids.state', 'transaction_ids.amount', 'amount_total', 'transaction_ids.payment_method_code')
     def _compute_is_paid_via_transaction(self):

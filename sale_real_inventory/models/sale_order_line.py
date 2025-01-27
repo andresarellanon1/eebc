@@ -3,6 +3,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
+
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -17,6 +21,9 @@ class SaleOrderLine(models.Model):
         for line in self:
             stock_location_wh = line.order_id.warehouse_id.lot_stock_id
             location = self.env['stock.location'].search([('id', '=', stock_location_wh.id)], limit=1)
+
+            logger.warning(f"locacion: {location.name}")
+
             if not location:
                 # Si no existe la ubicación, establece la cantidad disponible como 0
                 line.available_product_quantity = 0
@@ -31,7 +38,8 @@ class SaleOrderLine(models.Model):
             quants = self.env['stock.quant'].search([
                 ('product_id', '=', line.product_id.id),
                 ('location_id', 'child_of', location.id),
-                ('location_id.usage', '=', 'internal')  # Solo ubicaciones internas
+                ('location_id.usage', '=', 'internal'),
+                ('company_id', '=', line.company_id.id) 
             ])
 
             # Suma las cantidades disponibles y restadas las reservadas

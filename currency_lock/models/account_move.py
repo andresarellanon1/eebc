@@ -26,30 +26,36 @@ class AccountMove(models.Model):
     def create(self, vals_list):
         moves = super(AccountMove, self).create(vals_list)
         for move in moves:
+            move.locked_currency_rate = 0
             if move.sale_order_count <= 0:
                 continue
             for line in move.line_ids:
                 source_order_id = line.sale_line_ids.order_id
                 source_order = self.env["sale.order"].search([("id", "=", source_order_id.id)])
-                move.locked_currency_rate = source_order.locked_currency_rate
+                if source_order:
+                    move.locked_currency_rate = source_order.locked_currency_rate
         return moves
 
     @api.depends("sale_order_count")
     def _compute_target_currency_id(self):
         for move in self:
-            if move.state == "posted":
+            move.locked_currency_rate = 0
+            move.target_currency_id = False
+            if move.state == "posted": 
                 continue
             if move.sale_order_count <= 0:
                 continue
             for line in move.line_ids:
                 source_order_ids = line.sale_line_ids.order_id.ids
                 source_orders = self.env["sale.order"].search([("id", "in", source_order_ids)])
-                order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
-                move.target_currency_id = order.target_currency_id
+                if source_orders:
+                    order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
+                    move.target_currency_id = order.target_currency_id
 
     @api.depends("currency_id")
     def _compute_locked_currency_rate(self):
         for move in self:
+            move.locked_currency_rate = 0
             if move.state == "posted":
                 continue
             if move.sale_order_count <= 0:
@@ -57,5 +63,6 @@ class AccountMove(models.Model):
             for line in move.line_ids:
                 source_order_ids = line.sale_line_ids.order_id.ids
                 source_orders = self.env["sale.order"].search([("id", "in", source_order_ids)])
-                order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
-                move.locked_currency_rate = self.env["res.currency"].search([("id", "=", order.target_currency_id.id)], limit=1).inverse_rate
+                if source_orders:
+                    order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
+                    move.locked_currency_rate = self.env["res.currency"].search([("id", "=", order.target_currency_id.id)], limit=1).inverse_rate
