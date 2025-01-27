@@ -89,6 +89,9 @@ class ProjectVersionWizard(models.TransientModel):
             if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
         ]
 
+        existing_picking_lines = project.project_picking_lines
+        new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
+
         project.project_picking_lines = [
             (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
             for line in existing_picking_lines
