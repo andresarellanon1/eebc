@@ -26,7 +26,7 @@ class TaskTimeLines(models.Model):
     def _product_domain(self):
         for record in self:
             products = self.env['product.template'].search([
-                ('detailed_type', '=', 'service'),
+                ('detailed_type', '=', 'service'), 
                 ('sale_ok', '=', True),
                 ('name', '=', 'CUADRILLA INSTALADORA')
             ])
