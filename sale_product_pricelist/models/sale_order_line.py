@@ -48,14 +48,13 @@ class SaleOrderLine(models.Model):
 
     def _update_price_for_pricelist(self):
         """
-        Custom Algorithm:
-        Updates the price unit for the order line based on the pricelist.
+        Actualiza el precio unitario de la línea de pedido basado en la lista de precios.
 
-        This algorithm ensures the correct pricelist is used by referencing the `order_id.target_currency_id`.
-        It searches for the first match of an "Equivalent" pricelist in the target currency.
+        Utiliza la moneda objetivo del pedido (`order_id.target_currency_id`) para identificar
+        y aplicar la lista de precios equivalente en la moneda correspondiente.
 
         Raises:
-            ValidationError: If no suitable pricelist can be found for the product template in the correct currency.
+            ValidationError: Si no se encuentra una lista de precios válida para la moneda objetivo.
         """
         for line in self:
             line.price_unit = line._get_price_unit(unit_price=line.product_pricelist_id.unit_price,
@@ -68,7 +67,10 @@ class SaleOrderLine(models.Model):
 
     def _update_price_for_company_currency(self):
         """
-        Computes the price unit for the order line using the company's currency.
+        Calcula el precio unitario de la línea de pedido utilizando la moneda de la compañía.
+
+        Realiza conversión de divisa cuando la moneda objetivo difiere de la moneda de la compañía,
+        aplicando el margen de seguridad configurado en el pedido.
         """
         for line in self:
             unit_price = line.price_unit
@@ -89,8 +91,16 @@ class SaleOrderLine(models.Model):
 
     def _select_equivalent_pricelist(self):
         """
-        Finds the equivalent pricelist for the order line's product template in the correct currency.
-        This method also ensures that the pricelist's company matches the company of the parent order.
+        Busca la lista de precios equivalente en la moneda objetivo del pedido.
+
+        Verifica coincidencia de:
+        - Plantilla del producto
+        - Nombre de la lista de precios
+        - Moneda objetivo
+        - Compañía del pedido
+
+        Raises:
+            ValidationError: Si no existe una lista de precios con los criterios requeridos.
         """
         for line in self:
             if line.product_id and (line.product_pricelist_id.currency_id.id != line.order_id.target_currency_id.id):
@@ -104,29 +114,29 @@ class SaleOrderLine(models.Model):
                     line.product_pricelist_id = product_pricelist
                 else:
                     raise ValidationError(
-                        f"No se pudo calcular prcio unitario debido a la divisa.\n"
-                        f"No se encontró una lista de precios para el producto ‘{line.product_template_id.name}’"
-                        f"con la moneda ‘{line.order_id.target_currency_id.name}’\n"
-                        f"para la empresa ‘{line.company_id.name}’.\n"
-                        f"Sin esta equivalencia, no es posible realizar el cambio de divisa.\n\n"
-                        f"Por favor, elimine la línea de producto que causa este error de validación o cree la lista de precios correspondiente."
+                        f"No se pudo calcular el precio unitario por discrepancia cambiaria.\n"
+                        f"Producto: ‘{line.product_template_id.name}’\n"
+                        f"Moneda requerida: {line.order_id.target_currency_id.name}\n"
+                        f"Compañía: {line.company_id.name}\n\n"
+                        "Acciones requeridas:\n"
+                        "1. Elimine la línea problemática\n"
+                        "2. Cree una lista de precios equivalente\n"
+                        "3. Verifique configuraciones cambiarias"
                     )
 
     def _get_price_unit(self, unit_price, safe_margin, source_currency, target_currency, company_id):
         """
-        Helper method.
-        Computes the price unit based on the given parameters and currency conversion.
-        This method is solely responsible for adding the safe margin equivalent value in the order currency to the given prices.
+        Calcula el precio unitario aplicando conversión monetaria y margen de seguridad.
 
         Args:
-            unit_price (float): The unit price from the product pricelist.
-            safe_margin (float): The safe margin for currency conversion.
-            source_currency (record): The currency record representing the source currency for the safe margin field, likely the company currency.
-            target_currency (record): The currency record representing the target currency.
-            target_currency (record): The company of the line.
+            unit_price (float): Precio base de la lista de precios
+            safe_margin (float): Margen porcentual para fluctuaciones cambiarias
+            source_currency (record): Moneda origen (usualmente moneda de la compañía)
+            target_currency (record): Moneda objetivo del pedido
+            company_id (record): Compañía para contexto de conversión
 
         Returns:
-            float: The computed price unit in the target currency.
+            float: Precio unitario convertido con margen aplicado
         """
         def convert_currency(amount, from_currency, to_currency, company_id):
             return from_currency._convert(
@@ -145,14 +155,14 @@ class SaleOrderLine(models.Model):
 
     def _compute_pricelist_price_unit(self):
         """
-        Assigns the appropriate price list and price unit based on the currency and branch of the parent `order_id`.
-        When no price list is present, the company currency is used against the order currency to compute the unit price.
+        Determina el precio unitario final usando listas de precios o moneda de compañía.
+
+        Prioridad de cálculo:
+        1. Lista de precios asignada
+        2. Conversión directa de moneda de compañía
 
         Raises:
-            ValidationError: If a suitable price list cannot be found for the product template with the correct currency and branch.
-
-        Returns:
-            None
+            ValidationError: Si no se puede determinar un método de cálculo válido
         """
         for line in self:
             if not line.product_template_id:
@@ -165,19 +175,15 @@ class SaleOrderLine(models.Model):
 
     def _select_default_pricelist(self):
         """
-        Computes the price list for each order line based on default or customer-selected price lists.
-        Dynamically retrieves the default pricelist from the user's company settings.
+        Selecciona la lista de precios aplicable usando jerarquía configurada.
 
-        For each order line:
-        - Searches for the appropriate price list based on product, currency, and company.
-        - Prioritizes the customer's selected price list if it exists, followed by the priority price list,
-          and finally, the default price list.
-        - If no product is selected, the method clears the price list field and exits.
-        - If no price list is found for the product and currency, it raises a ValidationError.
+        Prioridad de selección:
+        1. Lista prioritaria del cliente
+        2. Lista estándar del cliente
+        3. Lista predeterminada de la compañía
 
         Raises:
-            ValidationError: If no appropriate price list is found for the product and currency combination
-                             or if the customer-selected or default price list is not available.
+            ValidationError: Si no se encuentra ninguna lista de precios compatible
         """
         def _get_pricelist_line(product_template, pricelist_id, currency, company_id):
             # It doesn't matter because the find equivalent will fix any currency missmatch
@@ -198,11 +204,15 @@ class SaleOrderLine(models.Model):
             customer_selected_pricelist = line.order_id.partner_id.property_product_pricelist
             # NOTE: Asseert at least one of the 3 pricelist options available
             if (not default_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
-                msg = "No se pudo cargar la lista de precios predeterminada.\n"
-                "No se encontró una lista de precios predeterminada para:\n"
-                f"producto ‘[{line.product_template_id.default_code}] {line.product_template_id.name}’ con la moneda ‘{line.order_id.target_currency_id.name}’.\n"
-                "Para continuar, cree una lista de precios predeterminada que cumpla con los requisitos o desactive esta validación."
-                raise ValidationError(msg)
+                raise ValidationError(
+                    "Fallo en carga de lista de precios predeterminada.\n"
+                    f"Producto: [{line.product_template_id.default_code}] {line.product_template_id.name}\n"
+                    f"Moneda objetivo: {line.order_id.target_currency_id.name}\n\n"
+                    "Soluciones:\n"
+                    "1. Cree una lista de precios compatible\n"
+                    "2. Desactive validaciones cambiarias\n"
+                    "3. Verifique configuraciones del cliente"
+                )
             if priority_customer_selected_pricelist and (not product_pricelist_id):
                 # NOTE: Search for the price list line that matches the priority-selected price list
                 product_pricelist_id = _get_pricelist_line(product_template=line.product_template_id,
@@ -223,23 +233,25 @@ class SaleOrderLine(models.Model):
                                                            company_id=line.company_id)
             if not product_pricelist_id:
                 # NOTE: Undefined behavior
-                raise ValidationError("No se pudo cargar la lista de precios del cliente ni la predeterminada para:\n"
-                                      f"producto ‘[{line.product_template_id.default_code}] {line.product_template_id.name}’ con la moneda ‘{line.order_id.target_currency_id.name}’.\n"
-                                      "Para continuar, cree una lista de precios que cumpla con los requisitos o desactive esta validación.")
+                raise ValidationError(
+                    "Inconsistencia en listas de precios disponibles.\n"
+                    f"Producto: [{line.product_template_id.default_code}] {line.product_template_id.name}\n"
+                    f"Moneda objetivo: {line.order_id.target_currency_id.name}\n\n"
+                    "Revisar:\n"
+                    "- Listas prioritarias del cliente\n"
+                    "- Configuración cambiaria de la compañía\n"
+                    "- Existencia de precios base para el producto"
+                )
             # === Write === #
             line.product_pricelist_id = product_pricelist_id
 
     def _compute_line_uom_factor(self):
         """
-               ===> Critical Warning for Developers <===
-        Calling this method more than once with identical values for both 'default' and 'selected' unit of measures (UoM) can lead to a severe bug.
-        Consequently, the unit price will undergo exponential multiplication with each subsequent invocation of this method.
+        Ajusta el precio unitario basado en la relación de unidades de medida.
 
-        It is imperative to diligently monitor any code segment that interacts with this model to detect and prevent occurrences of this bug.
-        Should such circumstances arise unavoidably, consider implementing a flag within this model:
-        - Use a flag in your code to prevent the method from being invoked successively with the same combination of 'default' and 'selected' UoM values.
-        - You'll probably need to add a new field to the line to store whether the last time a combination of UoMs was computed, it was 'default' to 'selected' or 'selected' to 'default'.
-        - I don't implement this by default as it would cause unnecessary overhead for my use cases.
+        ! ADVERTENCIA CRÍTICA !
+        Llamadas consecutivas con mismas UoMs pueden causar multiplicaciones exponenciales.
+        Implementar controles externos para prevenir invocaciones redundantes.
         """
         for line in self:
             if not line.product_uom or not line.product_id:
