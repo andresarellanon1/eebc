@@ -22,6 +22,34 @@ class ProductPricelist(models.Model):
         return res
 
     def _compute_product_pricelist_lines(self):
+        """
+        Actualiza las líneas de lista de precios relacionadas en productos y plantillas.
+
+        Procesa recursivamente los items de la lista de precios según su alcance:
+        1. Variantes de producto directas(`0_product_variant`):
+           - Actualiza plantillas vinculadas a variantes específicas
+        2. Productos directos (`1_product`):
+           - Recalcula precios en plantillas asociadas explícitamente
+        3. Categorías de producto (`2_product_category`):
+           - Afecta todas las plantillas dentro de la categoría configurada
+        4. Alcance global (`3_global`):
+           - Procesa todas las plantillas existentes en la base de datos
+           - Opera en bloques de 100 registros para optimizar memoria
+           - Realiza commit tras cada bloque y limpia la caché del entorno
+
+        Flujo:
+        - Identifica items por tipo de alcance
+        - Dispara recomputación en cascada de precios
+        - Maneja datasets masivos con procesamiento batch
+
+        Efectos Secundarios:
+        - Genera commits transaccionales parciales
+        - Limpia caché del entorno periódicamente
+        - Puede afectar rendimiento en bases grandes
+
+        Uso típico:
+        Llamado durante cambios en listas de precios para propagar actualizaciones
+        """
         for pricelist in self:
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])

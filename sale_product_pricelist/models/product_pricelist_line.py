@@ -17,6 +17,27 @@ class ProductPricelistLine(models.Model):
     unit_price = fields.Float('Precio unitario', digits="Precio Unitario", compute="_compute_unit_price", store=False)
     is_special = fields.Boolean(string="Es prioritaria", related="pricelist_id.is_special")
     company_id = fields.Many2one('res.company', string='Empresa', related="pricelist_id.company_id")
+    is_orphan = fields.Boolean(
+        string='Línea Huérfana',
+        compute='_compute_is_orphan',
+        help='Indica si esta línea de lista de precios no está siendo utilizada en ninguna línea de pedido de venta.'
+    )
+
+    @api.depends()
+    def _compute_is_orphan(self):
+        """
+        Determina si la línea de lista de precios no tiene relación con líneas de pedido de venta.
+        1. Busca en todas las líneas de pedido de venta
+        2. Verifica si alguna referencia esta línea de precio (campo `product_pricelist_id`)
+        3. Marca como huérfana si no hay referencias
+        - Utiliza `search_count` para optimizar consultas
+        """
+        sale_line_model = self.env['sale.order.line']
+        for line in self:
+            reference_count = sale_line_model.search_count([
+                ('product_pricelist_id', '=', line.id)
+            ])
+            line.is_orphan = reference_count == 0
 
     def _compute_display_name(self):
         for record in self:
@@ -28,8 +49,17 @@ class ProductPricelistLine(models.Model):
     @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
     def _compute_unit_price(self):
         """
-            Searches for a product_uom_id context variable to use that uom_id instead of the default.
-            If not found, uses default product template uom to compute the unit price from the pricelist.
+        Calcula el precio unitario basado en la lista de precios activa.
+        1. Obtiene la lista de precios asociada a la línea
+        2. Consulta la regla de precio aplicable para:
+           - Plantilla de producto específica
+           - Unidad de medida (UoM) configurada
+           - Moneda actual
+        3. Calcula para cantidad = 1
+        4. Usa fecha vigente como referencia
+
+        Returns:
+            float: Precio unitario según lista de precios o 0.0
         """
         for line in self:
             line.unit_price = 0.0
