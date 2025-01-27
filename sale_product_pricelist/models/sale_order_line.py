@@ -123,6 +123,7 @@ class SaleOrderLine(models.Model):
             safe_margin (float): The safe margin for currency conversion.
             source_currency (record): The currency record representing the source currency for the safe margin field, likely the company currency.
             target_currency (record): The currency record representing the target currency.
+            target_currency (record): The company of the line.
 
         Returns:
             float: The computed price unit in the target currency.
