@@ -16,7 +16,7 @@ class TaskTimeLines(models.Model):
     work_shift = fields.Float(string='Jornadas Laborales')
 
     unit_price = fields.Float(string="Precio", default=0.0)
-    price_subtotal = fields.Float(string="Subtotal", default=0.0)
+    price_subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal", default=0.0)
 
     @api.onchange('work_shift')
     def _work_shift_onchange_(self):
@@ -28,7 +28,7 @@ class TaskTimeLines(models.Model):
             products = self.env['product.template'].search([
                 ('detailed_type', '=', 'service'),
                 ('sale_ok', '=', True),
-                ('uom_id', '=', 'Días')
+                ('name', '=', 'CUADRILLA INSTALADORA')
             ])
 
     @api.onchange('product_id')
