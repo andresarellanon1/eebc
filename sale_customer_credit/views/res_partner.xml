@@ -10,7 +10,7 @@
                 <group name="customer_credit" string="Ajustes del credito">
                     <field name="customer_manual_suspend" />
                     <field name="customer_credit_suspend" placeholder="¿Suspender crédito?"
-                        readonly="not customer_manual_suspend" />
+                        readonly="not customer_manual_suspend" force_save="1"/>
                     <field name="customer_credit_key" placeholder="Llave de crédito" />
 
                 </group>
