@@ -90,7 +90,8 @@ class SaleOrder(models.Model):
         for order in self:
             if order.state == "sale":
                 continue
-            order.currency_id = order.target_currency_id  # Redudante pero no me voy a arriesgar... El currency_id de la sale order se comporta raro aveces.
+            order.currency_id = order.target_currency_id
+            logger.warning("computing target currency change")
             order._compute_pricelist_prices()
 
     def _compute_pricelist_prices(self):
