@@ -225,7 +225,10 @@ class SaleOrderLine(models.Model):
                                                            company_id=line.company_id)
             if default_pricelist_id and (not product_pricelist_id):
                 # NOTE: default ...
-                product_pricelist_id = default_pricelist_id
+                product_pricelist_id = _get_pricelist_line(product_template=line.product_template_id,
+                                                           pricelist_id=default_pricelist_id,
+                                                           currency=customer_selected_pricelist.currency_id,
+                                                           company_id=line.company_id)
             if not product_pricelist_id:
                 # NOTE: Undefined behavior
                 raise ValidationError("No se pudo cargar la lista de precios del cliente ni la predeterminada para:\n"
