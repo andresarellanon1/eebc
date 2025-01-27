@@ -35,6 +35,46 @@ class SaleOrder(models.Model):
         store=True
     )
 
+    task_time_lines = fields.One2many(
+        'task.time.lines',
+        string="Lineas de mano obra",
+        compute="_compute_task_lines",
+        store=True)
+
+    labour_total_cost = fields.Float(string="Costo mano de obra", compute="_compute_labour_cost", default=0.0)
+
+    @api.depends('project_plan_lines')
+    def _compute_task_lines(self):
+        for record in self:
+            record.task_time_lines = [(5, 0, 0)]
+            record.task_time_lines = record.get_task_time_lines(record.project_plan_lines)
+
+    def get_task_time_lines(self, line):
+        task_lines = []
+        for task in line:
+            if not line.display_type:
+                task_lines += self.prep_task_time_lines(task)
+
+        return task_lines
+
+    def prep_task_time_lines(self, line):
+        task_lines = []
+        for task in line.task_timesheet_id.task_time_lines:
+            task_lines.append((0, 0, {
+                'product_id': task.product_id.id,
+                'description': task.description,
+                'estimated_time': task.estimated_time,
+                'work_shift': task.work_shift,
+                'unit_price': task.unit_price,
+                'price_subtotal': task.price_subtotal
+            }))
+        return task_lines
+
+    @api.depends('task_time_lines.price_subtotal')
+    def _compute_labour_cost(self):
+        for task in self:
+            task.labour_total_cost = sum(line.price_subtotal for line in task.task_time_lines)
+
     @api.depends('state')
     def _compute_is_editable(self):
         """

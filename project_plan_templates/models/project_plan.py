@@ -122,6 +122,8 @@ class ProjectPlan(models.Model):
                 'description': task.description,
                 'estimated_time': task.estimated_time,
                 'work_shift': task.work_shift,
+                'unit_price': task.unit_price,
+                'price_subtotal': task.price_subtotal
             }))
         return task_lines
         
