@@ -113,6 +113,7 @@ class ProjectPlan(models.Model):
                 'estimated_time': task.estimated_time,
                 'work_shift': task.work_shift
             }))
+        return task_lines
         
     def prep_picking_section_line(self, line):
         return (0, 0, {
