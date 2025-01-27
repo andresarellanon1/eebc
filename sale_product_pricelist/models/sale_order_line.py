@@ -102,6 +102,7 @@ class SaleOrderLine(models.Model):
                     ("company_id", "=", line.order_id.company_id.id)
                 ], limit=1)
                 logger.warning(f"== {line.product_template_id.name} ==")
+                logger.warning(f"== {line.product_pricelist_id.name} ==")
                 logger.warning(f"== {line.order_id.target_currency_id.name} ==")
                 logger.warning(f"== {line.order_id.company_id.name} ==")
                 logger.warning(f"== {product_pricelist.display_name} ==")
