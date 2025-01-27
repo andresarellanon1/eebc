@@ -50,21 +50,21 @@ class SaleOrderLine(models.Model):
         Custom Algorithm:
         Updates the price unit for the order line based on the pricelist.
 
-        This algorithm ensures the correct pricelist is used by referencing the `target_currency_id`.
+        This algorithm ensures the correct pricelist is used by referencing the `order_id.target_currency_id`.
         It searches for the first match of an "Equivalent" pricelist in the target currency.
 
         Raises:
             ValidationError: If no suitable pricelist can be found for the product template in the correct currency.
         """
         for line in self:
-            if line.product_pricelist_id.currency_id != line.target_currency_id:
-                logger.warning(f"currencies changing... {line.product_pricelist_id.currency_id} {line.target_currency_id}")
+            if line.product_pricelist_id.currency_id != line.order_id.target_currency_id:
+                logger.warning(f"currencies changing... {line.product_pricelist_id.currency_id} {line.order_id.target_currency_id}")
                 product_pricelist = self._find_equivalent_pricelist()
                 if not product_pricelist:
                     raise ValidationError(
                         f"No se pudo calcular prcio unitario debido a la divisa.\n"
                         f"No se encontró una lista de precios para el producto ‘{line.product_template_id.name}’"
-                        f"con la moneda ‘{line.target_currency_id.name}’\n"
+                        f"con la moneda ‘{line.order_id.target_currency_id.name}’\n"
                         f"para la empresa ‘{line.company_id.name}’.\n"
                         f"Sin esta equivalencia, no es posible realizar el cambio de divisa.\n\n"
                         f"Por favor, elimine la línea de producto que causa este error de validación o cree la lista de precios correspondiente."
@@ -73,7 +73,7 @@ class SaleOrderLine(models.Model):
             line.price_unit = self._get_price_unit(unit_price=line.product_pricelist_id.unit_price,
                                                    safe_margin=line.order_id.safe_margin,
                                                    source_currency=line.company_id.currency_id,
-                                                   target_currency=line.target_currency_id,
+                                                   target_currency=line.order_id.target_currency_id,
                                                    company_id=line.company_id)
             if line.product_pricelist_id.uom_id.id != line.product_uom.id:
                 line._compute_line_uom_factor()
@@ -84,17 +84,17 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             unit_price = line.price_unit
-            if line.order_id.target_currency_id.id != line.target_currency_id.id:
-                unit_price = line.target_currency_id._convert(
+            if line.order_id.order_id.target_currency_id.id != line.order_id.target_currency_id.id:
+                unit_price = line.order_id.target_currency_id._convert(
                     unit_price,
-                    line.order_id.target_currency_id,
+                    line.order_id.order_id.target_currency_id,
                     line.company_id,
                     date.today(),
                     round=False)
             line.price_unit = self._get_price_unit(unit_price=unit_price,
                                                    safe_margin=line.order_id.safe_margin,
                                                    source_currency=line.company_id.currency_id,
-                                                   target_currency=line.target_currency_id,
+                                                   target_currency=line.order_id.target_currency_id,
                                                    company_id=line.company_id)
             if line.product_pricelist_id.uom_id.id != line.product_uom.id:
                 line._compute_line_uom_factor()
@@ -112,7 +112,7 @@ class SaleOrderLine(models.Model):
             return self.env["product.pricelist.line"].search([
                 ("product_templ_id", "=", line.product_template_id.id),
                 ("name", "=", line.product_pricelist_id.name),
-                ("currency_id", "=", line.target_currency_id.id),
+                ("currency_id", "=", line.order_id.target_currency_id.id),
                 ("company_id", "=", line.order_id.company_id.id)
             ], limit=1)
 
@@ -203,7 +203,7 @@ class SaleOrderLine(models.Model):
             if (not default_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
                 "No se encontró una lista de precios predeterminada para:\n"
-                f"producto ‘[{line.product_template_id.default_code}] {line.product_template_id.name}’ con la moneda ‘{line.target_currency_id.name}’.\n"
+                f"producto ‘[{line.product_template_id.default_code}] {line.product_template_id.name}’ con la moneda ‘{line.order_id.target_currency_id.name}’.\n"
                 "Para continuar, cree una lista de precios predeterminada que cumpla con los requisitos o desactive esta validación."
                 raise ValidationError(msg)
             if priority_customer_selected_pricelist and (not product_pricelist_id):
@@ -227,7 +227,7 @@ class SaleOrderLine(models.Model):
             if not product_pricelist_id:
                 # NOTE: Undefined behavior
                 raise ValidationError("No se pudo cargar la lista de precios del cliente ni la predeterminada para:\n"
-                                      f"producto ‘[{line.product_template_id.default_code}] {line.product_template_id.name}’ con la moneda ‘{line.target_currency_id.name}’.\n"
+                                      f"producto ‘[{line.product_template_id.default_code}] {line.product_template_id.name}’ con la moneda ‘{line.order_id.target_currency_id.name}’.\n"
                                       "Para continuar, cree una lista de precios que cumpla con los requisitos o desactive esta validación.")
             # === Write === #
             line.product_pricelist_id = product_pricelist_id
