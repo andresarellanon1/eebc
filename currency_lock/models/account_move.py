@@ -40,6 +40,7 @@ class AccountMove(models.Model):
     def _compute_target_currency_id(self):
         for move in self:
             move.locked_currency_rate = 0
+            move.target_currency_id = False
             if move.state == "posted": 
                 continue
             if move.sale_order_count <= 0:
