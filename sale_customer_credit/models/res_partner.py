@@ -9,18 +9,9 @@ class ResPartner(models.Model):
     orders_residual = fields.Monetary(string='Ordenes por facturar', compute='_compute_orders_residual')
     invoice_residual = fields.Monetary(string='Facturas por cobrar', compute='_compute_invoice_residual')
     total_residual = fields.Monetary(string='Total por cobrar', compute='_compute_total_residual')
-    customer_credit_suspend = fields.Boolean(
-        default=False,
-        string="Crédito suspendido.",
-    )
-    customer_manual_suspend = fields.Boolean(
-        default=False,
-        string="Crédito suspendido manual"
-    )
-    customer_credit_key = fields.Boolean(
-        default=False,
-        string="Llave de crédito.",
-        help="Abrir la llave de crédito.")
+    customer_credit_suspend = fields.Boolean(default=False, string="Crédito suspendido.")
+    customer_manual_suspend = fields.Boolean(default=False, string="Crédito suspendido manual")
+    customer_credit_key = fields.Boolean(default=False, string="Llave de crédito.", help="Abrir la llave de crédito.")
 
     def _check_credit_limit(self, amount):
         for partner in self:

@@ -21,8 +21,8 @@ class ConfigSettings(models.TransientModel):
         params = self.env["ir.config_parameter"].sudo()
 
         res.update({
-            "enable_partner_credit_limit_block": params.get_param("sale.enable_partner_credit_limit_block"),
-            "enable_partner_limit_key": params.get_param("sale.enable_partner_limit_key"),
+            "enable_partner_credit_limit_block": params.get_param("sale.enable_partner_credit_limit_block", default=False),
+            "enable_partner_limit_key": params.get_param("sale.enable_partner_limit_key", default=False),
         })
 
         return res
