@@ -30,6 +30,7 @@ class SaleOrderLine(models.Model):
                 raise ValidationError("El cliente es requerido antes de capturar las lineas.")
             line._select_default_pricelist()
             line._compute_pricelist_price_unit()
+            line._select_equivalent_pricelist()
 
     @api.depends_context('company')
     @api.depends('company_id', 'product_id', 'product_uom', 'product_uom_qty', 'product_pricelist_id', 'order_id.safe_margin', 'order_id.partner_id')
@@ -78,7 +79,7 @@ class SaleOrderLine(models.Model):
                     line.company_id,
                     date.today(),
                     round=False)
-            line.price_unit = self._get_price_unit(unit_price=unit_price,
+            line.price_unit = line._get_price_unit(unit_price=unit_price,
                                                    safe_margin=line.order_id.safe_margin,
                                                    source_currency=line.company_id.currency_id,
                                                    target_currency=line.order_id.target_currency_id,
@@ -86,22 +87,30 @@ class SaleOrderLine(models.Model):
             if line.product_pricelist_id.uom_id.id != line.product_uom.id:
                 line._compute_line_uom_factor()
 
-    def _find_equivalent_pricelist(self):
+    def _select_equivalent_pricelist(self):
         """
         Finds the equivalent pricelist for the order line's product template in the correct currency.
-
         This method also ensures that the pricelist's company matches the company of the parent order.
-
-        Returns:
-            record: The first matching pricelist.
         """
         for line in self:
-            return self.env["product.pricelist.line"].search([
-                ("product_templ_id", "=", line.product_template_id.id),
-                ("name", "=", line.product_pricelist_id.name),
-                ("currency_id", "=", line.order_id.target_currency_id.id),
-                ("company_id", "=", line.order_id.company_id.id)
-            ], limit=1)
+            if line.product_pricelist_id.currency_id.id != line.order_id.target_currency_id.id:
+                product_pricelist = self.env["product.pricelist.line"].search([
+                    ("product_templ_id", "=", line.product_template_id.id),
+                    ("name", "=", line.product_pricelist_id.name),
+                    ("currency_id", "=", line.order_id.target_currency_id.id),
+                    ("company_id", "=", line.order_id.company_id.id)
+                ], limit=1)
+                if product_pricelist:
+                    line.product_pricelist_id = product_pricelist
+                else:
+                    raise ValidationError(
+                        f"No se pudo calcular prcio unitario debido a la divisa.\n"
+                        f"No se encontró una lista de precios para el producto ‘{line.product_template_id.name}’"
+                        f"con la moneda ‘{line.order_id.target_currency_id.name}’\n"
+                        f"para la empresa ‘{line.company_id.name}’.\n"
+                        f"Sin esta equivalencia, no es posible realizar el cambio de divisa.\n\n"
+                        f"Por favor, elimine la línea de producto que causa este error de validación o cree la lista de precios correspondiente."
+                    )
 
     def _get_price_unit(self, unit_price, safe_margin, source_currency, target_currency, company_id):
         """
