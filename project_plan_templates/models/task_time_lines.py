@@ -18,6 +18,8 @@ class TaskTimeLines(models.Model):
     unit_price = fields.Float(string="Precio", default=0.0)
     price_subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal", default=0.0)
 
+    sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
+
     @api.onchange('work_shift')
     def _work_shift_onchange_(self):
         for record in self:
