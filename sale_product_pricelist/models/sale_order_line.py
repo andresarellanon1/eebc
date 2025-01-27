@@ -182,11 +182,13 @@ class SaleOrderLine(models.Model):
                              or if the customer-selected or default price list is not available.
         """
         def _get_pricelist_line(product_template, pricelist_id, currency, company_id):
+            # It doesn't matter because the find equivalent will fix any currency missmatch
+            eq_pricelist_ids = self.env["product.pricelist"].search([("name", "=", pricelist_id.name)])
             return self.env["product.pricelist.line"].search([("product_templ_id", "=", product_template.id),
-                                                              ("pricelist_id", "=", pricelist_id.id),
+                                                              ("pricelist_id", "in", eq_pricelist_ids.ids),
                                                               ("currency_id", "=", currency.id),
                                                               ("company_id", "=", company_id.id)],
-                                                             limit=1)
+                                                             limit=1)  # RETURN ONLY 1
         for line in self:
             if not line.product_template_id:
                 line.product_pricelist_id = False
@@ -194,16 +196,8 @@ class SaleOrderLine(models.Model):
             product_pricelist_id = False
             # Pricelists declarations
             default_pricelist_id = line.company_id.selected_product_pricelist_id
-            priority_customer_selected_pricelist = _get_pricelist_line(product_template=line.product_template_id,
-                                                                       pricelist_id=line.order_id.partner_id.priority_pricelist_id,
-                                                                       currency=line.target_currency_id,
-                                                                       company_id=line.company_id).pricelist_id
-            logger.warning(priority_customer_selected_pricelist)
-            customer_selected_pricelist = _get_pricelist_line(product_template=line.product_template_id,
-                                                              pricelist_id=line.order_id.partner_id.property_product_pricelist,
-                                                              currency=line.target_currency_id,
-                                                              company_id=line.company_id).pricelist_id
-            logger.warning(customer_selected_pricelist)
+            priority_customer_selected_pricelist = line.order_id.partner_id.priority_pricelist_id
+            customer_selected_pricelist = line.order_id.partner_id.property_product_pricelist
             # NOTE: Asseert at least one of the 3 pricelist options available
             if (not default_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
                 msg = "No se pudo cargar la lista de precios predeterminada.\n"
@@ -235,7 +229,6 @@ class SaleOrderLine(models.Model):
                                       f"producto ‘[{line.product_template_id.default_code}] {line.product_template_id.name}’ con la moneda ‘{line.target_currency_id.name}’.\n"
                                       "Para continuar, cree una lista de precios que cumpla con los requisitos o desactive esta validación.")
             # === Write === #
-            logger.warning(f"product_pricelist_id:{product_pricelist_id}")
             line.product_pricelist_id = product_pricelist_id
 
     def _compute_line_uom_factor(self):
