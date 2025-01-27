@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
         picking_lines = []
 
         for picking in line:
-            if picking.for_modification:
+            if picking.for_picking:
                 if picking.for_create:
                     if picking.display_type == 'line_section':
                         picking_lines.append(self.prep_picking_section_line(picking, True))
@@ -63,7 +63,8 @@ class SaleOrder(models.Model):
                 else:
                     picking_lines.append(self.prep_picking_section_line(picking, False))
 
-                # picking.for_modification = False
+                picking.for_picking = False
+                picking.for_modification = False
                 
         return picking_lines
     
@@ -162,7 +163,8 @@ class SaleOrder(models.Model):
             'project_plan_pickings': line.project_plan_pickings.id if line.project_plan_pickings else False,
             'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
             'for_create': line.for_create,
-            'for_modification': False
+            'for_modification': False,
+            'for_picking': line.for_picking
         }) for line in lines]
 
     def _prepare_picking_lines(self, lines):
@@ -195,7 +197,7 @@ class SaleOrder(models.Model):
             'standard_price': False,
             'subtotal': False,
             'for_create': for_create,
-            'for_modification': line.for_modification
+            'for_modification': False
         })
     
     def prep_plan_section_line(self, line, for_create):
@@ -211,7 +213,8 @@ class SaleOrder(models.Model):
             'task_timesheet_id': False,
             'for_create': for_create,
             'for_modification': True,
-            'service_qty': 0
+            'service_qty': 0,
+            'for_picking': True,
         })
 
     def prep_plan_lines(self, line):
@@ -230,7 +233,8 @@ class SaleOrder(models.Model):
                 'display_type': False,
                 'for_create': True,
                 'for_modification': plan.for_modification,
-                'service_qty': line.product_uom_qty
+                'service_qty': line.product_uom_qty,
+                'for_picking': True
             }))
         return plan_lines
 
@@ -249,7 +253,7 @@ class SaleOrder(models.Model):
                 'subtotal': picking.subtotal,
                 'display_type': False,
                 'for_create': True,
-                'for_modification': line.for_modification
+                'for_modification': False
             }))
         return picking_lines
 

@@ -44,6 +44,7 @@
                             <field name="service_qty"/>
                             <field name="use_project_task" column_invisible="1"/>
                             <field name="for_modification" column_invisible="1"/>
+                            <field name="for_picking" column_invisible="1"/>
                             <field name="for_create" column_invisible="1"/>
                             <field name="planned_date_begin" widget="daterange"/>
                             <field name="planned_date_end" widget="daterange"/>
