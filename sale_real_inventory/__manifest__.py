@@ -1,6 +1,6 @@
 {
     'name': 'Inventario Real Para Ventas',
-    'version': '17.0.1.003',
+    'version': '17.0.1.004',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [

@@ -12,11 +12,11 @@ class ProductPricelistLine(models.Model):
     display_name = fields.Char('Nombre', compute="_compute_display_name", store=False, readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Lista')
     uom_id = fields.Many2one('uom.uom', 'Unidad predeterminada', related="product_templ_id.uom_id")
-    product_templ_id = fields.Many2one('product.template', 'Producto')
+    product_templ_id = fields.Many2one('product.template', string='Producto')
     currency_id = fields.Many2one('res.currency', string='Moneda', related="pricelist_id.currency_id")
     unit_price = fields.Float('Precio unitario', digits="Precio Unitario", compute="_compute_unit_price", store=False)
     is_special = fields.Boolean(string="Es prioritaria", related="pricelist_id.is_special")
-    company_id = fields.Many2one('res.partner', string='Sucursal', related="pricelist_id.company_id")
+    company_id = fields.Many2one('res.company', string='Empresa', related="pricelist_id.company_id")
 
     def _compute_display_name(self):
         for record in self:
