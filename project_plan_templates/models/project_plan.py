@@ -30,7 +30,7 @@ class ProjectPlan(models.Model):
         store = True
         )
 
-    plan_total_cost = fields.Float(string="Costo total", compute="_compute_total_cost", default=0.0)
+    material_total_cost = fields.Float(string="Costo total", compute="_compute_total_cost", default=0.0)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
 
     product_template_id = fields.Many2one(
@@ -40,6 +40,8 @@ class ProjectPlan(models.Model):
     )
 
     service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
+
+    labour_total_cost = fields.Float(string="Costo mano de obra", compute="_compute_labour_cost", default=0.0)
 
     # @api.constrains('project_plan_lines', 'picking_lines')
     # def _check_lines_existence(self):
@@ -61,7 +63,12 @@ class ProjectPlan(models.Model):
     @api.depends('picking_lines.subtotal')
     def _compute_total_cost(self):
         for plan in self:
-            plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
+            plan.material_total_cost = sum(line.subtotal for line in plan.picking_lines)
+
+    @api.depends('task_time_lines.price_subtotal')
+    def _compute_labour_cost(self):
+        for task in self:
+            task.labour_total_cost = sum(line.price_subtotal for line in task.task_time_lines)
 
     @api.depends('project_plan_lines')
     def _compute_picking_lines(self):
@@ -111,9 +118,10 @@ class ProjectPlan(models.Model):
         task_lines = []
         for task in line.task_timesheet_id.task_time_lines:
             task_lines.append((0, 0, {
+                'product_id': task.product_id.id,
                 'description': task.description,
                 'estimated_time': task.estimated_time,
-                'work_shift': task.work_shift
+                'work_shift': task.work_shift,
             }))
         return task_lines
         

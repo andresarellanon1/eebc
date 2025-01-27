@@ -14,28 +14,30 @@ class ResPartner(models.Model):
     customer_credit_key = fields.Boolean(default=False, string="Llave de crédito.", help="Abrir la llave de crédito.")
 
     def _check_credit_limit(self, amount):
-        """Verifica si el cliente ha excedido su límite de crédito."""
         for partner in self:
             credit = partner.total_residual + amount
             return (not partner.customer_manual_suspend) and (credit <= partner.credit_limit)
 
     def _compute_invoice_residual(self):
-        """Calcula el total de facturas pendientes de cobro."""
         for partner in self:
             partner.invoice_residual = partner.credit
 
     @api.depends("orders_residual", "invoice_residual")
     def _compute_total_residual(self):
-        """Calcula el total adeudado por el cliente."""
         for record in self:
             record.total_residual = record.orders_residual + record.invoice_residual
 
     def _compute_orders_residual(self):
-        """Calcula el total de órdenes de venta pendientes de facturar."""
         for partner in self:
-            orders_data = self.env['sale.order'].read_group(
-                [('partner_id', '=', partner.id), ('state', '=', 'sale'), ('invoice_status', '=', 'to invoice')],
-                ['amount_total:sum'],
-                []
-            )
-            partner.orders_residual = orders_data[0]['amount_total'] if orders_data else 0.0
+            total = 0.0
+            orders = self.env['sale.order'].search([
+                ('partner_id', '=', partner.id),
+                ('state', '=', 'sale'),  # ordenes confirmadas
+                ('invoice_status', '=', 'to invoice')  # por facturar
+            ])
+            for order in orders:
+                total += order.amount_total
+            partner.orders_residual = total
+
+
+
