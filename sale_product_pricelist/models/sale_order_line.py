@@ -100,6 +100,7 @@ class SaleOrderLine(models.Model):
                     ("currency_id", "=", line.order_id.target_currency_id.id),
                     ("company_id", "=", line.order_id.company_id.id)
                 ], limit=1)
+                logger.warning(f"== {product_pricelist.display_name} ==")
                 if product_pricelist:
                     line.product_pricelist_id = product_pricelist
                 else:
