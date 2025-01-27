@@ -20,6 +20,7 @@ class ProductPricelistLine(models.Model):
     is_orphan = fields.Boolean(
         string='Línea Huérfana',
         compute='_compute_is_orphan',
+        store=True,
         help='Indica si esta línea de lista de precios no está siendo utilizada en ninguna línea de pedido de venta.'
     )
 
@@ -41,8 +42,13 @@ class ProductPricelistLine(models.Model):
 
     def _compute_display_name(self):
         for record in self:
-            if record.unit_price and record.name:
+            record._compute_is_orphan()
+            if record.unit_price and record.name and (not record.is_orphan):
                 record.display_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
+            elif (not record.is_orphan) and (not record.pricelist_id):
+                record.display_name = f"---Legacy {record.name} - {record.unit_price}"
+            elif (record.is_orphan) and (not record.pricelist_id):
+                record.display_name = "---Orphan"
             else:
                 record.display_name = record.name
 
