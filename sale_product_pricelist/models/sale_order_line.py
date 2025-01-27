@@ -94,7 +94,6 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             if line.product_id and (line.product_pricelist_id.currency_id.id != line.order_id.target_currency_id.id):
-                # self.env.cr.commit()  # Save changes made to the parent order before continue
                 product_pricelist = self.env["product.pricelist.line"].search([
                     ("product_templ_id", "=", line.product_template_id.id),
                     ("name", "=", line.product_pricelist_id.name),

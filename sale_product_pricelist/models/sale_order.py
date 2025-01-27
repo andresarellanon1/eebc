@@ -15,6 +15,7 @@ class SaleOrder(models.Model):
             Uses the pricelist lines of the product template to find the price unit with the most priority in the accurate currency and branch.
         """
         for order in self:
+            logger.warning(f"origin currency changed: {order.name}")
             for line in order.order_line:
                 line._select_equivalent_pricelist()
                 line._compute_pricelist_price_unit()
