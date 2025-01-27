@@ -57,20 +57,7 @@ class SaleOrderLine(models.Model):
             ValidationError: If no suitable pricelist can be found for the product template in the correct currency.
         """
         for line in self:
-            logger.warning(f"currencies changing... {line.product_pricelist_id.currency_id} {line.order_id.target_currency_id}")
-            if line.product_pricelist_id.currency_id.id != line.order_id.target_currency_id.id:
-                product_pricelist = self._find_equivalent_pricelist()
-                if not product_pricelist:
-                    raise ValidationError(
-                        f"No se pudo calcular prcio unitario debido a la divisa.\n"
-                        f"No se encontró una lista de precios para el producto ‘{line.product_template_id.name}’"
-                        f"con la moneda ‘{line.order_id.target_currency_id.name}’\n"
-                        f"para la empresa ‘{line.company_id.name}’.\n"
-                        f"Sin esta equivalencia, no es posible realizar el cambio de divisa.\n\n"
-                        f"Por favor, elimine la línea de producto que causa este error de validación o cree la lista de precios correspondiente."
-                    )
-                line.product_pricelist_id = product_pricelist
-            line.price_unit = self._get_price_unit(unit_price=line.product_pricelist_id.unit_price,
+            line.price_unit = line._get_price_unit(unit_price=line.product_pricelist_id.unit_price,
                                                    safe_margin=line.order_id.safe_margin,
                                                    source_currency=line.company_id.currency_id,
                                                    target_currency=line.order_id.target_currency_id,
