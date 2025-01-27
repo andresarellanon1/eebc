@@ -54,7 +54,7 @@ class AccountMove(models.Model):
     @api.depends("currency_id")
     def _compute_locked_currency_rate(self):
         for move in self:
-            move.locked_currency_rate = false
+            move.locked_currency_rate = 0
             if move.state == "posted":
                 continue
             if move.sale_order_count <= 0:
