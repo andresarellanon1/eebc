@@ -58,6 +58,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             if line.product_pricelist_id.currency_id != line.target_currency_id:
+                logger.warning(f"currencies changing... {line.product_pricelist_id.currency_id} {line.target_currency_id}")
                 product_pricelist = self._find_equivalent_pricelist()
                 if not product_pricelist:
                     raise ValidationError(
