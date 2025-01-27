@@ -119,7 +119,7 @@ class ProjectProject(models.Model):
                                         'standard_price': picking.standard_price,
                                         'subtotal': picking.subtotal,
                                         'display_type': False,
-                                        'for_modification': picking.for_modification
+                                        'for_modification': False
                                     }))
 
                         self.create_project_tasks_pickings(existing_task, picking_lines, location_id, location_dest_id, scheduled_date)
