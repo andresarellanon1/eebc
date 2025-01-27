@@ -34,13 +34,14 @@ class ProductPricelist(models.Model):
                 product_templates._compute_product_pricelist_line_ids()
 
             if items_all_stock:
-                product_templates = self.env["product.template"].search([])
+                product_templates = self.env["product.template"].search([]).with_prefetch()
                 batch_size = 100
 
                 for i in range(0, len(product_templates), batch_size):
                     batch = product_templates[i:i + batch_size]
                     batch._compute_product_pricelist_line_ids()
                     self.env.cr.commit()
+                    self.env.clear()  # Clear the environment cache to free memory
 
     @api.depends('item_ids')
     def _compute_filtered_item_ids(self):
