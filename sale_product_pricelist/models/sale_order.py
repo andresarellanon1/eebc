@@ -1,5 +1,6 @@
 import logging
 from odoo import models
+from odoo.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -15,4 +16,5 @@ class SaleOrder(models.Model):
         """
         for order in self:
             for line in order.order_line:
+                line._select_equivalent_pricelist()
                 line._compute_pricelist_price_unit()
