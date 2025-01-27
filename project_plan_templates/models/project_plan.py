@@ -68,7 +68,7 @@ class ProjectPlan(models.Model):
     @api.depends('task_time_lines.price_subtotal')
     def _compute_labour_cost(self):
         for task in self:
-            task.labour_total_cost = sum(line.subtotal for line in task.task_time_lines)
+            task.labour_total_cost = sum(line.price_subtotal for line in task.task_time_lines)
 
     @api.depends('project_plan_lines')
     def _compute_picking_lines(self):
