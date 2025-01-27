@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 import logging
 logger = logging.getLogger(__name__)
@@ -29,7 +28,6 @@ class ProductTemplate(models.Model):
                 pricelists_ids.add(pricelist_id)
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.add(pricelist_id)
-            logger.warning(f"found pricelists {pricelists_ids}")
             return list(pricelists_ids)
 
     @api.depends_context('company')
