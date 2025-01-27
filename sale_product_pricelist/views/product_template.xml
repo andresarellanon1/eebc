@@ -13,6 +13,7 @@
                             <field name="pricelist_id" />
                             <field name="uom_id" />
                             <field name="unit_price" />
+                            <field name="company_id" />
                         </tree>
                     </field>
                 </group>
