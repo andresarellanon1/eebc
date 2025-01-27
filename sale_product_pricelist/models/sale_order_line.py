@@ -57,8 +57,8 @@ class SaleOrderLine(models.Model):
             ValidationError: If no suitable pricelist can be found for the product template in the correct currency.
         """
         for line in self:
+            logger.warning(f"currencies changing... {line.product_pricelist_id.currency_id} {line.order_id.target_currency_id}")
             if line.product_pricelist_id.currency_id != line.order_id.target_currency_id:
-                logger.warning(f"currencies changing... {line.product_pricelist_id.currency_id} {line.order_id.target_currency_id}")
                 product_pricelist = self._find_equivalent_pricelist()
                 if not product_pricelist:
                     raise ValidationError(
