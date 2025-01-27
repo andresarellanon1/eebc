@@ -121,6 +121,9 @@ class ProjectProject(models.Model):
                                         'display_type': False,
                                         'for_modification': False
                                     }))
+                        
+                        if picking_lines:
+                            existing_task.project_picking_lines = [(4, picking.id) for picking in existing_task.project_picking_lines] + picking_lines
 
                         self.create_project_tasks_pickings(existing_task, picking_lines, location_id, location_dest_id, scheduled_date)
 
