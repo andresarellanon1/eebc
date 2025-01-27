@@ -37,6 +37,7 @@ class SaleOrder(models.Model):
 
     task_time_lines = fields.One2many(
         'task.time.lines',
+        'sale_order_id',
         string="Lineas de mano obra",
         compute="_compute_task_lines",
         store=True)
