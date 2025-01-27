@@ -67,7 +67,7 @@ class ProjectProject(models.Model):
                                     'standard_price': picking.standard_price,
                                     'subtotal': picking.subtotal,
                                     'display_type': False,
-                                    'for_modification': picking.for_modification
+                                    'for_modification': False
                                 }))
 
                         task_id = self.env['project.task'].create({
@@ -105,10 +105,10 @@ class ProjectProject(models.Model):
                         is_task = False
 
                         for picking in self.project_picking_lines:
-                            if picking.for_modification:
-                                if picking.display_type:
-                                    is_task = picking.name == line.name
-                                elif is_task:
+                            if picking.display_type:
+                                is_task = picking.name == line.name
+                            elif is_task:
+                                if picking.for_modification:
                                     picking_lines.append((0, 0, {
                                         'name': picking.product_id.name,
                                         'product_id': picking.product_id.id,
