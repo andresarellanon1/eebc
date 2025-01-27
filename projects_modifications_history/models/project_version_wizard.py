@@ -75,7 +75,31 @@ class ProjectVersionWizard(models.TransientModel):
 
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
-        
+
+        existing_plan_lines = project.project_plan_lines
+        new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+
+        project.project_plan_lines = [
+            (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+            for line in existing_plan_lines
+            for new_line in new_plan_lines_data
+            if line.name == new_line[2]['name']
+        ] + [
+            new_line for new_line in new_plan_lines_data
+            if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
+        ]
+
+        project.project_picking_lines = [
+            (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+            for line in existing_picking_lines
+            for new_line in new_picking_lines_data
+            if line.name == new_line[2]['name']
+        ] + [
+            new_line for new_line in new_picking_lines_data
+            if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
+        ]
+        project.write({})
+
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id)], limit=1)
 
@@ -111,10 +135,8 @@ class ProjectVersionWizard(models.TransientModel):
         })
 
         # Eliminar duplicados después de la modificación
-        
+        self.sale_order_id.clean_duplicates_after_modification()
         self.sale_order_id.state = 'sale'
-        self.update_project_planning_lines()
-        
         # Close the wizard window after completing the action.
         return {
             'type': 'ir.actions.act_window_close'
@@ -135,8 +157,7 @@ class ProjectVersionWizard(models.TransientModel):
                         'planned_date_end': False,
                         'project_plan_pickings': False,
                         'task_timesheet_id': False,
-                        'for_create': line.for_create,
-                        'service_qty': 0
+                        'for_create': line.for_create
                     }))
                 else:
                     plan_lines.append((0, 0, {
@@ -149,8 +170,7 @@ class ProjectVersionWizard(models.TransientModel):
                         'project_plan_pickings': line.project_plan_pickings.id,
                         'task_timesheet_id': line.task_timesheet_id.id,
                         'display_type': False,
-                        'for_create': True,
-                        'service_qty': line.service_qty
+                        'for_create': True
                     }))
         return plan_lines
 
@@ -184,22 +204,3 @@ class ProjectVersionWizard(models.TransientModel):
                     'display_type': False
                 }))
         return picking_lines
-
-    def update_project_planning_lines(self):
-        project = self._origin.project_id
-        if not project:
-            return
-
-        # Eliminar líneas existentes del proyecto
-        project.project_plan_lines = [(5, 0, 0)]
-        project.project_picking_lines = [(5, 0, 0)]
-
-        plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
-        picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
-
-        # Crear las nuevas líneas en el proyecto
-        project.project_plan_lines = plan_lines
-
-        project.project_picking_lines = picking_lines
-
-        self.sale_order_id.clean_duplicates_after_modification()
