@@ -118,9 +118,10 @@ class ProjectPlan(models.Model):
         task_lines = []
         for task in line.task_timesheet_id.task_time_lines:
             task_lines.append((0, 0, {
+                'product_id': task.product_id.id,
                 'description': task.description,
                 'estimated_time': task.estimated_time,
-                'work_shift': task.work_shift
+                'work_shift': task.work_shift,
             }))
         return task_lines
         
