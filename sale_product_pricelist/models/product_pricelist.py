@@ -22,23 +22,25 @@ class ProductPricelist(models.Model):
             items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('pricelist_id', '=', pricelist.id)])
 
             if items_direct_relation.product_tmpl_id:
-                logger.warning("items_direct_relation.product_tmpl_id")
                 product_template = self.env["product.template"].search([('id', '=', items_direct_relation.product_tmpl_id.id)])
                 product_template._compute_product_pricelist_line_ids()
 
             if items_direct_relation_variant.product_id:
-                logger.warning("items_direct_relation_variant.product_id")
                 product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
                 product.product_tmplt_id._compute_product_pricelist_line_ids()
 
             if items_category_relation.categ_id:
-                logger.warning("items_category_relation.categ_id")
                 product_templates = self.env["product.template"].search([('categ_id', '=', items_category_relation.categ_id.id)])
                 product_templates._compute_product_pricelist_line_ids()
 
-            if len(items_all_stock) > 0:
-                logger.warning("if len(items_all_stock) > 0")
-                self.env["product.template"].search([])._compute_product_pricelist_line_ids()
+            if items_all_stock:
+                product_templates = self.env["product.template"].search([])
+                batch_size = 100
+
+                for i in range(0, len(product_templates), batch_size):
+                    batch = product_templates[i:i + batch_size]
+                    batch._compute_product_pricelist_line_ids()
+                    self.env.cr.commit()
 
     @api.depends('item_ids')
     def _compute_filtered_item_ids(self):
