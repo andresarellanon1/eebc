@@ -57,5 +57,6 @@ class AccountMove(models.Model):
             for line in move.line_ids:
                 source_order_ids = line.sale_line_ids.order_id.ids
                 source_orders = self.env["sale.order"].search([("id", "in", source_order_ids)])
-                order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
-                move.locked_currency_rate = self.env["res.currency"].search([("id", "=", order.target_currency_id.id)], limit=1).inverse_rate
+                if source_orders:
+                    order = source_orders.sorted(key=lambda r: r.date_order, reverse=True)[0]
+                    move.locked_currency_rate = self.env["res.currency"].search([("id", "=", order.target_currency_id.id)], limit=1).inverse_rate
