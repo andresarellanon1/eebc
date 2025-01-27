@@ -30,14 +30,23 @@
                                 <field name="description"/> 
                             </page>
 
-                            <page name="lines" string="Horas">
+                            <page name="lines" string="Mano de obra">
                                 <field name="task_time_lines" nolabel="1">
                                     <tree editable="editable_bottom" style="width: 100%;">
-                                        <field name="description"/>  
+                                        <field name="product_domain" column_invisible="1"/>
+                                        <field name="product_id" domain="[('id', 'in', product_domain)]"/>
+                                        <field name="description"/>
                                         <field name="work_shift"/>
-                                        <field name="estimated_time" widget="timesheet_uom"/> 
+                                        <field name="estimated_time"/>
+                                        <field name="unit_price"/>
+                                        <field name="price_subtotal"/>
                                     </tree>
                                 </field>
+                                <group>
+                                    <group class="oe_subtotal_footer" colspan="2" name="labour_total">
+                                        <field name="labour_total_cost"/>
+                                    </group>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
