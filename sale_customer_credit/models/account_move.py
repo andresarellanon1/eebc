@@ -18,10 +18,8 @@ class AccountMove(models.Model):
             move.partner_shipping_id = move.partner_id
 
     def _check_and_update_partner_credit(self):
-        # Agrupar por cliente para evitar llamadas redundantes
-        partners = self.mapped('partner_id')
-        for partner in partners:
-            moves = self.filtered(lambda m: m.partner_id == partner)
-            total_residual = sum(moves.mapped('amount_residual'))
-            if not partner._check_credit_limit(total_residual):
+        for move in self:
+            partner = move.partner_id
+            limit_reached = partner._check_credit_limit(move.amount_residual)
+            if limit_reached:
                 partner.customer_credit_suspend = True
