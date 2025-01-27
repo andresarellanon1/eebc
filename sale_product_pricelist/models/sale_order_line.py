@@ -58,7 +58,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             logger.warning(f"currencies changing... {line.product_pricelist_id.currency_id} {line.order_id.target_currency_id}")
-            if line.product_pricelist_id.currency_id != line.order_id.target_currency_id:
+            if line.product_pricelist_id.currency_id.id != line.order_id.target_currency_id.id:
                 product_pricelist = self._find_equivalent_pricelist()
                 if not product_pricelist:
                     raise ValidationError(
@@ -84,10 +84,10 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             unit_price = line.price_unit
-            if line.order_id.order_id.target_currency_id.id != line.order_id.target_currency_id.id:
+            if line.order_id.target_currency_id.id != line.order_id.target_currency_id.id:
                 unit_price = line.order_id.target_currency_id._convert(
                     unit_price,
-                    line.order_id.order_id.target_currency_id,
+                    line.order_id.target_currency_id,
                     line.company_id,
                     date.today(),
                     round=False)
