@@ -76,28 +76,32 @@ class ProjectVersionWizard(models.TransientModel):
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
 
-        existing_plan_lines = project.project_plan_lines
+        existing_plan_lines = self.prep_plan_lines(project.project_plan_lines)
         new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
 
         project.project_plan_lines = [
-            (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+            (1, line[1], new_line[2]) if line[2]['name'] == new_line[2]['name'] else (4, line[1])
             for line in existing_plan_lines
             for new_line in new_plan_lines_data
-            if line.name == new_line[2]['name']
+            if line[2]['name'] == new_line[2]['name']
         ] + [
             new_line for new_line in new_plan_lines_data
-            if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
+            if all(new_line[2]['name'] != line[2]['name'] for line in existing_plan_lines)
         ]
 
+        existing_picking_lines = self.prep_picking_lines(project.project_picking_lines)
+        new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
+
         project.project_picking_lines = [
-            (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
+            (1, line[1], new_line[2]) if line[2]['name'] == new_line[2]['name'] else (4, line[1])
             for line in existing_picking_lines
             for new_line in new_picking_lines_data
-            if line.name == new_line[2]['name']
+            if line[2]['name'] == new_line[2]['name']
         ] + [
             new_line for new_line in new_picking_lines_data
-            if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
+            if all(new_line[2]['name'] != line[2]['name'] for line in existing_picking_lines)
         ]
+
         project.write({})
 
         # Check if a version history already exists for the current project.
