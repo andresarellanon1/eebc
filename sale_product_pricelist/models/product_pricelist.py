@@ -7,6 +7,42 @@ logger = logging.getLogger(__name__)
 class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
+    def write(self, vals):
+        res = super(ProductPricelist, self).write(vals)
+        if 'item_ids' in vals:
+            for line in self:
+                line._compute_product_pricelist_lines()
+        return res
+
+    def _compute_product_pricelist_lines(self):
+        for pricelist in self:
+            items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
+            items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
+            items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('pricelist_id', '=', pricelist.id)])
+            items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('pricelist_id', '=', pricelist.id)])
+
+            if items_direct_relation.product_tmpl_id:
+                product_template = self.env["product.template"].search([('id', '=', items_direct_relation.product_tmpl_id.id)])
+                product_template._compute_product_pricelist_line_ids()
+
+            if items_direct_relation_variant.product_id:
+                product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
+                product.product_tmplt_id._compute_product_pricelist_line_ids()
+
+            if items_category_relation.categ_id:
+                product_templates = self.env["product.template"].search([('categ_id', '=', items_category_relation.categ_id.id)])
+                product_templates._compute_product_pricelist_line_ids()
+
+            if items_all_stock:
+                product_templates = self.env["product.template"].search([]).with_prefetch()
+                batch_size = 100
+
+                for i in range(0, len(product_templates), batch_size):
+                    batch = product_templates[i:i + batch_size]
+                    batch._compute_product_pricelist_line_ids()
+                    self.env.cr.commit()
+                    self.env.clear()  # Clear the environment cache to free memory
+
     @api.depends('item_ids')
     def _compute_filtered_item_ids(self):
         for pricelist in self:

@@ -70,6 +70,15 @@
                                     </group>
                                 </group>
                             </page>
+                            <page name="task_time_lines" string="Mano de obra">
+                                <field name="task_time_lines" nolabel="1">
+                                    <tree editable="editable_bottom" style="width: 100%;">
+                                        <field name="description"/>
+                                        <field name="work_shift"/>
+                                        <field name="estimated_time"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>

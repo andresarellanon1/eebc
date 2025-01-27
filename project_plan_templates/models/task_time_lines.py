@@ -6,7 +6,7 @@ class TaskTimeLines(models.Model):
     _description = 'Project plan time lines model'
 
     task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
-    
+    project_plan_id = fields.Many2one('project.plan')
 
     description = fields.Char(string="Descripción", required=True)
     estimated_time = fields.Float(string="Horas estimadas")

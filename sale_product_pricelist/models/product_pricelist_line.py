@@ -21,7 +21,7 @@ class ProductPricelistLine(models.Model):
     def _compute_display_name(self):
         for record in self:
             if record.unit_price and record.name:
-                record.display_name = f"{record.name} - {record.unit_price}"
+                record.display_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
             else:
                 record.display_name = record.name
 
