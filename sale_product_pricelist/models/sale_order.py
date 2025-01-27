@@ -8,11 +8,11 @@ logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def _compute_product_pricelist(self):
+    def _compute_pricelist_prices(self):
         """
             Override
             Implemented custom method to recompute price unit per line.
-            Uses the pricelist lines of the product template to find the price unit with the most priority in the accurate currency and branch.
+            Uses the pricelist lines of the product template to find the price unit with the most priority in the accurate currency and company.
         """
         for order in self:
             logger.warning(f"origin currency changed: {order.name}")
