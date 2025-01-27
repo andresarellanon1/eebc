@@ -8,19 +8,19 @@
         </record>
 
         <record id="plan_picking_templates_action" model="ir.actions.act_window">
-            <field name="name">Plantillas de movimientos de inventario</field>
+            <field name="name">Listas de materiales</field>
             <field name="res_model">project.plan.pickings</field> 
             <field name="view_mode">tree,form</field>
         </record>
 
         <record id="plan_timesheet_templates_action" model="ir.actions.act_window">
-            <field name="name">Plantillas de hojas de horas</field> 
+            <field name="name">Hojas de horas</field> 
             <field name="res_model">task.timesheet</field> 
             <field name="view_mode">tree,form</field> 
         </record>
 
         <record id="menu_project_config" model="ir.ui.menu">
-            <field name="name">Plantillas</field> 
+            <field name="name">Planeación de proyectos</field> 
             <field name="parent_id" ref="project.menu_main_pm" />
             <field name="sequence" eval="20" /> 
         </record>
@@ -41,7 +41,7 @@
 
         <menuitem
             id="project_picking_option2"
-            name="Plantillas de materiales"
+            name="Listas de materiales"
             action="plan_picking_templates_action" 
             parent="project_menu_root" 
             sequence="20" 
@@ -49,7 +49,7 @@
 
         <menuitem 
             id="timesheet_option2"
-            name="Plantillas de hojas de horas"
+            name="Hojas de horas"
             action="plan_timesheet_templates_action" 
             parent="project_menu_root" 
             sequence="20" 
@@ -65,7 +65,7 @@
 
         <menuitem
             id="project_picking_option"
-            name="Plantillas de materiales"
+            name="Listas de materiales"
             action="plan_picking_templates_action" 
             parent="menu_project_config" 
             sequence="20" 
@@ -73,7 +73,7 @@
 
         <menuitem 
             id="timesheet_option"
-            name="Plantillas de hojas de horas"
+            name="Hojas de horas"
             action="plan_timesheet_templates_action" 
             parent="menu_project_config" 
             sequence="20" 
