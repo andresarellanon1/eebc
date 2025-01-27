@@ -40,8 +40,6 @@ class ProductPricelistLine(models.Model):
                 quantity=1,
                 uom_id=line.product_templ_id.uom_id,
                 date=date.today())
-            logger.warning(f"unit_price: {unit_price}")
-            logger.warning(f"unit_price[product_id.id]: {unit_price[product_id.id]}")
             line.unit_price = unit_price[product_id.id][0] or 0.0
 
     def name_get(self):

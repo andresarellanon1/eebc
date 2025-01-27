@@ -93,7 +93,7 @@ class SaleOrderLine(models.Model):
         This method also ensures that the pricelist's company matches the company of the parent order.
         """
         for line in self:
-            if line.product_pricelist_id.currency_id.id != line.order_id.target_currency_id.id:
+            if line.product_id and (line.product_pricelist_id.currency_id.id != line.order_id.target_currency_id.id):
                 product_pricelist = self.env["product.pricelist.line"].search([
                     ("product_templ_id", "=", line.product_template_id.id),
                     ("name", "=", line.product_pricelist_id.name),
