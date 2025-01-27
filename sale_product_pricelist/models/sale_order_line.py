@@ -93,18 +93,17 @@ class SaleOrderLine(models.Model):
         This method also ensures that the pricelist's company matches the company of the parent order.
         """
         for line in self:
+            logger.warning(f"== {line.product_template_id.name} ==")
+            logger.warning(f"== {line.product_pricelist_id.name} ==")
+            logger.warning(f"== {line.order_id.target_currency_id.name} ==")
+            logger.warning(f"== {line.order_id.company_id.name} ==")
             if line.product_id and (line.product_pricelist_id.currency_id.id != line.order_id.target_currency_id.id):
-                self.env.cr.commit()  # Save changes made to the parent order before continue
                 product_pricelist = self.env["product.pricelist.line"].search([
                     ("product_templ_id", "=", line.product_template_id.id),
                     ("name", "=", line.product_pricelist_id.name),
                     ("currency_id", "=", line.order_id.target_currency_id.id),
                     ("company_id", "=", line.order_id.company_id.id)
                 ], limit=1)
-                logger.warning(f"== {line.product_template_id.name} ==")
-                logger.warning(f"== {line.product_pricelist_id.name} ==")
-                logger.warning(f"== {line.order_id.target_currency_id.name} ==")
-                logger.warning(f"== {line.order_id.company_id.name} ==")
                 logger.warning(f"== {product_pricelist.display_name} ==")
                 if product_pricelist:
                     line.product_pricelist_id = product_pricelist

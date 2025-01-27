@@ -17,7 +17,7 @@ class ResPartner(models.Model):
             if partner.parent_id:
                 partner.commercial_name = partner.parent_id.commercial_name
 
-    @api.onchange('parent_id', 'customer_number_reference', 'parent_id.customer_number_reference')
+    @api.onchange('parent_id', 'customer_number_reference')
     def _compute_parent_customer_number_reference(self):
         for partner in self:
             if partner.parent_id:

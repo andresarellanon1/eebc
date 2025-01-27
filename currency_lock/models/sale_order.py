@@ -88,6 +88,7 @@ class SaleOrder(models.Model):
             Updates the pricelist prices for the whole sale order.
         """
         for order in self:
+            logger.warning("== > == < ==")
             if order.state == "sale":
                 continue
             order.currency_id = order.target_currency_id
