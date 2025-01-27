@@ -15,7 +15,7 @@
         Multi sucursal:
             Encuentra solamente listas de precio correspondientes a la sucursal del vendedor de la orden.
     """,
-    'version': '17.0.4.004',
+    'version': '17.0.4.005',
     'website': 'https://quadrosoluciones.com',
     'author': 'Quadro Soluciones',
     'depends': [

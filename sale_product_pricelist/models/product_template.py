@@ -12,20 +12,13 @@ class ProductTemplate(models.Model):
         'product.pricelist.line',
         'product_templ_id',
         compute="_compute_product_pricelist_line_ids",
-        store=False,
+        store=True,
         string='Lineas de lista de precios')
 
-    include_template_pricelist_ids = fields.Many2many(
-        'product.pricelist',
-        compute="_compute_include_template_pricelist_ids",
-        store=True,
-        string='Aparece en listas de precios')
-
-    @api.depends_context('company')
-    @api.depends("pricelist_item_count")
-    def _compute_include_template_pricelist_ids(self):
+    def _get_include_template_pricelist_ids(self):
         for product_template in self:
-            company_id = product_template or self.env.company.id
+            company_id = product_template.company_id or self.env.company
+            logger.warning(f"found company_id  {company_id.name}")
             # Agregate all applicable pricelist for the given product template:
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('product_tmpl_id', '=', product_template.id), ('company_id', '=', company_id.id)])
             items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('categ_id', '=', product_template.categ_id.id), ('company_id', '=', company_id.id)])
@@ -37,7 +30,7 @@ class ProductTemplate(models.Model):
                 pricelists_ids.append(pricelist_id.id)
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.append(pricelist_id.id)
-            product_template.sudo().write({'include_template_pricelist_ids': [(6, 0, pricelists_ids)]})
+            logger.warning(f"found pricelists {pricelists_ids}")
 
     @api.depends_context('company')
     @api.depends("list_price", "standard_price")
@@ -53,30 +46,25 @@ class ProductTemplate(models.Model):
             Finally, re-computes the related o2m field for this 'product.template'.
         """
         for product_template in self:
-            product_pricelist = []
-            pricelists = product_template.include_template_pricelist_ids
-            dict_product_pricelist_id = {}
-            if not pricelists:
-                return
-            for pricelist in pricelists:
-                if pricelist.id in dict_product_pricelist_id:
-                    dict_product_pricelist_id[pricelist.id].write({
-                        'name': pricelist.name,
-                        'uom_id': product_template.uom_id.id,
-                        'currency_id': pricelist.currency_id.id,
-                        'is_special': pricelist.is_special
-                    })
-                else:
-                    product_pricelist.append(self.env['product.pricelist.line'].create({
-                        'name': pricelist.name,
-                        'pricelist_id': pricelist.id,
-                        'uom_id': product_template.uom_id.id,
-                        'product_templ_id': product_template.id,
-                        'currency_id': pricelist.currency_id.id,
-                        'is_special': pricelist.is_special
-                    }).id)
-            # NOTE: Comand `0`: Unlink-all and Link-all
-            product_template.sudo().write({'product_pricelist_line_ids': [(6, 0, product_pricelist)]})
+            pricelist_line_vals = []
+            applied_pricelists = product_template._get_include_template_pricelist_ids()
+            # 1. Prepare vals for new lines
+            for pricelist in applied_pricelists:
+                pricelist_line_vals.append({
+                    'name': pricelist.name,
+                    'pricelist_id': pricelist.id,
+                    'uom_id': product_template.uom_id.id,
+                    'product_templ_id': product_template.id,
+                    'currency_id': pricelist.currency_id.id,
+                    'is_special': pricelist.is_special
+                })
+            # 2. Unlink and delete all
+            if len(applied_pricelists > 0):
+                product_template.sudo().write({'product_pricelist_line_ids': [(3, 0)]})
+            # 3. Link all
+            product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, pricelist_line_vals)]})
+            # 4. If nothing to link, write to `False`
+            product_template.sudo().write({'product_pricelist_line_ids': False})
 
     def get_min_sale_price(self, currency_id):
         """
