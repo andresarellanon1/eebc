@@ -181,7 +181,7 @@ class SaleOrderLine(models.Model):
             ValidationError: If no appropriate price list is found for the product and currency combination
                              or if the customer-selected or default price list is not available.
         """
-        def _get_pricelist(product_template, pricelist_id, currency, company_id):
+        def _get_pricelist_line(product_template, pricelist_id, currency, company_id):
             return self.env["product.pricelist.line"].search([("product_templ_id", "=", product_template.id),
                                                               ("pricelist_id", "=", pricelist_id.id),
                                                               ("currency_id", "=", currency.id),
@@ -194,17 +194,15 @@ class SaleOrderLine(models.Model):
             product_pricelist_id = False
             # Pricelists declarations
             default_pricelist_id = line.company_id.selected_product_pricelist_id
-            logger.warning("pricelists:")
-            logger.warning(default_pricelist_id)
-            priority_customer_selected_pricelist = _get_pricelist(product_template=line.product_template_id,
-                                                                  pricelist_id=line.order_id.partner_id.priority_pricelist_id,
-                                                                  currency=line.target_currency_id,
-                                                                  company_id=line.company_id)
+            priority_customer_selected_pricelist = _get_pricelist_line(product_template=line.product_template_id,
+                                                                       pricelist_id=line.order_id.partner_id.priority_pricelist_id,
+                                                                       currency=line.target_currency_id,
+                                                                       company_id=line.company_id).pricelist_id
             logger.warning(priority_customer_selected_pricelist)
-            customer_selected_pricelist = _get_pricelist(product_template=line.product_template_id,
-                                                         pricelist_id=line.order_id.partner_id.property_product_pricelist,
-                                                         currency=line.target_currency_id,
-                                                         company_id=line.company_id)
+            customer_selected_pricelist = _get_pricelist_line(product_template=line.product_template_id,
+                                                              pricelist_id=line.order_id.partner_id.property_product_pricelist,
+                                                              currency=line.target_currency_id,
+                                                              company_id=line.company_id).pricelist_id
             logger.warning(customer_selected_pricelist)
             # NOTE: Asseert at least one of the 3 pricelist options available
             if (not default_pricelist_id) and (not customer_selected_pricelist) and (not priority_customer_selected_pricelist):
@@ -215,16 +213,16 @@ class SaleOrderLine(models.Model):
                 raise ValidationError(msg)
             if priority_customer_selected_pricelist and (not product_pricelist_id):
                 # NOTE: Search for the price list line that matches the priority-selected price list
-                product_pricelist_id = _get_pricelist(product_template=line.product_template_id,
-                                                      pricelist_id=priority_customer_selected_pricelist,
-                                                      currency=priority_customer_selected_pricelist.currency_id,
-                                                      company_id=line.company_id)
+                product_pricelist_id = _get_pricelist_line(product_template=line.product_template_id,
+                                                           pricelist_id=priority_customer_selected_pricelist,
+                                                           currency=priority_customer_selected_pricelist.currency_id,
+                                                           company_id=line.company_id)
             if customer_selected_pricelist and (not product_pricelist_id):
                 # NOTE: Search for the price list line that matches the customer-selected price list
-                product_pricelist_id = _get_pricelist(product_template=line.product_template_id,
-                                                      pricelist_id=customer_selected_pricelist,
-                                                      currency=customer_selected_pricelist.currency_id,
-                                                      company_id=line.company_id)
+                product_pricelist_id = _get_pricelist_line(product_template=line.product_template_id,
+                                                           pricelist_id=customer_selected_pricelist,
+                                                           currency=customer_selected_pricelist.currency_id,
+                                                           company_id=line.company_id)
             if default_pricelist_id and (not product_pricelist_id):
                 # NOTE: default ...
                 product_pricelist_id = default_pricelist_id
