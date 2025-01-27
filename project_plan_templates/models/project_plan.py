@@ -89,6 +89,8 @@ class ProjectPlan(models.Model):
         for task in line:
             task_lines += self.prep_task_time_lines(task)
 
+        return task_lines
+
     def prep_picking_lines(self, line):
         picking_lines = []
         for picking in line.project_plan_pickings.project_picking_lines:
