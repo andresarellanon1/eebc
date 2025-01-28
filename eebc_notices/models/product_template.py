@@ -28,4 +28,13 @@ class ProductTemplate(models.Model):
                     break  # Detener la búsqueda si se encuentra el valor
             _logger.warning('valor boleano crear aviso: %s', record.crea_aviso)
             
-            
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    is_aviso = fields.Boolean(
+        string='Es aviso',
+        related='product_tmpl_id.crea_aviso',
+        store=True,
+        readonly=True,
+    )
