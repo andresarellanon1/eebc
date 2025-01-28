@@ -21,13 +21,11 @@ class StockMove(models.Model):
         compute='_compute_aviso_button_flags',
     )
     def _generate_serial_numbers(self, next_serial, next_serial_count=False, location_id=False):
-        _logger.warning("Entramos a _generate_serial_numbers ")
-
         self.ensure_one()
         if not location_id:
             location_id = self.location_dest_id
 
-        if self.product_id.is_aviso:
+        if self.product_id.is_aviso:  # Ahora se utiliza el campo is_aviso correctamente
             # Validar que los números de serie no existan
             existing_lots = self.env['stock.lot'].search([
                 ('product_id', '=', self.product_id.id),
