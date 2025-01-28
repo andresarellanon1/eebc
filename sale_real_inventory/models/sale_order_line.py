@@ -3,6 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
@@ -12,7 +13,7 @@ class SaleOrderLine(models.Model):
 
     available_product_quantity = fields.Float(
         compute='_compute_available_product_quantity',
-        string='Cantidad disponible en inventario de almacen SUM sin reservar',
+        string='Disponible',
         store=True
     )
 
@@ -39,7 +40,7 @@ class SaleOrderLine(models.Model):
                 ('product_id', '=', line.product_id.id),
                 ('location_id', 'child_of', location.id),
                 ('location_id.usage', '=', 'internal'),
-                ('company_id', '=', line.company_id.id) 
+                ('company_id', '=', line.company_id.id)
             ])
 
             # Suma las cantidades disponibles y restadas las reservadas

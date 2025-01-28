@@ -24,7 +24,7 @@
                             <h1>
                                 <field name="name" class="w-100" required="1"/>
                             </h1>
-                            <field name="product_template_id" string="Servicios"/>
+                            <field name="product_template_id" string="Servicios" invisible="1"/>
                             
                         </div>
                         <notebook>
@@ -65,19 +65,28 @@
                                 <group>
                                     <group colspan="4">
                                     </group>
-                                    <group class="oe_subtotal_footer" colspan="2" name="sale_total">
-                                        <field name="plan_total_cost"/>
+                                    <group class="oe_subtotal_footer" colspan="2" name="material_total">
+                                        <field name="material_total_cost"/>
                                     </group>
                                 </group>
                             </page>
                             <page name="task_time_lines" string="Mano de obra">
                                 <field name="task_time_lines" nolabel="1">
                                     <tree editable="editable_bottom" style="width: 100%;">
+                                        <field name="product_domain" column_invisible="1"/>
+                                        <field name="product_id"/>
                                         <field name="description"/>
                                         <field name="work_shift"/>
                                         <field name="estimated_time"/>
+                                        <field name="unit_price"/>
+                                        <field name="price_subtotal"/>
                                     </tree>
                                 </field>
+                                <group>
+                                    <group class="oe_subtotal_footer" colspan="2" name="labour_total">
+                                        <field name="labour_total_cost"/>
+                                    </group>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>

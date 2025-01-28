@@ -7,9 +7,8 @@ logger = logging.getLogger(__name__)
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    product_pricelist_line_ids = fields.One2many(
+    product_pricelist_line_ids = fields.Many2many(
         'product.pricelist.line',
-        'product_templ_id',
         compute="_compute_product_pricelist_line_ids",
         store=True,
         string='Lineas de lista de precios')
@@ -54,6 +53,7 @@ class ProductTemplate(models.Model):
                     'uom_id': product_template.uom_id.id,
                     'product_templ_id': product_template.id,
                     'currency_id': pricelist.currency_id.id,
+                    'company_id': pricelist.company_id.id,
                     'is_special': pricelist.is_special
                 })
             # 2. Unlink and delete all

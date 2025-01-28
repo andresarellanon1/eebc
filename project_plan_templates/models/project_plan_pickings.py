@@ -18,16 +18,16 @@ class ProjectPlanPickings(models.Model):
     active = fields.Boolean(string="Activo", default=True)
     project_id = fields.Many2one('project.project', string="Proyecto")
 
-    plan_total_cost = fields.Float(string="Costo total", default=0.0)
+    plan_total_cost = fields.Float(string="Costo total", compute="_compute_total_cost", default=0.0)
 
     def toggle_active(self):
         for record in self:
             record.active = not record.active
 
-    # @api.depends('project_picking_lines.subtotal')
-    # def _compute_total_cost(self):
-    #     for plan in self:
-    #         plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
         
     @api.constrains('project_picking_lines')
     def _check_picking_lines(self):
