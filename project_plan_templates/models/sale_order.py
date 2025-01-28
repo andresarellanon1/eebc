@@ -53,8 +53,7 @@ class SaleOrder(models.Model):
     def get_task_time_lines(self, line):
         task_lines = []
         for task in line:
-            if not line.display_type:
-                task_lines += self.prep_task_time_lines(task)
+            task_lines += self.prep_task_time_lines(task)
 
         return task_lines
 
