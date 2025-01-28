@@ -9,7 +9,7 @@ class TaskTimeLines(models.Model):
     project_plan_id = fields.Many2one('project.plan')
 
     product_id = fields.Many2one('product.template', string="Mano de obra")
-    product_domain = fields.Many2many('product.template', store=True, compute="_product_domain")
+    product_domain = fields.Many2many('product.template', store=True)
 
     description = fields.Char(string="Descripción", required=True)
     estimated_time = fields.Float(string="Horas estimadas")
