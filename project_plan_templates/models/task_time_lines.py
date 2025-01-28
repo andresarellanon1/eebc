@@ -25,13 +25,13 @@ class TaskTimeLines(models.Model):
         for record in self:
             record.estimated_time = record.work_shift * 8
         
-    def _product_domain(self):
-        for record in self:
-            products = self.env['product.template'].search([
-                ('detailed_type', '=', 'service'), 
-                ('sale_ok', '=', True),
-                ('name', '=', 'CUADRILLA INSTALADORA')
-            ])
+    # def _product_domain(self):
+    #     for record in self:
+    #         products = self.env['product.template'].search([
+    #             ('detailed_type', '=', 'service'), 
+    #             ('sale_ok', '=', True),
+    #             ('name', '=', 'CUADRILLA INSTALADORA')
+    #         ])
 
     @api.onchange('product_id')
     def _onchange_product(self):
