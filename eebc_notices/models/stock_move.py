@@ -78,7 +78,7 @@ class StockMove(models.Model):
     def action_assign_serial(self):
         _logger.warning('Estamos en el action_assign_serial heredado')
 
-        has_aviso = any('aviso' in attr.name for attr in self.product_id.attribute_line_ids.mapped('attribute_id'))
+        has_aviso = self.product_id.is_aviso
 
         _logger.warning('valor de has_aviso en action_assign_serial: %s', has_aviso)
         self.ensure_one()
