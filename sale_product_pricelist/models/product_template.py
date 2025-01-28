@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 import logging
 logger = logging.getLogger(__name__)
@@ -8,9 +7,8 @@ logger = logging.getLogger(__name__)
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    product_pricelist_line_ids = fields.One2many(
+    product_pricelist_line_ids = fields.Many2many(
         'product.pricelist.line',
-        'product_templ_id',
         compute="_compute_product_pricelist_line_ids",
         store=True,
         string='Lineas de lista de precios')
@@ -18,22 +16,21 @@ class ProductTemplate(models.Model):
     def _get_include_template_pricelist_ids(self):
         for product_template in self:
             company_id = product_template.company_id or self.env.company
-            logger.warning(f"found company_id  {company_id.name}")
             # Agregate all applicable pricelist for the given product template:
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('product_tmpl_id', '=', product_template.id), ('company_id', '=', company_id.id)])
             items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('categ_id', '=', product_template.categ_id.id), ('company_id', '=', company_id.id)])
             items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('company_id', '=', company_id.id)])
-            pricelists_ids = []
+            pricelists_ids = set()
             for pricelist_id in items_direct_relation.pricelist_id:
-                pricelists_ids.append(pricelist_id.id)
+                pricelists_ids.add(pricelist_id)
             for pricelist_id in items_category_relation.pricelist_id:
-                pricelists_ids.append(pricelist_id.id)
+                pricelists_ids.add(pricelist_id)
             for pricelist_id in items_all_stock.pricelist_id:
-                pricelists_ids.append(pricelist_id.id)
-            logger.warning(f"found pricelists {pricelists_ids}")
+                pricelists_ids.add(pricelist_id)
+            return list(pricelists_ids)
 
     @api.depends_context('company')
-    @api.depends("list_price", "standard_price")
+    @api.depends("categ_id", "list_price", "standard_price")
     def _compute_product_pricelist_line_ids(self):
         """
             Re-computes the price unit for all the 'product.pricelist.line' linked to this 'product.template'.
@@ -56,15 +53,16 @@ class ProductTemplate(models.Model):
                     'uom_id': product_template.uom_id.id,
                     'product_templ_id': product_template.id,
                     'currency_id': pricelist.currency_id.id,
+                    'company_id': pricelist.company_id.id,
                     'is_special': pricelist.is_special
                 })
             # 2. Unlink and delete all
-            if len(applied_pricelists > 0):
-                product_template.sudo().write({'product_pricelist_line_ids': [(3, 0)]})
-            # 3. Link all
-            product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, pricelist_line_vals)]})
+            product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
+            # 3. Link and create all
+            product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, vals) for vals in pricelist_line_vals]})
             # 4. If nothing to link, write to `False`
-            product_template.sudo().write({'product_pricelist_line_ids': False})
+            if len(pricelist_line_vals) <= 0:
+                product_template.sudo().write({'product_pricelist_line_ids': False})
 
     def get_min_sale_price(self, currency_id):
         """

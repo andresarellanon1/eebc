@@ -26,6 +26,7 @@ class AccountMove(models.Model):
     def create(self, vals_list):
         moves = super(AccountMove, self).create(vals_list)
         for move in moves:
+            move.locked_currency_rate = 0
             if move.sale_order_count <= 0:
                 continue
             for line in move.line_ids:
@@ -38,7 +39,9 @@ class AccountMove(models.Model):
     @api.depends("sale_order_count")
     def _compute_target_currency_id(self):
         for move in self:
-            if move.state == "posted":
+            move.locked_currency_rate = 0
+            move.target_currency_id = False
+            if move.state == "posted": 
                 continue
             if move.sale_order_count <= 0:
                 continue
@@ -52,6 +55,7 @@ class AccountMove(models.Model):
     @api.depends("currency_id")
     def _compute_locked_currency_rate(self):
         for move in self:
+            move.locked_currency_rate = 0
             if move.state == "posted":
                 continue
             if move.sale_order_count <= 0:

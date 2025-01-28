@@ -1,6 +1,6 @@
 from odoo import api, fields, models
 import logging
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 logger = logging.getLogger(__name__)
@@ -14,27 +14,46 @@ class SaleOrder(models.Model):
         compute="_compute_is_paid_via_transaction",
         store=True
     )
+    """
+    Campo Booleano: 'is_paid_via_transaction'
+    1. Indica si la orden ha sido pagada a través de una transacción válida.
+    2. Se calcula automáticamente con base en el estado, monto y método de pago de las transacciones asociadas.
+    3. Se almacena en la base de datos para optimizar consultas posteriores.
+    """
 
     @api.depends('transaction_ids.state', 'transaction_ids.amount', 'amount_total', 'transaction_ids.payment_method_code')
     def _compute_is_paid_via_transaction(self):
+        """
+        Computa si la orden ha sido pagada mediante una transacción.
+        1. Itera sobre las transacciones asociadas a la orden.
+        2. Verifica que el estado sea 'done', el monto coincida con el total de la orden,
+           y el método de pago no sea crédito.
+        3. Si alguna transacción cumple las condiciones, se marca como True.
+        """
         for order in self:
-            # Determine if the sale order is paid via a valid transaction
-            # Exclude transactions with the 'credit' method; this transactions are not paid by nature.
             order.is_paid_via_transaction = any(
                 tx.state == 'done' and tx.amount == order.amount_total and tx.payment_method_code != 'credit'
                 for tx in order.transaction_ids
             )
 
     def action_confirm(self):
+        """
+        Sobrescribe el método action_confirm para agregar validaciones relacionadas con el crédito del cliente.
+        1. Obtiene las configuraciones para habilitar las validaciones de crédito.
+        2. Si la validación está habilitada:
+            - Verifica si la llave de crédito está activa (enable_partner_limit_key).
+            - Si no está activa, valida el límite de crédito directamente.
+        3. Confirma la orden y realiza validaciones adicionales relacionadas con la suspensión de crédito.
+        """
         enable_partner_credit_limit_block = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("sale.enable_partner_credit_limit_block")
+            .get_param("sale.enable_partner_credit_limit_block", default=False)
         )
         enable_partner_limit_key = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("sale.enable_partner_limit_key")
+            .get_param("sale.enable_partner_limit_key", default=False)
         )
 
         if enable_partner_credit_limit_block:
@@ -46,11 +65,12 @@ class SaleOrder(models.Model):
         self._handle_credit_suspend()
         return res
 
-    # Handlers
     def _handle_credit_key(self):
         """
-        If Credit key usage is available, turn it off and do no futher validation for the credit limit. Single usage activation behavior.
-        Otherwise just check the credit block.
+        Maneja la funcionalidad de la llave de crédito para las órdenes.
+        1. Verifica si el cliente tiene una llave de crédito activa.
+        2. Si está activa, la desactiva.
+        3. Si no está activa, valida el límite de crédito.
         """
         for order in self:
             if order.partner_id.customer_credit_key:
@@ -60,11 +80,9 @@ class SaleOrder(models.Model):
 
     def _handle_credit_suspend(self):
         """
-        Suspends the credit if 'credit key' is not enabled and automatic control is available.
-        Called after the actual confirmation of the sale order.
-        Do not stop the workflow, suspends the credit AFTER the sale order that will overpass the limit is confirmed.
-        This will happend regardless of the payment terms, origin or transaction status: always suspend the credit when the limit is rebased anyhow.
-        Only the credit key can save the customer from getting his credit suspended.
+        Maneja la suspensión automática de crédito para clientes.
+        1. Ignora órdenes pagadas mediante transacciones o clientes con llave de crédito.
+        2. Si el total residual del cliente excede el límite de crédito, se suspende automáticamente.
         """
         for order in self:
             if order.is_paid_via_transaction:
@@ -76,17 +94,17 @@ class SaleOrder(models.Model):
             if order.partner_id.total_residual >= order.partner_id.credit_limit:
                 order.partner_id.customer_credit_suspend = True
 
-    # Credit Validations
     def _validate_credit_limit_block(self):
         """
-        If the payment term is cash or the order has paid transacions that fulfill the order amount, continue with workflow.
-        Otherwise, check if credit warning is being shown or if the credit is suspended.
+        Valida si la orden excede el límite de crédito del cliente.
+        1. Omite validaciones para órdenes con pago inmediato o pagadas mediante transacciones.
+        2. Si el cliente tiene advertencias de crédito o el crédito está suspendido, lanza un error.
         """
         for order in self:
             if order.payment_term_id.payment_term_cash or order.is_paid_via_transaction:
                 continue
             if order.partner_credit_warning or order.partner_id.customer_credit_suspend:
                 raise ValidationError(
-                    "Se ha alcanzado el límite de crédito del cliente o el cliente tiene el credito suspendido. "
+                    "Se ha alcanzado el límite de crédito del cliente o el cliente tiene el crédito suspendido. "
                     "Aumente el límite de crédito o desactive esta validación para continuar."
                 )

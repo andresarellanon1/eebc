@@ -1,6 +1,6 @@
 {
     'name': "Partner Customer Extension",
-    'version': '17.0.3.001',
+    'version': '17.0.3.002',
     'depends': [
         "sale",
         "contacts"
