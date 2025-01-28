@@ -20,6 +20,60 @@ class StockMove(models.Model):
         string="Mostrar botón de salida",
         compute='_compute_aviso_button_flags',
     )
+    def _generate_serial_numbers(self, next_serial, next_serial_count=False, location_id=False):
+        _logger.warning("Entramos a _generate_serial_numbers ")
+
+        self.ensure_one()
+        if not location_id:
+            location_id = self.location_dest_id
+
+        if self.product_id.is_aviso:
+            # Validar que los números de serie no existan
+            existing_lots = self.env['stock.lot'].search([
+                ('product_id', '=', self.product_id.id),
+                ('company_id', '=', self.company_id.id),
+            ]).mapped('name')
+
+            lot_names = self.env['stock.lot'].generate_lot_names(next_serial, next_serial_count or self.next_serial_count)
+            for lot in lot_names:
+                if lot['lot_name'] in existing_lots:
+                    raise ValidationError(_(
+                        "El número de serie/lote '%s' ya existe para el producto '%s'."
+                    ) % (lot['lot_name'], self.product_id.display_name))
+
+        # Continuar con la generación normal de números de serie
+        lot_names = self.env['stock.lot'].generate_lot_names(next_serial, next_serial_count or self.next_serial_count)
+        field_data = [{'lot_name': lot_name['lot_name'], 'quantity': 1} for lot_name in lot_names]
+        move_lines_commands = self._generate_serial_move_line_commands(field_data)
+        self.move_line_ids = move_lines_commands
+        return True
+        
+
+    def _create_lot_ids_from_move_line_vals(self, vals_list, product_id, company_id):
+        _logger.warning("Entramos a _create_lot_ids_from_move_line_vals ")
+        # Obtener los nombres de los lotes que ya existen
+        existing_lots = self.env['stock.lot'].search([
+            ('product_id', '=', product_id),
+            ('company_id', '=', company_id),
+        ]).mapped('name')
+
+        # Filtrar y crear solo los lotes que no existen
+        lot_names = {vals['lot_name'] for vals in vals_list if vals.get('lot_name')}
+        new_lots = lot_names - set(existing_lots)
+        lots_to_create_vals = [
+            {'product_id': product_id, 'name': lot_name, 'company_id': company_id}
+            for lot_name in new_lots
+        ]
+
+        # Crear los nuevos lotes
+        lot_ids = self.env['stock.lot'].create(lots_to_create_vals)
+        lot_id_by_name = {lot.name: lot.id for lot in lot_ids}
+
+        # Asignar lot_id a los valores de las líneas de movimiento
+        for vals in vals_list:
+            if vals.get('lot_name') in lot_id_by_name:
+                vals['lot_id'] = lot_id_by_name[vals['lot_name']]
+                vals['lot_name'] = False
 
 
 
