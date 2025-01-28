@@ -111,7 +111,8 @@ class StockMove(models.Model):
     @api.depends('product_id.attribute_line_ids', 'picking_type_id.code', 'product_id')
     def _compute_aviso_button_flags(self):
         for move in self:
-            has_aviso = any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id'))
+            has_aviso = move.product_id.is_aviso
+
             is_valid_picking_type = move.picking_type_id.code in ['incoming', 'outgoing']
             if has_aviso and is_valid_picking_type:
                 _logger.warning('ENTRAMOS A IF')
