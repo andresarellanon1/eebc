@@ -143,9 +143,9 @@ class ProjectPlan(models.Model):
         })
 
     def update_product_template_list_price(self, plan):
-    if plan.product_template_id:
-        total_cost = plan.material_total_cost + plan.labour_total_cost
-        plan.product_template_id.write({'list_price': total_cost})
+        if plan.product_template_id:
+            total_cost = plan.material_total_cost + plan.labour_total_cost
+            plan.product_template_id.write({'list_price': total_cost})
 
     @api.model
     def write(self, vals):
