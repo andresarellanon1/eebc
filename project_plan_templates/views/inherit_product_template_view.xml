@@ -8,6 +8,10 @@
             <xpath expr="//field[@name='service_tracking']" position="after">
                 <field name="project_plan_id"/> 
             </xpath>
+
+            <xpath expr="//field[@name='list_price']" position="attributes">
+                <attribute name="force_save">1</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
