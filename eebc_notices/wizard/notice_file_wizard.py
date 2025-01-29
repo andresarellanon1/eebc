@@ -31,7 +31,8 @@ class NoticeFileWizard(models.TransientModel):
 
     create_tab = fields.Boolean(string="Crear aviso", default=False)
     update_tab = fields.Boolean(string="Actualizar aviso", default=False)
-
+    single_notice = fields.Boolean(string="Un solo aviso", default=False)
+    multiple_notice = fields.Boolean(string="Multiples avisos", default=False)
     stock_move_id = fields.Many2one('stock.move', string='Traslado')
 
    
@@ -88,134 +89,112 @@ class NoticeFileWizard(models.TransientModel):
         
 
     def create_notice(self):
-        """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo"""            
+        """Crea nuevos registros en el modelo notices.notices basado en los datos extraídos del archivo."""
 
-        notice_id = self.env['notices.notices'].search([('notice', '=', self.notice)])
-        
-
+        # Validación de opciones seleccionadas
         if self.update_tab and self.create_tab:
-            raise ValidationError("Debe eleguir una sola tarea a ejecutar entre crear o actualizar aviso")
+            raise ValidationError("Debe elegir una sola opción entre crear o actualizar aviso.")
         
-        elif self.create_tab:
-            if not self.notice or not self.folio:
-                raise ValidationError('No a llenado los campos necesarios para crear un nuevo aviso')
-            _logger.warning('Creamos')
-            if notice_id:
-                history_match = notice_id.history_ids.filtered(lambda h: int(h.folio) == self.folio)
-                if history_match:
-                    return {
-                        'type': 'ir.actions.act_window',
-                        'res_model': 'notice.file.wizard',
-                        'view_mode': 'form',
-                        'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
-                        'target': 'new',
-                        'context': {
-                            'default_message': f"El folio del archivo ({self.folio}) ya existe en el folio ({notice_id}).",
-                        }
-                    }
-                else:
-                    notice_id.write({
-                        'history_ids': [(0, 0, {
-                            'location_dest': self._context['location_dest_id'],
-                            'location_id': self._context['location_id'],
-                            'product_id': self._context['product_id'],
-                            'quantity': self.quantity,
-                            'folio': self.folio,
-                            'picking_code': self._context['type'],
-                            'origin': self._context['origin'],
-                            'purchase_order_id':self._context['purchase_order_id'],
-                            'sale_order_id':self._context['sale_ids'],
-                            'state': 'draft',
+        if not self.create_tab:
+            raise ValidationError("Debe marcar la casilla 'Crear aviso' para proceder.")
 
-                        })]
-                    })
-            else:
+        if not self.notice or not self.folio:
+            raise ValidationError("Debe completar los campos 'Aviso' y 'Folio' antes de continuar.")
+
+        _logger.warning('Iniciando creación de avisos...')
+
+        # Buscar si el aviso ya existe
+        existing_notice = self.env['notices.notices'].search([('notice', '=', self.notice)])
+
+        # Validar si hay duplicados en el historial
+        if existing_notice:
+            history_match = existing_notice.history_ids.filtered(lambda h: int(h.folio) == int(self.folio))
+            if history_match:
+                return {
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'notice.file.wizard',
+                    'view_mode': 'form',
+                    'view_id': self.env.ref('eebc_notices.wizard_notice_error').id,
+                    'target': 'new',
+                    'context': {
+                        'default_message': f"El folio {self.folio} ya está registrado en el aviso {existing_notice.notice}.",
+                    }
+                }
+
+        # Manejo de la opción SINGLE_NOTICE (Un solo aviso para todos los lotes)
+        if self.single_notice:
+            _logger.warning("Creando un solo aviso con todos los números de serie/lote...")
+            
+            # Obtener todos los lotes asociados al `stock_move_id`
+            lot_ids = self.stock_move_id.lot_ids.ids if self.stock_move_id else []
+
+            if not lot_ids:
+                raise ValidationError("No hay lotes asociados al traslado seleccionado.")
+
+            # Crear un único aviso con todos los lotes
+            notice = self.env['notices.notices'].create({
+                'product_id': self._context['product_id'],
+                'quantity': self.quantity,
+                'description': self.description,
+                'partner_id': self._context['proveedor_id'],
+                'notice': self.notice,
+            })
+
+            # Crear historial con todos los lotes
+            self.env['notices.history'].create({
+                'location_id': self._context['location_id'],
+                'location_dest': self._context['location_dest_id'],
+                'product_id': self._context['product_id'],
+                'quantity': self.quantity,
+                'picking_code': self._context['type'],
+                'notice_id': notice.id,
+                'folio': self.folio,
+                'origin': self._context['origin'],
+                'purchase_order_id': self._context['purchase_order_id'],
+                'sale_order_id': self._context['sale_ids'],
+                'stock_move_id': self._context['stock_move_id'],
+                'state': 'draft',
+                'lot_ids': [(6, 0, lot_ids)],  # Asignar todos los lotes al aviso
+            })
+
+        # Manejo de la opción MULTIPLE_NOTICE (Un aviso por cada número de serie/lote)
+        elif self.multiple_notice:
+            _logger.warning("Creando múltiples avisos, uno por cada número de serie/lote...")
+
+            # Obtener cada lote del `stock_move_id`
+            for lot in self.stock_move_id.lot_ids:
+                # Crear un aviso para cada lote
                 notice = self.env['notices.notices'].create({
                     'product_id': self._context['product_id'],
-                    'quantity': self.quantity,
+                    'quantity': self.quantity / len(self.stock_move_id.lot_ids),  # Distribuir la cantidad
                     'description': self.description,
                     'partner_id': self._context['proveedor_id'],
-                    'notice': self.notice,
+                    'notice': f"{self.notice} - {lot.name}",  # Nombre del aviso con el lote
                 })
+
+                # Crear historial vinculado al aviso
                 self.env['notices.history'].create({
                     'location_id': self._context['location_id'],
                     'location_dest': self._context['location_dest_id'],
                     'product_id': self._context['product_id'],
-                    'quantity': self.quantity,
+                    'quantity': self.quantity / len(self.stock_move_id.lot_ids),
                     'picking_code': self._context['type'],
                     'notice_id': notice.id,
-                    'folio': self.folio,
+                    'folio': f"{self.folio}-{lot.name}",  # Folio único por lote
                     'origin': self._context['origin'],
-                    'purchase_order_id':self._context['purchase_order_id'],
-                    'sale_order_id':self._context['sale_ids'],
-                    'stock_move_id':self._context['stock_move_id'],
+                    'purchase_order_id': self._context['purchase_order_id'],
+                    'sale_order_id': self._context['sale_ids'],
+                    'stock_move_id': self._context['stock_move_id'],
                     'state': 'draft',
-                    
+                    'lot_ids': [(6, 0, [lot.id])],  # Asignar solo el lote correspondiente
                 })
-                
-           
-                    
-            # Limpieza del contexto
-            self = self.with_context(
-                lot_ids=False
-            )
-            return self.stock_move_id.action_show_incoming()
-          
 
-            
-        elif self.update_tab:
-            _logger.warning('Actualizamos')
-            try:
-                for wizard in self:
-                    _logger.warning('Inicio del proceso en wizard.')
-
-                    # Validar cantidades (puede lanzar un ValidationError)
-                    self._check_quantities()
-
-                    # Iterar sobre notice_ids
-                    for line in wizard.notice_ids:
-                        for notice in line.notice_id:
-                            # Validar datos necesarios antes de proceder
-                            if not wizard.stock_move_id or not wizard.stock_move_id.picking_id:
-                                _logger.error("El campo stock_move_id o picking_id no está definido.")
-                                raise ValueError("Faltan datos necesarios en stock_move_id o picking_id.")
-
-                            # Escribir el historial
-                            notice.write({
-                                'history_ids': [(0, 0, {
-                                    'location_id': wizard.stock_move_id.picking_id.location_id.id,
-                                    'location_dest': wizard.stock_move_id.picking_id.location_dest_id.id,
-                                    'quantity': line.quantity,
-                                    'picking_code': wizard.stock_move_id.picking_id.picking_type_code,
-                                    'origin': wizard.stock_move_id.picking_id.sale_id.name,
-                                    'sale_order_id': wizard.stock_move_id.picking_id.sale_id.id,
-                                    'product_id': wizard.stock_move_id.product_id.id,
-                                    'purchase_order_id': self._context.get('purchase_order_id'),
-                                    'state': 'draft',
-                                    'stock_move_id': self._context['stock_move_id'],
-
-                                })]
-                            })
-
-                    _logger.warning('Se procesaron todas las líneas de notice_ids.')
-                
-                # Retornar para cerrar la ventana
-                return self.stock_move_id.action_show_incoming()
-
-            except ValidationError as e:
-                # Registrar el mensaje de error para depuración
-                _logger.error(f"ValidationError detectado: {e}")
-                raise  # Propaga el ValidationError para que se muestre en la interfaz del usuario
-
-            except Exception as e:
-                # Manejar otros errores inesperados
-                _logger.error(f"Error en action_get_products: {e}")
-                raise  # Propaga otros errores si es necesario
-        
-
-        
         else:
-            raise ValidationError("Debe marcar una casilla")
+            raise ValidationError("Debe seleccionar 'Un solo aviso' o 'Múltiples avisos' para continuar.")
+
+        # Limpieza del contexto y redirección
+        self = self.with_context(lot_ids=False)
+        return self.stock_move_id.action_show_incoming()
             
 
 
