@@ -29,11 +29,26 @@
                 <div class="max-w-3xl mx-auto my-20" style="width:70%; margin: 20px;">
                     <div class="text-center p-6 bg-gray-100 rounded-lg">
                         <p class="text-lg text-gray-700" style="text-align: justify;">
-                            Este módulo muestra una tabla con la lista de precios dentro de la vista de cada producto. También incorpora un widget de selección que permite elegir la lista de precios en los documentos de venta y factura de cliente. Al seleccionar una lista de precios, el sistema actualiza automáticamente el precio unitario de la línea correspondiente en cualquiera de estos documentos.
-            
-                            Además, el módulo implementa métodos que calculan la lista de precios y el precio unitario, considerando la divisa secundaria de la empresa. Para determinar qué lista de precios se aplica, se utiliza un algoritmo de prioridades. Este algoritmo sigue un orden específico, priorizando primero la lista de precios del cliente (base de Odoo) y luego la lista prioritaria añadida en un módulo personalizado. En caso de que un producto esté presente en varias listas, se selecciona automáticamente la de mayor prioridad.
-            
-                            El módulo también soporta escenarios de multi-divisa y multi-sucursal. Si la orden cambia de divisa, el sistema busca una lista de precios con el mismo nombre en la divisa objetivo. En cuanto a la multi-sucursal, solo se consideran listas de precios que correspondan a la sucursal del vendedor que gestiona la orden.
+                            Este módulo muestra una tabla con la lista de precios dentro de la vista de cada producto. 
+                            También incorpora un widget de selección que permite elegir la lista de precios en los documentos 
+                            de venta y factura de cliente. Al seleccionar una lista de precios, el sistema actualiza automáticamente 
+                            el precio unitario de la línea correspondiente en cualquiera de estos documentos.
+                        </p>
+
+                        <p>
+                            Además, el módulo implementa métodos que calculan la lista de precios y el precio unitario, 
+                            considerando la divisa secundaria de la empresa. Para determinar qué lista de precios se aplica, 
+                            se utiliza un algoritmo de prioridades. Este algoritmo sigue un orden específico, priorizando primero 
+                            la lista de precios del cliente (base de Odoo) y luego la lista prioritaria añadida en un módulo 
+                            personalizado. En caso de que un producto esté presente en varias listas, se selecciona automáticamente 
+                            la de mayor prioridad.
+                        </p>
+
+                        <p>
+                            El módulo también soporta escenarios de multi-divisa y multi-sucursal. Si la orden cambia de divisa, 
+                            el sistema busca una lista de precios con el mismo nombre en la divisa objetivo. En cuanto a la 
+                            multi-sucursal, solo se consideran listas de precios que correspondan a la sucursal del vendedor que 
+                            gestiona la orden.
                         </p>
                     </div>
                 </div>
