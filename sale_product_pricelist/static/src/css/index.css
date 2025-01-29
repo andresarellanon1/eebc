@@ -1415,3 +1415,16 @@ video {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
+
+#desripcion-div {
+    width:70%; 
+    margin: 20px; 
+}
+
+#desripcion-text{
+    text-align: justify;
+}
+
+#funcionanlidad-div{
+    margin-left:15%;
+}

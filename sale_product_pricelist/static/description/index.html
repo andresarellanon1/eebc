@@ -25,9 +25,9 @@
             </div>
             
             <!-- Descripción -->
-            <div class="max-w-3xl mx-auto my-20">
+            <div class="max-w-3xl mx-auto my-20" id="desripcion-div">
                 <div class="text-center p-6 bg-gray-100 rounded-lg">
-                    <p class="text-lg text-gray-700">
+                    <p class="text-lg text-gray-700" id="desripcion-text">
                         Este módulo muestra una tabla con la lista de precios dentro de la vista de cada producto. También incorpora un widget de selección que permite elegir la lista de precios en los documentos de venta y factura de cliente. Al seleccionar una lista de precios, el sistema actualiza automáticamente el precio unitario de la línea correspondiente en cualquiera de estos documentos.
             
                         Además, el módulo implementa métodos que calculan la lista de precios y el precio unitario, considerando la divisa secundaria de la empresa. Para determinar qué lista de precios se aplica, se utiliza un algoritmo de prioridades. Este algoritmo sigue un orden específico, priorizando primero la lista de precios del cliente (base de Odoo) y luego la lista prioritaria añadida en un módulo personalizado. En caso de que un producto esté presente en varias listas, se selecciona automáticamente la de mayor prioridad.
@@ -38,7 +38,7 @@
             </div>
 
             <!-- Módulo Funcionalidad -->
-            <div class="space-y-8">
+            <div class="space-y-8" id="funcionanlidad-div">
                 <div class="bg-blue-50 p-6 rounded-lg">
                     <h2 class="text-xl font-semibold text-blue-900 mb-3">🏷️ Configuración de Listas de Precio</h2>
                     <ul class="space-y-3 text-blue-800">
@@ -86,18 +86,19 @@
                         </li>
                     </ul>
                 </div>
-
-                <!-- Soporte -->
-                <div class="text-center mt-10 pt-6 border-t border-blue-200">
-                    <p class="text-blue-600">
-                        ¿Necesitas ayuda? Contacta a nuestro equipo técnico:
-                        <a href="mailto:soporte@quadrosoluciones.com" 
-                           class="text-blue-800 underline hover:text-blue-900">
-                           soporte@quadrosoluciones.com
-                        </a>
-                    </p>
-                </div>
             </div>
+
+            <!-- Soporte -->
+            <div class="text-center mt-10 pt-6 border-t border-blue-200">
+            <p class="text-blue-600">
+                ¿Necesitas ayuda? Contacta a nuestro equipo técnico:
+                <a href="mailto:soporte@quadrosoluciones.com" 
+                    class="text-blue-800 underline hover:text-blue-900">
+                    soporte@quadrosoluciones.com
+                </a>
+            </p>
+            </div>
+            
         </div>
     </div>
 </body>
