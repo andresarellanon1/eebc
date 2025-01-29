@@ -38,6 +38,7 @@ class TaskTimeLines(models.Model):
         for record in self:
             record.unit_price = record.product_id.list_price
 
+
     @api.depends('work_shift')
     def _compute_subtotal(self):
         for record in self:
