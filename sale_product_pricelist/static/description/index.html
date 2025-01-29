@@ -8,12 +8,13 @@
             <!-- Header -->
             <div class="text-center mb-10">
                 <h1 class="text-3xl font-bold text-blue-900 mb-2">
-                    Advanced Pricelist Management
+                    Gestión Avanzada de Listas de Precios
                 </h1>
-                <p class="text-blue-600 mb-4">Versión 17 - Quadro Soluciones</p>
+                <p class="text-blue-600 mb-4">Versión 17 - Quadro Soluciones Tecnológicas
+                </p>
                 <div class="flex justify-center space-x-4">
                     <a href="https://quadrosoluciones.com" 
-                       class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                       class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors">
                        Sitio Web
                     </a>
                     <a href="https://quadro.odoo.com" 
@@ -22,19 +23,30 @@
                     </a>
                 </div>
             </div>
+            
+            <!-- Descripción -->
+            <div class="text-center my-10 p-6 bg-gray-100 rounded-lg">
+                <p class="text-lg text-gray-700">
+                    Este módulo muestra una tabla con la lista de precios dentro de la vista de cada producto. También incorpora un widget de selección que permite elegir la lista de precios en los documentos de venta y factura de cliente. Al seleccionar una lista de precios, el sistema actualiza automáticamente el precio unitario de la línea correspondiente en cualquiera de estos documentos.
+
+                    Además, el módulo implementa métodos que calculan la lista de precios y el precio unitario, considerando la divisa secundaria de la empresa. Para determinar qué lista de precios se aplica, se utiliza un algoritmo de prioridades. Este algoritmo sigue un orden específico, priorizando primero la lista de precios del cliente (base de Odoo) y luego la lista prioritaria añadida en un módulo personalizado. En caso de que un producto esté presente en varias listas, se selecciona automáticamente la de mayor prioridad.
+
+                    El módulo también soporta escenarios de multi-divisa y multi-sucursal. Si la orden cambia de divisa, el sistema busca una lista de precios con el mismo nombre en la divisa objetivo. En cuanto a la multi-sucursal, solo se consideran listas de precios que correspondan a la sucursal del vendedor que gestiona la orden.
+                </p>
+            </div>
 
             <!-- Módulo Funcionalidad -->
             <div class="space-y-8">
                 <div class="bg-blue-50 p-6 rounded-lg">
-                    <h2 class="text-xl font-semibold text-blue-900 mb-4">🏷️ Configuración de Listas de Precio</h2>
+                    <h2 class="text-xl font-semibold text-blue-900 mb-3">🏷️ Configuración de Listas de Precio</h2>
                     <ul class="space-y-3 text-blue-800">
                         <li class="flex items-start">
                             <span class="mr-2">✔️</span>
-                            Cálculo automático de precios con conversión divisa
+                            Cálculo automático de precios con conversión de divisas
                         </li>
                         <li class="flex items-start">
                             <span class="mr-2">✔️</span>
-                            Priorización inteligente de listas (cliente > empresa > default)
+                            Priorización inteligente de listas de precios (cliente > empresa > predeterminado)
                         </li>
                         <li class="flex items-start">
                             <span class="mr-2">✔️</span>
@@ -68,7 +80,7 @@
                         </li>
                         <li class="flex items-start">
                             <span class="mr-2">⚙️</span>
-                            Validar compatibilidad divisa-compañía en listas
+                            Validar la compatibilidad de divisa y empresa en las listas de precios
                         </li>
                     </ul>
                 </div>
