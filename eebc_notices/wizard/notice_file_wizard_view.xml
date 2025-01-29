@@ -29,6 +29,11 @@
                             <field name="quantity" />
 
                         </group>
+                        <group>
+                            <field name="single_notice"/>
+                            <field name="multiple_notice"/>
+
+                        </group>
                     </page>
 
 

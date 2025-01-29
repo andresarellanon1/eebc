@@ -12,6 +12,8 @@ class ProductTemplate(models.Model):
         ondelete='restrict',  # Evita borrar accidentalmente el proyecto
     )
 
+    list_price = fields.Float(compute="_compute_service_price", store=True)
+
     @api.constrains('project_plan_id')
     def _check_unique_project_plan(self):
         for record in self:
@@ -29,10 +31,8 @@ class ProductTemplate(models.Model):
                 plan.write({'product_template_id': self.id})
         return result
 
-    @api.onchange('project_plan_id')
-    def _onchange_project_plan_id(self):
+    @api.depends('project_plan_id')
+    def _compute_service_price(self):
         if self.project_plan_id:
             total_cost = self.project_plan_id.labour_total_cost + self.project_plan_id.material_total_cost
             self.list_price = total_cost
-        else:
-            self.list_price = 1.0
