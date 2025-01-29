@@ -28,3 +28,11 @@ class ProductTemplate(models.Model):
             if plan:
                 plan.write({'product_template_id': self.id})
         return result
+
+    @api.onchange('project_plan_id')
+    def _onchange_project_plan_id(self):
+        if self.project_plan_id:
+            total_cost = self.project_plan_id.labour_total_cost + self.project_plan_id.material_total_cost
+            self.list_price = total_cost
+        else:
+            self.list_price = 1.0

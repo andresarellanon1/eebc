@@ -49,18 +49,15 @@
                                         <field name="quantity"/>
                                         <field name="standard_price"/>
                                         <field name="subtotal"/>
-                                        <!--<field name="quantity"/>
-                                        <field name="standard_price"/>
-                                        <field name="subtotal"/>-->
                                     </tree>
                                 </field>
-                                <!--<group>
+                                <group>
                                     <group colspan="4">
                                     </group>
                                     <group class="oe_subtotal_footer" colspan="2" name="sale_total">
                                         <field name="plan_total_cost"/>
                                     </group>
-                                </group>-->
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
