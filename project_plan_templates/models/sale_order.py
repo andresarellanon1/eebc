@@ -2,7 +2,7 @@ from odoo import fields, models, api
 from odoo.exceptions import UserError, ValidationError
 import json
 import logging
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(_name_)
 
 class SaleOrder(models.Model):
 
@@ -35,17 +35,22 @@ class SaleOrder(models.Model):
         store=True
     )
 
+    # task_time_lines = fields.One2many(
+    #     'task.time.lines',
+    #     'sale_order_id',
+    #     string="Lineas de mano obra",
+    #     compute="_compute_task_lines",
+    #     store=True)
     task_time_lines = fields.One2many(
         'task.time.lines',
         'sale_order_id',
-        string="Lineas de mano obra",
-        compute="_compute_task_lines",
-        store=True)
+        string="Lineas de mano obra")
 
     labour_total_cost = fields.Float(string="Costo mano de obra", compute="_compute_labour_cost", default=0.0)
 
-    @api.depends('project_plan_lines')
-    def _compute_task_lines(self):
+    # @api.depends('project_plan_lines')
+    #def _compute_task_time_lines(self):
+    def update_task_lines(self):
         for record in self:
             record.task_time_lines = [(5, 0, 0)]
             record.task_time_lines = record.get_task_time_lines(record.project_plan_lines)
@@ -53,7 +58,13 @@ class SaleOrder(models.Model):
     def get_task_time_lines(self, line):
         task_lines = []
         for task in line:
-            task_lines += self.prep_task_time_lines(task)
+            if line.display_type == 'line_section':
+                task_lines.append(self.prep_task_line_section_line())
+            else:
+                task_lines.append(self.prep_task_line_section_line())
+                for _ in range(int(line.service_qty)):  # Repite según la cantidad de service_qty
+                    task_lines += self.prep_task_time_lines(task)
+            #task_lines += self.prep_task_time_lines(task)
 
         return task_lines
 
@@ -209,6 +220,7 @@ class SaleOrder(models.Model):
 
     def _prepare_picking_lines(self, lines):
         """Prepara las líneas de picking para asignarlas al pedido."""
+        lines.read(['standard_price', 'subtotal'])
         return [(0, 0, {
             'name': line.name,
             'sequence': line.sequence,
@@ -223,6 +235,18 @@ class SaleOrder(models.Model):
             'for_create': line.for_create,
             'for_modification': False
         }) for line in lines]
+
+    def prep_task_line_section_line(self, line)
+        return(0, 0, {
+            'name': line.name,
+            'display_type': line.display_type or 'line_section',
+            'product_id':  False,
+            'description':  False,
+            'estimated_time':  False,
+            'work_shift':  False,
+            'unit_price':  False,
+            'price_subtotal': False
+        })
     
     def prep_picking_section_line(self, line, for_create):
         return (0, 0, {
@@ -385,4 +409,3 @@ class SaleOrder(models.Model):
             'doc_model': 'sale.order',
             'docs': docs,
         }
-    

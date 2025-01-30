@@ -5,6 +5,7 @@ class TaskTimeLines(models.Model):
     _name = 'task.time.lines'
     _description = 'Project plan time lines model'
 
+    name = fields.Char(string="Descripción")
     task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
     project_plan_id = fields.Many2one('project.plan')
 
@@ -19,6 +20,12 @@ class TaskTimeLines(models.Model):
     price_subtotal = fields.Float(string="Subtotal", compute="_compute_subtotal", default=0.0)
 
     sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
+    display_type = fields.Selection(
+            [
+            ('line_section', 'Section'),
+            ('line_note', 'Note'),
+        ]
+    )
 
     @api.onchange('work_shift')
     def _work_shift_onchange_(self):
