@@ -8,7 +8,7 @@
             <!-- Header -->
             <div class="text-center mb-10">
                 <h1 class="text-3xl font-bold text-blue-900 mb-2">
-                    Cliente del Contacto (partner_customer)
+                    Extensión de Clientes y Ventas
                 </h1>
                 <p class="text-blue-600 mb-4">Versión 17 - Quadro Soluciones Tecnológicas</p>
                 <div class="flex justify-center space-x-4">
@@ -29,15 +29,22 @@
                 <div class="max-w-3xl mx-auto my-20" style="width:70%; margin: 20px;">
                     <div class="text-center p-6 bg-gray-100 rounded-lg">
                         <p class="text-lg text-gray-700" style="text-align: justify;">
-                            Este módulo permite agregar campos personalizados para almacenar información de sistemas externos de los clientes. Específicamente, se incluye un campo para registrar las referencias de órdenes de compra del cliente, que no corresponden a las órdenes de compra dentro de Odoo, sino a las que provienen de su sistema.
+                            Este módulo permite agregar campos personalizados para almacenar información de sistemas externos de los clientes. Específicamente, 
+                            se incluye un campo para registrar las referencias de órdenes de compra del cliente, que no corresponden a las órdenes de compra 
+                            dentro de Odoo, sino a las que provienen de su sistema.
 
-Con esta funcionalidad, Odoo puede gestionar y vincular las referencias externas de las órdenes de compra a las facturas y órdenes de venta de manera automática, asegurando una integración más fluida entre los sistemas del cliente y Odoo. Además, se mejora la visibilidad de esta información dentro de las vistas de las órdenes de venta.
                         </p>
-                    </div>
+
+                        <p class="text-lg text-gray-700" style="text-align: justify;">
+                            Con esta funcionalidad, Odoo puede gestionar y vincular las referencias externas de las órdenes de compra a las facturas y órdenes 
+                            de venta de manera automática, asegurando una integración más fluida entre los sistemas del cliente y Odoo. Además, se mejora la 
+                            visibilidad de esta información dentro de las vistas de las órdenes de venta.
+                        </p>
+                    </div>      
                 </div>
 
                 <!-- Línea Continua 1 -->
-                <div class="text-center my-8">
+                <div class="text-center my-8">          
                     <hr class="border-t-2 border-blue-600 w-1/2 mx-auto" style="margin-bottom:3px;">
                 </div>
 
@@ -58,23 +65,19 @@ Con esta funcionalidad, Odoo puede gestionar y vincular las referencias externas
                         <ul class="space-y-3 text-blue-800">
                             <li class="flex items-start">
                                 <span class="mr-2">✔️</span>
-                                Automatiza la herencia de información desde el contacto principal a los contactos hijos.
+                                Agrega un campo "Orden de compra" en las facturas y órdenes de venta para almacenar referencias externas de órdenes de compra.
                             </li>
                             <li class="flex items-start">
                                 <span class="mr-2">✔️</span>
-                                Actualiza automáticamente las direcciones de facturación y envío en las órdenes de venta.
+                                Vincula automáticamente las referencias externas con las facturas y órdenes de venta en Odoo.
                             </li>
                             <li class="flex items-start">
                                 <span class="mr-2">✔️</span>
-                                Permite marcar contactos como clientes mediante el campo "Es cliente".
+                                Mejora la visibilidad de las referencias externas en las vistas de facturas y órdenes de venta.
                             </li>
                             <li class="flex items-start">
                                 <span class="mr-2">✔️</span>
-                                Identifica clientes gubernamentales con el campo "Es del gobierno".
-                            </li>
-                            <li class="flex items-start">
-                                <span class="mr-2">✔️</span>
-                                Gestiona el nombre comercial del cliente con el campo "Nombre comercial".
+                                Facilita la integración entre los sistemas del cliente y Odoo.
                             </li>
                         </ul>
                     </div>
@@ -85,19 +88,19 @@ Con esta funcionalidad, Odoo puede gestionar y vincular las referencias externas
                         <ul class="space-y-3 text-blue-800">
                             <li class="flex items-start">
                                 <span class="mr-2">🔍</span>
-                                Verificar que los campos "Nombre comercial" y "Referencia del cliente" estén correctamente configurados en el contacto principal.
+                                Verificar que las referencias externas de las órdenes de compra estén correctamente asignadas en las órdenes de venta.
                             </li>
                             <li class="flex items-start">
                                 <span class="mr-2">📝</span>
-                                Utilizar el campo "Es del gobierno" para identificar clientes gubernamentales y aplicar reglas específicas.
+                                Utilizar el campo "Orden de compra" para mantener un registro claro de las referencias externas.
                             </li>
                             <li class="flex items-start">
                                 <span class="mr-2">📊</span>
-                                Asegurar que las direcciones de facturación y envío estén actualizadas en las órdenes de venta.
+                                Asegurar que las referencias externas estén correctamente vinculadas a las facturas y órdenes de venta.
                             </li>
                             <li class="flex items-start">
                                 <span class="mr-2">📂</span>
-                                Mantener una estructura clara de contactos principales y contactos hijos para facilitar la herencia de información
+                                Mantener una estructura clara de referencias externas para facilitar la gestión.
                             </li>
                         </ul>
                     </div>
@@ -108,19 +111,19 @@ Con esta funcionalidad, Odoo puede gestionar y vincular las referencias externas
                         <ul class="space-y-3 text-blue-800">
                             <li class="flex items-start">
                                 <span class="mr-2">⚠️</span>
-                                La eliminación de la validación del RFC (VAT) puede permitir el ingreso de formatos no estándar, aunque no afecta la funcionalidad del sistema.
+                                El campo "Orden de compra" no representa una orden de compra dentro de Odoo, sino una referencia externa.
                             </li>
                             <li class="flex items-start">
                                 <span class="mr-2">🔄</span>
-                                Validar que los contactos hijos hereden correctamente la información del contacto principal.
+                                Validar que las referencias externas estén correctamente configuradas antes de crear facturas.
                             </li>
                             <li class="flex items-start">
                                 <span class="mr-2">📈</span>
-                                Monitorear el rendimiento al manejar un gran número de contactos y órdenes de venta.
+                                Monitorear el rendimiento al manejar un gran número de referencias externas.
                             </li>
                             <li class="flex items-start">
                                 <span class="mr-2">🔗</span>
-                                Verificar la integridad de los datos al importar o migrar información de clientes.
+                                Verificar la integridad de los datos al importar o migrar información de referencias externas.
                             </li>
                         </ul>
                     </div>
