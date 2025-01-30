@@ -1,3 +1,4 @@
+from odoo import fields, models, api
 class PurchaseOrderLineInherit(models.Model):
     _inherit = 'purchase.order.line'
 
