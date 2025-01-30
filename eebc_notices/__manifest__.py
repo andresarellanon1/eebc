@@ -8,7 +8,7 @@
         Este modulo es para los avisos.
 
     """,
-    'depends': ['purchase', 'account', 'base', 'sale_stock', 'stock'],
+    'depends': ['purchase', 'account', 'base', 'sale_stock', 'stock', "purchase"],
 
     "data": [
         "security/ir.model.access.csv",
@@ -19,6 +19,10 @@
         "wizard/select_notice_wizard_view.xml",
         "wizard/wizard_selection_line_view.xml",
         "wizard/wizard_selection_lot_line_view.xml",
+        "wizard/product_replenish_aviso_wizard_view.xml",
+        "views/purchase_order_line_view.xml",
+
+
 
 
 
