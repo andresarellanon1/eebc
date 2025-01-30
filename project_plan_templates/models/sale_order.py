@@ -236,7 +236,7 @@ class SaleOrder(models.Model):
             'for_modification': False
         }) for line in lines]
 
-    def prep_task_line_section_line(self, line)
+    def prep_task_line_section_line(self, line):
         return(0, 0, {
             'name': line.name,
             'display_type': line.display_type or 'line_section',
