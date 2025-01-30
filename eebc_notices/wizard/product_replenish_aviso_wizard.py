@@ -14,6 +14,16 @@ class ProductReplenishAvisoWizard(models.TransientModel):
     total_qty = fields.Float(string="Total Quantity", readonly=True)
     aviso_lines = fields.One2many('product.replenish.aviso.line.wizard', 'wizard_id', string="Aviso Lines")
 
+    def _get_replenishment_order_notification_link(self, purchase_order):
+        """
+        Genera un enlace a la orden de compra.
+        """
+        action = self.env.ref('purchase.action_rfq_form')
+        return [{
+            'label': purchase_order.display_name,
+            'url': f'#action={action.id}&id={purchase_order.id}&model=purchase.order',
+        }]
+
     def action_confirm(self):
         self.ensure_one()
         for line in self.aviso_lines:
@@ -43,17 +53,24 @@ class ProductReplenishAvisoWizard(models.TransientModel):
                 'date_planned': self.replenish_id.date_planned,
             })
 
+        # Generar el enlace a la orden de compra
+        notification_link = self._get_replenishment_order_notification_link(purchase_order)
+
         # Mostrar notificación que redirige a la orden de compra
-        return {
+        notification = {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
                 'title': _('Purchase Order Created'),
                 'message': _('A new purchase order has been created.'),
-                'links': [{
-                    'label': purchase_order.name,
-                    'url': f'/web#id={purchase_order.id}&model=purchase.order&view_type=form',
-                }],
+                'links': notification_link,
                 'sticky': True,  # La notificación permanecerá visible hasta que el usuario la cierre
             }
+        }
+
+        # Cerrar el wizard automáticamente
+        return {
+            'type': 'ir.actions.act_window_close',
+            'infos': {'done': True},
+            'next': notification,  # Mostrar la notificación después de cerrar el wizard
         }
