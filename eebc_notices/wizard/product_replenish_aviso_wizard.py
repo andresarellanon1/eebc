@@ -7,7 +7,6 @@ _logger = logging.getLogger(__name__)
 
 class ProductReplenishAvisoWizard(models.TransientModel):
     _name = 'product.replenish.aviso.wizard'
-
     _description = 'Wizard for Aviso Details'
 
     replenish_id = fields.Many2one('product.replenish', string="Replenish", required=True)
