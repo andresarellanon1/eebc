@@ -58,10 +58,10 @@ class SaleOrder(models.Model):
         task_lines = []
         for task in line:
             if task.display_type == 'line_section':
-                task_lines.append(self.prep_task_line_section_line())
+                task_lines.append(self.prep_task_line_section_line(task))
             else:
-                task_lines.append(self.prep_task_line_section_line())
-                for _ in range(int(task.service_qty)):  # Repite según la cantidad de service_qty
+                task_lines.append(self.prep_task_line_section_line(task))
+                for _ in range(int(task.service_qty)):
                     task_lines += self.prep_task_time_lines(task)
             #task_lines += self.prep_task_time_lines(task)
 
