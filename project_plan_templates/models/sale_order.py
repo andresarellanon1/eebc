@@ -108,7 +108,6 @@ class SaleOrder(models.Model):
                         picking_lines.append(self.prep_picking_section_line(picking, True))
                     else:
                         if picking.for_create:
-                            picking_lines.append(self.prep_picking_section_line(picking, True))
                             picking_lines += self.prep_picking_lines(picking)
                 else:
                     picking_lines.append(self.prep_picking_section_line(picking, False))
