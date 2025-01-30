@@ -12,7 +12,7 @@ class TaskTimeLines(models.Model):
     product_id = fields.Many2one('product.template', string="Mano de obra")
     product_domain = fields.Many2many('product.template', store=True)
 
-    description = fields.Char(string="Descripción", required=True)
+    description = fields.Char(string="Descripción")
     estimated_time = fields.Float(string="Horas estimadas")
     work_shift = fields.Float(string='Jornadas Laborales')
 
