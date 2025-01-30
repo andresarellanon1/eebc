@@ -1,0 +1,26 @@
+<odoo>
+
+<record id="view_product_replenish_aviso_wizard" model="ir.ui.view">
+    <field name="name">Replenish Aviso Wizard</field>
+    <field name="model">product.replenish.aviso.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Configuración de Avisos">
+            <group>
+                <field name="aviso_name"/>
+                <field name="folio"/>
+                <field name="aviso_quantity"/>
+            </group>
+            <footer>
+                <button name="confirm_aviso_creation"
+                    string="Confirmar"
+                    type="object"
+                    class="btn-primary"/>
+                <button string="Cancelar"
+                    class="btn-secondary"
+                    special="cancel"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+</odoo>
