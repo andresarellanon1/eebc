@@ -6,29 +6,37 @@ _logger = logging.getLogger(__name__)
 class ProductReplenishInherit(models.TransientModel):
     _inherit = 'product.replenish'
 
-    is_aviso = fields.Boolean(string="Es aviso", compute="_compute_is_aviso")
+    has_aviso = fields.Boolean(compute="_compute_has_aviso", string="Con Aviso")
+    aviso_lines = fields.One2many('product.replenish.aviso.line', 'replenish_id', string="Aviso Lines")
 
     @api.depends('product_id')
-    def _compute_is_aviso(self):
-        """Detecta si el producto tiene el atributo 'Con aviso'"""
-        for record in self:
-            has_aviso = any(value.name == 'Con aviso' for value in record.product_id.attribute_line_ids.mapped('value_ids'))
-            record.is_aviso = has_aviso
-            _logger.warning(f"Producto {record.product_id.name} tiene aviso: {record.is_aviso}")
+    def _compute_has_aviso(self):
+        for rec in self:
+            rec.has_aviso = rec.product_id.aviso == "Con aviso"
 
-    def launch_replenishment(self):
-        """Si el producto tiene aviso, mostrar wizard para capturar los datos"""
-        if self.is_aviso:
-            return {
-                'name': 'Configurar Aviso',
-                'type': 'ir.actions.act_window',
-                'res_model': 'product.replenish.aviso.wizard',
-                'view_mode': 'form',
-                'target': 'new',
-                'context': {
-                    'default_replenish_id': self.id,
-                    'default_quantity': self.quantity,
-                    'default_product_id': self.product_id.id
-                }
-            }
-        return super().launch_replenishment()
+    def action_open_aviso_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Aviso Details'),
+            'res_model': 'product.replenish.aviso.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_replenish_id': self.id,
+                'default_total_qty': self.product_qty,
+            },
+        }
+
+    def _prepare_run_values(self):
+        res = super(ProductReplenishInherit, self)._prepare_run_values()
+        if self.has_aviso and self.aviso_lines:
+            # Agregar información de avisos a las líneas de la orden de compra
+            res['order_line'] = [(0, 0, {
+                'product_id': self.product_id.id,
+                'product_qty': line.quantity,
+                'aviso_name': line.name,
+                'aviso_folio': line.folio,
+                'aviso_quantity': line.quantity,
+            }) for line in self.aviso_lines]
+        return res
