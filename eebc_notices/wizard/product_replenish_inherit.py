@@ -24,7 +24,7 @@ class ProductReplenishInherit(models.TransientModel):
             'target': 'new',
             'context': {
                 'default_replenish_id': self.id,
-                'default_total_qty': self.product_qty,
+                'default_total_qty': self.quantity,
             },
         }
 
