@@ -1,6 +1,6 @@
 {
     "name": "Customer Sales Credit",
-    "summary": "Gestión y validación de crédito de clientes.","
+    "summary": "Gestión y validación de crédito de clientes.",
     "description": """
             Este módulo se centra en la gestión del crédito de los clientes dentro de Odoo. Permite verificar y controlar el crédito de los partners, 
             bloquear ventas si se excede el límite de crédito, y ofrecer una opción de "Llave de crédito" para excepciones. Integra estas funcionalidades 
