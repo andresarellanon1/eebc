@@ -14,7 +14,7 @@
             </xpath>
             <xpath expr="//field[@name='quantity']" position="after">
                 <field name="has_aviso" invisible="1"/>
-                <button name="action_open_aviso_wizard" string="Add Aviso Details" type="object" class="oe_highlight" attrs="{'invisible': [('has_aviso', '=', False)]}"/>
+                <button name="action_open_aviso_wizard" string="Add Aviso Details" type="object" class="oe_highlight" invisible="not has_aviso"/>
             </xpath>
         </field>
     </record>
