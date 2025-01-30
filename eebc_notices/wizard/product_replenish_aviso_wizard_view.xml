@@ -5,6 +5,10 @@
         <field name="model">product.replenish</field>
         <field name="inherit_id" ref="stock.view_product_replenish"/>
         <field name="arch" type="xml">
+
+        <xpath expr="//field[@name='product_id']" position="after">
+            <field name="has_aviso" invisible="1"/>
+        </xpath>
             <xpath expr="//footer/button[@name='launch_replenishment']" position="replace">
                 <button name="action_open_aviso_wizard" string="Add Aviso Details" type="object" class="btn-primary" invisible="not has_aviso"/>
                 <button name="launch_replenishment" string="Confirm" type="object" class="btn-primary" invisible="has_aviso"/>
