@@ -8,7 +8,7 @@
         Este modulo es para los avisos.
 
     """,
-    'depends': ['purchase', 'account', 'base', 'sale_stock', 'stock', "purchase"],
+    'depends': ['purchase', 'account', 'base', 'sale_stock', 'stock', "purchase", "purchase_stock"],
 
     "data": [
         "security/ir.model.access.csv",

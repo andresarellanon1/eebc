@@ -6,6 +6,9 @@ from . import wizard_selection_line
 from . import wizard_selection_lot_line
 from . import product_replenish_inherit
 from . import product_replenish_aviso_wizard
+from . import product_replenish_aviso_line
+from . import product_replenish_aviso_line_wizard
+
 
 
 
