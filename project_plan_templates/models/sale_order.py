@@ -2,7 +2,6 @@ from odoo import fields, models, api
 from odoo.exceptions import UserError, ValidationError
 import json
 import logging
-logger = logging.getLogger(_name_)
 
 class SaleOrder(models.Model):
 
@@ -165,6 +164,7 @@ class SaleOrder(models.Model):
                 sale.project_plan_lines = plan_lines
 
                 sale.update_picking_lines()
+                sale.update_task_lines()
 
             sale.state = 'budget'
             
