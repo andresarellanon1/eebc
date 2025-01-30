@@ -22,7 +22,7 @@ class ProductReplenishAvisoWizard(models.TransientModel):
         if sum(line.quantity for line in self.aviso_lines) > self.total_qty:
             raise ValidationError(_("The total quantity of avisos cannot exceed the total quantity specified."))
 
-        # Crear una nueva orden de compra
+        # Crear una nueva orden de compra en estado "Borrador"
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.replenish_id.supplier_id.partner_id.id,
             'date_order': fields.Datetime.now(),
@@ -38,19 +38,22 @@ class ProductReplenishAvisoWizard(models.TransientModel):
                 'name': f"Aviso: {line.name} - Folio: {line.folio}",  # Incluir nombre y folio del aviso
                 'aviso_name': line.name,  # Almacenar el nombre del aviso
                 'aviso_folio': line.folio,  # Almacenar el folio del aviso
-                "aviso_quantity": line.quantity,
+                'aviso_quantity': line.quantity,  # Almacenar la cantidad del aviso
                 'price_unit': self.replenish_id.product_id.standard_price,  # Precio estándar del producto
                 'date_planned': self.replenish_id.date_planned,
             })
 
-        # Confirmar la orden de compra
-        purchase_order.button_confirm()
-
-        # Retornar una acción para abrir la orden de compra creada
+        # Mostrar notificación que redirige a la orden de compra
         return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'purchase.order',
-            'res_id': purchase_order.id,
-            'view_mode': 'form',
-            'target': 'current',
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Purchase Order Created'),
+                'message': _('A new purchase order has been created.'),
+                'links': [{
+                    'label': purchase_order.name,
+                    'url': f'/web#id={purchase_order.id}&model=purchase.order&view_type=form',
+                }],
+                'sticky': True,  # La notificación permanecerá visible hasta que el usuario la cierre
+            }
         }
