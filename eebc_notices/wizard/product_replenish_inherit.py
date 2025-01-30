@@ -12,7 +12,7 @@ class ProductReplenishInherit(models.TransientModel):
     @api.depends('product_id')
     def _compute_has_aviso(self):
         for rec in self:
-            rec.has_aviso = rec.product_id.aviso == "Con aviso"
+            rec.has_aviso = rec.product_id.is_aviso
 
     def action_open_aviso_wizard(self):
         self.ensure_one()
