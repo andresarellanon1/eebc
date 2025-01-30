@@ -23,4 +23,4 @@ class ProductReplenishAvisoWizard(models.TransientModel):
             'folio': line.folio,
             'quantity': line.quantity,
         }) for line in self.aviso_lines]
-        return self.replenish_id.action_confirm()
+        return self.replenish_id.launch_replenishment() 
