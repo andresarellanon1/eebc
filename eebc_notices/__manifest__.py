@@ -4,9 +4,11 @@
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
+    "summary": "Gestión de productos con aviso especial.",
     'description': """
-        Este modulo es para los avisos.
-
+        Módulo de gestión de productos con seguimiento especial para inventarios y compras. Permite controlar los movimientos de productos relacionados con un aviso de prueba, asegurando trazabilidad 
+        precisa mediante la integración con registros de inventario y avisos asociados. Gestiona la creación de lotes, números de serie y validación de existencias, mejorando la visibilidad y 
+        eficiencia en los movimientos de productos.
     """,
     'depends': ['purchase', 'account', 'base', 'sale_stock', 'stock', "purchase", "purchase_stock"],
 
