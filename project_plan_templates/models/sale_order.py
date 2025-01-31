@@ -183,7 +183,7 @@ class SaleOrder(models.Model):
                 sale.order_line = [(0, 0, {
                     'product_id': line.product_id.id,
                     'display_type': line.display_type,
-                    'name': line.name + '* line.product_uom_qty',
+                    'name': line.name + ' * ' + line.product_uom_qty,
                     'product_uom_qty': 0,
                     'price_unit': line.price_unit,
                     'discount': line.discount,
@@ -356,7 +356,8 @@ class SaleOrder(models.Model):
                     'default_location_dest_id': self.project_id.location_dest_id.id,
                     'default_scheduled_date': self.project_id.scheduled_date,
                     'default_picking_type_id': self.project_id.default_picking_type_id.id,
-                    'default_sale_order_id': self.id
+                    'default_sale_order_id': self.id,
+                    'default_plan_total_cost': self.plan_total_cost
                 }
             }
         else:
