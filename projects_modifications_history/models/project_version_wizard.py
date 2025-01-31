@@ -11,7 +11,7 @@ class ProjectVersionWizard(models.TransientModel):
     modification_date = fields.Datetime(string='Fecha de modificación')
     modification_motive = fields.Html(string='Motivo de los cambios')
     modified_by = fields.Many2one('res.users', string='Modificado por', required=True)
-    plan_total_cost = fields.Float(string="Costo total",  compute='_compute_total_cost', default=0.0)
+    plan_total_cost = fields.Float(string="Costo total")
 
     project_plan_lines = fields.Many2many(
         'project.plan.line',
@@ -49,10 +49,10 @@ class ProjectVersionWizard(models.TransientModel):
     # Afterward, it creates a new entry in the version history with the current modification details.
     # Finally, it saves the updated project information and closes the wizard window.
 
-    @api.depends('project_picking_lines.subtotal')
-    def _compute_total_cost(self):
-        for plan in self:
-            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+    # @api.depends('project_picking_lines.subtotal')
+    # def _compute_total_cost(self):
+    #     for plan in self:
+    #         plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
 
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
@@ -134,7 +134,7 @@ class ProjectVersionWizard(models.TransientModel):
             'project_version_history_id': history.id,
             'modification_date': self.modification_date,
             'modified_by': self.modified_by.id,
-            'partner_id': self.contact_id,
+            'partner_id': self.contact_id.id,
             'modification_motive': self.modification_motive,
             'project_plan_lines': [(6, 0, self.sale_order_id.project_plan_lines.ids)],
             'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
