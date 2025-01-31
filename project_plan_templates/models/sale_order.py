@@ -362,14 +362,14 @@ class SaleOrder(models.Model):
         else:
 
             return {
-                'name': 'Projects creation',  
+                'name': project_name,  
                 'view_mode': 'form',  
                 'res_model': 'project.creation.wizard',  
                 'type': 'ir.actions.act_window',  
                 'target': 'new',  
                 'context': {
                     'default_sale_order_id': self.id,
-                    'deafult_client_id': self.partner_id.id,
+                    'deafult_client_id': self.partner_id,
                     'default_actual_sale_order_id': self.id,
                     'default_project_name': project_name,
                     'default_description': project_description

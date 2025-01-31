@@ -82,8 +82,8 @@
                 <page name="task_time_lines" string="Mano de obra" invisible="state in ('draft') or is_project != True">
                     <field name="task_time_lines" widget="section_and_note_one2many" nolabel="1">
                         <tree editable="editable_bottom" style="width: 100%;">
-                            <field name="name"/>
-                            <field name="display_type"/>
+                            <field name="name" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
                             <field name="product_domain" column_invisible="1"/>
                             <field name="product_id"/>
                             <field name="description"/>
