@@ -69,10 +69,6 @@ class ProductPricelist(models.Model):
                     product_templates = self.env["product.template"].search([('categ_id', '=', category.id)])
                     product_templates._compute_product_pricelist_line_ids()
                     
-            # if items_category_relation.categ_id:
-            #     product_templates = self.env["product.template"].search([('categ_id', '=', items_category_relation.categ_id.id)])
-            #     product_templates._compute_product_pricelist_line_ids()
-
             if items_all_stock:
                 product_templates = self.env["product.template"].search([]).with_prefetch()
                 batch_size = 100
