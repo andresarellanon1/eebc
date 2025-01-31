@@ -57,8 +57,8 @@ class ProjectVersionWizard(models.TransientModel):
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
         for record in self:
-            record.project_picking_lines = [(5, 0, 0)]
-            record.project_plan_lines = [(5, 0, 0)]
+            # record.project_picking_lines = [(5, 0, 0)]
+            # record.project_plan_lines = [(5, 0, 0)]
 
             plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
             picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
@@ -75,6 +75,9 @@ class ProjectVersionWizard(models.TransientModel):
 
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
+
+        logger.warning(f"Wizard Plan Lines IDs: {self.wizard_plan_lines.ids}")
+        logger.warning(f"Wizard Picking Lines IDs: {self.wizard_picking_lines.ids}")
 
         project.write({
             'project_plan_lines': [(4, line.id) for line in self.wizard_plan_lines],
