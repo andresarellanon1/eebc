@@ -362,6 +362,7 @@ class SaleOrder(models.Model):
                     'default_date': self.project_id.date
                 }
             }
+            
         else:
 
             return {
