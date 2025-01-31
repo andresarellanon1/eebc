@@ -48,3 +48,13 @@ class StockPicking(models.Model):
             histories.write({'state': 'canceled'})  # Cambia los estados a 'canceled'
 
         return res
+
+    def action_open_split_wizard(self):
+        return {
+            'name': 'Dividir Líneas',
+            'type': 'ir.actions.act_window',
+            'res_model': 'split.move.line.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_picking_id': self.id},
+        }
