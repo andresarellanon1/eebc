@@ -34,7 +34,6 @@
                             </group>
                             <group>
                                 <field name="modification_date" readonly="1"/>
-                                <field name="partner_id" readonly="1"/>
                             </group>
                         </group>
                         <notebook>

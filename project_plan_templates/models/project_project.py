@@ -21,6 +21,7 @@ class ProjectProject(models.Model):
     scheduled_date = fields.Datetime(string='Fecha programada de entrega')
     contact_id = fields.Many2one('res.partner', string='Contacto')
     date_start = fields.Datetime(string="Fecha de inicio planeada")
+    client_id = fields.Many2one('res.partner', string="Cliente")
 
     def create_project_tasks(self, location_id, location_dest_id, scheduled_date):
         for project in self:
