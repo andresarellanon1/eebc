@@ -114,7 +114,7 @@ class ProjectVersionWizard(models.TransientModel):
                 'modified_by': self.modified_by.id,
                 'modification_motive': self.modification_motive,
                 'project_name': self.project_id.name,
-                'client_id': self.project.client_id.id,
+                'client_id': self.project_id.client_id.id,
             })
         else:
             history = existing_history  # Use the existing history if found.
