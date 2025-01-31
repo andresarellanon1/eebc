@@ -3,12 +3,15 @@
     <record id="view_product_replenish_form_inherit_stock" model="ir.ui.view">
         <field name="name">product.replenish.form.inherit.stock</field>
         <field name="model">product.replenish</field>
-        <field name="inherit_id" ref="purchase_stock.view_product_replenish_form_inherit_stock"/>
+        <field name="inherit_id" ref="stock.view_product_replenish"/>
         <field name="arch" type="xml">
-       
-            <xpath expr="//field[@name='supplier_id']" position="after">
-                <field name="has_aviso" invisible="1"/>
-                <button name="action_open_aviso_wizard" string="Add Aviso Details" type="object" class="oe_highlight" invisible="not has_aviso"/>
+
+        <xpath expr="//field[@name='product_id']" position="after">
+            <field name="has_aviso" invisible="1"/>
+        </xpath>
+            <xpath expr="//footer/button[@name='launch_replenishment']" position="replace">
+                <button name="action_open_aviso_wizard" string="Add Aviso Details" type="object" class="btn-primary" invisible="not has_aviso"/>
+                <button name="launch_replenishment" string="Confirm" type="object" class="btn-primary" invisible="has_aviso"/>
             </xpath>
         </field>
     </record>

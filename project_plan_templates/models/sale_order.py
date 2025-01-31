@@ -60,7 +60,6 @@ class SaleOrder(models.Model):
             if task.display_type == 'line_section':
                 task_lines.append(self.prep_task_line_section_line(task))
             else:
-                task_lines.append(self.prep_task_line_section_line(task))
                 for _ in range(int(task.service_qty)):
                     task_lines += self.prep_task_time_lines(task)
             #task_lines += self.prep_task_time_lines(task)
@@ -108,7 +107,6 @@ class SaleOrder(models.Model):
                         picking_lines.append(self.prep_picking_section_line(picking, True))
                     else:
                         if picking.for_create:
-                            picking_lines.append(self.prep_picking_section_line(picking, True))
                             picking_lines += self.prep_picking_lines(picking)
                 else:
                     picking_lines.append(self.prep_picking_section_line(picking, False))
