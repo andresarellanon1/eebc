@@ -14,7 +14,8 @@ class ProjecVersionLines(models.Model):
     project_name = fields.Char(string='Nombre del proyecto')
     project_version_history_id = fields.Many2one('project.version.history', string="Historial del proyecto")
     plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
-
+    partner_id = fields.Many2one('res.partner', string='Cliente')
+    
     project_plan_lines = fields.Many2many(
         'project.plan.line',
         string='Planeación',
