@@ -183,7 +183,7 @@ class SaleOrder(models.Model):
                 sale.order_line = [(0, 0, {
                     'product_id': line.product_id.id,
                     'display_type': line.display_type,
-                    'name': line.name + ' * ' + line.product_uom_qty,
+                    'name': line.name + ' * ' + str(line.product_uom_qty),
                     'product_uom_qty': 0,
                     'price_unit': line.price_unit,
                     'discount': line.discount,
@@ -247,7 +247,7 @@ class SaleOrder(models.Model):
     
     def prep_picking_section_line(self, line, for_create, for_task):
         return (0, 0, {
-            'name': line.name + ' * ' + str(line.service_qty) if for_task else line.name,
+            'name': line.name,
             'display_type': line.display_type or 'line_section',
             'product_id': False,
             'sequence': 0,
