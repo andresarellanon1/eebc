@@ -1,7 +1,10 @@
 {
     'name': 'Planeación de proyectos',
+    'summary': 'Gestión de tareas, productos e inventarios.',
     'description': """
-            Este modulo comprende las configuraciones para la generacion de plantillas de proyectos.
+            Este módulo de Odoo facilita la gestión de tareas, productos y logística en proyectos. Permite asignar productos a tareas, 
+            controlar el inventario y calcular las horas de trabajo necesarias. Además, automatiza los movimientos de stock entre 
+            ubicaciones, optimizando la logística interna.
     """,
     'version': '17.0.1.001',
     'website': 'https://quadrosoluciones.com',
