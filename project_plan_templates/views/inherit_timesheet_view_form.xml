@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="inherit_timesheet_view_form" model="ir.ui.view">
-        <field name="name">inherit.timesheet.view.form</field>  
+    <record id="inherit_project_view_form" model="ir.ui.view">
+        <field name="name">inherit.project.view.form</field>  
         <field name="model">project.project</field>  
         <field name="inherit_id" ref="project.edit_project"/>  
         <field name="arch" type="xml">
@@ -13,7 +13,7 @@
             </xpath>
             <xpath expr="//notebook" position="inside">
                 
-                <page name="Planeacion" string="Tareas del proyecto" invisible="1">
+                <page name="Planeacion" string="Tareas del proyecto">
                     <div name="planning_lines">
                         <field name="project_plan_lines" widget="section_and_note_one2many" mode="tree,kanban" nolabel="1">
                             <tree editable="editable_bottom" style="width: 100%;"> 
@@ -38,7 +38,7 @@
                     </div>
                 </page>
                 
-                <page name="Stock" string="Inventario" invisible="1">
+                <page name="Stock" string="Inventario">
                     <div name="stock_lines" nolabel="1">
                         <field name="project_picking_lines" widget="section_and_note_one2many" mode="tree,kanban" style="width: 100%;"> 
                             <tree editable="editable_bottom">
