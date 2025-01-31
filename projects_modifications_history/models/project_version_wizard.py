@@ -89,7 +89,7 @@ class ProjectVersionWizard(models.TransientModel):
             'project_picking_lines': [(4, line.id) for line in existing_picking_lines] + new_picking_lines,
         })
 
-        self.sale_order_id.project_lines_created()
+        
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id), ('client_id', '=', self.project_id.client_id.id)], limit=1)
 
@@ -111,7 +111,7 @@ class ProjectVersionWizard(models.TransientModel):
 
         # Create any newly added tasks for the project.
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
-
+        self.sale_order_id.project_lines_created()
         # for sale in self.sale_order_id.project_picking_lines:
         #     sale.for_modification = False
 
