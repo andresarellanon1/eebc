@@ -280,6 +280,7 @@ class ProjectCreation(models.TransientModel):
                         'task_timesheet_id': False,
                         'for_create': line.for_create,
                         'for_modification': line.for_modification,
+                        'for_newlines': line.for_newlines,
                         'service_qty': 0
                     }))
                 else:
@@ -294,6 +295,7 @@ class ProjectCreation(models.TransientModel):
                         'display_type': False,
                         'for_create': True,
                         'for_modification': line.for_modification,
+                        'for_newlines': line.for_newlines,
                         'service_qty': line.service_qty
                     }))
         return plan_lines
@@ -312,7 +314,8 @@ class ProjectCreation(models.TransientModel):
                     'quantity': False,
                     'standard_price': False,
                     'subtotal': False,
-                    'for_modification': line.for_modification
+                    'for_modification': line.for_modification,
+                    'for_newlines': line.for_newlines,
                 }))
             else:
                 picking_lines.append((0, 0, {
@@ -325,7 +328,8 @@ class ProjectCreation(models.TransientModel):
                     'standard_price': line.standard_price,
                     'subtotal': line.subtotal,
                     'display_type': False,
-                    'for_modification': line.for_modification
+                    'for_modification': line.for_modification,
+                    'for_newlines': line.for_newlines,
                 }))
         return picking_lines
 

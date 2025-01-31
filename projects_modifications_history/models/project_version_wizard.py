@@ -140,7 +140,8 @@ class ProjectVersionWizard(models.TransientModel):
                             'planned_date_end': False,
                             'project_plan_pickings': False,
                             'task_timesheet_id': False,
-                            'for_create': line.for_create
+                            'for_create': line.for_create,
+                            'for_newlines': line.for_newlines,
                         }))
                     else:
                         plan_lines.append((0, 0, {
@@ -153,7 +154,8 @@ class ProjectVersionWizard(models.TransientModel):
                             'project_plan_pickings': line.project_plan_pickings.id,
                             'task_timesheet_id': line.task_timesheet_id.id,
                             'display_type': False,
-                            'for_create': True
+                            'for_create': True,
+                            'for_newlines': line.for_newlines,
                         }))
         return plan_lines
 
@@ -172,7 +174,8 @@ class ProjectVersionWizard(models.TransientModel):
                         'product_uom_qty': False,
                         'quantity': False,
                         'standard_price': False,
-                        'subtotal': False
+                        'subtotal': False,
+                        'for_newlines': line.for_newlines,
                     }))
                 else:
                     picking_lines.append((0, 0, {
@@ -185,6 +188,7 @@ class ProjectVersionWizard(models.TransientModel):
                         'quantity': line.quantity,
                         'standard_price': line.standard_price,
                         'subtotal': line.subtotal,
-                        'display_type': False
+                        'display_type': False,
+                        'for_newlines': line.for_newlines,
                     }))
         return picking_lines
