@@ -369,7 +369,7 @@ class SaleOrder(models.Model):
                 'target': 'new',  
                 'context': {
                     'default_sale_order_id': self.id,
-                    'deafult_client_id': self.partner_id,
+                    'default_client_id': self.partner_id.id,
                     'default_actual_sale_order_id': self.id,
                     'default_project_name': project_name,
                     'default_description': project_description
