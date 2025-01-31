@@ -5,6 +5,7 @@
         <field name="arch" type="xml">
             <form string="Dividir Líneas">
                 <group>
+                    <field name="picking_id" readonly="1"/>
                     <field name="move_id" domain="[('picking_id', '=', picking_id)]"/>
                     <field name="quantity"/>
                 </group>

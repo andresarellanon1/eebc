@@ -4,6 +4,8 @@ class SplitMoveLineWizard(models.TransientModel):
     _name = 'split.move.line.wizard'
     _description = 'Wizard para dividir líneas de stock.move.line'
 
+    
+    picking_id = fields.Many2one('stock.picking', string='Picking', required=True)
     move_id = fields.Many2one('stock.move', string='Movimiento a Dividir', required=True)
     quantity = fields.Float(string='Cantidad a Dividir', required=True)
 
