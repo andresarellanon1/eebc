@@ -357,7 +357,9 @@ class SaleOrder(models.Model):
                     'default_scheduled_date': self.project_id.scheduled_date,
                     'default_picking_type_id': self.project_id.default_picking_type_id.id,
                     'default_sale_order_id': self.id,
-                    'default_plan_total_cost': self.plan_total_cost
+                    'default_plan_total_cost': self.plan_total_cost,
+                    'default_date_start': self.project_id.date_start,
+                    'default_date': self.project_id.date
                 }
             }
         else:
