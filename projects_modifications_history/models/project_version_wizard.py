@@ -80,8 +80,8 @@ class ProjectVersionWizard(models.TransientModel):
         logger.warning(f"Wizard Picking Lines IDs: {self.wizard_picking_lines.ids}")
 
         project.write({
-            'project_plan_lines': [(6, 0, existing_plan_lines.ids)],
-            'project_picking_lines': [(6, 0, existing_picking_lines.ids)],
+            'project_plan_lines': [(6, 0, self.wizard_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, self.wizard_picking_lines.ids)],
         })
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id), ('client_id', '=', self.project_id.client_id.id)], limit=1)
