@@ -183,7 +183,7 @@ class SaleOrder(models.Model):
                 sale.order_line = [(0, 0, {
                     'product_id': line.product_id.id,
                     'display_type': line.display_type,
-                    'name': line.name,
+                    'name': line.name + '* line.product_uom_qty',
                     'product_uom_qty': 0,
                     'price_unit': line.price_unit,
                     'discount': line.discount,
@@ -369,6 +369,7 @@ class SaleOrder(models.Model):
                 'target': 'new',  
                 'context': {
                     'default_sale_order_id': self.id,
+                    'deafult_client_id': self.partner_id.id,
                     'default_actual_sale_order_id': self.id,
                     'default_project_name': project_name,
                     'default_description': project_description

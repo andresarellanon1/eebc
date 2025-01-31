@@ -85,7 +85,8 @@ class ProjectCreation(models.TransientModel):
         self.create_project_tasks(project)
 
         existing_history = self.env['project.version.history'].search([
-            ('project_id', '=', project.id)
+            ('project_id', '=', project.id), 
+            ('client_id', '=', self.project_id.client_id.id)
         ], limit=1)
 
         if not existing_history:
@@ -94,6 +95,7 @@ class ProjectCreation(models.TransientModel):
                 'modified_by': self.env.user.id,
                 'modification_motive': 'Se ha creado el proyecto',
                 'project_name': project.name,
+                'client_id': self.project.client_id.id,
             })
 
         for sale in self.sale_order_id.project_picking_lines:
