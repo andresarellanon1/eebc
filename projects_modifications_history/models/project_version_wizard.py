@@ -76,34 +76,10 @@ class ProjectVersionWizard(models.TransientModel):
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
 
-        existing_plan_lines = self.prep_plan_lines(project.project_plan_lines)
-        new_plan_lines_data = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
-
-        project.project_plan_lines = [
-            (1, line[1], new_line[2]) if line[2]['name'] == new_line[2]['name'] else (4, line[1])
-            for line in existing_plan_lines
-            for new_line in new_plan_lines_data
-            if line[2]['name'] == new_line[2]['name']
-        ] + [
-            new_line for new_line in new_plan_lines_data
-            if all(new_line[2]['name'] != line[2]['name'] for line in existing_plan_lines)
-        ]
-
-        existing_picking_lines = self.prep_picking_lines(project.project_picking_lines)
-        new_picking_lines_data = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
-
-        project.project_picking_lines = [
-            (1, line[1], new_line[2]) if line[2]['name'] == new_line[2]['name'] else (4, line[1])
-            for line in existing_picking_lines
-            for new_line in new_picking_lines_data
-            if line[2]['name'] == new_line[2]['name']
-        ] + [
-            new_line for new_line in new_picking_lines_data
-            if all(new_line[2]['name'] != line[2]['name'] for line in existing_picking_lines)
-        ]
-
-        project.write({})
-
+        project.write({
+            'project_plan_lines': [(4, line.id) for line in self.wizard_plan_lines],
+            'project_picking_lines': [(4, line.id) for line in self.wizard_picking_lines],
+        })
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id), ('client_id', '=', self.project_id.client_id.id)], limit=1)
 
@@ -151,62 +127,64 @@ class ProjectVersionWizard(models.TransientModel):
     def prep_plan_lines(self, plan):
         plan_lines = []
         for line in plan:
-            if line.use_project_task:
-                if line.display_type == 'line_section':
-                    plan_lines.append((0, 0, {
-                        'name': line.name,
-                        'sequence': line.sequence,
-                        'display_type':  line.display_type or 'line_section',
-                        'description': False,
-                        'use_project_task': True,
-                        'planned_date_begin': False,
-                        'planned_date_end': False,
-                        'project_plan_pickings': False,
-                        'task_timesheet_id': False,
-                        'for_create': line.for_create
-                    }))
-                else:
-                    plan_lines.append((0, 0, {
-                        'name': line.name,
-                        'sequence': line.sequence,
-                        'description': line.description,
-                        'use_project_task': True,
-                        'planned_date_begin': line.planned_date_begin,
-                        'planned_date_end': line.planned_date_end,
-                        'project_plan_pickings': line.project_plan_pickings.id,
-                        'task_timesheet_id': line.task_timesheet_id.id,
-                        'display_type': False,
-                        'for_create': True
-                    }))
+            if line.for_modification:
+                if line.use_project_task:
+                    if line.display_type == 'line_section':
+                        plan_lines.append((0, 0, {
+                            'name': line.name,
+                            'sequence': line.sequence,
+                            'display_type':  line.display_type or 'line_section',
+                            'description': False,
+                            'use_project_task': True,
+                            'planned_date_begin': False,
+                            'planned_date_end': False,
+                            'project_plan_pickings': False,
+                            'task_timesheet_id': False,
+                            'for_create': line.for_create
+                        }))
+                    else:
+                        plan_lines.append((0, 0, {
+                            'name': line.name,
+                            'sequence': line.sequence,
+                            'description': line.description,
+                            'use_project_task': True,
+                            'planned_date_begin': line.planned_date_begin,
+                            'planned_date_end': line.planned_date_end,
+                            'project_plan_pickings': line.project_plan_pickings.id,
+                            'task_timesheet_id': line.task_timesheet_id.id,
+                            'display_type': False,
+                            'for_create': True
+                        }))
         return plan_lines
 
     def prep_picking_lines(self, picking):
         picking_lines = []
         for line in picking:
-            if line.display_type == 'line_section':
-                picking_lines.append((0, 0, {
-                    'name': line.name,
-                    'sequence': line.sequence,
-                    'display_type': line.display_type or 'line_section',
-                    'product_id': False,
-                    'product_uom': False,
-                    'product_packaging_id': False,
-                    'product_uom_qty': False,
-                    'quantity': False,
-                    'standard_price': False,
-                    'subtotal': False
-                }))
-            else:
-                picking_lines.append((0, 0, {
-                    'name': line.product_id.name,
-                    'sequence': line.sequence,
-                    'product_id': line.product_id.id,
-                    'product_uom': line.product_uom.id,
-                    'product_packaging_id': line.product_packaging_id.id,
-                    'product_uom_qty': line.product_uom_qty,
-                    'quantity': line.quantity,
-                    'standard_price': line.standard_price,
-                    'subtotal': line.subtotal,
-                    'display_type': False
-                }))
+            if line.for_modification:
+                if line.display_type == 'line_section':
+                    picking_lines.append((0, 0, {
+                        'name': line.name,
+                        'sequence': line.sequence,
+                        'display_type': line.display_type or 'line_section',
+                        'product_id': False,
+                        'product_uom': False,
+                        'product_packaging_id': False,
+                        'product_uom_qty': False,
+                        'quantity': False,
+                        'standard_price': False,
+                        'subtotal': False
+                    }))
+                else:
+                    picking_lines.append((0, 0, {
+                        'name': line.product_id.name,
+                        'sequence': line.sequence,
+                        'product_id': line.product_id.id,
+                        'product_uom': line.product_uom.id,
+                        'product_packaging_id': line.product_packaging_id.id,
+                        'product_uom_qty': line.product_uom_qty,
+                        'quantity': line.quantity,
+                        'standard_price': line.standard_price,
+                        'subtotal': line.subtotal,
+                        'display_type': False
+                    }))
         return picking_lines
