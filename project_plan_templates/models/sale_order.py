@@ -283,7 +283,7 @@ class SaleOrder(models.Model):
         for plan in line.product_id.project_plan_id.project_plan_lines:
             plan_lines.append((0, 0, {
                 #'name': f"{line.product_template_id.name}-{plan.name}",
-                'name': plan.name,
+                'name': plan.name + ' * ' + line.product_uom_qty,
                 'description': plan.description,
                 'use_project_task': True,
                 'sequence': 0,
