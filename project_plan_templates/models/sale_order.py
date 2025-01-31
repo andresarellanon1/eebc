@@ -104,12 +104,12 @@ class SaleOrder(models.Model):
             if picking.for_picking:
                 if picking.for_create:
                     if picking.display_type == 'line_section':
-                        picking_lines.append(self.prep_picking_section_line(picking, True))
+                        picking_lines.append(self.prep_picking_section_line(picking, True, False))
                     else:
                         if picking.for_create:
                             picking_lines += self.prep_picking_lines(picking)
                 else:
-                    picking_lines.append(self.prep_picking_section_line(picking, False))
+                    picking_lines.append(self.prep_picking_section_line(picking, False, True))
 
                 picking.for_picking = False
                 picking.for_modification = False
@@ -144,10 +144,10 @@ class SaleOrder(models.Model):
                 for line in sale.order_line:
                     if line.for_modification:
                         if line.display_type == 'line_section':
-                            plan_lines.append(self.prep_plan_section_line(line, True))
+                            plan_lines.append(self.prep_plan_section_line(line, True, False))
                         else:
                             if line.product_id.project_plan_id:
-                                plan_lines.append(self.prep_plan_section_line(line, False))
+                                plan_lines.append(self.prep_plan_section_line(line, False, True))
                                 plan_lines += self.prep_plan_lines(line)
 
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
@@ -245,9 +245,9 @@ class SaleOrder(models.Model):
             'price_subtotal': False
         })
     
-    def prep_picking_section_line(self, line, for_create):
+    def prep_picking_section_line(self, line, for_create, for_task):
         return (0, 0, {
-            'name': line.name,
+            'name': line.name + ' * ' + str(line.product_uom_qty) if for_task else line.name,
             'display_type': line.display_type or 'line_section',
             'product_id': False,
             'sequence': 0,
@@ -261,9 +261,9 @@ class SaleOrder(models.Model):
             'for_modification': False
         })
     
-    def prep_plan_section_line(self, line, for_create):
+    def prep_plan_section_line(self, line, for_create, for_task):
         return (0, 0, {
-            'name': line.name,
+            'name': line.name + ' * ' + str(line.product_uom_qty) if for_task else line.name,
             'display_type': line.display_type or 'line_section',
             'description': False,
             'sequence': 0,
@@ -362,7 +362,7 @@ class SaleOrder(models.Model):
                     'default_date': self.project_id.date
                 }
             }
-            
+
         else:
 
             return {
