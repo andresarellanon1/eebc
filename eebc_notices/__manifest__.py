@@ -21,6 +21,8 @@
         "wizard/select_notice_wizard_view.xml",
         "wizard/wizard_selection_line_view.xml",
         "wizard/wizard_selection_lot_line_view.xml",
+        "wizard/split_move_line_wizard_views.xml",
+
 
 
 
