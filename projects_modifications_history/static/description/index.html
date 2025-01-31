@@ -2,57 +2,145 @@
     <link rel="stylesheet" href="/projects_modifications_history/static/src/css/index.css">
 </head>
 
-<body>
-    <div class="min-h-screen bg-green-100 text-gray-800 p-8">
-
-        <div class="max-w-7xl mx-auto bg-green-50 p-6 rounded-lg shadow-lg">
-            <!-- Title Section -->
-            <h1 class="text-4xl font-bold text-green-900 mb-4">
-                Project Modification History
-            </h1>
-            <div class="text-lg text-green-700 mb-6">
-                <strong>Version:</strong> 17.0.3.001 <br />
-                <strong>Category:</strong> Sale <br />
-                <strong>Author:</strong> Quadro Soluciones <br />
-                <strong>Website:</strong> <a href="https://quadrosoluciones.com" class="text-green-800 underline"
-                    target="_blank">Quadro Soluciones</a> <br />
-                <strong>Customer Portal:</strong> <a href="https://quadro.odoo.com" class="text-green-800 underline"
-                    target="_blank">Quadro Soluciones Portal</a> <br />
+<body class="bg-gray-50">
+    <div class="min-h-screen p-8">
+        <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md border border-blue-100">
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold text-blue-900 mb-2">
+                    Historial de Modificaciones de Proyectos
+                </h1>
+                <p class="text-blue-600 mb-4">Versión 17 - Quadro Soluciones Tecnológicas</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="https://quadrosoluciones.com" 
+                       class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors">
+                       Sitio Web
+                    </a>
+                    <a href="https://quadro.odoo.com" 
+                       class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors">
+                       Portal Clientes
+                    </a>
+                </div>
             </div>
 
-            <hr class="border-green-700 mb-8" />
+            <!-- Marco Azul para Descripción, Funcionalidad y Advertencias Técnicas -->
+            <div class="border-4 border-blue-500 p-6 rounded-lg">
+                <!-- Descripción -->
+                <div class="max-w-3xl mx-auto my-20" style="width:70%; margin: 20px;">
+                    <div class="text-center p-6 bg-gray-100 rounded-lg">
+                        <p class="text-lg text-gray-700" style="text-align: justify;">
+                            Este módulo está diseñado para gestionar el historial de versiones y modificaciones de los proyectos, permitiendo llevar un 
+                            registro detallado de los cambios realizados en cada etapa. Facilita el seguimiento de las tareas, inventarios y costos 
+                            asociados al proyecto, y ofrece una herramienta para agregar y visualizar las modificaciones mediante un flujo interactivo. 
+                            Cuando se realizan cambios en el proyecto, como la modificación de tareas o inventarios, el sistema genera un registro que 
+                            incluye el motivo del cambio, la persona que lo realizó, y la fecha en que se hizo. A través de un asistente, los usuarios 
+                            pueden revisar y confirmar las modificaciones antes de registrarlas oficialmente, garantizando que todos los detalles del 
+                            proyecto se mantengan actualizados.
+                        </p>
+                    </div>
+                </div>
 
-            <!-- Overview Section -->
-            <h2 class="text-3xl font-semibold text-green-800 mb-4">Overview</h2>
-            <p class="text-lg text-gray-700 mb-6">
-                Placeholder
-            </p>
+                <!-- Línea Continua 1 -->
+                <div class="text-center my-8">
+                    <hr class="border-t-2 border-blue-600 w-1/2 mx-auto" style="margin-bottom:3px;">
+                </div>
 
-            <hr class="border-green-700 mb-8" />
+                <!-- Palabra caracteristicas -->
+                <div class="text-center" >
+                    <h5 class="text-2xl font-semibold text-blue-900" style="margin-bottom:3px;">CARACTERÍSTICAS</h5>
+                </div>
 
-            <!-- Key Features Section -->
-            <h2 class="text-3xl font-semibold text-green-800 mb-4">Key Features</h2>
-            <ul class="list-disc ml-6 text-lg text-gray-700 mb-6">
-                <li><strong>Placeholder:</strong> Placeholder...</li>
-            </ul>
+                <!-- Línea Continua 2 -->
+                <div class="text-center my-8">
+                    <hr class="border-t-2 border-blue-600 w-1/2 mx-auto" style="margin-top:3px;">
+                </div>
 
-            <hr class="border-green-700 mb-8" />
+                <!-- Módulo Funcionalidad -->
+                <div class="space-y-8" style="margin-left:15%; margin-right:15%; display: flex; flex-wrap: wrap; gap: 20px;">
+                    <div class="bg-blue-50 p-6 rounded-lg" style="flex: 1 1 calc(50% - 20px); border: 1px solid #d1e9ff; border-radius: 10px; padding: 20px;">
+                        <h2 class="text-xl font-semibold text-blue-900 mb-3">🏷️ Funcionalidades Principales</h2>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Registra y gestiona el historial de modificaciones de proyectos.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Permite realizar un seguimiento detallado de las tareas y cambios en inventarios asociados al proyecto.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Genera registros con la fecha, motivo de la modificación y la persona que la realizó.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Facilita la visualización y confirmación de cambios a través de un asistente interactivo.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Calcula y actualiza los costos totales de las modificaciones relacionadas con las tareas e inventarios.
+                            </li>
+                        </ul>
+                    </div>
 
-            <!-- Benefits Section -->
-            <h2 class="text-3xl font-semibold text-green-800 mb-4">Benefits</h2>
-            <ul class="list-disc ml-6 text-lg text-gray-700 mb-6">
-                <li><strong>Placeholder:</strong> Placeholder...</li>
-            </ul>
+                    <!-- Guía Rápida -->
+                    <div class="border-l-4 border-blue-200 pl-6" style="flex: 1 1 calc(50% - 20px); background-color: #f0f9ff; padding: 20px; border-radius: 10px; border: 1px solid #d1e9ff;">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-3">📌 Buenas Prácticas</h3>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">🔍</span>
+                                Asegúrate de registrar siempre el motivo de la modificación al actualizar un proyecto.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📝</span>
+                                Revisa todos los cambios antes de confirmar y guardar los registros en el historial.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📊</span>
+                                Mantén actualizada la información de las tareas, inventarios y costos relacionados con el proyecto.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📂</span>
+                                Verifica la consistencia de las tareas y productos antes de registrar nuevas versiones del proyecto.
+                            </li>
+                        </ul>
+                    </div>
 
-            <hr class="border-green-700 mb-8" />
+                    <!-- Advertencias Técnicas -->
+                    <div class="bg-blue-100 p-6 rounded-lg" style="flex: 1 1 calc(50% - 20px); border: 1px solid #d1e9ff; border-radius: 10px; padding: 20px;">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-3">⚠️ Consideraciones Clave</h3>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">⚠️</span>
+                                Al agregar una nueva versión, asegúrate de que todos los datos de tareas e inventarios sean correctos.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">🔄</span>
+                                Si se modifican tareas o inventarios, verifica que se registren adecuadamente en el historial de cambios.
+                            </li>
+                            <li class="flex items-start">
+                                Realiza un seguimiento continuo de las versiones para evitar conflictos o duplicaciones de datos.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">🔗</span>
+                                Confirma que las modificaciones se reflejan de manera precisa en todos los registros relacionados al proyecto.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-            <!-- Contact Section -->
-            <h2 class="text-3xl font-semibold text-green-800 mb-4">Contact</h2>
-            <p class="text-lg text-gray-700 mb-6">
-                For additional support, installation guides, or customization requests, contact
-                <strong>Quadro Soluciones</strong> via our website at <a href="https://www.quadrosoluciones.com"
-                    class="text-green-800 underline" target="_blank">www.quadrosoluciones.com</a>.
-            </p>
+            <!-- Soporte -->
+            <div class="text-center mt-10 pt-6 border-t border-blue-200" style="margin-top: 15px;">
+                <p class="text-blue-600">
+                    ¿Necesitas ayuda? Contacta a nuestro equipo técnico:
+                    <a href="mailto:soporte@quadrosoluciones.com" 
+                        class="text-blue-800 underline hover:text-blue-900">
+                        soporte@quadrosoluciones.com
+                    </a>
+                </p>
+            </div>
+
         </div>
     </div>
 </body>

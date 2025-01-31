@@ -2,57 +2,148 @@
     <link rel="stylesheet" href="/purchase_landing_lines/static/src/css/index.css">
 </head>
 
-<body>
-    <div class="min-h-screen bg-green-100 text-gray-800 p-8">
-
-        <div class="max-w-7xl mx-auto bg-green-50 p-6 rounded-lg shadow-lg">
-            <!-- Title Section -->
-            <h1 class="text-4xl font-bold text-green-900 mb-4">
-                Purchase Landing Lines
-            </h1>
-            <div class="text-lg text-green-700 mb-6">
-                <strong>Version:</strong> 17.0.3.001 <br />
-                <strong>Category:</strong> Purchase <br />
-                <strong>Author:</strong> Quadro Soluciones <br />
-                <strong>Website:</strong> <a href="https://quadrosoluciones.com" class="text-green-800 underline"
-                    target="_blank">Quadro Soluciones</a> <br />
-                <strong>Customer Portal:</strong> <a href="https://quadro.odoo.com" class="text-green-800 underline"
-                    target="_blank">Quadro Soluciones Portal</a> <br />
+<body class="bg-gray-50">
+    <div class="min-h-screen p-8">
+        <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md border border-blue-100">
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold text-blue-900 mb-2">
+                    Líneas de costos destino y compra
+                </h1>
+                <p class="text-blue-600 mb-4">Versión 17 - Quadro Soluciones Tecnológicas</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="https://quadrosoluciones.com" 
+                       class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors">
+                       Sitio Web
+                    </a>
+                    <a href="https://quadro.odoo.com" 
+                       class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors">
+                       Portal Clientes
+                    </a>
+                </div>
             </div>
 
-            <hr class="border-green-700 mb-8" />
+            <!-- Marco Azul para Descripción, Funcionalidad y Advertencias Técnicas -->
+            <div class="border-4 border-blue-500 p-6 rounded-lg">
+                <!-- Descripción -->
+                <div class="max-w-3xl mx-auto my-20" style="width:70%; margin: 20px;">
+                    <div class="text-center p-6 bg-gray-100 rounded-lg">
+                        <p class="text-lg text-gray-700" style="text-align: justify;">
+                            El módulo de Gestión de Costos de Destino y Pedimentos en Órdenes de Compra extiende la funcionalidad 
+                            de Odoo para mejorar la gestión de costos de destino (landed costs) y pedimentos en las órdenes de compra. 
+                            Facilita la asignación de costos de destino a las órdenes de compra y sus líneas, permitiendo una mejor 
+                            organización de los costos adicionales asociados a las compras.
+                        </p>
 
-            <!-- Overview Section -->
-            <h2 class="text-3xl font-semibold text-green-800 mb-4">Overview</h2>
-            <p class="text-lg text-gray-700 mb-6">
-                Placeholder
-            </p>
+                        <p class="text-lg text-gray-700" style="text-align: justify;">
+                            Este módulo también automatiza la integración de los costos de destino desde los documentos de compra, vinculando 
+                            los costos con los traslados de inventario y asegurando que se utilice la fecha de "costo destino" para las conversiones 
+                            de divisa, tanto en las capas de valoración de inventario (stock.valuation.layer) como en los movimientos (stock.move) 
+                            generados por la compra. La automatización se limita a un único registro de costo destino por documento de compra, simplificando 
+                            el proceso de validación y la gestión de los costos asociados al inventario.
+                        </p>
+                    </div>
+                </div>
 
-            <hr class="border-green-700 mb-8" />
+                <!-- Línea Continua 1 -->
+                <div class="text-center my-8">
+                    <hr class="border-t-2 border-blue-600 w-1/2 mx-auto" style="margin-bottom:3px;">
+                </div>
 
-            <!-- Key Features Section -->
-            <h2 class="text-3xl font-semibold text-green-800 mb-4">Key Features</h2>
-            <ul class="list-disc ml-6 text-lg text-gray-700 mb-6">
-                <li><strong>Placeholder:</strong> Placeholder...</li>
-            </ul>
+                <!-- Palabra caracteristicas -->
+                <div class="text-center" >
+                    <h5 class="text-2xl font-semibold text-blue-900" style="margin-bottom:3px;">CARACTERÍSTICAS</h5>
+                </div>
 
-            <hr class="border-green-700 mb-8" />
+                <!-- Línea Continua 2 -->
+                <div class="text-center my-8">
+                    <hr class="border-t-2 border-blue-600 w-1/2 mx-auto" style="margin-top:3px;">
+                </div>
 
-            <!-- Benefits Section -->
-            <h2 class="text-3xl font-semibold text-green-800 mb-4">Benefits</h2>
-            <ul class="list-disc ml-6 text-lg text-gray-700 mb-6">
-                <li><strong>Placeholder:</strong> Placeholder...</li>
-            </ul>
+                <!-- Módulo Funcionalidad -->
+                <div class="space-y-8" style="margin-left:15%; margin-right:15%; display: flex; flex-wrap: wrap; gap: 20px;">
+                    <div class="bg-blue-50 p-6 rounded-lg" style="flex: 1 1 calc(50% - 20px); border: 1px solid #d1e9ff; border-radius: 10px; padding: 20px;">
+                        <h2 class="text-xl font-semibold text-blue-900 mb-3">🏷️ Funcionalidades Principales</h2>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Permite gestionar múltiples pedimentos en una sola orden de compra mediante el campo "Tiene varios pedimentos".
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Integra los costos de destino con los traslados de inventario para una valoración precisa.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Agrega campos personalizados como "Pedimento" y "Costos destino" para facilitar la gestión.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Valida automáticamente los costos de destino cuando se confirma una orden de compra.
+                            </li>
+                        </ul>
+                    </div>
 
-            <hr class="border-green-700 mb-8" />
+                    <!-- Guía Rápida -->
+                    <div class="border-l-4 border-blue-200 pl-6" style="flex: 1 1 calc(50% - 20px); background-color: #f0f9ff; padding: 20px; border-radius: 10px; border: 1px solid #d1e9ff;">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-3">📌 Buenas Prácticas</h3>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">🔍</span>
+                                Verificar que los "Costos destino" estén correctamente asignados a las líneas de la orden de compra.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📝</span>
+                                Utilizar el campo "Tiene varios pedimentos" cuando sea necesario gestionar múltiples pedimentos en una orden de compra.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📊</span>
+                                Asegurar que los traslados de inventario estén correctamente vinculados a los costos de destino.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📂</span>
+                                Mantener una estructura clara de pedimentos y costos de destino para facilitar la gestión.
+                            </li>
+                        </ul>
+                    </div>
 
-            <!-- Contact Section -->
-            <h2 class="text-3xl font-semibold text-green-800 mb-4">Contact</h2>
-            <p class="text-lg text-gray-700 mb-6">
-                For additional support, installation guides, or customization requests, contact
-                <strong>Quadro Soluciones</strong> via our website at <a href="https://www.quadrosoluciones.com"
-                    class="text-green-800 underline" target="_blank">www.quadrosoluciones.com</a>.
-            </p>
+                    <!-- Advertencias Técnicas -->
+                    <div class="bg-blue-100 p-6 rounded-lg" style="flex: 1 1 calc(50% - 20px); border: 1px solid #d1e9ff; border-radius: 10px; padding: 20px;">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-3">⚠️ Consideraciones Clave</h3>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">⚠️</span>
+                                Al activar el campo "Tiene varios pedimentos", el usuario debe asignar manualmente los pedimentos a cada línea de la orden de compra.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">🔄</span>
+                                Validar que los costos de destino estén correctamente configurados antes de confirmar la orden de compra.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📈</span>
+                                Monitorear el rendimiento al manejar un gran número de órdenes de compra y costos de destino.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">🔗</span>
+                                Verificar la integridad de los datos al importar o migrar información de órdenes de compra y costos de destino.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soporte -->
+            <div class="text-center mt-10 pt-6 border-t border-blue-200" style="margin-top: 15px;">
+                <p class="text-blue-600">
+                    ¿Necesitas ayuda? Contacta a nuestro equipo técnico:
+                    <a href="mailto:soporte@quadrosoluciones.com" 
+                        class="text-blue-800 underline hover:text-blue-900">
+                        soporte@quadrosoluciones.com
+                    </a>
+                </p>
+            </div>
+
         </div>
     </div>
 </body>
+

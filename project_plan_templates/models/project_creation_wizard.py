@@ -94,6 +94,7 @@ class ProjectCreation(models.TransientModel):
                 'modified_by': self.env.user.id,
                 'modification_motive': 'Se ha creado el proyecto',
                 'project_name': project.name,
+                'partner_id': self.partner_id,
             })
 
         for sale in self.sale_order_id.project_picking_lines:

@@ -1,7 +1,9 @@
 {
     'name': 'Historial de moficaciones de proyectos',
+    'summary': 'Historial y gestión de versiones de proyectos.',
     'description': """
-            Este modulo comprende el historial para cambios en los proyectos.
+            Gestiona el historial de versiones y modificaciones de proyectos, permitiendo el seguimiento detallado de cambios, tareas, 
+            inventarios y costos. Facilita la actualización y visualización de modificaciones mediante un asistente interactivo.
     """,
     'version': '17.0.1.001',
     'website': 'https://quadrosoluciones.com',
