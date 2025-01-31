@@ -50,6 +50,7 @@
                                                 <field name="service_qty"/>
                                                 <field name="use_project_task" column_invisible="1"/>
                                                 <field name="for_create" column_invisible="1"/>
+                                                <field name="for_newlines" column_invisible="1"/>
                                                 <field name="planned_date_begin" widget="daterange"/>
                                                 <field name="planned_date_end" widget="daterange"/>
                                                 <field name="project_plan_pickings" options="{'create': True}"/>
@@ -68,6 +69,7 @@
                                                 <field name="name"/>
                                                 <field name="product_id"/>
                                                 <field name="product_uom"/>
+                                                <field name="for_newlines" column_invisible="1"/>
                                                 <field name="product_packaging_id"/>
                                                 <field name="quantity"/>  
                                                 <field name="standard_price"/> 

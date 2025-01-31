@@ -34,6 +34,7 @@ class ProjectPickingWizardLine(models.TransientModel):
     company_id = fields.Many2one('res.company', string="Empresa")
     product_uom_qty = fields.Float(string="Demanda")
     for_modification = fields.Boolean()
+    for_new_lines = fields.Boolean()
 
     @api.depends('product_id')
     def _compute_standard_price(self):

@@ -79,6 +79,7 @@ class ProjectPlanPickingLine(models.Model):
     product_uom_qty = fields.Float(string="Demanda")
     for_create = fields.Boolean(default=True)
     for_modification = fields.Boolean(default=True)
+    for_new_lines = fields.Boolean(default=True)
     
 
     # @api.constrains('product_id')

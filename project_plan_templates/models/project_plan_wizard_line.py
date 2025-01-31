@@ -31,3 +31,4 @@ class ProjectPlanWizardLine(models.TransientModel):
     for_create = fields.Boolean()
     for_modification = fields.Boolean()
     service_qty = fields.Float(string="Cantidad")
+    for_new_lines = fields.Boolean()

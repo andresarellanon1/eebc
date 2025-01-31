@@ -127,7 +127,7 @@ class ProjectVersionWizard(models.TransientModel):
     def prep_plan_lines(self, plan):
         plan_lines = []
         for line in plan:
-            if line.for_modification:
+            if line.for_newlines:
                 if line.use_project_task:
                     if line.display_type == 'line_section':
                         plan_lines.append((0, 0, {
@@ -160,7 +160,7 @@ class ProjectVersionWizard(models.TransientModel):
     def prep_picking_lines(self, picking):
         picking_lines = []
         for line in picking:
-            if line.for_modification:
+            if line.for_newlines:
                 if line.display_type == 'line_section':
                     picking_lines.append((0, 0, {
                         'name': line.name,

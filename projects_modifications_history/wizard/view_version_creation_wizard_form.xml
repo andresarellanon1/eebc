@@ -27,7 +27,7 @@
                                 <field name="date" invisible="1" required="date_start"/>
                             </group>
                             <notebook>
-                                <page name="motive" string="Modification motive">
+                                <page name="motive" string="Descripción de la modificación">
                                     <field name="modification_motive"/>
                                 </page>
                                 <page name="tasks" string="Planeacion">
@@ -39,6 +39,7 @@
                                                 <field name="name" readonly="1"/>
                                                 <field name="description" readonly="1"/>
                                                 <field name="for_modification" column_invisible="1"/>
+                                                <field name="for_newlines" column_invisible="1"/>
                                                 <field name="service_qty"/>
                                                 <field name="use_project_task" column_invisible="1"/>
                                                 <field name="planned_date_begin" widget="daterange" readonly="1"/>
@@ -56,6 +57,7 @@
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="company_id" column_invisible="1" readonly="1"/>
                                                 <field name="display_type" column_invisible="True" readonly="1"/>
+                                                <field name="for_newlines" column_invisible="1"/>
                                                 <field name="product_id" readonly="1"/>
                                                 <field name="name" readonly="1"/>
                                                 <field name="product_uom" readonly="1"/>

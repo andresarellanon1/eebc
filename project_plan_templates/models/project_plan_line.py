@@ -43,6 +43,7 @@ class ProjectLines(models.Model):
     for_modification = fields.Boolean(default=True)
     for_picking = fields.Boolean(default=True)
     service_qty = fields.Float(string="Cantidad")
+    for_new_lines = fields.Boolean(default=True)
 
     def action_preview_task(self):
         user_ids = [partner.id for partner in self.partner_id] if self.partner_id else []
