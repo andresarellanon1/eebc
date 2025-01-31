@@ -8,3 +8,4 @@ access_select_notice_wizard,access_select_notice_wizard,model_select_notice_wiza
 access_wizard_selection_line,access_wizard_selection_line,model_wizard_selection_line,base.group_system,1,1,1,0
 access_wizard_selection_lot_line,access_wizard_selection_lot_line,model_wizard_selection_lot_line,base.group_system,1,1,1,0
 
+access_split_move_line_wizard,access_split_move_line_wizard,model_split_move_line_wizard,base.group_system,1,1,1,1
