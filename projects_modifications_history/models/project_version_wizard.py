@@ -80,8 +80,8 @@ class ProjectVersionWizard(models.TransientModel):
         existing_picking_lines = project.project_picking_lines.filtered(lambda l: l.exists())
 
         # Preparar nuevas líneas
-        new_plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
-        new_picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
+        new_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+        new_picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
         # Generar tuplas para agregar nuevas líneas sin borrar las existentes
         project.write({
