@@ -76,13 +76,20 @@ class ProjectVersionWizard(models.TransientModel):
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
 
-        logger.warning(f"Wizard Plan Lines IDs: {self.wizard_plan_lines.ids}")
-        logger.warning(f"Wizard Picking Lines IDs: {self.wizard_picking_lines.ids}")
+        existing_plan_lines = project.project_plan_lines.filtered(lambda l: l.exists())
+        existing_picking_lines = project.project_picking_lines.filtered(lambda l: l.exists())
 
+        # Preparar nuevas líneas
+        new_plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
+        new_picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
+
+        # Generar tuplas para agregar nuevas líneas sin borrar las existentes
         project.write({
-            'project_plan_lines': [(6, 0, self.wizard_plan_lines.ids)],
-            'project_picking_lines': [(6, 0, self.wizard_picking_lines.ids)],
+            'project_plan_lines': [(4, line.id) for line in existing_plan_lines] + new_plan_lines,
+            'project_picking_lines': [(4, line.id) for line in existing_picking_lines] + new_picking_lines,
         })
+
+        self.sale_order_id.project_lines_created()
         # Check if a version history already exists for the current project.
         existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id), ('client_id', '=', self.project_id.client_id.id)], limit=1)
 

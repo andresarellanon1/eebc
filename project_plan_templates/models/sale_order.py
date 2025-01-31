@@ -391,7 +391,12 @@ class SaleOrder(models.Model):
 
             lines_to_remove_picking = sale.project_picking_lines.filtered('for_modification')
             lines_to_remove_picking.unlink()
-        
+
+    def project_lines_created(self):
+        for sale in self.project_plan_lines:
+            sale.for_newlines == False
+        for sale in self.project_picking_lines:
+            sale.for_newlines == False
         
     def action_open_report(self):
         self.ensure_one()

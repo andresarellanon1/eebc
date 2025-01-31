@@ -102,6 +102,8 @@ class ProjectCreation(models.TransientModel):
         for sale in self.sale_order_id.project_picking_lines:
             sale.for_modification = False
 
+        self.sale_order_id.project_lines_created()
+
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
             'modification_date': fields.Datetime.now(),
