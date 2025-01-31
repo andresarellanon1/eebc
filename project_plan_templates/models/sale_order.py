@@ -218,7 +218,9 @@ class SaleOrder(models.Model):
 
     def _prepare_picking_lines(self, lines):
         """Prepara las líneas de picking para asignarlas al pedido."""
-        lines.read(['standard_price', 'subtotal'])
+        lines.flush(['standard_price', 'subtotal'])  
+        lines.invalidate_cache(fnames=['standard_price', 'subtotal'])  
+        lines.read(['standard_price', 'subtotal'])  
         return [(0, 0, {
             'name': line.name,
             'sequence': line.sequence,
