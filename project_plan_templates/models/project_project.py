@@ -72,7 +72,7 @@ class ProjectProject(models.Model):
                                 }))
 
                         task_id = self.env['project.task'].create({
-                            'name': line.name,
+                            'name': line.name + ' * ' * line.service_qty,
                             'project_id': project.id,
                             'stage_id': current_task_type.id,
                             'timesheet_ids': timesheet_data,
