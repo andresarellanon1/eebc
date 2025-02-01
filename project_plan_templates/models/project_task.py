@@ -13,6 +13,8 @@ class ProjectTask(models.Model):
 
     task_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
+    allocated_hours = fields.Float(compute="_compute_allocated_hours")
+
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
         for plan in self:
@@ -32,3 +34,8 @@ class ProjectTask(models.Model):
                 'default_user_id': self.env.user.id,
             }
         }
+
+    @api.depends('timesheet_ids.estimated_time')
+    def _compute_allocated_hours(self):
+        for record in self:
+            record.allocated_hours = sum(self.timesheet_ids.estimated_time)
