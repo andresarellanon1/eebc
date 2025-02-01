@@ -38,4 +38,4 @@ class ProjectTask(models.Model):
     @api.depends('timesheet_ids.estimated_time')
     def _compute_allocated_hours(self):
         for record in self:
-            record.allocated_hours = sum(self.timesheet_ids.estimated_time)
+            record.allocated_hours = sum(record.timesheet_ids.mapped('estimated_time'))
