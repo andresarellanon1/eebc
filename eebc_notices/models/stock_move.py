@@ -1,6 +1,6 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 import logging
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -230,36 +230,15 @@ class StockMove(models.Model):
                 }))
             _logger.warning(f'Líneas creadas: {lines}')
             return lines
+class StockMoveLineInherit(models.Model):
+    _inherit = 'stock.move.line'
 
-    def split_move_lines(self, quantity):
-        """
-        Divide un stock.move en múltiples stock.move.line según la cantidad especificada.
-        """
-        if self.product_uom_qty <= quantity:
-            raise UserError("La cantidad a dividir no puede ser mayor o igual a la cantidad demandada.")
-        
-        # Crear una nueva línea de stock.move.line con la cantidad especificada
-        new_move_line = self.env['stock.move.line'].create({
-            'move_id': self.id,
-            'product_id': self.product_id.id,
-            'product_uom_id': self.product_uom.id,
-            'location_id': self.location_id.id,
-            'location_dest_id': self.location_dest_id.id,
-            'quantity': quantity,
-        })
-        
-        # Reducir la cantidad en la línea original
-        self.write({'product_uom_qty': self.product_uom_qty - quantity})
-        
-        return new_move_line
-
-    def merge_move_lines(self, lines_to_merge):
-        """
-        Junta múltiples stock.move.line en un solo stock.move.
-        """
-        total_quantity = sum(line.qty_done for line in lines_to_merge)
-        lines_to_merge[0].write({'qty_done': total_quantity})
-        lines_to_merge[1:].unlink()
-
-
-
+    def open_fragment_wizard(self):
+        return {
+            'name': "Fragmentar Línea de Movimiento",
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.move.line.fragment.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_move_line_id': self.id}
+        }
