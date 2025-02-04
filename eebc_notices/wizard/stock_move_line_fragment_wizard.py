@@ -19,11 +19,10 @@ class StockMoveLineFragmentWizard(models.TransientModel):
     def default_get(self, fields):
         res = super(StockMoveLineFragmentWizard, self).default_get(fields)
         if 'default_move_line_id' in self._context:
-            stock_move_obj = self.env['stock.move'].search([('id','=',self._context['default_move_line_id'])])
-            res['total_quantity'] = stock_move_obj.product_uom_qty
-      
+            stock_move_line_obj = self.env['stock.move.line'].search([('id', '=', self._context['default_move_line_id'])])
+            if stock_move_line_obj:
+                res['total_quantity'] = stock_move_line_obj.qty_done
         return res
-
     @api.depends('fragment_lines.quantity')
     def _compute_total_fragment_quantity(self):
         for record in self:
@@ -46,17 +45,25 @@ class StockMoveLineFragmentWizard(models.TransientModel):
         move_line = self.move_line_id
 
         for fragment in self.fragment_lines:
-            self.env['stock.move.line'].create({
+            new_line = self.env['stock.move.line'].create({
                 'move_id': move_line.move_id.id,
                 'product_id': move_line.product_id.id,
-                'quantity_product_uom': fragment.quantity,
+                'qty_done': fragment.quantity,  # Corrección del campo
                 'location_id': move_line.location_id.id,
                 'location_dest_id': move_line.location_dest_id.id,
                 'lot_id': move_line.lot_id.id if move_line.lot_id else False,
                 'package_id': move_line.package_id.id if move_line.package_id else False,
             })
 
-        # Eliminar la línea original después de la fragmentación
-        move_line.unlink()
+            # Actualizar stock.quant para evitar el error "Quantity or Reserved Quantity should be set"
+            self.env['stock.quant']._update_available_quantity(
+                new_line.product_id,
+                new_line.location_id,
+                quantity=new_line.qty_done
+            )
+
         
+        #  En lugar de eliminar la línea original, actualizar su cantidad a 0 para mantener trazabilidad
+        move_line.qty_done = 0
+
         return {'type': 'ir.actions.act_window_close'}
