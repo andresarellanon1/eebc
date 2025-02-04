@@ -35,12 +35,16 @@ class StockMoveLineFragmentWizard(models.TransientModel):
     )
 
     def action_confirm_fragmentation(self):
-        """ Divide la línea de stock.move.line en múltiples líneas """
+        """ Divide la línea de stock.move.line en múltiples líneas asegurando que no exceda product_uom_qty """
         self.ensure_one()
+        
         total_new_qty = sum(self.fragment_lines.mapped('quantity'))
+        
+        #  Obtener la cantidad total demandada desde stock.move
+        total_demanded_qty = self.move_line_id.move_id.product_uom_qty
 
-        if total_new_qty > self.total_quantity:
-            raise ValidationError("La suma de las cantidades fragmentadas no puede ser mayor que la cantidad original.")
+        if total_new_qty > total_demanded_qty:
+            raise ValidationError("La suma de las cantidades fragmentadas no puede ser mayor que la cantidad demandada en stock.move.")
 
         move_line = self.move_line_id
 
@@ -48,22 +52,21 @@ class StockMoveLineFragmentWizard(models.TransientModel):
             new_line = self.env['stock.move.line'].create({
                 'move_id': move_line.move_id.id,
                 'product_id': move_line.product_id.id,
-                'qty_done': fragment.quantity,  # Corrección del campo
+                'qty_done': fragment.quantity,
                 'location_id': move_line.location_id.id,
                 'location_dest_id': move_line.location_dest_id.id,
                 'lot_id': move_line.lot_id.id if move_line.lot_id else False,
                 'package_id': move_line.package_id.id if move_line.package_id else False,
             })
 
-            # Actualizar stock.quant para evitar el error "Quantity or Reserved Quantity should be set"
+            #  Actualizar stock.quant para evitar errores
             self.env['stock.quant']._update_available_quantity(
                 new_line.product_id,
                 new_line.location_id,
                 quantity=new_line.qty_done
             )
 
-        
-        #  En lugar de eliminar la línea original, actualizar su cantidad a 0 para mantener trazabilidad
-        move_line.qty_done = 0
+        #  Si la fragmentación es exitosa, eliminar la línea original
+        move_line.unlink()
 
         return {'type': 'ir.actions.act_window_close'}
