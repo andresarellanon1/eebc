@@ -6,12 +6,23 @@ class StockMoveLineFragmentWizard(models.TransientModel):
     _description = 'Fragmentar Línea de Movimiento de Inventario'
 
     move_line_id = fields.Many2one('stock.move.line', string="Línea de Movimiento", required=True)
-    total_quantity = fields.Float(related='move_line_id.quantity_product_uom', string="Cantidad Total", readonly=True)
+    total_quantity = fields.Float(string="Cantidad Total", readonly=True)
     fragment_lines = fields.One2many(
         'stock.move.line.fragment.line', 
         'wizard_id', 
         string="Fragmentaciones"
     )
+
+
+      
+    @api.model
+    def default_get(self, fields):
+        res = super(StockMoveLineFragmentWizard, self).default_get(fields)
+        if 'default_move_line_id' in self._context:
+            stock_move_obj = self.env['stock.move'].search([('id','=',self._context['default_move_line_id'])])
+            res['total_quantity'] = stock_move_obj.product_uom_qty
+      
+        return res
 
     @api.depends('fragment_lines.quantity')
     def _compute_total_fragment_quantity(self):
