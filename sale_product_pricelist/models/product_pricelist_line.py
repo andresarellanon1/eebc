@@ -90,6 +90,8 @@ class ProductPricelistLine(models.Model):
             else:
                 name = f"{record.name} ({record.currency_id})"
             result.append((record.id, name))
+
+            logger.warning("Final display names: %s", result)
         return result
 
     def open_product_pricelist(self):
