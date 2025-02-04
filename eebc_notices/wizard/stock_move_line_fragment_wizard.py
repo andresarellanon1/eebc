@@ -59,14 +59,15 @@ class StockMoveLineFragmentWizard(models.TransientModel):
                 'package_id': move_line.package_id.id if move_line.package_id else False,
             })
 
-            #  Actualizar stock.quant para evitar errores
-            self.env['stock.quant']._update_available_quantity(
-                new_line.product_id,
-                new_line.location_id,
-                quantity=new_line.qty_done
-            )
+            #  Verificar si la línea original aún existe antes de actualizar stock.quant
+            if move_line.exists():
+                self.env['stock.quant']._update_available_quantity(
+                    new_line.product_id,
+                    new_line.location_id,
+                    quantity=new_line.qty_done
+                )
 
-        #  Si la fragmentación es exitosa, eliminar la línea original
-        move_line.unlink()
-
+        #  Solo eliminar la línea si realmente existe
+        if move_line.exists():
+            move_line.sudo().unlink()
         return {'type': 'ir.actions.act_window_close'}
