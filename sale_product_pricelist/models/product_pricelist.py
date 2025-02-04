@@ -62,7 +62,7 @@ class ProductPricelist(models.Model):
 
             if items_direct_relation_variant.product_id:
                 product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
-                product.product_tmplt_id._compute_product_pricelist_line_ids()
+                product.product_tmpl_id._compute_product_pricelist_line_ids()
 
             if items_category_relation.categ_id:
                 for category in items_category_relation.categ_id:
