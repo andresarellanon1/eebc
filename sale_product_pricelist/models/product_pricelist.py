@@ -7,19 +7,19 @@ logger = logging.getLogger(__name__)
 class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     records = super(ProductPricelist, self).create(vals_list)
-    #     for record in records:
-    #         record._compute_product_pricelist_lines()
-    #     return records
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super(ProductPricelist, self).create(vals_list)
+        for record in records:
+            record._compute_product_pricelist_lines()
+        return records
 
-    def write(self, vals):
-        res = super(ProductPricelist, self).write(vals)
-        if 'item_ids' in vals:
-            for line in self:
-                line._compute_product_pricelist_lines()
-        return res
+    # def write(self, vals):
+    #     res = super(ProductPricelist, self).write(vals)
+    #     if 'item_ids' in vals:
+    #         for line in self:
+    #             line._compute_product_pricelist_lines()
+    #     return res
 
     def _compute_product_pricelist_lines(self):
         """
