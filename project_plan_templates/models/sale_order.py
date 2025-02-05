@@ -2,7 +2,6 @@ from odoo import fields, models, api
 from odoo.exceptions import UserError, ValidationError
 import json
 import logging
-logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
 
@@ -12,14 +11,13 @@ class SaleOrder(models.Model):
     project_name = fields.Char(string="Titulo de proyecto")
     plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
 
-    state = fields.Selection([
-        ('draft', 'Cotización'),
-        ('budget', 'Presupuesto'),
-        ('sale', 'Orden de venta'),
-        ('process', 'En proceso'),
-        ('done', 'Hecho'),
-        ('cancel', 'Cancelado')
-    ], string='Estado', readonly=True, copy=False, tracking=True, default='draft')
+    state = fields.Selection(
+        selection_add=[
+            ('budget', 'Presupuesto'),
+            ('process', 'En proceso'),
+        ],
+        ondelete={'budget': 'set default', 'process': 'set default'},
+    )
 
     project_plan_pickings = fields.Many2many('project.plan.pickings', string="Picking Templates")
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
@@ -30,26 +28,72 @@ class SaleOrder(models.Model):
     project_picking_lines = fields.One2many('project.picking.lines', 'sale_order_id')
     edit_project = fields.Boolean(string="Modificar proyecto", default=False)
 
-    # @api.model
-    # def create(self, vals):
-    #     record = super(SaleOrder, self).create(vals)
-    #     record.update_picking_lines()
-    #     return record
+    is_editable = fields.Boolean(
+        string='Editable',
+        compute='_compute_is_editable',
+        store=True
+    )
 
-    # def write(self, vals):
-    #     res = super(SaleOrder, self).write(vals)
-    #     logger.warning(f"Plan lines: {self.project_plan_lines}")
+    # task_time_lines = fields.One2many(
+    #     'task.time.lines',
+    #     'sale_order_id',
+    #     string="Lineas de mano obra",
+    #     compute="_compute_task_lines",
+    #     store=True)
+    task_time_lines = fields.One2many(
+        'task.time.lines',
+        'sale_order_id',
+        string="Lineas de mano obra")
 
-    #     # Verificar si se modificaron las líneas o si hay cambios generales
-    #     if 'project_plan_lines' in vals or any(line.task_timesheet_id is None for line in self.project_plan_lines):
-    #         # Validar que todas las líneas tengan task_timesheet_id
-    #         for line in self.project_plan_lines:
-    #             if not line.task_timesheet_id:
-    #                 raise ValidationError("Cada línea de planificación debe tener asignada una hoja de horas (task_timesheet_id).")
+    labour_total_cost = fields.Float(string="Costo mano de obra", compute="_compute_labour_cost", default=0.0)
 
-    #         self.update_picking_lines()
+    # @api.depends('project_plan_lines')
+    #def _compute_task_time_lines(self):
+    def update_task_lines(self):
+        for record in self:
+            #record.task_time_lines = [(5, 0, 0)]
+            record.task_time_lines = record.get_task_time_lines(record.project_plan_lines)
 
-    #     return res
+    def get_task_time_lines(self, line):
+        task_lines = []
+        for task in line:
+            if task.for_modification:
+                if task.display_type == 'line_section':
+                    task_lines.append(self.prep_task_line_section_line(task))
+                else:
+                    # for _ in range(int(task.service_qty)):
+                    #     task_lines += self.prep_task_time_lines(task)
+                    task_lines += self.prep_task_time_lines(task)
+            task.for_modification = False
+            #task_lines += self.prep_task_time_lines(task)
+
+        return task_lines
+
+    def prep_task_time_lines(self, line):
+        task_lines = []
+        for task in line.task_timesheet_id.task_time_lines:
+            task_lines.append((0, 0, {
+                'product_id': task.product_id.id,
+                'description': task.description,
+                'estimated_time': task.estimated_time,
+                'work_shift': task.work_shift * line.service_qty,
+                'unit_price': task.unit_price,
+                'price_subtotal': task.price_subtotal
+            }))
+        return task_lines
+
+    @api.depends('task_time_lines.price_subtotal')
+    def _compute_labour_cost(self):
+        for task in self:
+            task.labour_total_cost = sum(line.price_subtotal for line in task.task_time_lines)
+
+    @api.depends('state')
+    def _compute_is_editable(self):
+        """
+        Determina si el pedido es editable según su estado.
+        """
+        for sale in self:
+            sale.is_editable = sale.state in ['draft', 'budget']
 
     def update_picking_lines(self):
         for record in self:
@@ -60,18 +104,18 @@ class SaleOrder(models.Model):
         picking_lines = []
 
         for picking in line:
-            if picking.for_modification:
+            if picking.for_picking:
                 if picking.for_create:
                     if picking.display_type == 'line_section':
-                        picking_lines.append(self.prep_picking_section_line(picking, True))
+                        picking_lines.append(self.prep_picking_section_line(picking, True, False))
                     else:
                         if picking.for_create:
-                            picking_lines.append(self.prep_picking_section_line(picking, True))
                             picking_lines += self.prep_picking_lines(picking)
                 else:
-                    picking_lines.append(self.prep_picking_section_line(picking, False))
+                    picking_lines.append(self.prep_picking_section_line(picking, False, True))
 
-                picking.for_modification = False
+                picking.for_picking = False
+                
                 
         return picking_lines
     
@@ -103,20 +147,26 @@ class SaleOrder(models.Model):
                 for line in sale.order_line:
                     if line.for_modification:
                         if line.display_type == 'line_section':
-                            plan_lines.append(self.prep_plan_section_line(line, True))
+                            plan_lines.append(self.prep_plan_section_line(line, True, False))
                         else:
                             if line.product_id.project_plan_id:
-                                plan_lines.append(self.prep_plan_section_line(line, False))
+                                plan_lines.append(self.prep_plan_section_line(line, False, True))
                                 plan_lines += self.prep_plan_lines(line)
 
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                                 plan_pickings.append((4, project_picking.id))
                         line.for_modification = False
+                    line.last_service_price = line.price_unit
+
+                for plan in sale.project_plan_lines:
+                    if plan.for_modification:
+                        plan.for_modification = False
 
                 sale.project_plan_pickings = plan_pickings
                 sale.project_plan_lines = plan_lines
 
                 sale.update_picking_lines()
+                sale.update_task_lines()
 
             sale.state = 'budget'
             
@@ -124,7 +174,10 @@ class SaleOrder(models.Model):
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
         for sale in self:
-            logger.warning(f"Encontro la sale order: {sale.project_id.actual_sale_order_id}")
+            sale.order_line = [(5, 0, 0)]
+            sale.project_plan_lines = [(5, 0, 0)]
+            sale.project_picking_lines = [(5, 0, 0)]
+            sale.task_time_lines = [(5, 0, 0)]
             if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
 
                 previous_order = sale.project_id.actual_sale_order_id
@@ -135,11 +188,12 @@ class SaleOrder(models.Model):
                 sale.order_line = [(0, 0, {
                     'product_id': line.product_id.id,
                     'display_type': line.display_type,
-                    'name': line.name,
-                    'product_uom_qty': line.product_uom_qty,
-                    'price_unit': line.price_unit,
+                    'name': line.name + ' * ' + str(line.product_uom_qty),
+                    'product_uom_qty': 0,
+                    'price_unit': line.last_service_price,
                     'discount': line.discount,
-                    'for_modification': False
+                    'for_modification': False,
+                    'last_service_price': line.last_service_price
                 }) for line in previous_order.order_line]
 
                 # Copiar project_plan_lines directamente
@@ -150,6 +204,22 @@ class SaleOrder(models.Model):
                 # Preparar y asignar líneas de picking
                 picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
                 sale.project_picking_lines = picking_lines
+
+                task_lines = self._prepare_task_lines(previous_order.task_time_lines)
+                sale.task_time_lines = task_lines
+
+    def _prepare_task_lines(self, lines):
+        return [(0, 0, {
+            'name': line.name,
+            'display_type': line.display_type,
+            'product_id': line.product_id.id,
+            'description': line.description,
+            'estimated_time': line.estimated_time,
+            'work_shift': line.work_shift,
+            'unit_price': line.unit_price,
+            'price_subtotal': line.price_subtotal,
+            'for_modification': False
+        }) for line in lines]
 
     def _prepare_plan_lines(self, lines):
         """Prepara las líneas de plan para asignarlas al pedido."""
@@ -164,7 +234,8 @@ class SaleOrder(models.Model):
             'project_plan_pickings': line.project_plan_pickings.id if line.project_plan_pickings else False,
             'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
             'for_create': line.for_create,
-            'for_modification': False
+            'for_modification': False,
+            'for_picking': line.for_picking
         }) for line in lines]
 
     def _prepare_picking_lines(self, lines):
@@ -178,13 +249,26 @@ class SaleOrder(models.Model):
             'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
             'product_uom_qty': line.product_uom_qty,
             'quantity': line.quantity,
-            'standard_price': line.standard_price,
+            'standard_price': line.last_price,
             'subtotal': line.subtotal,
             'for_create': line.for_create,
-            'for_modification': False
+            'for_modification': False,
+            'last_price': line.last_price
         }) for line in lines]
+
+    def prep_task_line_section_line(self, line):
+        return(0, 0, {
+            'name': line.name,
+            'display_type': line.display_type or 'line_section',
+            'product_id':  False,
+            'description':  False,
+            'estimated_time':  False,
+            'work_shift':  False,
+            'unit_price':  False,
+            'price_subtotal': False
+        })
     
-    def prep_picking_section_line(self, line, for_create):
+    def prep_picking_section_line(self, line, for_create, for_task):
         return (0, 0, {
             'name': line.name,
             'display_type': line.display_type or 'line_section',
@@ -196,12 +280,14 @@ class SaleOrder(models.Model):
             'quantity': False,
             'standard_price': False,
             'subtotal': False,
-            'for_create': for_create
+            'for_create': for_create,
+            'for_modification': False,
+            'last_price': False
         })
     
-    def prep_plan_section_line(self, line, for_create):
+    def prep_plan_section_line(self, line, for_create, for_task):
         return (0, 0, {
-            'name': line.name,
+            'name': line.name + ' * ' + str(line.product_uom_qty) if for_task else line.name,
             'display_type': line.display_type or 'line_section',
             'description': False,
             'sequence': 0,
@@ -210,7 +296,10 @@ class SaleOrder(models.Model):
             'planned_date_end': False,
             'project_plan_pickings': False,
             'task_timesheet_id': False,
-            'for_create': for_create
+            'for_create': for_create,
+            'for_modification': True,
+            'service_qty': 0,
+            'for_picking': True,
         })
 
     def prep_plan_lines(self, line):
@@ -218,7 +307,7 @@ class SaleOrder(models.Model):
         for plan in line.product_id.project_plan_id.project_plan_lines:
             plan_lines.append((0, 0, {
                 #'name': f"{line.product_template_id.name}-{plan.name}",
-                'name': plan.name,
+                'name': plan.name + ' * ' + str(line.product_uom_qty),
                 'description': plan.description,
                 'use_project_task': True,
                 'sequence': 0,
@@ -227,7 +316,10 @@ class SaleOrder(models.Model):
                 'project_plan_pickings': plan.project_plan_pickings.id,
                 'task_timesheet_id': plan.task_timesheet_id.id,
                 'display_type': False,
-                'for_create': True
+                'for_create': True,
+                'for_modification': plan.for_modification,
+                'service_qty': line.product_uom_qty,
+                'for_picking': True
             }))
         return plan_lines
 
@@ -241,44 +333,95 @@ class SaleOrder(models.Model):
                 'sequence': 0,
                 'product_packaging_id': picking.product_packaging_id.id,
                 'product_uom_qty': picking.product_uom_qty,
-                'quantity': picking.quantity,
+                'quantity': picking.quantity * line.service_qty,
                 'standard_price': picking.standard_price,
                 'subtotal': picking.subtotal,
                 'display_type': False,
-                'for_create': True
+                'for_create': True,
+                'for_modification': False,
+                'last_price': picking.standard_price
             }))
         return picking_lines
 
     def action_open_create_project_wizard(self):
+        
         self.ensure_one()
 
-        logger.warning(f"Sale Order ID: {self.id}")
-
         project_name = []
+        project_description = []
 
         if self.project_name:
             project_name = self.project_name
         else:
             project_name = self.project_id.name
+            project_description = self.project_id.description
 
         context = {
             'default_sale_order_id': self.id,
             'default_actual_sale_order_id': self.id,
             'default_project_name': project_name,
+            'default_description': project_description
         }
 
         if self.project_id:
             context['default_project_id'] = self.project_id.id
 
-        return {
-            'name': 'Projects creation',  
-            'view_mode': 'form',  
-            'res_model': 'project.creation.wizard',  
-            'type': 'ir.actions.act_window',  
-            'target': 'new',  
-            'context': context,
-        }
-        
+        if self.edit_project:
+            return {
+                'name': 'Project Version History',
+                'view_mode': 'form',
+                'res_model': 'project.version.wizard',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context':{
+                    'default_project_id': self.project_id.id,
+                    'default_modified_by': self.env.user.id,
+                    'default_modification_date': fields.Datetime.now(),
+                    'default_location_id': self.project_id.location_id.id,
+                    'default_location_dest_id': self.project_id.location_dest_id.id,
+                    'default_scheduled_date': self.project_id.scheduled_date,
+                    'default_picking_type_id': self.project_id.default_picking_type_id.id,
+                    'default_sale_order_id': self.id,
+                    'default_plan_total_cost': self.plan_total_cost,
+                    'default_date_start': self.project_id.date_start,
+                    'default_date': self.project_id.date
+                }
+            }
+
+        else:
+
+            return {
+                'name': project_name,  
+                'view_mode': 'form',  
+                'res_model': 'project.creation.wizard',  
+                'type': 'ir.actions.act_window',  
+                'target': 'new',  
+                'context': {
+                    'default_sale_order_id': self.id,
+                    'default_client_id': self.partner_id.id,
+                    'default_actual_sale_order_id': self.id,
+                    'default_project_name': project_name,
+                    'default_description': project_description
+                }
+            }
+
+    def clean_duplicates_after_modification(self):
+        """
+        Limpia las líneas duplicadas después de modificar un proyecto.
+        Solo limpia las líneas con for_modification=True.
+        """
+        for sale in self:
+            lines_to_remove = sale.project_plan_lines.filtered('for_modification')
+            lines_to_remove.unlink()
+
+            lines_to_remove_picking = sale.project_picking_lines.filtered('for_modification')
+            lines_to_remove_picking.unlink()
+
+    def project_lines_created(self):
+        for sale in self.project_plan_lines:
+            sale.for_newlines == False
+        for sale in self.project_picking_lines:
+            sale.for_newlines == False
         
     def action_open_report(self):
         self.ensure_one()
@@ -298,4 +441,3 @@ class SaleOrder(models.Model):
             'doc_model': 'sale.order',
             'docs': docs,
         }
-    

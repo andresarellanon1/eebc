@@ -41,6 +41,14 @@ class NoticesHistory(models.Model):
         string='state',
         selection=[('draft', 'Borrador'), ('approved', 'Aprobado'), ('canceled', 'Cancelado')]
     )
+    lot_ids = fields.Many2many(
+        'stock.lot',
+        'notices_history_lot_rel',
+        'history_id',
+        'lot_id',
+        string='Números de Serie/Lote',
+        help="Números de serie o lotes asociados a este aviso"
+    )
     
 
     

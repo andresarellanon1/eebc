@@ -18,16 +18,16 @@ class ProjectPlanPickings(models.Model):
     active = fields.Boolean(string="Activo", default=True)
     project_id = fields.Many2one('project.project', string="Proyecto")
 
-    plan_total_cost = fields.Float(string="Costo total", default=0.0)
+    plan_total_cost = fields.Float(string="Costo total", compute="_compute_total_cost", default=0.0)
 
     def toggle_active(self):
         for record in self:
             record.active = not record.active
 
-    # @api.depends('project_picking_lines.subtotal')
-    # def _compute_total_cost(self):
-    #     for plan in self:
-    #         plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
         
     @api.constrains('project_picking_lines')
     def _check_picking_lines(self):
@@ -41,7 +41,7 @@ class ProjectPlanPickingLine(models.Model):
     _description = 'Project picking lines'
     _order = 'sequence'
 
-    name = fields.Char(required=True, string="Nombre")
+    name = fields.Char(string="Nombre")
     
     project_id = fields.Many2one('project.project', string="Proyecto")
     picking_id = fields.Many2one('project.plan.pickings', string="Plantilla de proyecto")
@@ -60,9 +60,10 @@ class ProjectPlanPickingLine(models.Model):
    
     picking_name = fields.Char(string="Inventario")
     project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas")
-    stock_move_id = fields.Many2one('stock.move', string='Inventario')
+    stock_move_id = fields.Many2one('stock.move', string='Movimiento de inventario')
     
-    standard_price = fields.Float(string="Precio")
+    standard_price = fields.Float(string="Precio", compute="_compute_standard_price", store=True)
+    last_price = fields.Float(string="Ultimo precio")
     subtotal = fields.Float(string="Subtotal", compute='_compute_subtotal')
     total_cost = fields.Float(string="Costo total")
 
@@ -79,6 +80,7 @@ class ProjectPlanPickingLine(models.Model):
     product_uom_qty = fields.Float(string="Demanda")
     for_create = fields.Boolean(default=True)
     for_modification = fields.Boolean(default=True)
+    for_newlines = fields.Boolean(default=True)
     
 
     # @api.constrains('product_id')
@@ -99,12 +101,17 @@ class ProjectPlanPickingLine(models.Model):
             if record.used_quantity > quantity:
                 raise ValidationError("Cantidad excedida, ordene mas o ingrese la cantidad correcta")
 
+    @api.depends('product_id', 'product_id.standard_price')
+    def _compute_standard_price(self):
+        for record in self:
+            if not record.sale_order_id:
+                record.standard_price = record.product_id.standard_price
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
             self.product_uom = self.product_id.uom_id
             self.name = self.product_id.name
-            self.standard_price = self.product_id.standard_price
 
     def reservado_update(self, task_inventory_lines):
         for record in self:

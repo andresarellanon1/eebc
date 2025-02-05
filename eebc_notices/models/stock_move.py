@@ -1,119 +1,8 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 import logging
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
-
-
-
-
-class StockQuant(models.Model):
-    _inherit = 'stock.quant'
-
-
-
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        """ Override to handle the "inventory mode" and create a quant as
-        superuser the conditions are met.
-        """
-        quants = self.env['stock.quant']
-        is_inventory_mode = self._is_inventory_mode()
-        allowed_fields = self._get_inventory_fields_create()
-
-        _logger.warning('valor de vals list para crear stock.quant: %s', vals_list)
-
-        for vals in vals_list:
-            if is_inventory_mode and any(f in vals for f in ['inventory_quantity', 'inventory_quantity_auto_apply']):
-                if any(field for field in vals.keys() if field not in allowed_fields):
-                    raise UserError(_("Quant's creation is restricted, you can't do this operation."))
-                auto_apply = 'inventory_quantity_auto_apply' in vals
-                inventory_quantity = vals.pop('inventory_quantity_auto_apply', False) or vals.pop(
-                    'inventory_quantity', False) or 0
-                # Create an empty quant or write on a similar one.
-                product = self.env['product.product'].browse(vals['product_id'])
-                location = self.env['stock.location'].browse(vals['location_id'])
-                lot_id = self.env['stock.lot'].browse(vals.get('lot_id'))
-                package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
-                owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
-                quant = self.env['stock.quant']
-                if not self.env.context.get('import_file'):
-                    # Merge quants later, to make sure one line = one record during batch import
-                    quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
-                if lot_id:
-                    if self.env.context.get('import_file') and lot_id.product_id != product:
-                        lot_name = lot_id.name
-                        lot_id = self.env['stock.lot'].search([('product_id', '=', product.id), ('name', '=', lot_name)], limit=1)
-                        if not lot_id:
-                            company_id = location.company_id or self.env.company
-                            lot_id = self.env['stock.lot'].create({'name': lot_name, 'product_id': product.id, 'company_id': company_id.id})
-                        vals['lot_id'] = lot_id.id
-                    quant = quant.filtered(lambda q: q.lot_id)
-                if quant:
-                    quant = quant[0].sudo()
-                else:
-                    quant = self.sudo().create(vals)
-                    if 'quants_cache' in self.env.context:
-                        self.env.context['quants_cache'][
-                            quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
-                        ] |= quant
-                if auto_apply:
-                    quant.write({'inventory_quantity_auto_apply': inventory_quantity})
-                else:
-                    # Set the `inventory_quantity` field to create the necessary move.
-                    quant.inventory_quantity = inventory_quantity
-                    quant.user_id = vals.get('user_id', self.env.user.id)
-                    quant.inventory_date = fields.Date.today()
-                quants |= quant
-            else:
-                quant = super().create(vals)
-                if 'quants_cache' in self.env.context:
-                    self.env.context['quants_cache'][
-                        quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
-                    ] |= quant
-                quants |= quant
-                if self._is_inventory_mode():
-                    quant._check_company()
-        return quants
-
-
-
-
-class StockLot(models.Model):
-    _inherit = 'stock.lot'
-
-
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        _logger.warning('valor de vals list para crear stock.lot: %s', vals_list)
-
-        self._check_create()
-        return super(StockLot, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
-
-
-
-
-
-class StockMoveLine(models.Model):
-    _inherit = 'stock.move.line'
-
-
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        _logger.warning('valor de vals list para crear stock.move.line: %s', vals_list)
-
-        for vals in vals_list:
-            if vals.get('move_id'):
-                vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
-            elif vals.get('picking_id'):
-                vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
-            if vals.get('move_id') and 'picked' not in vals:
-                vals['picked'] = self.env['stock.move'].browse(vals['move_id']).picked
-            if vals.get('quant_id'):
-                vals.update(self._copy_quant_info(vals))
 
 
 class StockMove(models.Model):
@@ -131,12 +20,82 @@ class StockMove(models.Model):
         string="Mostrar botón de salida",
         compute='_compute_aviso_button_flags',
     )
+    def _generate_serial_numbers(self, next_serial, next_serial_count=False, location_id=False):
+        self.ensure_one()
+        if not location_id:
+            location_id = self.location_dest_id
 
+        if self.product_id.is_aviso:  # Ahora se utiliza el campo is_aviso correctamente
+            # Validar que los números de serie no existan
+            existing_lots = self.env['stock.lot'].search([
+                ('product_id', '=', self.product_id.id),
+                ('company_id', '=', self.company_id.id),
+            ]).mapped('name')
+
+            lot_names = self.env['stock.lot'].generate_lot_names(next_serial, next_serial_count or self.next_serial_count)
+            for lot in lot_names:
+                if lot['lot_name'] in existing_lots:
+                    raise ValidationError(_(
+                        "El número de serie/lote '%s' ya existe para el producto '%s'."
+                    ) % (lot['lot_name'], self.product_id.display_name))
+
+        # Continuar con la generación normal de números de serie
+        lot_names = self.env['stock.lot'].generate_lot_names(next_serial, next_serial_count or self.next_serial_count)
+        field_data = [{'lot_name': lot_name['lot_name'], 'quantity': 1} for lot_name in lot_names]
+        move_lines_commands = self._generate_serial_move_line_commands(field_data)
+        self.move_line_ids = move_lines_commands
+        return True
+        
+
+    def _create_lot_ids_from_move_line_vals(self, vals_list, product_id, company_id):
+        _logger.warning("Entramos a _create_lot_ids_from_move_line_vals ")
+        # Obtener los nombres de los lotes que ya existen
+        existing_lots = self.env['stock.lot'].search([
+            ('product_id', '=', product_id),
+            ('company_id', '=', company_id),
+        ]).mapped('name')
+
+        # Filtrar y crear solo los lotes que no existen
+        lot_names = {vals['lot_name'] for vals in vals_list if vals.get('lot_name')}
+        new_lots = lot_names - set(existing_lots)
+        lots_to_create_vals = [
+            {'product_id': product_id, 'name': lot_name, 'company_id': company_id}
+            for lot_name in new_lots
+        ]
+
+        # Crear los nuevos lotes
+        lot_ids = self.env['stock.lot'].create(lots_to_create_vals)
+        lot_id_by_name = {lot.name: lot.id for lot in lot_ids}
+
+        # Asignar lot_id a los valores de las líneas de movimiento
+        for vals in vals_list:
+            if vals.get('lot_name') in lot_id_by_name:
+                vals['lot_id'] = lot_id_by_name[vals['lot_name']]
+                vals['lot_name'] = False
+
+
+
+    def action_assign_serial(self):
+        _logger.warning('Estamos en el action_assign_serial heredado')
+
+        has_aviso = self.product_id.is_aviso
+
+        _logger.warning('valor de has_aviso en action_assign_serial: %s', has_aviso)
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.act_assign_serial_numbers")
+        action['context'] = {
+            'default_product_id': self.product_id.id,
+            'default_move_id': self.id,
+            'is_aviso': has_aviso
+        }
+        return action
 
 
     @api.model_create_multi
     def create(self, vals_list):
         _logger.warning('valor de vals list para crear stock.move: %s', vals_list)
+        # se debe validar que en una entrada de un producto con aviso pida forzosamente el registrar aviso
+
         for vals in vals_list:
             if (vals.get('quantity') or vals.get('move_line_ids')) and 'lot_ids' in vals:
                 vals.pop('lot_ids')
@@ -152,7 +111,8 @@ class StockMove(models.Model):
     @api.depends('product_id.attribute_line_ids', 'picking_type_id.code', 'product_id')
     def _compute_aviso_button_flags(self):
         for move in self:
-            has_aviso = any('aviso' in attr.name for attr in move.product_id.attribute_line_ids.mapped('attribute_id'))
+            has_aviso = move.product_id.is_aviso
+
             is_valid_picking_type = move.picking_type_id.code in ['incoming', 'outgoing']
             if has_aviso and is_valid_picking_type:
                 _logger.warning('ENTRAMOS A IF')
@@ -167,8 +127,7 @@ class StockMove(models.Model):
                 move.show_incoming_button = False
                 move.show_outgoing_button = False
 
-
-
+    
  
 
     def action_show_incoming(self):
@@ -271,7 +230,14 @@ class StockMove(models.Model):
                 }))
             _logger.warning(f'Líneas creadas: {lines}')
             return lines
-
-           
-
-
+    def open_fragment_wizard(self):
+        return {
+            'name': "Fragmentar Línea de Movimiento",
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.move.line.fragment.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+                'context': {'default_move_line_id': self.id}
+            }
+        
+ 

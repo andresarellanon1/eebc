@@ -1,28 +1,22 @@
 {
     'name': "Partner Customer Extension",
-    'version': '17.0.0.01',
+    'summary': 'Extiende la funcionalidad de contactos y órdenes de venta en Odoo.',
+    'description': """
+        Este módulo extiende la funcionalidad de los contactos y órdenes de venta en Odoo, agregando campos 
+        adicionales para la clasificación de clientes y mejorando la gestión de información comercial. Facilita 
+        la configuración de clientes y la automatización de procesos en las órdenes de venta.
+    """,
+    'version': '17.0.3.002',
     'depends': [
-        "base",
         "sale",
-        "sale_stock",
-        "sale_stock_margin",
-        "contacts",
-        "contacts_enterprise",
-        "account_accountant",
-        "stock",
-        "stock_account",
-        "base_address_extended",
+        "contacts"
     ],
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
-    'description': """
-        Este modulo conforma las configuraciones de los clientes.
-    """,
     "data": [
         "views/res_partner.xml",
-        "views/sale_order_views.xml",
-        "views/res_country_views.xml",
+        "views/sale_order.xml",
     ],
     "application": False,
     "installable": True,

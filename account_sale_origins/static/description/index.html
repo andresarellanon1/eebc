@@ -1,0 +1,141 @@
+<head>
+    <link rel="stylesheet" href="/account_sale_origins/static/src/css/index.css">
+</head>
+
+<body class="bg-gray-50">
+    <div class="min-h-screen p-8">
+        <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md border border-blue-100">
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold text-blue-900 mb-2">
+                    Orígenes de Venta en la Cuenta
+                </h1>
+                <p class="text-blue-600 mb-4">Versión 17 - Quadro Soluciones Tecnológicas</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="https://quadrosoluciones.com" 
+                       class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors">
+                       Sitio Web
+                    </a>
+                    <a href="https://quadro.odoo.com" 
+                       class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors">
+                       Portal Clientes
+                    </a>
+                </div>
+            </div>
+
+            <!-- Marco Azul para Descripción, Funcionalidad y Advertencias Técnicas -->
+            <div class="border-4 border-blue-500 p-6 rounded-lg">
+                <!-- Descripción -->
+                <div class="max-w-3xl mx-auto my-20" style="width:70%; margin: 20px;">
+                    <div class="text-center p-6 bg-gray-100 rounded-lg">
+                        <p class="text-lg text-gray-700" style="text-align: justify;">
+                            Este módulo extiende la funcionalidad de las facturas en Odoo para incluir campos relacionados que 
+                            permiten vincular órdenes de venta y albaranes como documentos de origen. Facilita el rastreo y la 
+                            gestión de las facturas en relación con las ventas y entregas, mejorando la trazabilidad entre los 
+                            procesos de ventas, inventario y contabilidad.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Línea Continua 1 -->
+                <div class="text-center my-8">
+                    <hr class="border-t-2 border-blue-600 w-1/2 mx-auto" style="margin-bottom:3px;">
+                </div>
+
+                <!-- Palabra caracteristicas -->
+                <div class="text-center" >
+                    <h5 class="text-2xl font-semibold text-blue-900" style="margin-bottom:3px;">CARACTERÍSTICAS</h5>
+                </div>
+
+                <!-- Línea Continua 2 -->
+                <div class="text-center my-8">
+                    <hr class="border-t-2 border-blue-600 w-1/2 mx-auto" style="margin-top:3px;">
+                </div>
+
+                <!-- Módulo Funcionalidad -->
+                <div class="space-y-8" style="margin-left:15%; margin-right:15%; display: flex; flex-wrap: wrap; gap: 20px;">
+                    <div class="bg-blue-50 p-6 rounded-lg" style="flex: 1 1 calc(50% - 20px); border: 1px solid #d1e9ff; border-radius: 10px; padding: 20px;">
+                        <h2 class="text-xl font-semibold text-blue-900 mb-3">🏷️ Funcionalidades Principales</h2>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Vinculación automática de órdenes de venta a facturas
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Cálculo dinámico de órdenes de venta relacionadas basado en líneas de factura
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Campos para vincular albaranes y calcular la fecha de entrega
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Manejo de facturas canceladas para mantener la trazabilidad
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Guía Rápida -->
+                    <div class="border-l-4 border-blue-200 pl-6" style="flex: 1 1 calc(50% - 20px); background-color: #f0f9ff; padding: 20px; border-radius: 10px; border: 1px solid #d1e9ff;">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-3">📌 Buenas Prácticas</h3>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">🔍</span>
+                                Verificar que las líneas de factura estén correctamente vinculadas a órdenes de venta
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📝</span>
+                                Revisar y ajustar manualmente las órdenes de venta vinculadas si es necesario
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📊</span>
+                                Utilizar los campos relacionados para rastrear el origen de las facturas en informes y auditorías
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📂</span>
+                                Mantener actualizados los registros de órdenes de venta y albaranes
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Advertencias Técnicas -->
+                    <div class="bg-blue-100 p-6 rounded-lg" style="flex: 1 1 calc(50% - 20px); border: 1px solid #d1e9ff; border-radius: 10px; padding: 20px;">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-3">⚠️ Consideraciones Clave</h3>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">⚠️</span>
+                                Asegurar que las líneas de factura tengan la información correcta
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">🔄</span>
+                                Validar que las órdenes de venta y albaranes vinculados estén completos y aprobados
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📈</span>
+                                Monitorear el rendimiento al calcular órdenes de venta en facturas con muchas líneas
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">🔗</span>
+                                Verificar la integridad de los datos al importar o migrar información
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soporte -->
+            <div class="text-center mt-10 pt-6 border-t border-blue-200" style="margin-top: 15px;">
+                <p class="text-blue-600">
+                    ¿Necesitas ayuda? Contacta a nuestro equipo técnico:
+                    <a href="mailto:soporte@quadrosoluciones.com" 
+                        class="text-blue-800 underline hover:text-blue-900">
+                        soporte@quadrosoluciones.com
+                    </a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</body>
+

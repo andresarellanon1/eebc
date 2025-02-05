@@ -1,166 +1,313 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-   
     <template id="report_analytics" name="Reporte de Materiales">    
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <t t-foreach="docs" t-as="doc">
-
-                    <div class="report-content">                
-                        <p><strong>Orden de Venta:</strong> <span t-esc="doc.name"/></p>
-                        <p><strong>Proyecto:</strong> <span t-esc="doc.project_name"/></p>
-                        <p><strong>Cliente:</strong> <span t-esc="doc.partner_id.name"/></p>
-                        <p><strong>Fecha:</strong> <span t-esc="doc.date_order"/></p>
-                    </div>
-
-                    <div class="report-header text-center">
-                        <h1>Análisis de precios unitarios</h1>
-                    </div>
-
-                    <table class="table table-condensed">
-                        <tbody>
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Unidad de Medida</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Total</th>
-                                </tr>
-                                
-                            </thead>
-                            
-                            <t t-set="total_subtotal_mat" t-value="0"/>
-                            <t t-set="total_subtotal_man" t-value="0"/>
-                            <t t-set="order_lines_used" t-value="[]"/> 
-
-                            <t t-foreach="doc.project_picking_lines" t-as="line">
-                                <t t-if="line.for_create == True">
-                                    <t t-if="line.product_id">
-                                        <tr>
-                                            <td><span t-esc="line.product_id.name"/></td>
-                                            <td><span t-esc="line.product_uom.name"/></td>
-                                            <td><span t-esc="line.quantity"/></td>
-                                            <td><span t-esc="line.standard_price"/></td>
-                                            <td><span t-esc="line.subtotal"/></td>
-                                            <t t-set="total_subtotal_mat" t-value="total_subtotal_mat + line.subtotal"/>
-                                        </tr>  
-                                    </t>
-                                    <t t-else="">
-                                        <tr>
-                                            <th colspan="4" style="text-align: right; " class="bg-transparent">Total:</th>
-                                            <td style="text-align: left;" class="bg-transparent">
-                                                <span t-esc="total_subtotal_mat"/>
-                                            </td>
-                                            <t t-set="total_subtotal_mat" t-value="0"/>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5">
-                                                <strong><span t-esc="line.name or 'Sin descripción'"/></strong>
-                                            </td>
-                                        </tr>
                     
-                                        <t t-foreach="doc.project_plan_lines" t-as="task_line">
-                                            <t t-if="task_line.name == line.name and task_line.task_timesheet_id">
-                                                <t t-foreach="task_line.task_timesheet_id" t-as="time_line">
-                                                    <t t-foreach="time_line.task_time_lines" t-as="time_lines">
+                    <style>
+                        
+                        body {
+                            padding-bottom: 20px;
+                        }
+                        
+                        p {
+                            margin:0;
+                            font-size: 12px;
+                        }
+
+                        tr, td, th, table {
+                            background-color: transparent !important;
+                            border: none !important;
+                            font-size: 12px;
+                        }
+                    
+                    </style>
+
+                    <!-- Encabezado -->    
+
+                    <div style="display: -webkit-box; -webkit-box-pack: justify;">
+                        <div>
+                            <strong><p>Cliente: <span t-esc="doc.partner_id.name"/></p></strong>
+                            <strong><p>Proyecto: <span t-esc="doc.project_name"/></p></strong>
+                        </div>
+                        <div>
+                            <strong><p>Cotización: <span t-esc="doc.name"/></p></strong>
+                            <strong><p>Fecha: <span t-esc="doc.date_order"/></p></strong>
+                            <strong><p>Elaboró:<span t-esc="doc.user_id.name"/></p></strong>
+                        </div>
+                    </div>
+
+                    <div class="report-header text-center" style="border: 2px solid black; text-align: right;">
+                        <p><strong>Análisis de precios unitarios</strong></p>
+                    </div>
+
+                    <!--Fin de Encabezado-->
+
+                    <!--Servicio-->
+                    <t t-foreach="doc.order_line" t-as="line">
+                        <t t-if="line.display_type != 'line_section'">
+                            <div style="display: -webkit-box; -webkit-box-pack: justify; margin-bottom: 10px;">
+        
+                                <div style="width: 70%;">
+                                    <div style="display: flex;">
+        
+                                        <div style="margin-right: 60px;">
+                                            <p>Clave:</p>
+                                        </div>
+                                        
+                                        <div style="text-align: left;">
+                                            <p>Pendiente</p>
+                                        </div>
+        
+                                    </div>
+                                    
+                                    <div style="margin-top: 10px;">
+                                        <p><span t-esc="line.product_template_id.name"/></p>
+                                    </div>
+                                    
+                                </div>
+        
+                                <div style="width: 30%; display: -webkit-box; -webkit-box-pack: justify;">
+        
+                                    <div>
+                                        <p>Unidad: </p>
+                                        <p>Cantidad: </p>
+                                        <p>Precio unitario: </p>
+                                        <p>Total: </p>
+                                    </div>
+                                    
+                                    <div style="text-align: right;">
+                                        <p><span t-esc="line.product_uom.name"/></p>
+                                        <p><span t-esc="line.product_uom_qty"/></p>
+                                        <p><span t-esc="line.price_unit"/></p>
+                                        <p><span t-esc="line.purchase_price"/></p>
+                                    </div>
+                                    
+                                </div>
+        
+                            </div>
+                            <!--Fin de Servicio-->
+
+                            <!--Materiales-->
+                            
+                            <div style="width: 100%;">
+                                <table style="border-collapse: collapse;">
+                                    <thead>
+        
+                                        <tr style="border-collapse: collapse;">
+                                            <th style="width: 5%; border: 2px solid black;">C</th>
+                                            <th style="width: 10%; border: 2px solid black; text-align: left">Clave</th>
+                                            <th style="width: 45%; border: 2px solid black; text-align: left">Descripción</th>
+                                            <th style="width: 10%; border: 2px solid black;">Unidad</th>
+                                            <th style="width: 10%; border: 2px solid black; text-align: right">Cantidad</th>
+                                            <th style="width: 15%; border: 2px solid black; text-align: right">Costo Unitario</th>
+                                            <th style="width: 15%; border: 2px solid black; text-align: right">Total</th>
+                                        </tr>
+        
+                                    </thead>
+        
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <td colspan="7" style="font-weight: bold;">Materiales</td>
+                                        </tr>
+                                        
+                                        <t t-set="total_materiales" t-value="0.0"/>
+                                        
+                                        <t t-foreach="doc.project_picking_lines" t-as="material">
+                                            <t t-if="not stop">
+                                                
+                                                <t t-if="material.display_type == 'line_section'">
+                                        
+                                                    <t t-if="fill">
+                                                        
+                                                        <t t-if="material.for_create == False">
+                                                            
+                                                            <t t-set="stop_loop" t-value="True"/>
+                                                            <t t-set="fill" t-value="False"/>
+                                                        </t>
+                                                    </t>
+                                                    
+                                                    <t t-if="material.name == line.product_template_id.name">
+                                                      
+                                                        <t t-set="fill" t-value="True"/>
+                                                    </t>
+                                                    
+                                                </t>
+                                                
+                                                <t t-if="fill">
+                                                    <t t-if="material.display_type != 'line_section'">
                                                         <tr>
-                                                            <td><span t-esc="time_lines.description"/></td>
-                                                            <td>Jornada</td>
-                                                            <td><span t-esc="time_lines.work_shift"/></td>
-                                                            <td>0</td>
-                                                            <td>0</td>
+                                                            <td> </td>
+                                                            <td>Pendiente</td>
+                                                            <td><span t-esc="material.product_id.name"/></td>
+                                                            <td style="text-align: center"><span t-esc="material.product_id.uom_id.name"/></td>
+                                                            <td style="text-align: right"><span t-esc="material.quantity"/></td>
+                                                            <td style="text-align: right"><span t-esc="material.standard_price"/></td>
+                                                            <td style="text-align: right"><span t-esc="material.subtotal"/></td>
                                                         </tr>
+                                                        
+                                                        <t t-set="total_materiales" t-value="total_materiales + material.subtotal"/>
+
                                                     </t>
                                                 </t>
-                                                <tr>
-                                                    <th colspan="4" style="text-align: right; " class="bg-transparent">Total:</th>
-                                                    <td style="text-align: left;" class="bg-transparent">
-                                                        <span t-esc="total_subtotal_man"/>
-                                                    </td>
-                                                </tr>
                                             </t>
                                         </t>
-                                    </t>
-                                </t>
-                                
-                                
-                                <t t-if="line.for_create == False">
-                                    <tr>
-                                        <td colspan="5" style="background-color: #FFFFFF; color: #FFFFFF; text-align: center;  border: 1px solid #FFFFFF;">
-                                             x 
-                                        </td>
-                                    </tr>  
-                                    <t t-set="order_line_match" t-value="False"/>
+                                        
+                                        <t t-set="fill" t-value="False"/>
+                                        <t t-set="stop_loop" t-value="False"/>
+                                        
+                                        <tr style="border-top: 20px solid white;">
+                                            <td colspan="6" style="font-weight: bold;">Total de materiales</td>
+                                            <td style="text-align: right; font-weight: bold;"><span t-esc="total_materiales"/></td>
+                                        </tr>
+                                         
 
-                                    <t t-foreach="doc.order_line" t-as="order_line">
-                                        <t t-if="not order_line_match and order_line.product_id.name == line.name and order_line.id not in order_lines_used">
-                                            <tr>
-                                                <td style="vertical-align: top; font-weight: bold; width: 30%; border-right: 1px solid #ddd;">
-                                                    <span t-esc="order_line.product_id.name or 'Sin producto'"/>
-                                                </td>
-                                                <td style="vertical-align: top; width: 100%;" colspan="4">
-                                                    <table class="table table-borderless" style="margin: 0; width: 100%;">
-                                                    <tr>
-                                                        <th style="text-align: left; font-weight: normal; padding: 0;" class="bg-transparent">Unidad de Medida:</th>
-                                                        <td style="text-align: left; padding: 0;" class="bg-transparent">
-                                                            <span t-esc="order_line.product_uom.name or 'Sin unidad de medida'"/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="text-align: left; font-weight: normal; padding: 0;" class="bg-transparent">Cantidad:</th>
-                                                        <td style="text-align: left; padding: 0;" class="bg-transparent">
-                                                            <span t-esc="order_line.product_uom_qty or 'Sin cantidad'"/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="text-align: left; font-weight: normal; padding: 0;" class="bg-transparent">Precio Unitario:</th>
-                                                        <td style="text-align: left; padding: 0;" class="bg-transparent">
-                                                            <span t-esc="order_line.price_unit or '0'"/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="text-align: left; font-weight: normal; padding: 0;" class="bg-transparent">Total:</th>
-                                                        <td style="text-align: left; padding: 0;" class="bg-transparent">
-                                                            <span t-esc="order_line.price_subtotal or '0'"/>
-                                                        </td>
-                                                    </tr>
-
-                                                </table>
-                                                </td>
-                                                <tr>
-                                                    <td colspan="5" style="background-color: #FFFFFF; color: #FFFFFF; text-align: center;  border: 1px solid #FFFFFF;">
-                                                         x 
-                                                    </td>
-                                                </tr>
-
-                                                <thead>
-                                                    <tr>
-                                                        <th>Producto</th>
-                                                        <th>Unidad de Medida</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Precio Unitario</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                </thead>
-                                            </tr>
-                                            <t t-set="order_lines_used" t-value="order_lines_used + [order_line.id]"/>
-                                            <t t-set="order_line_match" t-value="True"/>
+                                        <!--Fin de Materiales-->
+                                                
+                                        
+                                        <!--Mano de obra-->
+        
+                                        <tr style="border-top: 10px solid white;">
+                                            <td colspan="6" style="font-weight: bold;">Mano de obra</td>
+                                        </tr>
+                                        <t t-foreach="doc.project_plan_lines" t-as="manoObra">  
+                                            
+                                            <t t-if="not stop">
+                                                    
+                                                <t t-if="manoObra.display_type == 'line_section'">
+                                        
+                                                    <t t-if="fill">
+                                                        
+                                                        <t t-if="manoObra.for_create == False">
+                                                            
+                                                            <t t-set="stop_loop" t-value="True"/>
+                                                            <t t-set="fill" t-value="False"/>
+                                                        </t>
+                                                    </t>
+                                                    
+                                                    <t t-if="manoObra.name == line.product_template_id.name">
+                                                    
+                                                        <t t-set="fill" t-value="True"/>
+                                                    </t>
+                                                </t>
+                                                
+                                                <t t-if="fill">
+                                                    <t t-if="manoObra.display_type != 'line_section'">
+                                                        <t t-foreach="manoObra.task_timesheet_id.task_time_lines" t-as="horas">  
+                                                            <tr>
+                                                                <td> </td>
+                                                                <td>Pendiente</td>
+                                                                <td><span t-esc="horas.description"/></td>
+                                                                <td style="text-align: center">jor</td>
+                                                                <td style="text-align: right"><span t-esc="horas.work_shift"/></td>
+                                                                <td style="text-align: right"><span>PENDIENTE</span></td>
+                                                                <td style="text-align: right"><span>PENDIENTE</span></td>
+                                                            </tr>
+                                                        </t>
+                                                        
+                                                    </t>
+                                                </t>
+                                                    
+                                            </t>
+                                            
+                                            
                                         </t>
                                         
-                                    </t>
-                                </t>
-                                
-                            </t>
-                            <tr>
-                                <th colspan="4" style="text-align: right; " class="bg-transparent">Total:</th>
-                                <td style="text-align: left;" class="bg-transparent">
-                                    <span t-esc="total_subtotal_mat"/>
-                                </td>
-                                <t t-set="total_subtotal_mat" t-value="0"/>
-                            </tr>
-                        </tbody>
-                    </table>
+                                        <t t-set="fill" t-value="False"/>
+                                        <t t-set="stop_loop" t-value="False"/>
+                                        
+                                        <tr style="border-top: 20px solid white;">
+                                            <td colspan="6" style="font-weight: bold;">Total de Mano de obra</td>
+                                            <td style="text-align: right; font-weight: bold;">PENDIENTE</td>
+                                        </tr>
+                            
+                                        <!--Fin de Mano de obra-->
+                                        
+                                        <!--Totales-->
+                    
+                                        <t t-set="total_manoObra" t-value="0"/>
+                    
+                                        <!-- Calcular Costo Directo -->
+                                        <t t-set="costo_directo" t-value="total_materiales + total_manoObra"/>
+                                    
+                                        <!-- Calcular Utilidad (porcentaje) -->
+                                        <t t-set="utilidad" t-value="0"/> <!-- Utilidad 0% por ahora -->
+                                    
+                                        <!-- Calcular Precio Unitario -->
+                                        <t t-set="precio_unitario" t-value="costo_directo + utilidad"/>
+                                    
+                                        <!-- Calcular IVA -->
+                                        <t t-set="iva_porcentaje" t-value="16"/> <!-- IVA al 16% -->
+                                        <t t-set="iva_calculado" t-value="precio_unitario * iva_porcentaje"/>
+                                    
+                                        <!-- Calcular Total (Precio Unitario + IVA) -->
+                                        <t t-set="total_con_iva" t-value="precio_unitario + iva_calculado"/>
+
+                                        <tr>
+                                            <td> </td>
+                                            <td/>
+                                            <td style="font-weight: bold;">Costo directo</td>
+                                            <td/>
+                                            <td/>
+                                            <td/>
+                                            <td style="text-align: right; font-weight: bold;"><span t-esc="costo_directo"/></td>
+                                        </tr>
+                                    
+                                        <tr>
+                                            <td> </td>
+                                            <td/>
+                                            <td style="font-weight: bold;">Utilidad</td>
+                                            <td/>
+                                            <td/>
+                                            <td style="text-align: right; font-weight: bold;">PENDIENTE%</td>
+                                            <td style="text-align: right; font-weight: bold;"><span t-esc="utilidad"/></td>
+                                        </tr>
+                                    
+                                        <tr>
+                                            <td> </td>
+                                            <td/>
+                                            <td style="font-weight: bold;">Precio unitario</td>
+                                            <td/>
+                                            <td/>
+                                            <td/>
+                                            <td style="text-align: right; font-weight: bold;"><span t-esc="precio_unitario"/></td>
+                                        </tr>
+                            
+                                        <tr>
+                                            <td> </td>
+                                            <td/>
+                                            <td style="font-weight: bold;"><span t-esc="iva_porcentaje"/></td>
+                                            <td/>
+                                            <td/>
+                                            <td/>
+                                            <td style="text-align: right; font-weight: bold;"><span t-esc="iva_calculado"/></td>
+                                        </tr>
+                                    
+                                        <tr>
+                                            <td> </td>
+                                            <td/>
+                                            <td style="font-weight: bold;">Total</td>
+                                            <td/>
+                                            <td/>
+                                            <td/>
+                                            <td style="text-align: right; font-weight: bold;"><span t-esc="total_con_iva"/></td>
+                                        </tr>
+                                        
+                                        <!--<tr>-->
+                                        <!--    <td colspan="7" style="padding-top: 20px; font-weight: bold; text-align: center;">(* PENDIENTES PESOS 20/100 MXN*)</td>-->
+                                        <!--</tr>-->
+                                        <!--Fin de Totales-->
+                                        <tr style="border-top: 25px solid white;"/>
+                                        <tr style="border-top: 2px solid black;">
+                                            <td style="padding-bottom: 20px;"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                    </t>            
                 </t>
             </t>
         </t>

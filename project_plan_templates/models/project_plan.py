@@ -23,17 +23,25 @@ class ProjectPlan(models.Model):
         store=True
     )
 
-    plan_total_cost = fields.Float(string="Costo total", default=0.0)
+    task_time_lines = fields.One2many('task.time.lines',
+        'project_plan_id',
+        string="Mano de obra",
+        compute="_compute_task_lines",
+        store = True
+        )
+
+    material_total_cost = fields.Float(string="Costo total", compute="_compute_total_cost", default=0.0)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
 
     product_template_id = fields.Many2one(
         'product.template',
         string="Servicio",
-        ondelete='restrict',  
-        inverse_name='project_plan_id'
+        ondelete='restrict',
     )
 
     service_project_domain = fields.Many2many('product.template', store=True, compute="_compute_service_project_domain")
+
+    labour_total_cost = fields.Float(string="Costo mano de obra", compute="_compute_labour_cost", default=0.0)
 
     # @api.constrains('project_plan_lines', 'picking_lines')
     # def _check_lines_existence(self):
@@ -52,10 +60,17 @@ class ProjectPlan(models.Model):
     #                 raise ValidationError("El producto '%s' ya está asignado a otro proyecto." % record.product_template_id.display_name)
 
 
-    # @api.depends('picking_lines.subtotal')
-    # def _compute_total_cost(self):
-    #     for plan in self:
-    #         plan.plan_total_cost = sum(line.subtotal for line in plan.picking_lines)
+    @api.depends('picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.material_total_cost = sum(line.subtotal for line in plan.picking_lines)
+            self.update_product_template_list_price(plan)
+
+    @api.depends('task_time_lines.price_subtotal')
+    def _compute_labour_cost(self):
+        for task in self:
+            task.labour_total_cost = sum(line.price_subtotal for line in task.task_time_lines)
+            self.update_product_template_list_price(task)
 
     @api.depends('project_plan_lines')
     def _compute_picking_lines(self):
@@ -63,14 +78,27 @@ class ProjectPlan(models.Model):
             record.picking_lines = [(5, 0, 0)]
             record.picking_lines = record.get_picking_lines(record.project_plan_lines)
 
+    @api.depends('project_plan_lines')
+    def _compute_task_lines(self):
+        for record in self:
+            record.task_time_lines = [(5, 0, 0)]
+            record.task_time_lines = record.get_task_time_lines(record.project_plan_lines)
+
     def get_picking_lines(self, line):
         picking_lines = []
 
         for picking in line:
-            picking_lines.append(self.prep_picking_section_line(picking))
             picking_lines += self.prep_picking_lines(picking)
                 
         return picking_lines
+
+    def get_task_time_lines(self, line):
+        task_lines = []
+
+        for task in line:
+            task_lines += self.prep_task_time_lines(task)
+
+        return task_lines
 
     def prep_picking_lines(self, line):
         picking_lines = []
@@ -87,6 +115,19 @@ class ProjectPlan(models.Model):
                 'display_type': False
             }))
         return picking_lines
+    
+    def prep_task_time_lines(self, line):
+        task_lines = []
+        for task in line.task_timesheet_id.task_time_lines:
+            task_lines.append((0, 0, {
+                'product_id': task.product_id.id,
+                'description': task.description,
+                'estimated_time': task.estimated_time,
+                'work_shift': task.work_shift,
+                'unit_price': task.unit_price,
+                'price_subtotal': task.price_subtotal
+            }))
+        return task_lines
         
     def prep_picking_section_line(self, line):
         return (0, 0, {
@@ -100,6 +141,11 @@ class ProjectPlan(models.Model):
             'standard_price': False,
             'subtotal': False
         })
+
+    def update_product_template_list_price(self, plan):
+        if plan.product_template_id:
+            total_cost = plan.material_total_cost + plan.labour_total_cost
+            plan.product_template_id.write({'list_price': total_cost})
 
     @api.model
     def write(self, vals):

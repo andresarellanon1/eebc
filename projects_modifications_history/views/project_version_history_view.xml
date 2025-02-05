@@ -8,6 +8,7 @@
                 <tree>
                     <field name="project_id"/>
                     <field name="modified_by"/>
+                    <field name="client_id"/>
                 </tree>
             </field>
         </record>
@@ -22,6 +23,7 @@
                             <label for="project_name"/>
                             <h1><field name="project_name" class="w-100"/></h1>
                         </div>
+                        <field name="client_id" readonly="1"/>
                         <notebook>
                             <page name="versions" string="Versiones">
                                 <div>

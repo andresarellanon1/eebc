@@ -7,28 +7,29 @@ _logger = logging.getLogger(__name__)
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
-    project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly="True")
+    project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly=True)
     project_plan_lines = fields.One2many('project.plan.line', 'origin_project_id', string="Project plan lines")
     
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Movimientos de inventario")
-    project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines", compute="_compute_picking_lines", store=True)
+    project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines")
     plan_total_cost = fields.Float(string="Costo total", default=0.0)
     sale_order_id = fields.Many2one('sale.order', string='Orden de venta', readonly=False, store=True)
-    actual_sale_order_id = fields.Many2one('sale.order', string="Orden de venta", store=True)
+    actual_sale_order_id = fields.Many2one('sale.order', string="Orden actual de venta", store=True)
 
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada de entrega')
     contact_id = fields.Many2one('res.partner', string='Contacto')
     date_start = fields.Datetime(string="Fecha de inicio planeada")
+    client_id = fields.Many2one('res.partner', string="Cliente")
 
-    def create_project_tasks(self, location_id, location_dest_id):
+    def create_project_tasks(self, location_id, location_dest_id, scheduled_date):
         for project in self:
 
             current_task_type = None
 
             for line in project.project_plan_lines:
-                if line.display_type:
+                if line.display_type and line.for_create:
                     current_task_type = self.get_or_create_task_type(line.name, project)
 
                 if line.use_project_task and not line.display_type:
@@ -47,7 +48,7 @@ class ProjectProject(models.Model):
 
                         timesheet_data = [(0, 0, {
                             'name': ts_line.description,
-                            'estimated_time': ts_line.estimated_time,
+                            'work_shift': ts_line.work_shift * line.service_qty
                         }) for ts_line in timesheet_lines]
 
                         picking_lines = []
@@ -66,7 +67,8 @@ class ProjectProject(models.Model):
                                     'quantity': picking.quantity,
                                     'standard_price': picking.standard_price,
                                     'subtotal': picking.subtotal,
-                                    'display_type': False
+                                    'display_type': False,
+                                    'for_modification': False
                                 }))
 
                         task_id = self.env['project.task'].create({
@@ -80,7 +82,7 @@ class ProjectProject(models.Model):
                             'project_picking_lines': picking_lines
                         })
 
-                        self.create_project_tasks_pickings(task_id, picking_lines, location_id, location_dest_id)
+                        self.create_project_tasks_pickings(task_id, picking_lines, location_id, location_dest_id, scheduled_date)
                     else:
                         existing_task.name = line.name
                         existing_task.description = line.description
@@ -95,19 +97,37 @@ class ProjectProject(models.Model):
 
                             timesheet_data = [(0, 0, {
                                 'name': ts_line.description,
+                                'work_shift': ts_line.work_shift * line.service_qty,
                                 'estimated_time': ts_line.estimated_time,
                             }) for ts_line in timesheet_lines]
 
                             existing_task.timesheet_ids = timesheet_data
 
-    @api.depends('project_plan_lines')
-    def _compute_picking_lines(self):
-        for record in self:
-            record.project_picking_lines = [(5, 0, 0)]
-            record.project_picking_lines = record.sale_order_id.get_picking_lines(record.project_plan_lines)
-            for line in record.project_plan_lines:
-                _logger.warning(line.id)
-                _logger.warning(line.sequence)
+                        picking_lines = []
+                        is_task = False
+
+                        for picking in self.project_picking_lines:
+                            if picking.display_type:
+                                is_task = picking.name == line.name
+                            elif is_task:
+                                if picking.for_modification:
+                                    picking_lines.append((0, 0, {
+                                        'name': picking.product_id.name,
+                                        'product_id': picking.product_id.id,
+                                        'product_uom': picking.product_uom.id,
+                                        'product_packaging_id': picking.product_packaging_id.id,
+                                        'product_uom_qty': picking.product_uom_qty,
+                                        'quantity': picking.quantity,
+                                        'standard_price': picking.standard_price,
+                                        'subtotal': picking.subtotal,
+                                        'display_type': False,
+                                        'for_modification': False
+                                    }))
+                        
+                        if picking_lines:
+                            existing_task.project_picking_lines = [(4, picking.id) for picking in existing_task.project_picking_lines] + picking_lines
+
+                        self.create_project_tasks_pickings(existing_task, picking_lines, location_id, location_dest_id, scheduled_date)
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
@@ -123,8 +143,9 @@ class ProjectProject(models.Model):
 
         return task_type
 
-    def create_project_tasks_pickings(self, task_id, pickings, location_id, location_dest_id):
+    def create_project_tasks_pickings(self, task_id, pickings, location_id, location_dest_id, scheduled_date):
         for line in pickings:
+        
             line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
 
             stock_move_vals = [(0, 0, {
@@ -143,7 +164,7 @@ class ProjectProject(models.Model):
                 'partner_id': self.contact_id.id,
                 'picking_type_id': self.default_picking_type_id.id,
                 'location_id': location_id,
-                'scheduled_date': self.scheduled_date,
+                'scheduled_date': scheduled_date,
                 'origin': task_id.name,
                 'task_id': task_id.id,
                 'user_id': self.env.user.id,

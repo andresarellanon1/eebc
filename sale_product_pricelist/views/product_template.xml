@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_pricelist" model="ir.ui.view">
+        <field name="name">product.template.pricelist</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product_unspsc.product_template_unspsc" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='unspsc']" position="before">
+                <group name="pricelist_template" string="Listas de precios">
+                    <field name="product_pricelist_line_ids" readonly="1" nolabel="1" colspan="2"
+                        context="{'origin_res_id': active_id, 'origin_res_model': active_model}">
+                        <tree string="Lista de precios">
+                            <field name="pricelist_id" />
+                            <field name="uom_id" />
+                            <field name="unit_price" />
+                            <field name="company_id" />
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

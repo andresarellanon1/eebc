@@ -32,7 +32,6 @@ class ProjectCreation(models.TransientModel):
     note = fields.Char()
 
     plan_total_cost = fields.Float(string="Costo total",  compute='_compute_total_cost', default=0.0)
-
     picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
@@ -41,6 +40,7 @@ class ProjectCreation(models.TransientModel):
     date_start = fields.Datetime(string="Fecha de inicio planeada")
     date = fields.Datetime()
     project_id = fields.Many2one('project.project', string="Proyecto")
+    client_id = fields.Many2one('res.partner', string='Cliente')
 
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
@@ -59,86 +59,87 @@ class ProjectCreation(models.TransientModel):
     def action_confirm_create_project(self):
         self.ensure_one()
 
+        for line in self.wizard_plan_lines:
+            logger.info(
+                    "No hay datos en Wizard Plan Line"
+                )
+            
+        # if not self.project_id:
         self.sale_order_id.state = 'sale'
 
-        if not self.project_id:
-            project_vals = {
-                'name': self.project_name,
-                'description': self.description,
-                'project_plan_lines': self.prep_plan_lines(self.wizard_plan_lines),
-                'project_picking_lines': self.prep_picking_lines(self.wizard_picking_lines),
-                'default_picking_type_id': self.picking_type_id.id,
-                'publication_date': fields.Datetime.now(),
-                'date_start': self.date_start,
-                'date': self.date,
-                'actual_sale_order_id': self.sale_order_id.id
-            }
+        project_vals = {
+            'name': self.project_name,
+            'description': self.description,
+            'project_plan_lines': self.prep_plan_lines(self.wizard_plan_lines),
+            'project_picking_lines': self.prep_picking_lines(self.wizard_picking_lines),
+            'default_picking_type_id': self.picking_type_id.id,
+            'publication_date': fields.Datetime.now(),
+            'date_start': self.date_start,
+            'date': self.date,
+            'actual_sale_order_id': self.sale_order_id.id,
+            'location_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id
+        }
 
-            project = self.env['project.project'].create(project_vals)
-            logger.warning(f"Id del proyecto: {project.id}")
-            self.create_project_tasks(project)
+        project = self.env['project.project'].create(project_vals)
+        logger.warning(f"Id del proyecto: {project.id}")
+        self.create_project_tasks(project)
 
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'project.project',
-                'res_id': project.id,
-                'view_mode': 'form',
-                'target': 'current',
-            }
-        else:
-            project = self._origin.project_id
+        existing_history = self.env['project.version.history'].search([
+            ('project_id', '=', project.id), 
+            ('client_id', '=', self.project_id.client_id.id)
+        ], limit=1)
 
-            logger.warning(f"Id del sale: {project.actual_sale_order_id.id}")
+        if not existing_history:
+            history = self.env['project.version.history'].create({
+                'project_id': project.id,
+                'modified_by': self.env.user.id,
+                'modification_motive': 'Se ha creado el proyecto',
+                'project_name': project.name,
+                'client_id': project.client_id.id,
+            })
 
-            self.sale_order_id.project_id = project.id
-            project.actual_sale_order_id = self.sale_order_id.id
+        for sale in self.sale_order_id.project_picking_lines:
+            sale.for_modification = False
 
-            existing_plan_lines = project.project_plan_lines
-            new_plan_lines_data = self.prep_plan_lines(self.wizard_plan_lines)
+        self.sale_order_id.project_lines_created()
 
-            project.project_plan_lines = [
-                (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
-                for line in existing_plan_lines
-                for new_line in new_plan_lines_data
-                if line.name == new_line[2]['name']
-            ] + [
-                new_line for new_line in new_plan_lines_data
-                if all(new_line[2]['name'] != line.name for line in existing_plan_lines)
-            ]
+        self.env['project.version.lines'].create({
+            'project_version_history_id': history.id,
+            'modification_date': fields.Datetime.now(),
+            'modified_by': self.env.user.id,
+            'modification_motive': 'Se ha creado el proyecto',
+            'project_plan_lines': [(6, 0, self.sale_order_id.project_plan_lines.ids)],
+            'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
+        })
 
-            existing_picking_lines = project.project_picking_lines
-            new_picking_lines_data = self.prep_picking_lines(self.wizard_picking_lines)
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+        
 
-            project.project_picking_lines = [
-                (1, line.id, new_line[2]) if line.name == new_line[2]['name'] else (4, line.id)
-                for line in existing_picking_lines
-                for new_line in new_picking_lines_data
-                if line.name == new_line[2]['name']
-            ] + [
-                new_line for new_line in new_picking_lines_data
-                if all(new_line[2]['name'] != line.name for line in existing_picking_lines)
-            ]
-
-            return {
-                'name': 'Project Version History',
-                'view_mode': 'form',
-                'res_model': 'project.version.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'context': {
-                    'default_project_id': project.id,
-                    'default_project_plan_id': project.project_plan_id.id if project.project_plan_id else False,
-                    'default_project_plan_lines': [(6, 0, project.project_plan_lines.ids)] if project.project_plan_lines else False,
-                    'default_project_picking_lines': [(6, 0, project.project_picking_lines.ids)] if project.project_picking_lines else False,
-                    'default_modified_by': self.env.user.id,
-                    'default_modification_date': fields.Datetime.now(),
-                    'default_contact_id': self.partner_id.id,
-                    'default_location_id': self.location_id.id,
-                    'default_location_dest_id': self.location_dest_id.id,
-                    'default_scheduled_date': self.scheduled_date,
-                    'default_picking_type_id': self.picking_type_id.id
-                }
-            }
+            # return {
+            #     'name': 'Project Version History',
+            #     'view_mode': 'form',
+            #     'res_model': 'project.version.wizard',
+            #     'type': 'ir.actions.act_window',
+            #     'target': 'new',
+            #     'context': {
+            #         'default_project_id': self.project_id.id,
+            #         'default_modified_by': self.env.user.id,
+            #         'default_modification_date': fields.Datetime.now(),
+            #         'default_contact_id': self.partner_id.id,
+            #         'default_location_id': self.location_id.id,
+            #         'default_location_dest_id': self.location_dest_id.id,
+            #         'default_scheduled_date': self.scheduled_date,
+            #         'default_picking_type_id': self.picking_type_id.id,
+            #         'default_sale_order_id': self.sale_order_id.id
+            #     }
+            # }
 
     def get_or_create_task_for_picking(self, picking_line, project):
         # Intentar encontrar una tarea asociada con este picking
@@ -215,7 +216,7 @@ class ProjectCreation(models.TransientModel):
 
                 timesheet_data = [(0, 0, {
                     'name': ts_line.description,
-                    'estimated_time': ts_line.estimated_time,
+                    'work_shift': ts_line.work_shift * line.service_qty
                 }) for ts_line in timesheet_lines]
 
                 picking_lines = []
@@ -267,7 +268,7 @@ class ProjectCreation(models.TransientModel):
     def prep_plan_lines(self, plan):
         plan_lines = []
         for line in plan:
-            if line.use_project_task and line.for_create:
+            if line.use_project_task:
                 if line.display_type == 'line_section':
                     plan_lines.append((0, 0, {
                         'name': line.name,
@@ -278,7 +279,10 @@ class ProjectCreation(models.TransientModel):
                         'planned_date_end': False,
                         'project_plan_pickings': False,
                         'task_timesheet_id': False,
-                        'for_create': line.for_create
+                        'for_create': line.for_create,
+                        'for_modification': line.for_modification,
+                        'for_newlines': line.for_newlines,
+                        'service_qty': line.service_qty
                     }))
                 else:
                     plan_lines.append((0, 0, {
@@ -290,7 +294,10 @@ class ProjectCreation(models.TransientModel):
                         'project_plan_pickings': line.project_plan_pickings.id,
                         'task_timesheet_id': line.task_timesheet_id.id,
                         'display_type': False,
-                        'for_create': True
+                        'for_create': True,
+                        'for_modification': line.for_modification,
+                        'for_newlines': line.for_newlines,
+                        'service_qty': line.service_qty
                     }))
         return plan_lines
 
@@ -307,7 +314,9 @@ class ProjectCreation(models.TransientModel):
                     'product_uom_qty': False,
                     'quantity': False,
                     'standard_price': False,
-                    'subtotal': False
+                    'subtotal': False,
+                    'for_modification': line.for_modification,
+                    'for_newlines': line.for_newlines,
                 }))
             else:
                 picking_lines.append((0, 0, {
@@ -319,7 +328,9 @@ class ProjectCreation(models.TransientModel):
                     'quantity': line.quantity,
                     'standard_price': line.standard_price,
                     'subtotal': line.subtotal,
-                    'display_type': False
+                    'display_type': False,
+                    'for_modification': line.for_modification,
+                    'for_newlines': line.for_newlines,
                 }))
         return picking_lines
 

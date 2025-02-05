@@ -16,6 +16,7 @@
                                 <group>
                                     <field name="project_id" readonly="1"/>
                                     <field name="sale_order_id" readonly="1"/>
+                                    <field name="client_id" readonly="1"/>
                                     <field name="partner_id"/>
                                     <field name="picking_type_id"/>
                                     <field name="location_id"/>
@@ -35,10 +36,7 @@
                                     <field name="description" />
                                 </page>
                                 <page name="planning" string="Tareas del proyecto">
-                                    <group>
-                                        <field name="project_plan_id" invisible="1"/>
-                                    </group>
-                                    <div style="100%">
+                                    <div>
                                         <field name="wizard_plan_lines" widget="section_and_note_one2many" mode="tree,kanban" nolabel="1">
                                             <tree editable="bottom" style="width: 100%;">
                                                 <control>
@@ -46,10 +44,13 @@
                                                     <create name="add_section_control" string="Añadir sección" context="{'default_display_type': 'line_section'}"/>
                                                 </control>
                                                 <field name="display_type" column_invisible="True"/>
+                                                <field name="sequence" widget="handle"/>
                                                 <field name="name"/>
                                                 <field name="description"/>
-                                                <field name="use_project_task"/>
+                                                <field name="service_qty"/>
+                                                <field name="use_project_task" column_invisible="1"/>
                                                 <field name="for_create" column_invisible="1"/>
+                                                <field name="for_newlines" column_invisible="1"/>
                                                 <field name="planned_date_begin" widget="daterange"/>
                                                 <field name="planned_date_end" widget="daterange"/>
                                                 <field name="project_plan_pickings" options="{'create': True}"/>
@@ -64,9 +65,11 @@
                                             <tree editable="editable_bottom" style="width: 100%;">
                                                 <field name="company_id" column_invisible="1"/>
                                                 <field name="display_type" column_invisible="True"/>
+                                                <field name="sequence" widget="handle"/>
                                                 <field name="name"/>
                                                 <field name="product_id"/>
                                                 <field name="product_uom"/>
+                                                <field name="for_newlines" column_invisible="1"/>
                                                 <field name="product_packaging_id"/>
                                                 <field name="quantity"/>  
                                                 <field name="standard_price"/> 

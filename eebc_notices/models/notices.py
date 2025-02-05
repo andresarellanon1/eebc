@@ -92,13 +92,14 @@ class Notices(models.Model):
     def _compute_total_lot_quantity(self):
         _logger.warning("entramos a nuestro compute de lot_ids total")
         total_quantity = 0
-        for lot in self.lot_ids:
+        for record in self.history_ids:
             # Sumar la cantidad disponible de cada lote asociado al aviso
-            _logger.warning("valor de total lot product_qty : %s",lot.product_qty )
-
-            total_quantity += lot.product_qty
-        
-        _logger.warning("valor de total lot quantity : %s",total_quantity )
+            _logger.warning("valor de stock_move_id : %s",record.stock_move_id)
+            if record.stock_move_id.move_line_ids.picking_id.move_ids_without_package.lot_ids:
+                for line in  record.stock_move_id.move_line_ids:
+                    total_quantity += line.quantity
+            
+            _logger.warning("valor de total lot quantity : %s",total_quantity )
 
         self.total_lot_quantity = total_quantity
     
@@ -111,15 +112,13 @@ class Notices(models.Model):
 
     @api.depends('history_ids')
     def _compute_series(self):
-         for notice in self:
-            lot_ids = []
-            for history_record in notice.history_ids:
-                stock_move = history_record.stock_move_id
-                if stock_move:
-                    for lot in stock_move.lot_ids:
-                        if lot.id not in lot_ids:
-                            lot_ids.append(lot.id)
+        for notice in self:
+            # Obtener todos los lotes desde notices.history
+            lot_ids = notice.history_ids.mapped('lot_ids.id')
+
             _logger.warning(f"Lotes asignados al aviso {notice.id}: {lot_ids}")
+            
+            # Asignar los lotes al aviso
             notice.lot_ids = [(6, 0, lot_ids)]
 
     @api.depends('history_ids')
@@ -127,7 +126,7 @@ class Notices(models.Model):
         for notice in self:
             invoice_set = set()
             for history_record in notice.history_ids:
-                purchase_order = history_record.purchase_order_id
+                purchase_order = history_record.purchase_order_idm
                 if purchase_order:
                     for invoice in purchase_order.invoice_ids:
                         invoice_set.add(invoice.id)
@@ -149,7 +148,9 @@ class Notices(models.Model):
         _logger.warning('Entramos a compute de quantity')
         
         for record in self:
-            approved_history = record.history_ids.filtered(lambda h: h.state == 'draft')
+            approved_history = record.history_ids.filtered(
+                lambda h: h.state == 'draft' and not h.stock_move_id.move_line_ids.picking_id.move_ids_without_package.lot_ids
+            )
             _logger.warning(f'VALOR DE APPROVED HISTORY: {approved_history}')
             record.quantity = sum(approved_history.mapped('quantity'))
 

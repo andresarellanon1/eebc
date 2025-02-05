@@ -6,19 +6,16 @@
         <field name="priority">36</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
-
             <xpath expr="//group[@name='sale']" position="before">
                 <group>
                     <field name="is_customer" invisible="not is_company" />
                     <field name="is_government" invisible="not is_customer" />
                 </group>
             </xpath>
-
             <xpath expr="//field[@name='lang']" position="after">
                 <field name="commercial_name" readonly="parent_id" />
                 <field name="customer_number_reference" readonly="1" invisible="not is_customer" />
             </xpath>
-
             <xpath expr="//group[@name='sale']" position="attributes">
                 <attribute name="invisible">not is_customer</attribute>
             </xpath>

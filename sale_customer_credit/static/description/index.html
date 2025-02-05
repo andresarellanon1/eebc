@@ -1,0 +1,141 @@
+<head>
+    <link rel="stylesheet" href="/sale_customer_credit/static/src/css/index.css">
+</head> 
+
+<body class="bg-gray-50">
+    <div class="min-h-screen p-8">
+        <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md border border-blue-100">
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold text-blue-900 mb-2">
+                    Crédito del Cliente en Venta
+                </h1>
+                <p class="text-blue-600 mb-4">Versión 17 - Quadro Soluciones Tecnológicas</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="https://quadrosoluciones.com" 
+                       class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors">
+                       Sitio Web
+                    </a>
+                    <a href="https://quadro.odoo.com" 
+                       class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors">
+                       Portal Clientes
+                    </a>
+                </div>
+            </div>
+
+            <!-- Marco Azul para Descripción, Funcionalidad y Advertencias Técnicas -->
+            <div class="border-4 border-blue-500 p-6 rounded-lg">
+                <!-- Descripción -->
+                <div class="max-w-3xl mx-auto my-20" style="width:70%; margin: 20px;">
+                    <div class="text-center p-6 bg-gray-100 rounded-lg">
+                        <p class="text-lg text-gray-700" style="text-align: justify;">
+                            Este módulo extiende los modelos de Odoo relacionados con la gestión de ventas y partners, con el objetivo de mejorar la administración del crédito 
+                            de los clientes. Permite establecer límites de crédito y realizar validaciones para evitar que los clientes excedan su capacidad de pago. Además, 
+                            ofrece la posibilidad de bloquear ventas automáticamente si el cliente supera su límite de crédito, con excepciones configurables como la 
+                            "Llave de crédito", que permite realizar ventas incluso si el cliente tiene el crédito suspendido. Con esta funcionalidad, se optimiza la gestión 
+                            financiera de la empresa, evitando riesgos innecesarios asociados con el crédito de los clientes.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Línea Continua 1 -->
+                <div class="text-center my-8">
+                    <hr class="border-t-2 border-blue-600 w-1/2 mx-auto" style="margin-bottom:3px;">
+                </div>
+
+                <!-- Palabra caracteristicas -->
+                <div class="text-center" >
+                    <h5 class="text-2xl font-semibold text-blue-900" style="margin-bottom:3px;">CARACTERÍSTICAS</h5>
+                </div>
+
+                <!-- Línea Continua 2 -->
+                <div class="text-center my-8">
+                    <hr class="border-t-2 border-blue-600 w-1/2 mx-auto" style="margin-top:3px;">
+                </div>
+
+                <!-- Módulo Funcionalidad -->
+                <div class="space-y-8" style="margin-left:15%; margin-right:15%; display: flex; flex-wrap: wrap; gap: 20px;">
+                    <div class="bg-blue-50 p-6 rounded-lg" style="flex: 1 1 calc(50% - 20px); border: 1px solid #d1e9ff; border-radius: 10px; padding: 20px;">
+                        <h2 class="text-xl font-semibold text-blue-900 mb-3">🏷️ Funcionalidades Principales</h2>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Permite validar y controlar el crédito disponible de los clientes antes de confirmar las órdenes de venta, asegurando que no se exceda el límite 
+                                de crédito asignado.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Suspende automáticamente el crédito del cliente cuando se excede el límite de crédito, impidiendo nuevas ventas hasta que se resuelva la situación.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">✔️</span>
+                                Añade opciones en los parámetros de configuración, como "Bloquear ventas por límite de crédito excedido" y "Llave de crédito" para habilitar excepciones 
+                                en clientes con problemas de crédito.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Guía Rápida -->
+                    <div class="border-l-4 border-blue-200 pl-6" style="flex: 1 1 calc(50% - 20px); background-color: #f0f9ff; padding: 20px; border-radius: 10px; border: 1px solid #d1e9ff;">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-3">📌 Buenas Prácticas</h3>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">🔍</span>
+                                Asegúrate de que las configuraciones de bloqueo de ventas y la llave de crédito estén correctamente habilitadas según las necesidades de tu negocio.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📝</span>
+                                Utiliza la "Llave de crédito" cuando sea necesario permitir que el cliente supere temporalmente su límite de crédito.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📊</span>
+                                Verifica las órdenes pendientes de facturación y su relación con el límite de crédito para evitar problemas de crédito.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📂</span>
+                                Informa a los clientes cuando su crédito sea suspendido o exceda el límite, para evitar malentendidos y mejorar la gestión de pagos.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Advertencias Técnicas -->
+                    <div class="bg-blue-100 p-6 rounded-lg" style="flex: 1 1 calc(50% - 20px); border: 1px solid #d1e9ff; border-radius: 10px; padding: 20px;">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-3">⚠️ Consideraciones Clave</h3>
+                        <ul class="space-y-3 text-blue-800">
+                            <li class="flex items-start">
+                                <span class="mr-2">⚠️</span>
+                                Si se habilita el bloqueo de ventas por crédito excedido, asegúrate de revisar que las condiciones de pago y los montos sean correctos antes 
+                                de confirmar cualquier venta.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">🔄</span>
+                                Siempre valida el límite de crédito antes de confirmar una venta, para evitar que se procesen ventas a clientes con crédito suspendido.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">📈</span>
+                                Monitorea regularmente las alertas de crédito suspendido o sobrepasado, especialmente si manejas un volumen alto de ventas.
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">🔗</span>
+                                Si realizas importaciones de datos de clientes y sus límites de crédito, verifica que todos los registros estén correctamente 
+                                configurados para evitar errores al realizar ventas.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soporte -->
+            <div class="text-center mt-10 pt-6 border-t border-blue-200" style="margin-top: 15px;">
+                <p class="text-blue-600">
+                    ¿Necesitas ayuda? Contacta a nuestro equipo técnico:
+                    <a href="mailto:soporte@quadrosoluciones.com" 
+                        class="text-blue-800 underline hover:text-blue-900">
+                        soporte@quadrosoluciones.com
+                    </a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</body>
