@@ -204,6 +204,7 @@ class SaleOrder(models.Model):
                 sale.project_picking_lines = picking_lines
 
                 task_lines = self._prepare_task_lines(previous_order.task_time_lines)
+                sale.task_time_lines = task_lines
 
     def _prepare_task_lines(self, lines):
         return [(0, 0, {
