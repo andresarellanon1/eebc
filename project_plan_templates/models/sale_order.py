@@ -97,8 +97,19 @@ class SaleOrder(models.Model):
 
     def update_picking_lines(self):
         for record in self:
-            #record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
-            record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
+            existing_lines = {line.name: line.sequence for line in record.project_picking_lines}
+
+            # Generar nuevas líneas de picking
+            picking_lines = record.get_picking_lines(record.project_plan_lines)
+
+            # Reasignar secuencias originales
+            for line in picking_lines:
+                line_name = line[2].get('name', '')
+                if line_name in existing_lines:
+                    line[2]['sequence'] = existing_lines[line_name]
+
+            # Asignar las líneas ordenadas por secuencia
+            record.project_picking_lines = sorted(picking_lines, key=lambda x: x[2]['sequence'])
 
     def get_picking_lines(self, line):
         picking_lines = []
@@ -143,6 +154,10 @@ class SaleOrder(models.Model):
                     ) 
 
                 plan_pickings = []
+                # Mantener el orden original en las líneas existentes
+                existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
+
+                # Procesar nuevas líneas y conservar la secuencia
                 plan_lines = []
                 for line in sale.order_line:
                     if line.for_modification:
@@ -156,14 +171,16 @@ class SaleOrder(models.Model):
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                                 plan_pickings.append((4, project_picking.id))
                         line.for_modification = False
-                    line.last_service_price = line.price_unit
 
-                for plan in sale.project_plan_lines:
-                    if plan.for_modification:
-                        plan.for_modification = False
+                # Reasignar secuencias originales a las líneas nuevas
+                for plan in plan_lines:
+                    plan_name = plan[2].get('name', '')
+                    if plan_name in existing_lines:
+                        plan[2]['sequence'] = existing_lines[plan_name]
 
+                # Sobrescribir sin desordenar
                 sale.project_plan_pickings = plan_pickings
-                sale.project_plan_lines = plan_lines
+                sale.project_plan_lines = sorted(plan_lines, key=lambda x: x[2]['sequence'])
 
                 sale.update_picking_lines()
                 sale.update_task_lines()
@@ -225,7 +242,7 @@ class SaleOrder(models.Model):
         """Prepara las líneas de plan para asignarlas al pedido."""
         return [(0, 0, {
             'name': line.name,
-            'sequence': 0,
+            'sequence': line.sequence,
             'display_type': line.display_type,
             'description': line.description,
             'use_project_task': line.use_project_task,
@@ -242,7 +259,7 @@ class SaleOrder(models.Model):
         """Prepara las líneas de picking para asignarlas al pedido."""
         return [(0, 0, {
             'name': line.name,
-            'sequence': 0,
+            'sequence': line.sequence,
             'display_type': line.display_type,
             'product_id': line.product_id.id if line.product_id else False,
             'product_uom': line.product_uom.id if line.product_uom else False,
