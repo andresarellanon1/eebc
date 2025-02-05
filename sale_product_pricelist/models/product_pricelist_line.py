@@ -36,7 +36,7 @@ class ProductPricelistLine(models.Model):
         referenced_ids = {sl["product_pricelist_id"][0] for sl in sale_lines if sl.get("product_pricelist_id")}
         
         for line in self:
-            line.is_orphan = line.id in referenced_ids
+            line.is_orphan = line.id not in referenced_ids
             logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", line.name, "Sí" if line.is_orphan else "No")
 
     # @api.depends()
