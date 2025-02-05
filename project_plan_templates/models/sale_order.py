@@ -156,6 +156,7 @@ class SaleOrder(models.Model):
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                                 plan_pickings.append((4, project_picking.id))
                         line.for_modification = False
+                    line.last_service_price = line.price_unit
 
                 for plan in sale.project_plan_lines:
                     if plan.for_modification:
@@ -189,9 +190,10 @@ class SaleOrder(models.Model):
                     'display_type': line.display_type,
                     'name': line.name + ' * ' + str(line.product_uom_qty),
                     'product_uom_qty': 0,
-                    'price_unit': line.price_unit,
+                    'price_unit': line.last_service_price,
                     'discount': line.discount,
-                    'for_modification': False
+                    'for_modification': False,
+                    'last_service_price': line.last_service_price
                 }) for line in previous_order.order_line]
 
                 # Copiar project_plan_lines directamente
@@ -247,10 +249,11 @@ class SaleOrder(models.Model):
             'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
             'product_uom_qty': line.product_uom_qty,
             'quantity': line.quantity,
-            'standard_price': line.standard_price,
+            'standard_price': line.last_price,
             'subtotal': line.subtotal,
             'for_create': line.for_create,
-            'for_modification': False
+            'for_modification': False,
+            'last_price': line.last_price
         }) for line in lines]
 
     def prep_task_line_section_line(self, line):
@@ -278,7 +281,8 @@ class SaleOrder(models.Model):
             'standard_price': False,
             'subtotal': False,
             'for_create': for_create,
-            'for_modification': False
+            'for_modification': False,
+            'last_price': False
         })
     
     def prep_plan_section_line(self, line, for_create, for_task):
@@ -334,7 +338,8 @@ class SaleOrder(models.Model):
                 'subtotal': picking.subtotal,
                 'display_type': False,
                 'for_create': True,
-                'for_modification': False
+                'for_modification': False,
+                'last_price': picking.standard_price
             }))
         return picking_lines
 
