@@ -13,7 +13,7 @@ class TaskTimeLines(models.Model):
     product_domain = fields.Many2many('product.template', store=True)
 
     description = fields.Char(string="Descripción")
-    estimated_time = fields.Float(string="Horas estimadas")
+    estimated_time = fields.Float(string="Horas estimadas", compute="_compute_estimated_hours", store=True)
     work_shift = fields.Float(string='Jornadas Laborales')
 
     unit_price = fields.Float(string="Precio", default=0.0)
@@ -28,8 +28,8 @@ class TaskTimeLines(models.Model):
     )
     for_modification = fields.Boolean(default=True)
 
-    @api.onchange('work_shift')
-    def _work_shift_onchange_(self):
+    @api.depends('work_shift')
+    def _compute_estimated_hours(self):
         for record in self:
             record.estimated_time = record.work_shift * 8
         
