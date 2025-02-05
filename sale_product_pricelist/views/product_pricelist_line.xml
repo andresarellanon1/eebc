@@ -36,6 +36,7 @@
                             <field name="uom_id" />
                             <field name="currency_id" />
                             <field name="is_special" />
+                            <field name="is_orphan"/>
                         </group>
                     </group>
                 </sheet>
