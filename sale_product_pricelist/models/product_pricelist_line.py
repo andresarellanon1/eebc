@@ -24,22 +24,37 @@ class ProductPricelistLine(models.Model):
         help='Indica si esta línea de lista de precios no está siendo utilizada en ninguna línea de pedido de venta.'
     )
 
-    @api.depends()
+
+    @api.depends()  # Agrega dependencias si hay campos relacionados
     def _compute_is_orphan(self):
-        """
-        Determina si la línea de lista de precios no tiene relación con líneas de pedido de venta.
-        1. Busca en todas las líneas de pedido de venta
-        2. Verifica si alguna referencia esta línea de precio (campo `product_pricelist_id`)
-        3. Marca como huérfana si no hay referencias
-        - Utiliza `search_count` para optimizar consultas
-        """
-        sale_line_model = self.env['sale.order.line']
+        sale_lines = self.env["sale.order.line"].read_group(
+            [("product_pricelist_id", "in", self.ids)],
+            ["product_pricelist_id"],
+            ["product_pricelist_id"],
+        )
+        # Crear un set con los IDs de líneas referenciadas
+        referenced_ids = {sl["product_pricelist_id"][0] for sl in sale_lines if sl.get("product_pricelist_id")}
+        
         for line in self:
-            reference_count = sale_line_model.search_count([
-                ('product_pricelist_id', '=', line.id)
-            ])
-            line.is_orphan = reference_count == 0
+            line.is_orphan = line.id not in referenced_ids
             logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", line.name, "Sí" if line.is_orphan else "No")
+
+    # @api.depends()
+    # def _compute_is_orphan(self):
+    #     """
+    #     Determina si la línea de lista de precios no tiene relación con líneas de pedido de venta.
+    #     1. Busca en todas las líneas de pedido de venta
+    #     2. Verifica si alguna referencia esta línea de precio (campo `product_pricelist_id`)
+    #     3. Marca como huérfana si no hay referencias
+    #     - Utiliza `search_count` para optimizar consultas
+    #     """
+    #     sale_line_model = self.env['sale.order.line']
+    #     for line in self:
+    #         reference_count = sale_line_model.search_count([
+    #             ('product_pricelist_id', '=', line.id)
+    #         ])
+    #         line.is_orphan = reference_count == 0
+    #         logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", line.name, "Sí" if line.is_orphan else "No")
 
     def _compute_display_name(self):
         for record in self:
