@@ -39,7 +39,7 @@ class ProductPricelistLine(models.Model):
                 ('product_pricelist_id', '=', line.id)
             ])
             line.is_orphan = reference_count == 0
-            logger.warning("Línea de lista de precios ID: %s - ¿Es huérfana? %s", line.id, "Sí" if line.is_orphan else "No")
+            logger.warning("Línea de lista de precios ID: %s - ¿Es huérfana? %s", line.name, "Sí" if line.is_orphan else "No")
 
     def _compute_display_name(self):
         for record in self:
