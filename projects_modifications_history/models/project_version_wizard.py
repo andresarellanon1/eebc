@@ -152,6 +152,7 @@ class ProjectVersionWizard(models.TransientModel):
                             'task_timesheet_id': False,
                             'for_create': line.for_create,
                             'for_newlines': line.for_newlines,
+                            'service_qty': line.service_qty
                         }))
                     else:
                         plan_lines.append((0, 0, {
@@ -166,6 +167,7 @@ class ProjectVersionWizard(models.TransientModel):
                             'display_type': False,
                             'for_create': True,
                             'for_newlines': line.for_newlines,
+                            'service_qty': line.service_qty
                         }))
         return plan_lines
 
