@@ -64,6 +64,7 @@ class SaleOrder(models.Model):
                     # for _ in range(int(task.service_qty)):
                     #     task_lines += self.prep_task_time_lines(task)
                     task_lines += self.prep_task_time_lines(task)
+            task.for_modification = False
             #task_lines += self.prep_task_time_lines(task)
 
         return task_lines
@@ -114,7 +115,7 @@ class SaleOrder(models.Model):
                     picking_lines.append(self.prep_picking_section_line(picking, False, True))
 
                 picking.for_picking = False
-                picking.for_modification = False
+                
                 
         return picking_lines
     
