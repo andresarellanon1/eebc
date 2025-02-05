@@ -14,12 +14,12 @@ class ProductPricelist(models.Model):
             record._compute_product_pricelist_lines()
         return records
 
-    def write(self, vals):
-        res = super(ProductPricelist, self).write(vals)
-        if 'item_ids' in vals:
-            for line in self:
-                line._compute_product_pricelist_lines()
-        return res
+    # def write(self, vals):
+    #     res = super(ProductPricelist, self).write(vals)
+    #     if 'item_ids' in vals:
+    #         for line in self:
+    #             line._compute_product_pricelist_lines()
+    #     return res
 
     def _compute_product_pricelist_lines(self):
         """
