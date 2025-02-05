@@ -51,16 +51,18 @@ class SaleOrder(models.Model):
     #def _compute_task_time_lines(self):
     def update_task_lines(self):
         for record in self:
-            record.task_time_lines = [(5, 0, 0)]
+            #record.task_time_lines = [(5, 0, 0)]
             record.task_time_lines = record.get_task_time_lines(record.project_plan_lines)
 
     def get_task_time_lines(self, line):
         task_lines = []
         for task in line:
-            if task.display_type == 'line_section':
-                task_lines.append(self.prep_task_line_section_line(task))
-            else:
-                for _ in range(int(task.service_qty)):
+            if task.for_modification:
+                if task.display_type == 'line_section':
+                    task_lines.append(self.prep_task_line_section_line(task))
+                else:
+                    # for _ in range(int(task.service_qty)):
+                    #     task_lines += self.prep_task_time_lines(task)
                     task_lines += self.prep_task_time_lines(task)
             #task_lines += self.prep_task_time_lines(task)
 
@@ -73,7 +75,7 @@ class SaleOrder(models.Model):
                 'product_id': task.product_id.id,
                 'description': task.description,
                 'estimated_time': task.estimated_time,
-                'work_shift': task.work_shift,
+                'work_shift': task.work_shift * line.service_qty,
                 'unit_price': task.unit_price,
                 'price_subtotal': task.price_subtotal
             }))
@@ -173,6 +175,7 @@ class SaleOrder(models.Model):
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
             sale.project_picking_lines = [(5, 0, 0)]
+            sale.task_time_lines = [(5, 0, 0)]
             if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
 
                 previous_order = sale.project_id.actual_sale_order_id
@@ -198,6 +201,20 @@ class SaleOrder(models.Model):
                 # Preparar y asignar líneas de picking
                 picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
                 sale.project_picking_lines = picking_lines
+
+                task_lines = self._prepare_task_lines(previous_order.task_time_lines)
+
+    def _prepare_task_lines(self, line):
+        return [(0, 0, {
+            'name': line.name,
+            'product_id': line.product_id.id,
+            'description': line.description,
+            'estimated_time': line.estimated_time,
+            'work_shift': line.work_shift,
+            'unit_price': line.unit_price,
+            'price_subtotal': line.price_subtotal,
+            'for_modification': False
+        })]
 
     def _prepare_plan_lines(self, lines):
         """Prepara las líneas de plan para asignarlas al pedido."""
