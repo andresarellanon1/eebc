@@ -26,6 +26,7 @@ class TaskTimeLines(models.Model):
             ('line_note', 'Note'),
         ]
     )
+    for_modification = fields.Boolean(default=True)
 
     @api.onchange('work_shift')
     def _work_shift_onchange_(self):
