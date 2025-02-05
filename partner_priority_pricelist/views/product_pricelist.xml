@@ -7,7 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='currency_id']" position="before">
                 <field name="is_special"/>
-                <field name="is_special"/>
+            </xpath>
+            <xpath expr="//field[@name='is_special']" position="before">
+                <field name="is_orphan"/>
             </xpath>
         </field>
     </record>
