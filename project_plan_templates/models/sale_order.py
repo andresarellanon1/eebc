@@ -209,6 +209,7 @@ class SaleOrder(models.Model):
     def _prepare_task_lines(self, lines):
         return [(0, 0, {
             'name': line.name,
+            'display_type': line.display_type,
             'product_id': line.product_id.id,
             'description': line.description,
             'estimated_time': line.estimated_time,
