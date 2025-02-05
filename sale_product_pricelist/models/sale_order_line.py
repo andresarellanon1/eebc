@@ -15,6 +15,7 @@ class SaleOrderLine(models.Model):
     @api.onchange("product_pricelist_id")
     def product_pricelist_id_change(self):
         for line in self:
+            line.product_pricelist_id._compute_is_orphan()
             line._compute_pricelist_price_unit()
 
     @api.onchange("product_id")
