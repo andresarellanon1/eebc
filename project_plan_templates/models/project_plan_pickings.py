@@ -108,6 +108,7 @@ class ProjectPlanPickingLine(models.Model):
                 record.standard_price = record.product_id.standard_price
             elif record.for_newlines:
                 record.standard_price = record.product_id.standard_price
+                record.last_price = record.product_id.standard_price
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
