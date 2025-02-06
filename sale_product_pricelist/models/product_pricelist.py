@@ -7,12 +7,12 @@ logger = logging.getLogger(__name__)
 class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        records = super(ProductPricelist, self).create(vals_list)
-        for record in records:
-            record._compute_product_pricelist_lines()
-        return records
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     records = super(ProductPricelist, self).create(vals_list)
+    #     for record in records:
+    #         record._compute_product_pricelist_lines()
+    #     return records
 
     # def write(self, vals):
     #     res = super(ProductPricelist, self).write(vals)
@@ -24,7 +24,7 @@ class ProductPricelist(models.Model):
     def action_update_pricelist(self):
         # Aquí va la lógica para actualizar la lista de precios
         for record in self:
-            record.write({'name': record.name})  # Esto es solo un ejemplo
+            record._compute_product_pricelist_lines()
         return True
 
     def _compute_product_pricelist_lines(self):
