@@ -43,6 +43,7 @@ class ProjectProject(models.Model):
                     # Obtener las líneas de picking para la tarea actual
                     picking_lines = []
                     is_task = False
+                    stock_move_name = []
 
                     for picking in self.project_picking_lines:
                         if picking.display_type:
@@ -83,6 +84,8 @@ class ProjectProject(models.Model):
                             'date_deadline': line.planned_date_end,
                             'project_picking_lines': picking_lines
                         })
+
+                        stock_move_name = task_id.name
                     else:
                         # Actualizar tarea existente sin sobrescribir líneas de picking previas
                         existing_task.write({
@@ -116,8 +119,8 @@ class ProjectProject(models.Model):
                         if new_picking_lines:
                             existing_task.write({'project_picking_lines': [(4, pid) for pid in existing_picking_ids] + new_picking_lines})
                         
-                    stock_move_name = existing_task.name
-
+                        stock_move_name = existing_task.name
+                    logger.warning(f"Stock move name: {stock_move_name}")
                     self.create_project_tasks_pickings(existing_task, stock_move_name, picking_lines, location_id, location_dest_id, scheduled_date)
 
 
