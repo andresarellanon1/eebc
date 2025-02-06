@@ -24,6 +24,12 @@ class ProductPricelistLine(models.Model):
         help='Indica si esta línea de lista de precios no está siendo utilizada en ninguna línea de pedido de venta.'
     )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super(ProductPricelistLine, self).create(vals_list)
+        for record in records:
+            record._compute_display_name()
+        return records
 
     @api.depends()  # Agrega dependencias si hay campos relacionados
     def _compute_is_orphan(self):
