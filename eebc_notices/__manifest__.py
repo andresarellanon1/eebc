@@ -15,6 +15,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/notices_views.xml",
+        "views/stock_move_views.xml",
         "views/menu.xml",
         "views/stock_picking_views.xml",
         "views/stock_move_line.xml",
@@ -22,7 +23,7 @@
         "wizard/select_notice_wizard_view.xml",
         "wizard/wizard_selection_line_view.xml",
         "wizard/wizard_selection_lot_line_view.xml",
-        "wizard/stock_move_line_fragment_wizard_views.xml",
+        "wizard/split_stock_move_wizard_view.xml",
 
 
 
