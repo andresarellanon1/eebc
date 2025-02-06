@@ -8,8 +8,7 @@
             <button string="Dividir Movimiento"
                     type="object"
                     class="btn-primary"
-                    name="action_open_split_stock_move_wizard"
-                    attrs="{'invisible': [('product_uom_qty', '<=', 0)]}"/>
+                    name="action_open_split_stock_move_wizard"/>
         </xpath>
     </field>
 </record>
