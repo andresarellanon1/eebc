@@ -5,12 +5,13 @@
         <field name="model">product.pricelist</field>
         <field name="inherit_id" ref="product.product_pricelist_view" />
         <field name="arch" type="xml">
-            <xpath expr="//form" position="inside">
+            <xpath expr="//div[@class='oe_title']" position="after">
                 <header>
-                    <button name="action_update_pricelist" id="send_by_email_primary"
+                    <button name="action_update_pricelist"
+                        id="send_by_email_primary"
                         string="Actualizar Lista de Precios"
-                        type="object" class="btn-primary"
-                    />
+                        type="object"
+                        class="btn-primary"/>
                 </header>
             </xpath>
             <xpath expr="//field[@name='item_ids']" position="after">
