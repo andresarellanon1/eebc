@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <header>
-                    <button  id="send_by_email_primary"
+                    <button name="action_update_pricelist" id="send_by_email_primary"
                         string="Actualizar Lista de Precios"
                         type="object" class="btn-primary"
                     />
