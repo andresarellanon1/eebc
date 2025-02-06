@@ -18,7 +18,6 @@
         "views/stock_move_views.xml",
         "views/menu.xml",
         "views/stock_picking_views.xml",
-        "views/stock_move_line.xml",
         "wizard/notice_file_wizard_view.xml",
         "wizard/select_notice_wizard_view.xml",
         "wizard/wizard_selection_line_view.xml",
