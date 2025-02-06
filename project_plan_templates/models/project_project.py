@@ -25,7 +25,6 @@ class ProjectProject(models.Model):
 
     def create_project_tasks(self, location_id, location_dest_id, scheduled_date):
         for project in self:
-
             current_task_type = None
 
             for line in project.project_plan_lines:
@@ -41,23 +40,15 @@ class ProjectProject(models.Model):
                         ('project_id', '=', project.id)
                     ], limit=1)
 
-                    if not existing_task:
-                        timesheet_lines = self.env['task.time.lines'].search([
-                            ('task_timesheet_id', '=', line.task_timesheet_id.id)
-                        ])
+                    # Obtener las líneas de picking para la tarea actual
+                    picking_lines = []
+                    is_task = False
 
-                        timesheet_data = [(0, 0, {
-                            'name': ts_line.description,
-                            'work_shift': ts_line.work_shift * line.service_qty
-                        }) for ts_line in timesheet_lines]
-
-                        picking_lines = []
-                        is_task = False
-
-                        for picking in self.project_picking_lines:
-                            if picking.display_type:
-                                is_task = picking.name == line.name
-                            elif is_task:
+                    for picking in self.project_picking_lines:
+                        if picking.display_type:
+                            is_task = picking.name == line.name
+                        elif is_task:
+                            if not existing_task or picking.for_modification:
                                 picking_lines.append((0, 0, {
                                     'name': picking.product_id.name,
                                     'product_id': picking.product_id.id,
@@ -71,6 +62,17 @@ class ProjectProject(models.Model):
                                     'for_modification': False
                                 }))
 
+                    if not existing_task:
+                        # Crear nueva tarea con líneas de picking
+                        timesheet_lines = self.env['task.time.lines'].search([
+                            ('task_timesheet_id', '=', line.task_timesheet_id.id)
+                        ])
+
+                        timesheet_data = [(0, 0, {
+                            'name': ts_line.description,
+                            'work_shift': ts_line.work_shift * line.service_qty
+                        }) for ts_line in timesheet_lines]
+
                         task_id = self.env['project.task'].create({
                             'name': line.name,
                             'project_id': project.id,
@@ -81,14 +83,15 @@ class ProjectProject(models.Model):
                             'date_deadline': line.planned_date_end,
                             'project_picking_lines': picking_lines
                         })
-
-                        self.create_project_tasks_pickings(task_id, picking_lines, location_id, location_dest_id, scheduled_date)
                     else:
-                        existing_task.name = line.name
-                        existing_task.description = line.description
-                        existing_task.planned_date_begin = line.planned_date_begin
-                        existing_task.date_deadline = line.planned_date_end
-                        existing_task.user_ids = [(6, 0, line.partner_id.ids)]
+                        # Actualizar tarea existente sin sobrescribir líneas de picking previas
+                        existing_task.write({
+                            'name': line.name,
+                            'description': line.description,
+                            'planned_date_begin': line.planned_date_begin,
+                            'date_deadline': line.planned_date_end,
+                            'user_ids': [(6, 0, line.partner_id.ids)]
+                        })
 
                         if not existing_task.timesheet_ids and line.task_timesheet_id:
                             timesheet_lines = self.env['task.time.lines'].search([
@@ -103,31 +106,18 @@ class ProjectProject(models.Model):
 
                             existing_task.timesheet_ids = timesheet_data
 
-                        picking_lines = []
-                        is_task = False
+                        # Agregar solo nuevas líneas de picking sin duplicar las existentes
+                        existing_picking_ids = existing_task.project_picking_lines.ids
+                        new_picking_lines = [
+                            (0, 0, picking[2]) for picking in picking_lines
+                            if picking[2]['product_id'] not in existing_picking_ids
+                        ]
 
-                        for picking in self.project_picking_lines:
-                            if picking.display_type:
-                                is_task = picking.name == line.name
-                            elif is_task:
-                                if picking.for_modification:
-                                    picking_lines.append((0, 0, {
-                                        'name': picking.product_id.name,
-                                        'product_id': picking.product_id.id,
-                                        'product_uom': picking.product_uom.id,
-                                        'product_packaging_id': picking.product_packaging_id.id,
-                                        'product_uom_qty': picking.product_uom_qty,
-                                        'quantity': picking.quantity,
-                                        'standard_price': picking.standard_price,
-                                        'subtotal': picking.subtotal,
-                                        'display_type': False,
-                                        'for_modification': False
-                                    }))
-                        
-                        if picking_lines:
-                            existing_task.project_picking_lines = [(4, picking.id) for picking in existing_task.project_picking_lines] + picking_lines
+                        if new_picking_lines:
+                            existing_task.write({'project_picking_lines': [(4, pid) for pid in existing_picking_ids] + new_picking_lines})
 
-                        self.create_project_tasks_pickings(existing_task, picking_lines, location_id, location_dest_id, scheduled_date)
+                    self.create_project_tasks_pickings(existing_task, picking_lines, location_id, location_dest_id, scheduled_date)
+
 
     def get_or_create_task_type(self, stage_id, project):
         task_type = self.env['project.task.type'].search([
@@ -145,43 +135,39 @@ class ProjectProject(models.Model):
 
     def create_project_tasks_pickings(self, task_id, pickings, location_id, location_dest_id, scheduled_date):
         for line in pickings:
-        
             line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
 
-            stock_move_vals = [(0, 0, {
-                'product_id': line_data['product_id'],
-                'product_packaging_id': line_data['product_packaging_id'],
-                'product_uom_qty': line_data['quantity'],
-                'quantity': line_data['quantity'],
-                'product_uom': line_data['product_uom'],
-                'location_id': location_id,
-                'location_dest_id': location_dest_id,
-                'name': task_id.name
-            })]
+            # Verificar si ya existe un picking con los mismos datos para evitar duplicados
+            existing_picking = self.env['stock.picking'].search([
+                ('origin', '=', task_id.name),
+                ('task_id', '=', task_id.id),
+                ('product_id', '=', line_data['product_id'])
+            ], limit=1)
 
-            stock_picking_vals = {
-                'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
-                'partner_id': self.contact_id.id,
-                'picking_type_id': self.default_picking_type_id.id,
-                'location_id': location_id,
-                'scheduled_date': scheduled_date,
-                'origin': task_id.name,
-                'task_id': task_id.id,
-                'user_id': self.env.user.id,
-                'move_ids': stock_move_vals,
-                'carrier_id': False,
-                'carrier_tracking_ref': False,
-                'weight': False,
-                'shipping_weight': False,
-                'company_id': self.env.company.id,
-                'transport_type': False,
-                'custom_document_identification': False,
-                'lat_origin': False,
-                'long_origin': False,
-                'lat_dest': False,
-                'long_dest': False,
-                'note': False,
-                'state': 'draft'
-            }
+            if not existing_picking:
+                stock_move_vals = [(0, 0, {
+                    'product_id': line_data['product_id'],
+                    'product_packaging_id': line_data['product_packaging_id'],
+                    'product_uom_qty': line_data['quantity'],
+                    'quantity': line_data['quantity'],
+                    'product_uom': line_data['product_uom'],
+                    'location_id': location_id,
+                    'location_dest_id': location_dest_id,
+                    'name': task_id.name
+                })]
 
-            self.env['stock.picking'].create(stock_picking_vals)
+                stock_picking_vals = {
+                    'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
+                    'partner_id': self.contact_id.id,
+                    'picking_type_id': self.default_picking_type_id.id,
+                    'location_id': location_id,
+                    'scheduled_date': scheduled_date,
+                    'origin': task_id.name,
+                    'task_id': task_id.id,
+                    'user_id': self.env.user.id,
+                    'move_ids': stock_move_vals,
+                    'company_id': self.env.company.id,
+                    'state': 'draft'
+                }
+
+                self.env['stock.picking'].create(stock_picking_vals)
