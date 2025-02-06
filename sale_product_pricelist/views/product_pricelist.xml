@@ -10,6 +10,7 @@
                     <button  id="send_by_email_primary"
                         string="Actualizar Lista de Precios"
                         type="object" class="btn-primary"
+                    </button>
                 </header>
             </xpath>
             <xpath expr="//field[@name='item_ids']" position="after">
