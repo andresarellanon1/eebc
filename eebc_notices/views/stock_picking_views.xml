@@ -36,6 +36,11 @@
                         string="Seleccionar aviso" 
                         icon="fa-area-chart"
                         invisible="not show_outgoing_button"/>
+
+                <button string="Dividir Movimiento"
+                        type="object"
+                        class="btn-primary"
+                        name="action_open_split_stock_move_wizard"/>
             </xpath>
         </field>
     </record>
