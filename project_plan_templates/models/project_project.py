@@ -111,14 +111,14 @@ class ProjectProject(models.Model):
                             if picking.display_type:
                                 is_task = picking.name == line.name
                             elif is_task and picking.for_modification:
-                                # Verifica si el picking ya existe en la tarea
-                                existing_picking = self.env['stock.picking'].search([
+                                # Verifica si el movimiento de stock ya existe en la tarea
+                                existing_move = self.env['stock.move'].search([
                                     ('task_id', '=', existing_task.id),
                                     ('product_id', '=', picking.product_id.id),
                                     ('product_uom_qty', '=', picking.product_uom_qty)
                                 ], limit=1)
 
-                                if not existing_picking:
+                                if not existing_move:
                                     picking_lines.append((0, 0, {
                                         'name': picking.product_id.name,
                                         'product_id': picking.product_id.id,
