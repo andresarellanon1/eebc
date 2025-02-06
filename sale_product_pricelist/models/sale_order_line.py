@@ -16,6 +16,8 @@ class SaleOrderLine(models.Model):
     def product_pricelist_id_change(self):
         for line in self:
             line.product_pricelist_id._compute_is_orphan()
+            line.product_pricelist_id._compute_display_name()
+()
             line._compute_pricelist_price_unit()
             line.product_pricelist_id.is_orphan = False
 
