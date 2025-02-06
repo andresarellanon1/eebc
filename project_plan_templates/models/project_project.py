@@ -93,8 +93,6 @@ class ProjectProject(models.Model):
                             'user_ids': [(6, 0, line.partner_id.ids)]
                         })
 
-                        existing_task.name = line.name
-
                         if not existing_task.timesheet_ids and line.task_timesheet_id:
                             timesheet_lines = self.env['task.time.lines'].search([
                                 ('task_timesheet_id', '=', line.task_timesheet_id.id)
@@ -117,8 +115,10 @@ class ProjectProject(models.Model):
 
                         if new_picking_lines:
                             existing_task.write({'project_picking_lines': [(4, pid) for pid in existing_picking_ids] + new_picking_lines})
+                        
+                    stock_move_name = existing_task.name
 
-                    self.create_project_tasks_pickings(existing_task, picking_lines, location_id, location_dest_id, scheduled_date)
+                    self.create_project_tasks_pickings(existing_task, stock_move_name, picking_lines, location_id, location_dest_id, scheduled_date)
 
 
     def get_or_create_task_type(self, stage_id, project):
@@ -135,13 +135,13 @@ class ProjectProject(models.Model):
 
         return task_type
 
-    def create_project_tasks_pickings(self, task_id, pickings, location_id, location_dest_id, scheduled_date):
+    def create_project_tasks_pickings(self, task_id, stock_move_name, pickings, location_id, location_dest_id, scheduled_date):
         for line in pickings:
             line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
 
             # Verificar si ya existe un picking con los mismos datos para evitar duplicados
             existing_picking = self.env['stock.picking'].search([
-                ('origin', '=', task_id.name),
+                ('origin', '=', stock_move_name),
                 ('task_id', '=', task_id.id),
                 ('product_id', '=', line_data['product_id'])
             ], limit=1)
@@ -155,7 +155,7 @@ class ProjectProject(models.Model):
                     'product_uom': line_data['product_uom'],
                     'location_id': location_id,
                     'location_dest_id': location_dest_id,
-                    'name': task_id.name
+                    'name': stock_move_name
                 })]
 
                 stock_picking_vals = {
@@ -164,7 +164,7 @@ class ProjectProject(models.Model):
                     'picking_type_id': self.default_picking_type_id.id,
                     'location_id': location_id,
                     'scheduled_date': scheduled_date,
-                    'origin': task_id.name,
+                    'origin': stock_move_name,
                     'task_id': task_id.id,
                     'user_id': self.env.user.id,
                     'move_ids': stock_move_vals,
