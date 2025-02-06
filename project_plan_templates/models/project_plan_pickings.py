@@ -106,14 +106,14 @@ class ProjectPlanPickingLine(models.Model):
         for record in self:
             if not record.sale_order_id:
                 record.standard_price = record.product_id.standard_price
+            elif record.for_new_lines:
+                record.standard_price = record.product_id.standard_price
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
             self.product_uom = self.product_id.uom_id
             self.name = self.product_id.name
-            if self.sale_order_id:
-                self.standard_price = self.product_id.standard_price
 
     def reservado_update(self, task_inventory_lines):
         for record in self:
