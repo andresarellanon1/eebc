@@ -29,6 +29,7 @@
                             <field name="product_packaging_id"/>
                             <field name="quantity"/>
                             <field name="used_quantity"/>
+                            <field name="for_modification" column_invisible="1"/>
                             <!--<field name="standard_price"/>
                             <field name="subtotal"/>-->
                         </tree>

@@ -111,26 +111,19 @@ class ProjectProject(models.Model):
                             if picking.display_type:
                                 is_task = picking.name == line.name
                             elif is_task and picking.for_modification:
-                                # Verifica si el movimiento de stock ya existe en la tarea
-                                existing_move = self.env['stock.move'].search([
-                                    ('task_id', '=', existing_task.id),
-                                    ('product_id', '=', picking.product_id.id),
-                                    ('product_uom_qty', '=', picking.product_uom_qty)
-                                ], limit=1)
-
-                                if not existing_move:
-                                    picking_lines.append((0, 0, {
-                                        'name': picking.product_id.name,
-                                        'product_id': picking.product_id.id,
-                                        'product_uom': picking.product_uom.id,
-                                        'product_packaging_id': picking.product_packaging_id.id,
-                                        'product_uom_qty': picking.product_uom_qty,
-                                        'quantity': picking.quantity,
-                                        'standard_price': picking.standard_price,
-                                        'subtotal': picking.subtotal,
-                                        'display_type': False,
-                                        'for_modification': False
-                                    }))
+                                picking_lines.append((0, 0, {
+                                    'name': picking.product_id.name,
+                                    'product_id': picking.product_id.id,
+                                    'product_uom': picking.product_uom.id,
+                                    'product_packaging_id': picking.product_packaging_id.id,
+                                    'product_uom_qty': picking.product_uom_qty,
+                                    'quantity': picking.quantity,
+                                    'standard_price': picking.standard_price,
+                                    'subtotal': picking.subtotal,
+                                    'display_type': False,
+                                    'for_modification': False
+                                }))
+                                picking.for_modification = False
 
                         if picking_lines:
                             existing_task.project_picking_lines = [(4, picking.id) for picking in existing_task.project_picking_lines] + picking_lines
