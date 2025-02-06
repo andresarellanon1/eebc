@@ -93,8 +93,6 @@ class ProjectProject(models.Model):
                             'user_ids': [(6, 0, line.partner_id.ids)]
                         })
 
-                        existing_task.name = line.name
-
                         if not existing_task.timesheet_ids and line.task_timesheet_id:
                             timesheet_lines = self.env['task.time.lines'].search([
                                 ('task_timesheet_id', '=', line.task_timesheet_id.id)
