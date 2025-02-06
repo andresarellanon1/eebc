@@ -231,4 +231,12 @@ class StockMove(models.Model):
             _logger.warning(f'Líneas creadas: {lines}')
             return lines
 
- 
+    def action_open_split_stock_move_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'split.stock.move.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_stock_move_id': self.id},
+        }
