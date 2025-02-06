@@ -106,7 +106,7 @@ class ProjectPlanPickingLine(models.Model):
         for record in self:
             if not record.sale_order_id:
                 record.standard_price = record.product_id.standard_price
-            elif record.for_new_lines:
+            elif record.for_newlines:
                 record.standard_price = record.product_id.standard_price
 
     @api.onchange('product_id')
