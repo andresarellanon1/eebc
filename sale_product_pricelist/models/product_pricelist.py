@@ -21,6 +21,12 @@ class ProductPricelist(models.Model):
     #             line._compute_product_pricelist_lines()
     #     return res
 
+    def action_update_pricelist(self):
+        # Aquí va la lógica para actualizar la lista de precios
+        for record in self:
+            record.write({'name': record.name})  # Esto es solo un ejemplo
+        return True
+
     def _compute_product_pricelist_lines(self):
         """
         Actualiza las líneas de lista de precios relacionadas en productos y plantillas.
