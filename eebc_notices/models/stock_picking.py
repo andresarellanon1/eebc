@@ -49,14 +49,4 @@ class StockPicking(models.Model):
 
         return res
 
-    def open_fragment_wizard(self):
-        return {
-            'name': "Fragmentar Línea de Movimiento",
-            'type': 'ir.actions.act_window',
-            'res_model': 'stock.move.line.fragment.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-                'context': {'default_move_line_id': self.id}
-            }
-        
  
