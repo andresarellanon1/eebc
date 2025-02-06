@@ -7,11 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <header>
-                    <button name="action_quotation_send" id="send_by_email_primary"
-                        string="Enviar por correo electrónico"
+                    <button  id="send_by_email_primary"
+                        string="Actualizar Lista de Precios"
                         type="object" class="btn-primary"
-                        context="{'validate_analytic': True}"
-                        attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                 </header>
             </xpath>
             <xpath expr="//field[@name='item_ids']" position="after">
