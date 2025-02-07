@@ -9,7 +9,7 @@ class ProductPricelistLine(models.Model):
     _description = 'Linea de lista de precios para producto'
 
     name = fields.Char('Nombre linea de lista por producto')
-    display_name = fields.Char('Nombre', compute="_compute_display_name", store=True, readonly=True)
+    display_name = fields.Char('Nombre', compute="_compute_display_name", store=False, readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Lista')
     uom_id = fields.Many2one('uom.uom', 'Unidad predeterminada', related="product_templ_id.uom_id")
     product_templ_id = fields.Many2one('product.template', string='Producto')
@@ -70,14 +70,12 @@ class ProductPricelistLine(models.Model):
             if record.unit_price and record.name and (not record.is_orphan):
                 dis_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
 
-                # for line in self:
-                #     if line.display_name == dis_name:
-                #         exist_name = True
+                for line in self:
+                    if line.display_name == dis_name:
+                        exist_name = True
 
-                # if not exist_name:
-                #     record.display_name = dis_name
-                # else:
-                record.display_name = dis_name
+                if not exist_name:
+                    record.display_name = dis_name
 
             elif (not record.is_orphan) and (not record.pricelist_id):
                 record.display_name = f"---Legacy {record.name} - {record.unit_price} ({record.currency_id.name})"
