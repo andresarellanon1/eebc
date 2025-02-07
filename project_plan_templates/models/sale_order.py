@@ -436,9 +436,9 @@ class SaleOrder(models.Model):
 
     def project_lines_created(self):
         for sale in self.project_plan_lines:
-            sale.for_newlines == False
+            sale.for_newlines = False
         for sale in self.project_picking_lines:
-            sale.for_newlines == False
+            sale.for_newlines = False
         
     def action_open_report(self):
         self.ensure_one()
