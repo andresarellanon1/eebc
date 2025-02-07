@@ -30,7 +30,7 @@ class ProductPricelist(models.Model):
 
     def _compute_product_pricelist_lines(self):
         for pricelist in self:
-            _logger.info(f"Procesando lista de precios: ID {pricelist.id}, Nombre: {pricelist.name}")
+            logger.info(f"Procesando lista de precios: ID {pricelist.id}, Nombre: {pricelist.name}")
 
             # Buscar los ítems en la lista de precios según su aplicación
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
@@ -38,29 +38,29 @@ class ProductPricelist(models.Model):
             items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('pricelist_id', '=', pricelist.id)])
             items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('pricelist_id', '=', pricelist.id)])
 
-            _logger.info(f"Ítems encontrados en lista ID {pricelist.id}:")
-            _logger.info(f"  - Relación directa (Producto): {[(item.id, item.product_tmpl_id.name) for item in items_direct_relation]}")
-            _logger.info(f"  - Relación directa (Variante): {[(item.id, item.product_id.name) for item in items_direct_relation_variant]}")
-            _logger.info(f"  - Relación por Categoría: {[(item.id, item.categ_id.name) for item in items_category_relation]}")
-            _logger.info(f"  - Aplicado a todo el stock: {len(items_all_stock)} ítems")
+            logger.info(f"Ítems encontrados en lista ID {pricelist.id}:")
+            logger.info(f"  - Relación directa (Producto): {[(item.id, item.product_tmpl_id.name) for item in items_direct_relation]}")
+            logger.info(f"  - Relación directa (Variante): {[(item.id, item.product_id.name) for item in items_direct_relation_variant]}")
+            logger.info(f"  - Relación por Categoría: {[(item.id, item.categ_id.name) for item in items_category_relation]}")
+            logger.info(f"  - Aplicado a todo el stock: {len(items_all_stock)} ítems")
 
             # Procesar productos directamente relacionados
             if items_direct_relation.product_tmpl_id:
                 product_template = self.env["product.template"].search([('id', '=', items_direct_relation.product_tmpl_id.id)])
-                _logger.info(f"Procesando producto plantilla ID {product_template.id}, Nombre: {product_template.name}")
+                logger.info(f"Procesando producto plantilla ID {product_template.id}, Nombre: {product_template.name}")
                 product_template._compute_product_pricelist_line_ids()
 
             # Procesar variantes de productos
             if items_direct_relation_variant.product_id:
                 product = self.env["product.product"].search([('id', '=', items_direct_relation_variant.product_id.id)])
-                _logger.info(f"Procesando variante de producto ID {product.id}, Nombre: {product.name}")
+                logger.info(f"Procesando variante de producto ID {product.id}, Nombre: {product.name}")
                 product.product_tmpl_id._compute_product_pricelist_line_ids()
 
             # Procesar categorías de productos
             if items_category_relation.categ_id:
                 for category in items_category_relation.categ_id:
                     product_templates = self.env["product.template"].search([('categ_id', '=', category.id)])
-                    _logger.info(f"Procesando categoría ID {category.id}, Nombre: {category.name}, Productos afectados: {[p.id for p in product_templates]}")
+                    logger.info(f"Procesando categoría ID {category.id}, Nombre: {category.name}, Productos afectados: {[p.id for p in product_templates]}")
                     product_templates._compute_product_pricelist_line_ids()
 
             # Aplicar precios a todo el stock
@@ -68,15 +68,15 @@ class ProductPricelist(models.Model):
                 product_templates = self.env["product.template"].search([]).with_prefetch()
                 batch_size = 100
 
-                _logger.info(f"Aplicando precios globales: {len(product_templates)} productos en lotes de {batch_size}")
+                logger.info(f"Aplicando precios globales: {len(product_templates)} productos en lotes de {batch_size}")
 
                 for i in range(0, len(product_templates), batch_size):
                     batch = product_templates[i:i + batch_size]
-                    _logger.info(f"Procesando lote: {[p.id for p in batch]}")
+                    logger.info(f"Procesando lote: {[p.id for p in batch]}")
                     batch._compute_product_pricelist_line_ids()
                     self.env.cr.commit()
 
-        _logger.info("Finalización de la función _compute_product_pricelist_lines")
+        logger.info("Finalización de la función _compute_product_pricelist_lines")
 
 
 
