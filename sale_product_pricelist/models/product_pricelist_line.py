@@ -64,8 +64,7 @@ class ProductPricelistLine(models.Model):
             else:
                 record.display_name = record.name
 
-            if record.display_name == False:
-                record.unlink()
+
 
     @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
     def _compute_unit_price(self):
