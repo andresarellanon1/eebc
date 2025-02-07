@@ -65,7 +65,7 @@ class ProductPricelistLine(models.Model):
                 record.display_name = record.name
             
             if exist_name == True:
-                record.is_orphan = False
+                record.is_orphan = True
 
 
 
