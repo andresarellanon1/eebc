@@ -65,12 +65,16 @@ class ProductPricelistLine(models.Model):
             # record._compute_is_orphan() 
             #logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", record.name, "Sí" if record.is_orphan else "No")
 
+            exist_name = False
+
             if record.unit_price and record.name and (not record.is_orphan):
                 dis_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
 
-                exist_name = self.env["product.pricelist.line"].search([("display_name", "=", dis_name)])
+                for line in self:
+                    if line.display_name == dis_name:
+                        exist_name = True
 
-                if exist_name:
+                if not exist_name:
                     record.display_name = dis_name
 
             elif (not record.is_orphan) and (not record.pricelist_id):
