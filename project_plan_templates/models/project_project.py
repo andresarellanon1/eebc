@@ -206,7 +206,6 @@ class ProjectProject(models.Model):
                                     'display_type': False,
                                     'for_modification': False
                                 }))
-                                picking.for_modification = False
 
                         if picking_lines:
                             existing_task.project_picking_lines = [(4, picking.id) for picking in existing_task.project_picking_lines] + picking_lines
