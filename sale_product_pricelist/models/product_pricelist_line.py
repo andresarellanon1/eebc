@@ -66,6 +66,7 @@ class ProductPricelistLine(models.Model):
             else:
                 record.display_name = record.name
             
+            sale_line_model = self.env['sale.order.line']
             if exist_name:
                 reference_count = sale_line_model.search_count([
                 ('product_pricelist_id', '=', record.id)
