@@ -27,66 +27,117 @@ class ProductPricelist(models.Model):
             record._compute_product_pricelist_lines()
         return True
 
+
     def _compute_product_pricelist_lines(self):
-        """
-        Actualiza las líneas de lista de precios relacionadas en productos y plantillas.
-
-        Procesa recursivamente los items de la lista de precios según su alcance:
-        1. Variantes de producto directas(`0_product_variant`):
-           - Actualiza plantillas vinculadas a variantes específicas
-        2. Productos directos (`1_product`):
-           - Recalcula precios en plantillas asociadas explícitamente
-        3. Categorías de producto (`2_product_category`):
-           - Afecta todas las plantillas dentro de la categoría configurada
-        4. Alcance global (`3_global`):
-           - Procesa todas las plantillas existentes en la base de datos
-           - Opera en bloques de 100 registros para optimizar memoria
-           - Realiza commit tras cada bloque y limpia la caché del entorno
-
-        Flujo:
-        - Identifica items por tipo de alcance
-        - Dispara recomputación en cascada de precios
-        - Maneja datasets masivos con procesamiento batch
-
-        Efectos Secundarios:
-        - Genera commits transaccionales parciales
-        - Limpia caché del entorno periódicamente
-        - Puede afectar rendimiento en bases grandes
-
-        Uso típico:
-        Llamado durante cambios en listas de precios para propagar actualizaciones
-        """
         for pricelist in self:
-            existing_lines = self.env['product.pricelist.line'].search([('pricelist_id', '=', pricelist.id)])
-            existing_lines.unlink()
+            _logger.info(f"Procesando lista de precios: ID {pricelist.id}, Nombre: {pricelist.name}")
 
+            # Buscar los ítems en la lista de precios según su aplicación
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
             items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('pricelist_id', '=', pricelist.id)])
             items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('pricelist_id', '=', pricelist.id)])
 
+            _logger.info(f"Ítems encontrados en lista ID {pricelist.id}:")
+            _logger.info(f"  - Relación directa (Producto): {[(item.id, item.product_tmpl_id.name) for item in items_direct_relation]}")
+            _logger.info(f"  - Relación directa (Variante): {[(item.id, item.product_id.name) for item in items_direct_relation_variant]}")
+            _logger.info(f"  - Relación por Categoría: {[(item.id, item.categ_id.name) for item in items_category_relation]}")
+            _logger.info(f"  - Aplicado a todo el stock: {len(items_all_stock)} ítems")
+
+            # Procesar productos directamente relacionados
             if items_direct_relation.product_tmpl_id:
                 product_template = self.env["product.template"].search([('id', '=', items_direct_relation.product_tmpl_id.id)])
+                _logger.info(f"Procesando producto plantilla ID {product_template.id}, Nombre: {product_template.name}")
                 product_template._compute_product_pricelist_line_ids()
 
+            # Procesar variantes de productos
             if items_direct_relation_variant.product_id:
-                product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
+                product = self.env["product.product"].search([('id', '=', items_direct_relation_variant.product_id.id)])
+                _logger.info(f"Procesando variante de producto ID {product.id}, Nombre: {product.name}")
                 product.product_tmpl_id._compute_product_pricelist_line_ids()
 
+            # Procesar categorías de productos
             if items_category_relation.categ_id:
                 for category in items_category_relation.categ_id:
                     product_templates = self.env["product.template"].search([('categ_id', '=', category.id)])
+                    _logger.info(f"Procesando categoría ID {category.id}, Nombre: {category.name}, Productos afectados: {[p.id for p in product_templates]}")
                     product_templates._compute_product_pricelist_line_ids()
-                    
+
+            # Aplicar precios a todo el stock
             if items_all_stock:
                 product_templates = self.env["product.template"].search([]).with_prefetch()
                 batch_size = 100
 
+                _logger.info(f"Aplicando precios globales: {len(product_templates)} productos en lotes de {batch_size}")
+
                 for i in range(0, len(product_templates), batch_size):
                     batch = product_templates[i:i + batch_size]
+                    _logger.info(f"Procesando lote: {[p.id for p in batch]}")
                     batch._compute_product_pricelist_line_ids()
                     self.env.cr.commit()
-                    self.env.clear()  # Clear the environment cache to free memory
+
+        _logger.info("Finalización de la función _compute_product_pricelist_lines")
+
+
+
+    # def _compute_product_pricelist_lines(self):
+    #     """
+    #     Actualiza las líneas de lista de precios relacionadas en productos y plantillas.
+
+    #     Procesa recursivamente los items de la lista de precios según su alcance:
+    #     1. Variantes de producto directas(`0_product_variant`):
+    #        - Actualiza plantillas vinculadas a variantes específicas
+    #     2. Productos directos (`1_product`):
+    #        - Recalcula precios en plantillas asociadas explícitamente
+    #     3. Categorías de producto (`2_product_category`):
+    #        - Afecta todas las plantillas dentro de la categoría configurada
+    #     4. Alcance global (`3_global`):
+    #        - Procesa todas las plantillas existentes en la base de datos
+    #        - Opera en bloques de 100 registros para optimizar memoria
+    #        - Realiza commit tras cada bloque y limpia la caché del entorno
+
+    #     Flujo:
+    #     - Identifica items por tipo de alcance
+    #     - Dispara recomputación en cascada de precios
+    #     - Maneja datasets masivos con procesamiento batch
+
+    #     Efectos Secundarios:
+    #     - Genera commits transaccionales parciales
+    #     - Limpia caché del entorno periódicamente
+    #     - Puede afectar rendimiento en bases grandes
+
+    #     Uso típico:
+    #     Llamado durante cambios en listas de precios para propagar actualizaciones
+    #     """
+    #     for pricelist in self:
+
+    #         items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
+    #         items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
+    #         items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('pricelist_id', '=', pricelist.id)])
+    #         items_all_stock = self.env['product.pricelist.item'].search([('applied_on', '=', '3_global'), ('pricelist_id', '=', pricelist.id)])
+
+    #         if items_direct_relation.product_tmpl_id:
+    #             product_template = self.env["product.template"].search([('id', '=', items_direct_relation.product_tmpl_id.id)])
+    #             product_template._compute_product_pricelist_line_ids()
+
+    #         if items_direct_relation_variant.product_id:
+    #             product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
+    #             product.product_tmpl_id._compute_product_pricelist_line_ids()
+
+    #         if items_category_relation.categ_id:
+    #             for category in items_category_relation.categ_id:
+    #                 product_templates = self.env["product.template"].search([('categ_id', '=', category.id)])
+    #                 product_templates._compute_product_pricelist_line_ids()
+                    
+    #         if items_all_stock:
+    #             product_templates = self.env["product.template"].search([]).with_prefetch()
+    #             batch_size = 100
+
+    #             for i in range(0, len(product_templates), batch_size):
+    #                 batch = product_templates[i:i + batch_size]
+    #                 batch._compute_product_pricelist_line_ids()
+    #                 self.env.cr.commit()
+    #                 self.env.clear()  
 
     @api.depends('item_ids')
     def _compute_filtered_item_ids(self):
