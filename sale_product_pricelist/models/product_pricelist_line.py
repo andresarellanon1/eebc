@@ -39,7 +39,7 @@ class ProductPricelistLine(models.Model):
                 ('product_pricelist_id', '=', line.id)
             ])
              
-            if reference_count > 0 or record.unit_price:
+            if reference_count > 0 or line.unit_price:
                 line.is_orphan = False
             
 
