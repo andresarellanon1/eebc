@@ -33,7 +33,7 @@
                                 <page name="tasks" string="Planeacion">
                                     <div style="width: 100%;">
                                         <field name="wizard_plan_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none">
-                                            <tree style="width: 100%;" editable="bottom">
+                                            <tree style="width: 100%;" editable="bottom" limit="1000">
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="display_type" column_invisible="True"/>
                                                 <field name="name" readonly="1"/>
@@ -53,7 +53,7 @@
                                 <page name="stock" string="Materiales">
                                     <div>
                                         <field name="wizard_picking_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none">
-                                            <tree style="width: 100%;" editable="bottom">
+                                            <tree style="width: 100%;" editable="bottom" limit="1000">
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="company_id" column_invisible="1" readonly="1"/>
                                                 <field name="display_type" column_invisible="True" readonly="1"/>

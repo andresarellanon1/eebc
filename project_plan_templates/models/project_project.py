@@ -12,7 +12,7 @@ class ProjectProject(models.Model):
     
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Movimientos de inventario")
     project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines", compute="_compute_project_picking_lines", store=True)
-    plan_total_cost = fields.Float(string="Costo total", default=0.0)
+    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
     sale_order_id = fields.Many2one('sale.order', string='Orden de venta', readonly=False, store=True)
     actual_sale_order_id = fields.Many2one('sale.order', string="Orden actual de venta", store=True)
 
@@ -22,6 +22,11 @@ class ProjectProject(models.Model):
     contact_id = fields.Many2one('res.partner', string='Contacto')
     date_start = fields.Datetime(string="Fecha de inicio planeada")
     client_id = fields.Many2one('res.partner', string="Cliente")
+
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
 
     @api.depends('sale_order_id')
     def _compute_project_picking_lines(self):
