@@ -41,7 +41,7 @@
                         type="object"
                         class="btn-primary"
                         name="action_open_split_stock_move_wizard"
-                        invisible="product_uom_qty <= 1"/>
+                        invisible="product_uom_qty &lt;= 1"/>
             </xpath>
         </field>
     </record>
