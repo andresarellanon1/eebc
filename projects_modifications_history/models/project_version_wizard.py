@@ -98,8 +98,6 @@ class ProjectVersionWizard(models.TransientModel):
         # Validar que se haya proporcionado un motivo de modificación
         if not self.modification_motive:
             raise UserError('Hace falta agregar el motivo de la modificación.')
-        
-        self.sale_order_id.change_for_modification()
 
         # Crear tareas para el proyecto
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
