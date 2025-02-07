@@ -53,6 +53,7 @@ class ProjectProject(models.Model):
                     'standard_price': False,
                     'subtotal': False,
                     'for_newlines': line.for_newlines,
+                    'for_modification': line.for_modification
                 }))
             else:
                 picking_lines.append((0, 0, {
@@ -67,6 +68,7 @@ class ProjectProject(models.Model):
                     'subtotal': line.subtotal,
                     'display_type': False,
                     'for_newlines': line.for_newlines,
+                    'for_modification': line.for_modification
                 }))
         return picking_lines
 
@@ -87,7 +89,8 @@ class ProjectProject(models.Model):
                         'task_timesheet_id': False,
                         'for_create': line.for_create,
                         'for_newlines': line.for_newlines,
-                        'service_qty': line.service_qty
+                        'service_qty': line.service_qty,
+                        'for_modification': line.for_modification
                     }))
                 else:
                     plan_lines.append((0, 0, {
@@ -102,7 +105,8 @@ class ProjectProject(models.Model):
                         'display_type': False,
                         'for_create': True,
                         'for_newlines': line.for_newlines,
-                        'service_qty': line.service_qty
+                        'service_qty': line.service_qty,
+                        'for_modification': line.for_modification
                     }))
         return plan_lines
 
@@ -150,7 +154,9 @@ class ProjectProject(models.Model):
                                     'standard_price': picking.standard_price,
                                     'subtotal': picking.subtotal,
                                     'display_type': False,
-                                    'for_modification': False
+                                    'for_modification': False,
+                                    'for_newlines': False,
+                                    'for_create': False
                                 }))
 
                         task_id = self.env['project.task'].create({
@@ -193,7 +199,7 @@ class ProjectProject(models.Model):
                         for picking in project.project_picking_lines:
                             if picking.display_type:
                                 is_task = picking.name == line.name
-                            elif is_task and picking.for_modification:
+                            elif is_task and picking.for_newlines:
                                 picking_lines.append((0, 0, {
                                     'name': picking.product_id.name,
                                     'product_id': picking.product_id.id,
@@ -204,7 +210,9 @@ class ProjectProject(models.Model):
                                     'standard_price': picking.standard_price,
                                     'subtotal': picking.subtotal,
                                     'display_type': False,
-                                    'for_modification': False
+                                    'for_modification': False,
+                                    'for_newlines': False,
+                                    'for_create': False
                                 }))
 
                         if picking_lines:
