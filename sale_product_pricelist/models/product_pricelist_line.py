@@ -38,7 +38,9 @@ class ProductPricelistLine(models.Model):
             reference_count = sale_line_model.search_count([
                 ('product_pricelist_id', '=', line.id)
             ])
-            line.is_orphan = reference_count == 0
+             
+            if reference_count > 0 or record.unit_price:
+                line.is_orphan = False
             
 
     def _compute_display_name(self):
