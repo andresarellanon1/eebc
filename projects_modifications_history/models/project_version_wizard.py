@@ -335,43 +335,43 @@ class ProjectVersionWizard(models.TransientModel):
     #     return task_type
 
     # def create_project_tasks_pickings(self, task_id, pickings, location_id, location_dest_id, scheduled_date):
-        for line in pickings:
-            line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
+        # for line in pickings:
+        #     line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
 
-            stock_move_vals = [(0, 0, {
-                'product_id': line_data['product_id'],
-                'product_packaging_id': line_data['product_packaging_id'],
-                'product_uom_qty': line_data['quantity'],
-                'quantity': line_data['quantity'],
-                'product_uom': line_data['product_uom'],
-                'location_id': location_id,
-                'location_dest_id': location_dest_id,
-                'name': task_id.name
-            })]
+        #     stock_move_vals = [(0, 0, {
+        #         'product_id': line_data['product_id'],
+        #         'product_packaging_id': line_data['product_packaging_id'],
+        #         'product_uom_qty': line_data['quantity'],
+        #         'quantity': line_data['quantity'],
+        #         'product_uom': line_data['product_uom'],
+        #         'location_id': location_id,
+        #         'location_dest_id': location_dest_id,
+        #         'name': task_id.name
+        #     })]
 
-            stock_picking_vals = {
-                'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
-                'partner_id': self.contact_id.id,
-                'picking_type_id': self.default_picking_type_id.id,
-                'location_id': location_id,
-                'scheduled_date': scheduled_date,
-                'origin': task_id.name,
-                'task_id': task_id.id,
-                'user_id': self.env.user.id,
-                'move_ids': stock_move_vals,
-                'carrier_id': False,
-                'carrier_tracking_ref': False,
-                'weight': False,
-                'shipping_weight': False,
-                'company_id': self.env.company.id,
-                'transport_type': False,
-                'custom_document_identification': False,
-                'lat_origin': False,
-                'long_origin': False,
-                'lat_dest': False,
-                'long_dest': False,
-                'note': False,
-                'state': 'draft'
-            }
+        #     stock_picking_vals = {
+        #         'name': self.env['ir.sequence'].next_by_code('stock.picking') or _('New'),
+        #         'partner_id': self.contact_id.id,
+        #         'picking_type_id': self.default_picking_type_id.id,
+        #         'location_id': location_id,
+        #         'scheduled_date': scheduled_date,
+        #         'origin': task_id.name,
+        #         'task_id': task_id.id,
+        #         'user_id': self.env.user.id,
+        #         'move_ids': stock_move_vals,
+        #         'carrier_id': False,
+        #         'carrier_tracking_ref': False,
+        #         'weight': False,
+        #         'shipping_weight': False,
+        #         'company_id': self.env.company.id,
+        #         'transport_type': False,
+        #         'custom_document_identification': False,
+        #         'lat_origin': False,
+        #         'long_origin': False,
+        #         'lat_dest': False,
+        #         'long_dest': False,
+        #         'note': False,
+        #         'state': 'draft'
+        #     }
 
-            self.env['stock.picking'].create(stock_picking_vals)
+        #     self.env['stock.picking'].create(stock_picking_vals)
