@@ -58,12 +58,7 @@ class ProductPricelist(models.Model):
         """
         
         for pricelist in self:
-            pricelist_lines = self.env['product.pricelist.line'].search([('pricelist_id', '=', pricelist.id)])
-    
-            for record in pricelist_lines:
-                record._compute_is_orphan()
-
-
+            
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
             items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('pricelist_id', '=', pricelist.id)])
@@ -72,16 +67,16 @@ class ProductPricelist(models.Model):
             if items_direct_relation.product_tmpl_id:
                 product_template = self.env["product.template"].search([('id', '=', items_direct_relation.product_tmpl_id.id)])
                 product_template._compute_product_pricelist_line_ids()
-
+                logger.warning('Producto: %s', product_template.product_template_id.name)
             if items_direct_relation_variant.product_id:
                 product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
                 product.product_tmpl_id._compute_product_pricelist_line_ids()
-
+                logger.warning('Producto: %s', product_template.product_template_id.name)
             if items_category_relation.categ_id:
                 for category in items_category_relation.categ_id:
                     product_templates = self.env["product.template"].search([('categ_id', '=', category.id)])
                     product_templates._compute_product_pricelist_line_ids()
-                    
+                    logger.warning('Producto: %s', product_template.product_template_id.name)
             if items_all_stock:
                 product_templates = self.env["product.template"].search([]).with_prefetch()
                 batch_size = 100
@@ -91,6 +86,7 @@ class ProductPricelist(models.Model):
                     batch._compute_product_pricelist_line_ids()
                     self.env.cr.commit()
                     # self.env.clear()  # Clear the environment cache to free memory
+                    logger.warning('Producto: %s', batch.product_template_id.name)
 
     @api.depends('item_ids')
     def _compute_filtered_item_ids(self):
