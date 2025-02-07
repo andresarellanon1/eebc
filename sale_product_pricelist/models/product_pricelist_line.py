@@ -24,49 +24,25 @@ class ProductPricelistLine(models.Model):
         help='Indica si esta línea de lista de precios no está siendo utilizada en ninguna línea de pedido de venta.'
     )
 
-    @api.onchange("is_special")
-    def _imprimir_registros(self):
-        for record in self:
-            logger.warning("Registro: %s, es huerfana: %s", record.name, record.is_orphan)
-
-    @api.depends()  # Agrega dependencias si hay campos relacionados
+    @api.depends()
     def _compute_is_orphan(self):
-        sale_lines = self.env["sale.order.line"].read_group(
-            [("product_pricelist_id", "in", self.ids)],
-            ["product_pricelist_id"],
-            ["product_pricelist_id"],
-        )
-        # Crear un set con los IDs de líneas referenciadas
-        referenced_ids = {sl["product_pricelist_id"][0] for sl in sale_lines if sl.get("product_pricelist_id")}
-        
+        """
+        Determina si la línea de lista de precios no tiene relación con líneas de pedido de venta.
+        1. Busca en todas las líneas de pedido de venta
+        2. Verifica si alguna referencia esta línea de precio (campo `product_pricelist_id`)
+        3. Marca como huérfana si no hay referencias
+        - Utiliza `search_count` para optimizar consultas
+        """
+        sale_line_model = self.env['sale.order.line']
         for line in self:
-            line.is_orphan = line.id not in referenced_ids
-
-    # @api.depends()
-    # def _compute_is_orphan(self):
-    #     """
-    #     Determina si la línea de lista de precios no tiene relación con líneas de pedido de venta.
-    #     1. Busca en todas las líneas de pedido de venta
-    #     2. Verifica si alguna referencia esta línea de precio (campo `product_pricelist_id`)
-    #     3. Marca como huérfana si no hay referencias
-    #     - Utiliza `search_count` para optimizar consultas
-    #     """
-    #     sale_line_model = self.env['sale.order.line']
-    #     for line in self:
-    #         reference_count = sale_line_model.search_count([
-    #             ('product_pricelist_id', '=', line.id)
-    #         ])
-    #         line.is_orphan = reference_count == 0
-    #         logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", line.name, "Sí" if line.is_orphan else "No")
+            reference_count = sale_line_model.search_count([
+                ('product_pricelist_id', '=', line.id)
+            ])
+            line.is_orphan = reference_count == 0
 
     def _compute_display_name(self):
-
         for record in self:
-            # record._compute_is_orphan() 
-            #logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", record.name, "Sí" if record.is_orphan else "No")
-
-            exist_name = False
-
+            record._compute_is_orphan()
             if record.unit_price and record.name and (not record.is_orphan):
                 dis_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
 
@@ -77,24 +53,13 @@ class ProductPricelistLine(models.Model):
                 if not exist_name:
                     record.display_name = dis_name
 
+                #record.display_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
             elif (not record.is_orphan) and (not record.pricelist_id):
                 record.display_name = f"---Legacy {record.name} - {record.unit_price} ({record.currency_id.name})"
             elif (record.is_orphan) and (not record.pricelist_id):
                 record.display_name = "---Orphan"
             else:
                 record.display_name = record.name
-            
-            for record in self:
-                if record.display_name == False:
-                    record.unlink()
-
-            logger.warning(
-                "Pricelist_id: %s - Display_name: ID %s - Name: %s - Display Name: %s", 
-                record.pricelist_id,
-                record.id, 
-                record.name, 
-                record.display_name
-            )
 
     @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
     def _compute_unit_price(self):
