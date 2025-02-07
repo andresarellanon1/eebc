@@ -94,7 +94,6 @@
                             <div style="width: 100%;">
                                 <table style="border-collapse: collapse;">
                                     <thead>
-        
                                         <tr style="border-collapse: collapse;">
                                             <th style="width: 5%; border: 2px solid black;">C</th>
                                             <th style="width: 10%; border: 2px solid black; text-align: left">Clave</th>
@@ -104,11 +103,9 @@
                                             <th style="width: 15%; border: 2px solid black; text-align: right">Costo Unitario</th>
                                             <th style="width: 15%; border: 2px solid black; text-align: right">Total</th>
                                         </tr>
-        
                                     </thead>
         
                                     <tbody>
-                                        
                                         <tr>
                                             <td colspan="7" style="font-weight: bold;">Materiales</td>
                                         </tr>
@@ -116,7 +113,7 @@
                                         <t t-set="total_materiales" t-value="0.0"/>
                                         
                                         <t t-foreach="doc.project_picking_lines" t-as="material">
-                                            <t t-if="not stop">
+                                            <t t-if="not stop_loop">
                                                 
                                                 <t t-if="material.display_type == 'line_section'">
                                         
@@ -128,8 +125,8 @@
                                                             <t t-set="fill" t-value="False"/>
                                                         </t>
                                                     </t>
-                                                    
-                                                    <t t-if="material.name == line.product_template_id.name">
+                                                    <t t-set="name" t-value="line.product_template_id.name + ' * ' + str(line.product_uom_qty)"/>
+                                                    <t t-if="name == material.name">
                                                       
                                                         <t t-set="fill" t-value="True"/>
                                                     </t>
@@ -174,7 +171,7 @@
                                         </tr>
                                         <t t-foreach="doc.project_plan_lines" t-as="manoObra">  
                                             
-                                            <t t-if="not stop">
+                                            <t t-if="not stop_loop">
                                                     
                                                 <t t-if="manoObra.display_type == 'line_section'">
                                         
@@ -187,7 +184,8 @@
                                                         </t>
                                                     </t>
                                                     
-                                                    <t t-if="manoObra.name == line.product_template_id.name">
+                                                    <t t-set="name" t-value="line.product_template_id.name + ' * ' + str(line.product_uom_qty)"/>
+                                                    <t t-if="name == manoObra.name">
                                                     
                                                         <t t-set="fill" t-value="True"/>
                                                     </t>
