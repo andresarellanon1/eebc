@@ -196,6 +196,7 @@ class ProjectVersionWizard(models.TransientModel):
         return picking_lines
 
     def update_project_lines(self):
+        project = self._origin.project_id
 
         new_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
         new_picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
