@@ -39,8 +39,7 @@ class ProductPricelistLine(models.Model):
                 ('product_pricelist_id', '=', line.id)
             ])
             line.is_orphan = reference_count == 0
-            if line.display_name == False:
-                line.unlink()
+            
 
     def _compute_display_name(self):
         for record in self:
@@ -64,6 +63,9 @@ class ProductPricelistLine(models.Model):
                 record.display_name = "---Orphan"
             else:
                 record.display_name = record.name
+
+            if record.display_name == False:
+                record.unlink()
 
     @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
     def _compute_unit_price(self):
