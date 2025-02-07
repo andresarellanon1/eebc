@@ -84,8 +84,9 @@ class ProductPricelistLine(models.Model):
             else:
                 record.display_name = record.name
             
-            if record.display_name == False:
-                record.unlink()
+            for record in self:
+                if record.display_name == False:
+                    record.unlink()
 
             logger.warning(
                 "Pricelist_id: %s - Display_name: ID %s - Name: %s - Display Name: %s", 
