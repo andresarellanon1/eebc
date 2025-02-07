@@ -77,9 +77,6 @@ class ProjectVersionWizard(models.TransientModel):
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
 
-        # Preparar nuevas líneas desde la sale_order
-        #self.update_project_lines()
-
         # Verificar si ya existe un historial de versiones para el proyecto
         existing_history = self.env['project.version.history'].search([
             ('project_id', '=', self.project_id.id),
@@ -101,6 +98,8 @@ class ProjectVersionWizard(models.TransientModel):
         # Validar que se haya proporcionado un motivo de modificación
         if not self.modification_motive:
             raise UserError('Hace falta agregar el motivo de la modificación.')
+        
+        self.sale_order_id.change_for_modification()
 
         # Crear tareas para el proyecto
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)

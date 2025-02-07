@@ -186,7 +186,10 @@ class SaleOrder(models.Model):
                 sale.update_task_lines()
 
             sale.state = 'budget'
-            
+    
+    def change_for_modification(self):
+        for sale in self.project_picking_lines:
+            sale.for_modification = False
 
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
