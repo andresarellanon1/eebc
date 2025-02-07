@@ -60,9 +60,33 @@ class ProductPricelist(models.Model):
         for pricelist in self:
             pricelist_lines = self.env['product.pricelist.line'].search([('pricelist_id', '=', pricelist.id)])
     
-            for line in pricelist_lines:
-                logger.warning("Entro a for de compute_display")
-                line._compute_display_name()
+            for record in pricelist_lines:
+                exist_name = False
+
+                if record.unit_price and record.name and (not record.is_orphan):
+                    dis_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
+
+                    for line in self:
+                        if line.display_name == dis_name:
+                            exist_name = True
+
+                    if not exist_name:
+                        record.display_name = dis_name
+
+                    #record.display_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
+                elif (not record.is_orphan) and (not record.pricelist_id):
+                    record.display_name = f"---Legacy {record.name} - {record.unit_price} ({record.currency_id.name})"
+                elif (record.is_orphan) and (not record.pricelist_id):
+                    record.display_name = "---Orphan"
+                else:
+                    record.display_name = record.name
+
+                if exist_name == True:
+                    logger.warning("Volviendo huerfano a")
+                    record.is_orphan = True
+
+                record._compute_is_orphan()
+
 
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])

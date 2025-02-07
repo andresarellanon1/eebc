@@ -63,11 +63,6 @@ class ProductPricelistLine(models.Model):
                 record.display_name = "---Orphan"
             else:
                 record.display_name = record.name
-            
-            if exist_name == True:
-                logger.warning("Volviendo huerfano a")
-                record.is_orphan = True
-
 
 
     @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
