@@ -71,12 +71,12 @@ class ProductPricelist(models.Model):
             if items_direct_relation_variant.product_id:
                 product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
                 product.product_tmpl_id._compute_product_pricelist_line_ids()
-                logger.warning('Producto: %s', product_template.product_template_id.name)
+                logger.warning('Producto: %s', product.product_id.name)
             if items_category_relation.categ_id:
                 for category in items_category_relation.categ_id:
                     product_templates = self.env["product.template"].search([('categ_id', '=', category.id)])
                     product_templates._compute_product_pricelist_line_ids()
-                    logger.warning('Producto: %s', product_template.product_template_id.name)
+                    logger.warning('Producto: %s', product_templates.product_template_id.name)
             if items_all_stock:
                 product_templates = self.env["product.template"].search([]).with_prefetch()
                 batch_size = 100
