@@ -57,6 +57,9 @@ class ProductPricelist(models.Model):
         Llamado durante cambios en listas de precios para propagar actualizaciones
         """
         for pricelist in self:
+            existing_lines = self.env['product.pricelist.line'].search([('pricelist_id', '=', pricelist.id)])
+            existing_lines.unlink()
+
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
             items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('pricelist_id', '=', pricelist.id)])
