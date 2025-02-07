@@ -78,20 +78,10 @@ class ProjectVersionWizard(models.TransientModel):
         project.sale_order_id = self.sale_order_id.id
 
         # Preparar nuevas líneas desde la sale_order
-        new_plan_lines = self.prep_plan_lines(self.wizard_plan_lines)
-        new_picking_lines = self.prep_picking_lines(self.wizard_picking_lines)
+        new_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+        new_picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
-        # Eliminar todas las líneas existentes en el proyecto
-        project.write({
-            'project_plan_lines': [(5, 0, 0)],  # Elimina todas las líneas de project_plan_lines
-            'project_picking_lines': [(5, 0, 0)],  # Elimina todas las líneas de project_picking_lines
-        })
-
-        # Agregar las nuevas líneas desde la sale_order
-        project.write({
-            'project_plan_lines': new_plan_lines,  # Agrega las nuevas líneas de project_plan_lines
-            'project_picking_lines': new_picking_lines,  # Agrega las nuevas líneas de project_picking_lines
-        })
+        
 
         # Verificar si ya existe un historial de versiones para el proyecto
         existing_history = self.env['project.version.history'].search([
