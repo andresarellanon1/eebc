@@ -78,7 +78,7 @@ class ProjectVersionWizard(models.TransientModel):
         project.sale_order_id = self.sale_order_id.id
 
         # Preparar nuevas líneas desde la sale_order
-        self.update_project_lines()
+        #self.update_project_lines()
 
         # Verificar si ya existe un historial de versiones para el proyecto
         existing_history = self.env['project.version.history'].search([
