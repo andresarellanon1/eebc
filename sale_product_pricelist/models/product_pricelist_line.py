@@ -41,7 +41,6 @@ class ProductPricelistLine(models.Model):
         
         for line in self:
             line.is_orphan = line.id not in referenced_ids
-            logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", line.name, "Sí" if line.is_orphan else "No")
 
     # @api.depends()
     # def _compute_is_orphan(self):
@@ -63,7 +62,8 @@ class ProductPricelistLine(models.Model):
     def _compute_display_name(self):
         for record in self:
             # record._compute_is_orphan()
-            logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", record.name, "Sí" if record.is_orphan else "No")
+            
+            #logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", record.name, "Sí" if record.is_orphan else "No")
 
             if record.unit_price and record.name and (not record.is_orphan):
                 record.display_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
@@ -73,6 +73,13 @@ class ProductPricelistLine(models.Model):
                 record.display_name = "---Orphan"
             else:
                 record.display_name = record.name
+            
+            logger.warning(
+                "Compute display_name: ID %s - Name: %s - Display Name: %s", 
+                record.id, 
+                record.name, 
+                record.display_name
+            )
 
     @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
     def _compute_unit_price(self):
