@@ -65,6 +65,7 @@ class ProductPricelistLine(models.Model):
                 record.display_name = record.name
             
             if exist_name == True:
+                logger.warning("Volviendo huerfano a")
                 record.is_orphan = True
 
 
