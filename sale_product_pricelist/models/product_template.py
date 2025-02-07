@@ -57,15 +57,27 @@ class ProductTemplate(models.Model):
                     'is_special': pricelist.is_special
                 })
 
-            # product_template.sudo().write({'product_pricelist_line_ids': [(6, 0, [])] + pricelist_line_vals})
+                # Log antes de realizar cualquier acción para ver el estado actual de las líneas de la lista de precios
+                logger.warning(f"Antes de la eliminación - Líneas de precios actuales: {product_template.product_pricelist_line_ids}")
 
-            # 2. Unlink and delete all
-            product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
-            # 3. Link and create all
-            product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, vals) for vals in pricelist_line_vals]})
-            # 4. If nothing to link, write to `False`
-            if len(pricelist_line_vals) <= 0:
-                product_template.sudo().write({'product_pricelist_line_ids': False})
+                # 2. Eliminar todas las líneas existentes
+                product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
+
+                # Log después de eliminar las líneas para asegurarse de que se han eliminado
+                logger.warning(f"Después de la eliminación - Líneas de precios: {product_template.product_pricelist_line_ids}")
+
+                # 3. Crear nuevas líneas
+                if pricelist_line_vals:
+                    product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, vals) for vals in pricelist_line_vals]})
+
+                    # Log después de agregar las nuevas líneas para verificar que se han creado correctamente
+                    logger.warning(f"Después de la creación - Nuevas líneas de precios: {product_template.product_pricelist_line_ids}")
+                else:
+                    # Si no hay nuevas líneas, escribir `False`
+                    product_template.sudo().write({'product_pricelist_line_ids': False})
+
+                    # Log si no hay líneas nuevas para asociar
+                    logger.warning(f"No se crearon nuevas líneas. Campo 'product_pricelist_line_ids' set a False.")
 
     def get_min_sale_price(self, currency_id):
         """
