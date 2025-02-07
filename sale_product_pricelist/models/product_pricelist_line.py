@@ -22,6 +22,7 @@ class ProductPricelistLine(models.Model):
         string='Línea Huérfana',
         compute='_compute_is_orphan',
         store=True,
+        default=False,
         help='Indica si esta línea de lista de precios no está siendo utilizada en ninguna línea de pedido de venta.'
     )
 
