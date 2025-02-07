@@ -75,7 +75,8 @@ class ProductPricelistLine(models.Model):
                 record.display_name = record.name
             
             logger.warning(
-                "Compute display_name: ID %s - Name: %s - Display Name: %s", 
+                "Pricelist_id: %s - Display_name: ID %s - Name: %s - Display Name: %s", 
+                record.pricelist_id,
                 record.id, 
                 record.name, 
                 record.display_name
