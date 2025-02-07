@@ -73,27 +73,33 @@ class ProjectVersionWizard(models.TransientModel):
         if not project:
             raise ValueError("No se encontró el proyecto asociado.")
 
+        # Actualizar la sale_order asociada al proyecto
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
 
-        existing_plan_lines = project.project_plan_lines.filtered(lambda l: l.exists())
-        existing_picking_lines = project.project_picking_lines.filtered(lambda l: l.exists())
-
-        # Preparar nuevas líneas
+        # Preparar nuevas líneas desde la sale_order
         new_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
         new_picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
 
-        # Generar tuplas para agregar nuevas líneas sin borrar las existentes
+        # Eliminar todas las líneas existentes en el proyecto
         project.write({
-            'project_plan_lines': [(4, line.id) for line in existing_plan_lines] + new_plan_lines,
-            'project_picking_lines': [(4, line.id) for line in existing_picking_lines] + new_picking_lines,
+            'project_plan_lines': [(5, 0, 0)],  # Elimina todas las líneas de project_plan_lines
+            'project_picking_lines': [(5, 0, 0)],  # Elimina todas las líneas de project_picking_lines
         })
 
-        
-        # Check if a version history already exists for the current project.
-        existing_history = self.env['project.version.history'].search([('project_id', '=', self.project_id.id), ('client_id', '=', self.project_id.client_id.id)], limit=1)
+        # Agregar las nuevas líneas desde la sale_order
+        project.write({
+            'project_plan_lines': new_plan_lines,  # Agrega las nuevas líneas de project_plan_lines
+            'project_picking_lines': new_picking_lines,  # Agrega las nuevas líneas de project_picking_lines
+        })
 
-        # If no version history exists, create a new one.
+        # Verificar si ya existe un historial de versiones para el proyecto
+        existing_history = self.env['project.version.history'].search([
+            ('project_id', '=', self.project_id.id),
+            ('client_id', '=', self.project_id.client_id.id)
+        ], limit=1)
+
+        # Crear un nuevo historial si no existe
         if not existing_history:
             history = self.env['project.version.history'].create({
                 'project_id': self.project_id.id,
@@ -103,19 +109,17 @@ class ProjectVersionWizard(models.TransientModel):
                 'client_id': self.project_id.client_id.id,
             })
         else:
-            history = existing_history  # Use the existing history if found.
+            history = existing_history  # Usar el historial existente
 
-        # Ensure that a modification motive is provided; raise an error if missing.
+        # Validar que se haya proporcionado un motivo de modificación
         if not self.modification_motive:
-            raise UserError(f'Hace falta agregar el motivo de la modificación.')
+            raise UserError('Hace falta agregar el motivo de la modificación.')
 
-        # Create any newly added tasks for the project.
+        # Crear tareas para el proyecto
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
         self.sale_order_id.project_lines_created()
-        # for sale in self.sale_order_id.project_picking_lines:
-        #     sale.for_modification = False
 
-        # Create a new entry in the project version lines for the modification details.
+        # Crear una nueva entrada en el historial de versiones
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
             'modification_date': self.modification_date,
@@ -129,7 +133,8 @@ class ProjectVersionWizard(models.TransientModel):
         # Eliminar duplicados después de la modificación
         self.sale_order_id.clean_duplicates_after_modification()
         self.sale_order_id.state = 'sale'
-        # Close the wizard window after completing the action.
+
+        # Cerrar el wizard después de completar la acción
         return {
             'type': 'ir.actions.act_window_close'
         }
