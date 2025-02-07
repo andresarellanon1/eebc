@@ -17,6 +17,7 @@ class ProductPricelistLine(models.Model):
     unit_price = fields.Float('Precio unitario', digits="Precio Unitario", compute="_compute_unit_price", store=False)
     is_special = fields.Boolean(string="Es prioritaria", related="pricelist_id.is_special")
     company_id = fields.Many2one('res.company', string='Empresa', related="pricelist_id.company_id")
+
     is_orphan = fields.Boolean(
         string='Línea Huérfana',
         compute='_compute_is_orphan',
@@ -38,14 +39,12 @@ class ProductPricelistLine(models.Model):
             reference_count = sale_line_model.search_count([
                 ('product_pricelist_id', '=', line.id)
             ])
-             
-            if reference_count > 0 or line.unit_price:
-                line.is_orphan = False
+            line.is_orphan = reference_count == 0
             
 
     def _compute_display_name(self):
         for record in self:
-            
+            record._compute_is_orphan()
             exist_name = False
 
             if record.unit_price and record.name and (not record.is_orphan):
@@ -65,16 +64,6 @@ class ProductPricelistLine(models.Model):
                 record.display_name = "---Orphan"
             else:
                 record.display_name = record.name
-            
-            sale_line_model = self.env['sale.order.line']
-            if exist_name:
-                reference_count = sale_line_model.search_count([
-                ('product_pricelist_id', '=', record.id)
-                ])
-                reference_count = 0
-                record.unit_price: False
-
-            record._compute_is_orphan()
 
 
     @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
