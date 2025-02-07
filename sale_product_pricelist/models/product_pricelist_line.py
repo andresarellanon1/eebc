@@ -60,29 +60,27 @@ class ProductPricelistLine(models.Model):
     #         logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", line.name, "Sí" if line.is_orphan else "No")
 
     def _compute_display_name(self):
+
         for record in self:
             # record._compute_is_orphan() 
             #logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", record.name, "Sí" if record.is_orphan else "No")
-            
-            existing_record = search_existing_record(record.pricelist_id)
 
-            if not record.display_name and existing_record:
-                if record.unit_price and record.name and (not record.is_orphan):
-                    record.display_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
-                elif (not record.is_orphan) and (not record.pricelist_id):
-                    record.display_name = f"---Legacy {record.name} - {record.unit_price} ({record.currency_id.name})"
-                elif (record.is_orphan) and (not record.pricelist_id):
-                    record.display_name = "---Orphan"
-                else:
-                    record.display_name = record.name
-                
-                logger.warning(
-                    "Pricelist_id: %s - Display_name: ID %s - Name: %s - Display Name: %s", 
-                    record.pricelist_id,
-                    record.id, 
-                    record.name, 
-                    record.display_name
-                )
+            if record.unit_price and record.name and (not record.is_orphan):
+                record.display_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
+            elif (not record.is_orphan) and (not record.pricelist_id):
+                record.display_name = f"---Legacy {record.name} - {record.unit_price} ({record.currency_id.name})"
+            elif (record.is_orphan) and (not record.pricelist_id):
+                record.display_name = "---Orphan"
+            else:
+                record.display_name = record.name
+            
+            logger.warning(
+                "Pricelist_id: %s - Display_name: ID %s - Name: %s - Display Name: %s", 
+                record.pricelist_id,
+                record.id, 
+                record.name, 
+                record.display_name
+            )
 
     @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
     def _compute_unit_price(self):
