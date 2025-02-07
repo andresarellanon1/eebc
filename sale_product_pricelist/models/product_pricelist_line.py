@@ -70,14 +70,14 @@ class ProductPricelistLine(models.Model):
             if record.unit_price and record.name and (not record.is_orphan):
                 dis_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
 
-                for line in self:
-                    if line.display_name == dis_name:
-                        exist_name = True
+                # for line in self:
+                #     if line.display_name == dis_name:
+                #         exist_name = True
 
-                if not exist_name:
-                    record.display_name = dis_name
-                else:
-                    record.display_name = False
+                # if not exist_name:
+                #     record.display_name = dis_name
+                # else:
+                record.display_name = dis_name
 
             elif (not record.is_orphan) and (not record.pricelist_id):
                 record.display_name = f"---Legacy {record.name} - {record.unit_price} ({record.currency_id.name})"
