@@ -1,7 +1,7 @@
 from odoo import fields, api, models
 from odoo.exceptions import UserError
 import logging
-_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class ProjectProject(models.Model):
@@ -25,7 +25,6 @@ class ProjectProject(models.Model):
 
     def create_project_tasks(self, location_id, location_dest_id, scheduled_date):
         for project in self:
-
             current_task_type = None
 
             for line in project.project_plan_lines:
@@ -54,7 +53,7 @@ class ProjectProject(models.Model):
                         picking_lines = []
                         is_task = False
 
-                        for picking in self.project_picking_lines:
+                        for picking in project.project_picking_lines:
                             if picking.display_type:
                                 is_task = picking.name == line.name
                             elif is_task:
@@ -84,11 +83,13 @@ class ProjectProject(models.Model):
 
                         self.create_project_tasks_pickings(task_id, picking_lines, location_id, location_dest_id, scheduled_date)
                     else:
-                        existing_task.name = line.name
-                        existing_task.description = line.description
-                        existing_task.planned_date_begin = line.planned_date_begin
-                        existing_task.date_deadline = line.planned_date_end
-                        existing_task.user_ids = [(6, 0, line.partner_id.ids)]
+                        existing_task.write({
+                            'name': line.name,
+                            'description': line.description,
+                            'planned_date_begin': line.planned_date_begin,
+                            'date_deadline': line.planned_date_end,
+                            'user_ids': [(6, 0, line.partner_id.ids)]
+                        })
 
                         if not existing_task.timesheet_ids and line.task_timesheet_id:
                             timesheet_lines = self.env['task.time.lines'].search([
@@ -106,24 +107,24 @@ class ProjectProject(models.Model):
                         picking_lines = []
                         is_task = False
 
-                        for picking in self.project_picking_lines:
+                        for picking in project.project_picking_lines:
                             if picking.display_type:
                                 is_task = picking.name == line.name
-                            elif is_task:
-                                if picking.for_modification:
-                                    picking_lines.append((0, 0, {
-                                        'name': picking.product_id.name,
-                                        'product_id': picking.product_id.id,
-                                        'product_uom': picking.product_uom.id,
-                                        'product_packaging_id': picking.product_packaging_id.id,
-                                        'product_uom_qty': picking.product_uom_qty,
-                                        'quantity': picking.quantity,
-                                        'standard_price': picking.standard_price,
-                                        'subtotal': picking.subtotal,
-                                        'display_type': False,
-                                        'for_modification': False
-                                    }))
-                        
+                            elif is_task and picking.for_modification:
+                                picking_lines.append((0, 0, {
+                                    'name': picking.product_id.name,
+                                    'product_id': picking.product_id.id,
+                                    'product_uom': picking.product_uom.id,
+                                    'product_packaging_id': picking.product_packaging_id.id,
+                                    'product_uom_qty': picking.product_uom_qty,
+                                    'quantity': picking.quantity,
+                                    'standard_price': picking.standard_price,
+                                    'subtotal': picking.subtotal,
+                                    'display_type': False,
+                                    'for_modification': False
+                                }))
+                                picking.for_modification = False
+
                         if picking_lines:
                             existing_task.project_picking_lines = [(4, picking.id) for picking in existing_task.project_picking_lines] + picking_lines
 
@@ -145,7 +146,6 @@ class ProjectProject(models.Model):
 
     def create_project_tasks_pickings(self, task_id, pickings, location_id, location_dest_id, scheduled_date):
         for line in pickings:
-        
             line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
 
             stock_move_vals = [(0, 0, {

@@ -282,7 +282,7 @@ class ProjectCreation(models.TransientModel):
                         'for_create': line.for_create,
                         'for_modification': line.for_modification,
                         'for_newlines': line.for_newlines,
-                        'service_qty': 0
+                        'service_qty': line.service_qty
                     }))
                 else:
                     plan_lines.append((0, 0, {

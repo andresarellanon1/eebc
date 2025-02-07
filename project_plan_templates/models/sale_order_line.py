@@ -10,6 +10,7 @@ class SaleOrderLine(models.Model):
     
     project_plan_lines = fields.One2many('project.plan.line', 'sale_order_id')
     for_modification = fields.Boolean(string="For modification", default=True)
+    last_service_price = fields.Float(string="Ultimo precio del servicio")
 
     @api.depends('order_id', 'order_id.is_project')
     def _products_project_domain(self):

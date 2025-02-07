@@ -63,6 +63,7 @@ class ProjectPlanPickingLine(models.Model):
     stock_move_id = fields.Many2one('stock.move', string='Movimiento de inventario')
     
     standard_price = fields.Float(string="Precio", compute="_compute_standard_price", store=True)
+    last_price = fields.Float(string="Ultimo precio")
     subtotal = fields.Float(string="Subtotal", compute='_compute_subtotal')
     total_cost = fields.Float(string="Costo total")
 
@@ -105,6 +106,9 @@ class ProjectPlanPickingLine(models.Model):
         for record in self:
             if not record.sale_order_id:
                 record.standard_price = record.product_id.standard_price
+            elif record.for_newlines:
+                record.standard_price = record.product_id.standard_price
+                record.last_price = record.product_id.standard_price
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

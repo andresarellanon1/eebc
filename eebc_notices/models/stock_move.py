@@ -230,14 +230,13 @@ class StockMove(models.Model):
                 }))
             _logger.warning(f'Líneas creadas: {lines}')
             return lines
-    def open_fragment_wizard(self):
+
+    def action_open_split_stock_move_wizard(self):
+        self.ensure_one()
         return {
-            'name': "Fragmentar Línea de Movimiento",
             'type': 'ir.actions.act_window',
-            'res_model': 'stock.move.line.fragment.wizard',
+            'res_model': 'split.stock.move.wizard',
             'view_mode': 'form',
             'target': 'new',
-                'context': {'default_move_line_id': self.id}
-            }
-        
- 
+            'context': {'default_stock_move_id': self.id},
+        }

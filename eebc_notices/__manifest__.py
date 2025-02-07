@@ -1,6 +1,6 @@
 {
     'name': "EBBC NOTICES",
-    'version': '17.0.1.107',
+    'version': '17.0.1.108',
     'author': "Quadro Soluciones",
     'website': 'https://quadrosoluciones.com/',
     'category': 'other',
@@ -15,14 +15,14 @@
     "data": [
         "security/ir.model.access.csv",
         "views/notices_views.xml",
+        "views/stock_move_views.xml",
         "views/menu.xml",
         "views/stock_picking_views.xml",
-        "views/stock_move_line.xml",
         "wizard/notice_file_wizard_view.xml",
         "wizard/select_notice_wizard_view.xml",
         "wizard/wizard_selection_line_view.xml",
         "wizard/wizard_selection_lot_line_view.xml",
-        "wizard/stock_move_line_fragment_wizard_views.xml",
+        "wizard/split_stock_move_wizard_view.xml",
 
 
 

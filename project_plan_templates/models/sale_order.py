@@ -51,17 +51,20 @@ class SaleOrder(models.Model):
     #def _compute_task_time_lines(self):
     def update_task_lines(self):
         for record in self:
-            record.task_time_lines = [(5, 0, 0)]
+            #record.task_time_lines = [(5, 0, 0)]
             record.task_time_lines = record.get_task_time_lines(record.project_plan_lines)
 
     def get_task_time_lines(self, line):
         task_lines = []
         for task in line:
-            if task.display_type == 'line_section':
-                task_lines.append(self.prep_task_line_section_line(task))
-            else:
-                for _ in range(int(task.service_qty)):
+            if task.for_modification:
+                if task.display_type == 'line_section':
+                    task_lines.append(self.prep_task_line_section_line(task))
+                else:
+                    # for _ in range(int(task.service_qty)):
+                    #     task_lines += self.prep_task_time_lines(task)
                     task_lines += self.prep_task_time_lines(task)
+            task.for_modification = False
             #task_lines += self.prep_task_time_lines(task)
 
         return task_lines
@@ -73,7 +76,7 @@ class SaleOrder(models.Model):
                 'product_id': task.product_id.id,
                 'description': task.description,
                 'estimated_time': task.estimated_time,
-                'work_shift': task.work_shift,
+                'work_shift': task.work_shift * line.service_qty,
                 'unit_price': task.unit_price,
                 'price_subtotal': task.price_subtotal
             }))
@@ -94,8 +97,19 @@ class SaleOrder(models.Model):
 
     def update_picking_lines(self):
         for record in self:
-            #record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
-            record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
+            existing_lines = {line.name: line.sequence for line in record.project_picking_lines}
+
+            # Generar nuevas líneas de picking
+            picking_lines = record.get_picking_lines(record.project_plan_lines)
+
+            # Reasignar secuencias originales
+            for line in picking_lines:
+                line_name = line[2].get('name', '')
+                if line_name in existing_lines:
+                    line[2]['sequence'] = existing_lines[line_name]
+
+            # Asignar las líneas ordenadas por secuencia
+            record.project_picking_lines = sorted(picking_lines, key=lambda x: x[2]['sequence'])
 
     def get_picking_lines(self, line):
         picking_lines = []
@@ -112,7 +126,7 @@ class SaleOrder(models.Model):
                     picking_lines.append(self.prep_picking_section_line(picking, False, True))
 
                 picking.for_picking = False
-                picking.for_modification = False
+                
                 
         return picking_lines
     
@@ -140,6 +154,10 @@ class SaleOrder(models.Model):
                     ) 
 
                 plan_pickings = []
+                # Mantener el orden original en las líneas existentes
+                existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
+
+                # Procesar nuevas líneas y conservar la secuencia
                 plan_lines = []
                 for line in sale.order_line:
                     if line.for_modification:
@@ -154,12 +172,15 @@ class SaleOrder(models.Model):
                                 plan_pickings.append((4, project_picking.id))
                         line.for_modification = False
 
-                for plan in sale.project_plan_lines:
-                    if plan.for_modification:
-                        plan.for_modification = False
+                # Reasignar secuencias originales a las líneas nuevas
+                for plan in plan_lines:
+                    plan_name = plan[2].get('name', '')
+                    if plan_name in existing_lines:
+                        plan[2]['sequence'] = existing_lines[plan_name]
 
+                # Sobrescribir sin desordenar
                 sale.project_plan_pickings = plan_pickings
-                sale.project_plan_lines = plan_lines
+                sale.project_plan_lines = sorted(plan_lines, key=lambda x: x[2]['sequence'])
 
                 sale.update_picking_lines()
                 sale.update_task_lines()
@@ -173,6 +194,7 @@ class SaleOrder(models.Model):
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
             sale.project_picking_lines = [(5, 0, 0)]
+            sale.task_time_lines = [(5, 0, 0)]
             if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
 
                 previous_order = sale.project_id.actual_sale_order_id
@@ -185,9 +207,10 @@ class SaleOrder(models.Model):
                     'display_type': line.display_type,
                     'name': line.name + ' * ' + str(line.product_uom_qty),
                     'product_uom_qty': 0,
-                    'price_unit': line.price_unit,
+                    'price_unit': line.last_service_price,
                     'discount': line.discount,
-                    'for_modification': False
+                    'for_modification': False,
+                    'last_service_price': line.last_service_price
                 }) for line in previous_order.order_line]
 
                 # Copiar project_plan_lines directamente
@@ -198,6 +221,22 @@ class SaleOrder(models.Model):
                 # Preparar y asignar líneas de picking
                 picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
                 sale.project_picking_lines = picking_lines
+
+                task_lines = self._prepare_task_lines(previous_order.task_time_lines)
+                sale.task_time_lines = task_lines
+
+    def _prepare_task_lines(self, lines):
+        return [(0, 0, {
+            'name': line.name,
+            'display_type': line.display_type,
+            'product_id': line.product_id.id,
+            'description': line.description,
+            'estimated_time': line.estimated_time,
+            'work_shift': line.work_shift,
+            'unit_price': line.unit_price,
+            'price_subtotal': line.price_subtotal,
+            'for_modification': False
+        }) for line in lines]
 
     def _prepare_plan_lines(self, lines):
         """Prepara las líneas de plan para asignarlas al pedido."""
@@ -227,10 +266,11 @@ class SaleOrder(models.Model):
             'product_packaging_id': line.product_packaging_id.id if line.product_packaging_id else False,
             'product_uom_qty': line.product_uom_qty,
             'quantity': line.quantity,
-            'standard_price': line.standard_price,
+            'standard_price': line.last_price,
             'subtotal': line.subtotal,
             'for_create': line.for_create,
-            'for_modification': False
+            'for_modification': False,
+            'last_price': line.last_price
         }) for line in lines]
 
     def prep_task_line_section_line(self, line):
@@ -258,7 +298,8 @@ class SaleOrder(models.Model):
             'standard_price': False,
             'subtotal': False,
             'for_create': for_create,
-            'for_modification': False
+            'for_modification': False,
+            'last_price': False
         })
     
     def prep_plan_section_line(self, line, for_create, for_task):
@@ -314,7 +355,8 @@ class SaleOrder(models.Model):
                 'subtotal': picking.subtotal,
                 'display_type': False,
                 'for_create': True,
-                'for_modification': False
+                'for_modification': False,
+                'last_price': picking.standard_price
             }))
         return picking_lines
 
