@@ -252,7 +252,8 @@ class SaleOrder(models.Model):
             'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
             'for_create': line.for_create,
             'for_modification': False,
-            'for_picking': line.for_picking
+            'for_picking': line.for_picking,
+            'for_newlines': line.for_newlines
         }) for line in lines]
 
     def _prepare_picking_lines(self, lines):
@@ -270,7 +271,8 @@ class SaleOrder(models.Model):
             'subtotal': line.subtotal,
             'for_create': line.for_create,
             'for_modification': False,
-            'last_price': line.last_price
+            'last_price': line.last_price,
+            'for_newlines': line.for_newlines
         }) for line in lines]
 
     def prep_task_line_section_line(self, line):
