@@ -67,11 +67,12 @@ class ProductPricelistLine(models.Model):
                 record.display_name = record.name
             
             if exist_name:
-                 reference_count = sale_line_model.search_count([
+                reference_count = sale_line_model.search_count([
                 ('product_pricelist_id', '=', record.id)
                 ])
                 reference_count = 0
                 record.unit_price: False
+
             record._compute_is_orphan()
 
 
