@@ -61,8 +61,8 @@ class ProductPricelist(models.Model):
             pricelist_lines = self.env['product.pricelist.line'].search([('pricelist_id', '=', pricelist.id)])
     
             # Imprimir el name y is_orphan de cada línea
-            for line in pricelist_lines:
-                logger.warning(f"Línea de lista de precios: {line.name}, ¿Es huérfana?: {line.is_orphan}")
+            # for line in pricelist_lines:
+            #     logger.warning(f"Línea de lista de precios: {line.name}, ¿Es huérfana?: {line.is_orphan}")
 
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
