@@ -43,6 +43,9 @@ class ProjectPlan(models.Model):
 
     labour_total_cost = fields.Float(string="Costo mano de obra", compute="_compute_labour_cost", default=0.0)
 
+    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Lista de materiales")
+    task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
+
     # @api.constrains('project_plan_lines', 'picking_lines')
     # def _check_lines_existence(self):
     #     for record in self:
@@ -72,17 +75,17 @@ class ProjectPlan(models.Model):
             task.labour_total_cost = sum(line.price_subtotal for line in task.task_time_lines)
             self.update_product_template_list_price(task)
 
-    @api.depends('project_plan_lines')
+    @api.depends('project_plan_pickings')
     def _compute_picking_lines(self):
         for record in self:
             record.picking_lines = [(5, 0, 0)]
-            record.picking_lines = record.get_picking_lines(record.project_plan_lines)
+            record.picking_lines = record.get_picking_lines(record.project_plan_pickings)
 
-    @api.depends('project_plan_lines')
+    @api.depends('task_timesheet_id')
     def _compute_task_lines(self):
         for record in self:
             record.task_time_lines = [(5, 0, 0)]
-            record.task_time_lines = record.get_task_time_lines(record.project_plan_lines)
+            record.task_time_lines = record.get_task_time_lines(record.task_timesheet_id)
 
     def get_picking_lines(self, line):
         picking_lines = []
@@ -102,7 +105,7 @@ class ProjectPlan(models.Model):
 
     def prep_picking_lines(self, line):
         picking_lines = []
-        for picking in line.project_plan_pickings.project_picking_lines:
+        for picking in line.project_picking_lines:
             picking_lines.append((0, 0, {
                 'name': picking.product_id.name,
                 'product_id': picking.product_id.id,
@@ -118,7 +121,7 @@ class ProjectPlan(models.Model):
     
     def prep_task_time_lines(self, line):
         task_lines = []
-        for task in line.task_timesheet_id.task_time_lines:
+        for task in line.task_time_lines:
             task_lines.append((0, 0, {
                 'product_id': task.product_id.id,
                 'description': task.description,
