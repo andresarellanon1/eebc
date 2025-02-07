@@ -39,6 +39,8 @@ class ProductPricelistLine(models.Model):
                 ('product_pricelist_id', '=', line.id)
             ])
             line.is_orphan = reference_count == 0
+            if record.display_name == False:
+                record.unlink()
 
     def _compute_display_name(self):
         for record in self:
