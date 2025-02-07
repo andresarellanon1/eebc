@@ -61,6 +61,7 @@ class ProductPricelist(models.Model):
             pricelist_lines = self.env['product.pricelist.line'].search([('pricelist_id', '=', pricelist.id)])
     
             for line in pricelist_lines:
+                logger.warning("Entro a for de compute_display")
                 line._compute_display_name()
 
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
