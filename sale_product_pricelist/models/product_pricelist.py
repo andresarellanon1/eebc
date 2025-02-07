@@ -23,9 +23,9 @@ class ProductPricelist(models.Model):
         
     def action_update_pricelist(self):
     # Aquí va la lógica para actualizar la lista de precios
-    for record in self:
-        # record._compute_product_pricelist_lines()
-    return True
+        for record in self:
+            # record._compute_product_pricelist_lines()
+        return True
 
     def _compute_product_pricelist_lines(self):
         """
