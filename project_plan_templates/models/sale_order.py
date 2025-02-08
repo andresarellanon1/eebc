@@ -185,6 +185,8 @@ class SaleOrder(models.Model):
                 sale.update_picking_lines()
                 sale.update_task_lines()
 
+            self.change_for_modification()
+
             sale.state = 'budget'
     
     def change_for_modification(self):
