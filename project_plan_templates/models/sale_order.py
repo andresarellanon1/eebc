@@ -432,14 +432,30 @@ class SaleOrder(models.Model):
     def clean_duplicates_after_modification(self):
         """
         Limpia las líneas duplicadas después de modificar un proyecto.
-        Solo limpia las líneas con for_modification=True.
+        Solo limpia las líneas que no tienen for_modification, for_create o for_newlines activados.
         """
         for sale in self:
-            lines_to_remove = sale.project_plan_lines.filtered('for_modification')
-            lines_to_remove.unlink()
+            # Eliminar líneas en project_plan_lines
+            domain = [
+                ('id', 'in', sale.project_plan_lines.ids),
+                ('for_modification', '=', False),
+                ('for_create', '=', False),
+                ('for_newlines', '=', False),
+            ]
+            lines_to_remove = self.env['project.plan.line'].search(domain)
+            if lines_to_remove:
+                lines_to_remove.unlink()
 
-            lines_to_remove_picking = sale.project_picking_lines.filtered('for_modification')
-            lines_to_remove_picking.unlink()
+            # Eliminar líneas en project_picking_lines
+            domain = [
+                ('id', 'in', sale.project_picking_lines.ids),
+                ('for_modification', '=', False),
+                ('for_create', '=', False),
+                ('for_newlines', '=', False),
+            ]
+            lines_to_remove_picking = self.env['project.picking.line'].search(domain)
+            if lines_to_remove_picking:
+                lines_to_remove_picking.unlink()
 
     def project_lines_created(self):
         for sale in self.project_plan_lines:
