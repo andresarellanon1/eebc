@@ -99,7 +99,7 @@ class ProjectVersionWizard(models.TransientModel):
         if not self.modification_motive:
             raise UserError('Hace falta agregar el motivo de la modificación.')
         
-        # self.sale_order_id.clean_duplicates_after_modification()
+        self.sale_order_id.clean_duplicates_after_modification()
         # Crear tareas para el proyecto
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
         self.sale_order_id.project_lines_created()
