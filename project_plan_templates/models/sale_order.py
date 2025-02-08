@@ -435,25 +435,10 @@ class SaleOrder(models.Model):
         Solo limpia las líneas que no tienen for_modification, for_create o for_newlines activados.
         """
         for sale in self:
-            # Eliminar líneas en project_plan_lines
-            domain = [
-                ('id', 'in', sale.project_plan_lines.ids),
-                ('for_modification', '=', False),
-                ('for_create', '=', False),
-                ('for_newlines', '=', False),
-            ]
-            lines_to_remove = self.env['project.plan.line'].search(domain)
-            if lines_to_remove:
-                lines_to_remove.unlink()
-
-            # Eliminar líneas en project_picking_lines
-            domain = [
-                ('id', 'in', sale.project_picking_lines.ids),
-                ('for_modification', '=', False),
-                ('for_create', '=', False),
-                ('for_newlines', '=', False),
-            ]
-            lines_to_remove_picking = self.env['project.picking.line'].search(domain)
+            # Filtrar y eliminar líneas en project_picking_lines
+            lines_to_remove_picking = sale.project_picking_lines.filtered(
+                lambda line: not line.for_modification and not line.for_create and not line.for_newlines
+            )
             if lines_to_remove_picking:
                 lines_to_remove_picking.unlink()
 
