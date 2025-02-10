@@ -14,6 +14,7 @@ class ProductTemplate(models.Model):
         string='Lineas de lista de precios')
 
     def _get_include_template_pricelist_ids(self):
+        logger.warning('Inicio _get_include_template_pricelist_ids')
         for product_template in self:
             company_id = product_template.company_id or self.env.company
             # Agregate all applicable pricelist for the given product template:
@@ -28,10 +29,12 @@ class ProductTemplate(models.Model):
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.add(pricelist_id)
             return list(pricelists_ids)
+        logger.warning('Termino _get_include_template_pricelist_ids')
 
     @api.depends_context('company')
     @api.depends("categ_id", "list_price", "standard_price")
     def _compute_product_pricelist_line_ids(self):
+        logger.warning('Inicio _compute_product_pricelist_line_ids')
         """
             Re-computes the price unit for all the 'product.pricelist.line' linked to this 'product.template'.
             Search for pricelist items applied on:
@@ -70,7 +73,10 @@ class ProductTemplate(models.Model):
             if len(pricelist_line_vals) <= 0:
                 product_template.sudo().write({'product_pricelist_line_ids': False})
 
+        logger.warning('Termino _compute_product_pricelist_line_ids')
+
     def get_min_sale_price(self, currency_id):
+        logger.warning('Inicio get_min_sale_price')
         """
             Helper to use in validations.
             Returns the lowest price out of all pricelist lines.
@@ -83,3 +89,4 @@ class ProductTemplate(models.Model):
                     lowest_value = pricelist.unit_price
             lowest_value = round(lowest_value, price_unit_prec)
             return lowest_value
+        logger.warning('Termino get_min_sale_price')
