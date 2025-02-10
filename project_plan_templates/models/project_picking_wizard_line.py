@@ -5,8 +5,6 @@ class ProjectPickingWizardLine(models.TransientModel):
     _description = 'Porject picking wizard lines'
     _order = 'sequence'
 
-    wizard_creation_id = fields.Many2one('project.creation.wizard', string="Wizard")
-
     name = fields.Char(string="Name")
     product_id = fields.Many2one('product.product', string="Product")
     quantity = fields.Float(string="Quantity")
@@ -34,6 +32,12 @@ class ProjectPickingWizardLine(models.TransientModel):
     product_uom_qty = fields.Float(string="Demanda")
     for_modification = fields.Boolean()
     for_newlines = fields.Boolean()
+
+    wizard_creation_id = fields.Many2one(
+        'project.creation.wizard',  # Modelo relacionado
+        string="Wizard Creation",  # Etiqueta del campo
+        ondelete='cascade'  # Eliminar líneas si se elimina el wizard
+    )
 
     @api.depends('product_id')
     def _compute_standard_price(self):
