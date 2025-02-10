@@ -174,12 +174,15 @@ class SaleOrder(models.Model):
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
         for sale in self:
+            if sale.project_id:
+                sale.partner_id = sale.project_id.partner_id  # Asignar automáticamente el cliente del proyecto
+
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
             sale.project_picking_lines = [(5, 0, 0)]
             sale.task_time_lines = [(5, 0, 0)]
-            if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
 
+            if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
                 previous_order = sale.project_id.actual_sale_order_id
 
                 sale.partner_id = previous_order.partner_id
@@ -196,7 +199,6 @@ class SaleOrder(models.Model):
                     'last_service_price': line.last_service_price
                 }) for line in previous_order.order_line]
 
-                # Copiar project_plan_lines directamente
                 # Preparar y asignar líneas de plan
                 plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
                 sale.project_plan_lines = plan_lines
@@ -205,6 +207,7 @@ class SaleOrder(models.Model):
                 picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
                 sale.project_picking_lines = picking_lines
 
+                # Preparar y asignar líneas de tareas
                 task_lines = self._prepare_task_lines(previous_order.task_time_lines)
                 sale.task_time_lines = task_lines
 
