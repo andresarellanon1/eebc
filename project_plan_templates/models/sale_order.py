@@ -135,8 +135,6 @@ class SaleOrder(models.Model):
         for line in self.project_picking_lines
             if line.subtotal > 0:
                 plan.plan_total_cost = sum(line.subtotal)
-            else:
-                plan.plan_total_cost = sum(line.last_price)
 
     @api.onchange('is_project')
     def _onchange_is_project(self):
