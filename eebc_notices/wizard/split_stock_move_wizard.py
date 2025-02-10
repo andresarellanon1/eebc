@@ -39,5 +39,4 @@ class SplitStockMoveWizard(models.TransientModel):
             })
             new_move._action_confirm()
         
-        # Cancelar el movimiento original
-        original_move._action_cancel()
+       
