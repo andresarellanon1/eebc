@@ -1,0 +1,29 @@
+<odoo>
+
+<record id="view_split_stock_move_wizard_form" model="ir.ui.view">
+    <field name="name">split.stock.move.wizard.form</field>
+    <field name="model">split.stock.move.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Dividir Movimiento de Stock">
+            <group>
+                <field name="stock_move_id" readonly="1"/>
+                <field name="split_quantity"/>
+            </group>
+            <footer>
+                <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                <button string="Dividir" class="btn-primary" type="object" name="action_split_stock_move"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+
+<record id="action_split_stock_move_wizard" model="ir.actions.act_window">
+    <field name="name">Dividir Movimiento de Stock</field>
+    <field name="res_model">split.stock.move.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+
+</odoo>

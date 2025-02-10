@@ -48,3 +48,5 @@ class StockPicking(models.Model):
             histories.write({'state': 'canceled'})  # Cambia los estados a 'canceled'
 
         return res
+
+   

@@ -20,22 +20,29 @@ class ProductPricelist(models.Model):
             for line in self:
                 line._compute_product_pricelist_lines()
         return res
+        
+    def action_update_pricelist(self):
+    # Aquí va la lógica para actualizar la lista de precios
+        for record in self:
+            record._compute_product_pricelist_lines()
+        return True
 
+    @api.model
     def _compute_product_pricelist_lines(self):
         """
         Actualiza las líneas de lista de precios relacionadas en productos y plantillas.
 
         Procesa recursivamente los items de la lista de precios según su alcance:
         1. Variantes de producto directas(`0_product_variant`):
-           - Actualiza plantillas vinculadas a variantes específicas
+            - Actualiza plantillas vinculadas a variantes específicas
         2. Productos directos (`1_product`):
-           - Recalcula precios en plantillas asociadas explícitamente
+            - Recalcula precios en plantillas asociadas explícitamente
         3. Categorías de producto (`2_product_category`):
-           - Afecta todas las plantillas dentro de la categoría configurada
+            - Afecta todas las plantillas dentro de la categoría configurada
         4. Alcance global (`3_global`):
-           - Procesa todas las plantillas existentes en la base de datos
-           - Opera en bloques de 100 registros para optimizar memoria
-           - Realiza commit tras cada bloque y limpia la caché del entorno
+            - Procesa todas las plantillas existentes en la base de datos
+            - Opera en bloques de 100 registros para optimizar memoria
+            - Realiza commit tras cada bloque y limpia la caché del entorno
 
         Flujo:
         - Identifica items por tipo de alcance
@@ -49,8 +56,10 @@ class ProductPricelist(models.Model):
 
         Uso típico:
         Llamado durante cambios en listas de precios para propagar actualizaciones
-        """
+            """
+
         for pricelist in self:
+            
             items_direct_relation_variant = self.env['product.pricelist.item'].search([('applied_on', '=', '0_product_variant'), ('pricelist_id', '=', pricelist.id)])
             items_direct_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '1_product'), ('pricelist_id', '=', pricelist.id)])
             items_category_relation = self.env['product.pricelist.item'].search([('applied_on', '=', '2_product_category'), ('pricelist_id', '=', pricelist.id)])
@@ -62,12 +71,13 @@ class ProductPricelist(models.Model):
 
             if items_direct_relation_variant.product_id:
                 product = self.env["product.product"].search([('id', '=', items_direct_relation.product_id.id)])
-                product.product_tmplt_id._compute_product_pricelist_line_ids()
+                product.product_tmpl_id._compute_product_pricelist_line_ids()
 
             if items_category_relation.categ_id:
-                product_templates = self.env["product.template"].search([('categ_id', '=', items_category_relation.categ_id.id)])
-                product_templates._compute_product_pricelist_line_ids()
-
+                for category in items_category_relation.categ_id:
+                    product_templates = self.env["product.template"].search([('categ_id', '=', category.id)])
+                    product_templates._compute_product_pricelist_line_ids()
+            
             if items_all_stock:
                 product_templates = self.env["product.template"].search([]).with_prefetch()
                 batch_size = 100
@@ -75,8 +85,8 @@ class ProductPricelist(models.Model):
                 for i in range(0, len(product_templates), batch_size):
                     batch = product_templates[i:i + batch_size]
                     batch._compute_product_pricelist_line_ids()
-                    self.env.cr.commit()
-                    self.env.clear()  # Clear the environment cache to free memory
+                    # self.env.cr.commit()
+                    # self.env.clear()  # Clear the environment cache to free memory
 
     @api.depends('item_ids')
     def _compute_filtered_item_ids(self):

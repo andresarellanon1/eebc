@@ -4,6 +4,7 @@ from . import stock_assign_serial_numbers_inherit
 from . import select_notice_wizard
 from . import wizard_selection_line
 from . import wizard_selection_lot_line
+from . import split_stock_move_wizard
 
 
 

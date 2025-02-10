@@ -1,6 +1,6 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 import logging
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -199,8 +199,7 @@ class StockMove(models.Model):
         }
 
 
-
-
+    
     def _create_line_ids(self, in_or_out):
         for move in self:
             if not move.id:
@@ -231,6 +230,12 @@ class StockMove(models.Model):
             _logger.warning(f'Líneas creadas: {lines}')
             return lines
 
-           
-
-
+    def action_open_split_stock_move_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'split.stock.move.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_stock_move_id': self.id},
+        }
