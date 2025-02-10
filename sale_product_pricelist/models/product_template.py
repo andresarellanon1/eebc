@@ -45,6 +45,13 @@ class ProductTemplate(models.Model):
             Get the price for each pricelist and create/update the lines for the template.
             Finally, re-computes the related o2m field for this 'product.template'.
         """
+        # Obtener todas las líneas de precios en un solo paso y eliminarlas
+        all_pricelist_lines = self.mapped("product_pricelist_line_ids")
+        if all_pricelist_lines:
+            all_pricelist_lines.unlink()
+        logger.warning('Se eliminaron todas las listas de precios')
+
+
         for product_template in self:
             pricelist_line_vals = []
             applied_pricelists = product_template._get_include_template_pricelist_ids()
@@ -61,20 +68,11 @@ class ProductTemplate(models.Model):
                 })
 
             # 2. Unlink and delete all
-            if product_template.product_pricelist_line_ids:
-                BATCH_SIZE = 700
-                pricelist_lines = product_template.product_pricelist_line_ids
-                for batch in range(0, len(pricelist_lines), BATCH_SIZE):
-                    pricelist_lines[batch : batch + BATCH_SIZE].unlink()
-                # product_template.product_pricelist_line_ids.unlink()
-                # product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
-                logger.warning('Se elimino la lista de precios')
-
+            # product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
             # 3. Link and create all
             # self.env.cr.commit()
             product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, vals) for vals in pricelist_line_vals]})
             # 4. recompute orphans
-            
             product_template.product_pricelist_line_ids._compute_is_orphan()
             # If nothing to link, write to `False`
             if len(pricelist_line_vals) <= 0:
