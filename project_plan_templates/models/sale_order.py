@@ -211,7 +211,7 @@ class SaleOrder(models.Model):
                 previous_order = sale.project_id.actual_sale_order_id
 
                 # Volvemos a asignar el cliente, por si el pedido anterior tiene uno distinto
-                sale.partner_id = previous_order.partner_id.id
+                sale.partner_id = sale.project_id.client_id
 
                 # Copiar líneas del pedido anterior
                 sale.order_line = [(0, 0, {
