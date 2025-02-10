@@ -439,7 +439,7 @@ class SaleOrder(models.Model):
         for sale in self:
             # Filtrar y eliminar líneas en project_picking_lines
             lines_to_remove_picking = sale.project_picking_lines.filtered(
-                lambda line: not line.for_creat and not line.for_newlines
+                lambda line: not line.for_create and not line.for_newlines and not line.for_modification
             )
             if lines_to_remove_picking:
                 lines_to_remove_picking.unlink()
