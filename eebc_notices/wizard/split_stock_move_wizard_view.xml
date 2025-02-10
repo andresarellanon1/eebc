@@ -1,5 +1,5 @@
 <odoo>
-
+<!-- 
 <record id="view_split_stock_move_wizard_form" model="ir.ui.view">
     <field name="name">split.stock.move.wizard.form</field>
     <field name="model">split.stock.move.wizard</field>
@@ -12,6 +12,31 @@
             <footer>
                 <button string="Cancelar" class="btn-secondary" special="cancel"/>
                 <button string="Dividir" class="btn-primary" type="object" name="action_split_stock_move"/>
+            </footer>
+        </form>
+    </field>
+</record> -->
+<record id="view_split_stock_move_wizard_form" model="ir.ui.view">
+    <field name="name">split.stock.move.wizard.form</field>
+    <field name="model">split.stock.move.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Dividir Movimiento de Stock">
+            <group>
+                <field name="stock_move_id" readonly="1"/>
+                <field name="split_quantity"/>
+            </group>
+            <field name="new_move_lines">
+                <tree editable="bottom">
+                    <field name="product_id"/>
+                    <field name="product_uom_qty"/>
+                    <field name="location_id"/>
+                    <field name="location_dest_id"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+            <footer>
+                <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                <button string="Confirmar" class="btn-primary" type="object" name="action_confirm"/>
             </footer>
         </form>
     </field>
