@@ -29,7 +29,7 @@ class ProductPricelist(models.Model):
 
 
     @api.model
-    def _compute_product_pricelist_dependencies(self):
+    def _compute_product_pricelist_lines(self):
         logger.warning('Inicio _compute_product_pricelist_dependencies')
 
         # Buscar todas las líneas de precios en una sola consulta y agruparlas por `applied_on`
