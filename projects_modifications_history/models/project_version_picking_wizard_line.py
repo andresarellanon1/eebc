@@ -5,7 +5,7 @@ class ProjectPickingWizardLine(models.TransientModel):
     _description = 'Porject picking wizard lines'
     _order = 'sequence'
 
-    wizard_creation_id = fields.Many2one('project.creation.wizard')
+    wizard_id = fields.Many2one('project.version.wizard')
 
     name = fields.Char(string="Name")
     product_id = fields.Many2one('product.product', string="Product")
