@@ -43,8 +43,8 @@ class SplitStockMoveWizard(models.TransientModel):
                 'rule_id': stock_move.rule_id.id,
                 # Agrega otros campos necesarios aquí
             }
-            new_move = self.env['stock.move'].create(new_move_vals)
-            new_moves += new_move
+            # new_move = self.env['stock.move'].create(new_move_vals)
+            # new_moves += new_move
             remaining_qty -= qty
 
         # Desactivar o cancelar la línea original
@@ -53,7 +53,7 @@ class SplitStockMoveWizard(models.TransientModel):
         if stock_move.picking_id:
             for new_move in new_moves:
                 stock_move.picking_id.write({
-                    'move_ids_without_package': [(0,0, new_move.id)]  # Agrega cada nuevo movimiento al campo one2many
+                    'move_ids_without_package': [(0,0, new_move_vals)]  # Agrega cada nuevo movimiento al campo one2many
                 })
 
         # Abrir la vista de los nuevos movimientos creados
