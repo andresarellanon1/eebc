@@ -72,15 +72,12 @@ class ProductTemplate(models.Model):
                 #     pricelist.is_special
                 # )
 
-            if product_template.product_pricelist_line_ids:
-                # Si tiene registros, los eliminamos
-                product_template.product_pricelist_line_ids.unlink()
-            else:
-                logger.warning('No hay líneas de lista de precios para eliminar.')
-            # product_template.sudo().write({'product_pricelist_line_ids': [(6, 0, [])] + pricelist_line_vals})
-
             # 2. Unlink and delete all
-            product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
+            if product_template.product_pricelist_line_ids:
+                product_template.product_pricelist_line_ids.unlink()
+                product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
+                logger.warning('Se elimino la lista de precios')
+
             # 3. Link and create all
             # self.env.cr.commit()
             # product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, vals) for vals in pricelist_line_vals]})
