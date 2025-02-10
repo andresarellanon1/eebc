@@ -146,6 +146,8 @@ class ProjectPlan(models.Model):
     def ensure_plan_line_exists(self):
         """ Garantiza que exista una línea en project_plan_lines con la información obligatoria. """
         for plan in self:
+            plan.project_plan_lines = [(5, 0, 0)]
+
             existing_line = self.env['project.plan.line'].search([
                 ('project_plan_id', '=', plan.id),
                 ('name', '=', plan.name)
