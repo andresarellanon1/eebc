@@ -174,20 +174,25 @@ class SaleOrder(models.Model):
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
         for sale in self:
-            if sale.project_id:
-                sale.partner_id = sale.project_id.partner_id  # Asignar automáticamente el cliente del proyecto
+            # Siempre asignar el cliente desde el proyecto si existe
+            if sale.project_id and sale.project_id.partner_id:
+                sale.partner_id = sale.project_id.partner_id
 
+            # Limpiar las líneas previas
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
             sale.project_picking_lines = [(5, 0, 0)]
             sale.task_time_lines = [(5, 0, 0)]
 
+            # Si edit_project es True y el proyecto tiene un pedido previo
             if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
                 previous_order = sale.project_id.actual_sale_order_id
 
+                # Asignar el cliente y nombre del proyecto desde el pedido anterior
                 sale.partner_id = previous_order.partner_id
                 sale.project_name = previous_order.project_name
 
+                # Copiar líneas de orden
                 sale.order_line = [(0, 0, {
                     'product_id': line.product_id.id,
                     'display_type': line.display_type,
@@ -199,17 +204,15 @@ class SaleOrder(models.Model):
                     'last_service_price': line.last_service_price
                 }) for line in previous_order.order_line]
 
-                # Preparar y asignar líneas de plan
-                plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
-                sale.project_plan_lines = plan_lines
+                # Copiar líneas del plan
+                sale.project_plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
 
-                # Preparar y asignar líneas de picking
-                picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
-                sale.project_picking_lines = picking_lines
+                # Copiar líneas de picking
+                sale.project_picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
 
-                # Preparar y asignar líneas de tareas
-                task_lines = self._prepare_task_lines(previous_order.task_time_lines)
-                sale.task_time_lines = task_lines
+                # Copiar líneas de tareas
+                sale.task_time_lines = self._prepare_task_lines(previous_order.task_time_lines)
+
 
     def _prepare_task_lines(self, lines):
         return [(0, 0, {
