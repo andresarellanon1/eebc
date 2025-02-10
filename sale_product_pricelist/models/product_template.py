@@ -60,17 +60,17 @@ class ProductTemplate(models.Model):
                     'is_special': pricelist.is_special
                 })
 
-                logger.warning(
-                    "Procesando pricelist: %s | ID: %d | UOM ID: %d | Producto Template ID: %d | "
-                    "Currency ID: %d | Company ID: %d | Is Special: %s",
-                    pricelist.name,
-                    pricelist.id,
-                    product_template.uom_id.id,
-                    product_template.id,
-                    pricelist.currency_id.id,
-                    pricelist.company_id.id,
-                    pricelist.is_special
-                )
+                # logger.warning(
+                #     "Procesando pricelist: %s | ID: %d | UOM ID: %d | Producto Template ID: %d | "
+                #     "Currency ID: %d | Company ID: %d | Is Special: %s",
+                #     pricelist.name,
+                #     pricelist.id,
+                #     product_template.uom_id.id,
+                #     product_template.id,
+                #     pricelist.currency_id.id,
+                #     pricelist.company_id.id,
+                #     pricelist.is_special
+                # )
 
 
             # product_template.sudo().write({'product_pricelist_line_ids': [(6, 0, [])] + pricelist_line_vals})
