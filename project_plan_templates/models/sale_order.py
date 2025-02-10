@@ -174,25 +174,30 @@ class SaleOrder(models.Model):
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
         for sale in self:
-            if sale.project_id:
-                # Primero, asignar el cliente desde el proyecto
-                if sale.project_id.partner_id:
-                    sale.partner_id = sale.project_id.partner_id
+            if not sale.project_id:
+                return
 
-            # Limpiar las líneas previas (esto evita duplicados)
+            #  Primero, asignamos el cliente del proyecto, si existe
+            if sale.project_id.partner_id:
+                sale.partner_id = sale.project_id.partner_id
+
+            
+            sale._onchange_partner_id()  
+
+            #  Limpiar líneas previas para evitar duplicados
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
             sale.project_picking_lines = [(5, 0, 0)]
             sale.task_time_lines = [(5, 0, 0)]
 
-            # Si edit_project es True y el proyecto tiene un pedido previo
-            if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
+            # Si el proyecto tiene un pedido anterior, copiamos datos
+            if sale.edit_project and sale.project_id.actual_sale_order_id:
                 previous_order = sale.project_id.actual_sale_order_id
 
-                # Asignar el cliente desde el pedido anterior (esto solo refuerza el cambio)
+                # Volvemos a asignar el cliente, por si el pedido anterior tiene uno distinto
                 sale.partner_id = previous_order.partner_id
 
-                # Copiar líneas de orden
+                # Copiar líneas del pedido anterior
                 sale.order_line = [(0, 0, {
                     'product_id': line.product_id.id,
                     'display_type': line.display_type,
@@ -212,6 +217,7 @@ class SaleOrder(models.Model):
 
                 # Copiar líneas de tareas
                 sale.task_time_lines = self._prepare_task_lines(previous_order.task_time_lines)
+
 
 
 
