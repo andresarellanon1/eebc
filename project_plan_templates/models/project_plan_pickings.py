@@ -129,7 +129,7 @@ class ProjectPlanPickingLine(models.Model):
             quantity = record.quantity
 
             if quantity >= 0:
-                if record.standard_price > 0
+                if record.standard_price > 0:
                     record.subtotal = record.standard_price * quantity
                 else:
                     record.subtotal = record.last_price * quantity
