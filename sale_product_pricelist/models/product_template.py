@@ -62,7 +62,7 @@ class ProductTemplate(models.Model):
 
             # 2. Unlink and delete all
             if product_template.product_pricelist_line_ids:
-                BATCH_SIZE = 50
+                BATCH_SIZE = 500
                 pricelist_lines = product_template.product_pricelist_line_ids
                 for batch in range(0, len(pricelist_lines), BATCH_SIZE):
                     pricelist_lines[batch : batch + BATCH_SIZE].unlink()
