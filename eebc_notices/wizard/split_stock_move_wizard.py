@@ -51,9 +51,10 @@ class SplitStockMoveWizard(models.TransientModel):
         stock_move.write({'product_uom_qty': 0, 'state': 'cancel'})
 
         if stock_move.picking_id:
-            stock_move.picking_id.write({
-                'move_ids_without_package': [(0,0, new_move.id) for new_move in new_moves]  # Agrega cada nuevo movimiento al campo one2many
-            })
+            for new_move in new_moves:
+                stock_move.picking_id.write({
+                    'move_ids_without_package': [(0,0, new_move.id)]  # Agrega cada nuevo movimiento al campo one2many
+                })
 
         # Abrir la vista de los nuevos movimientos creados
         return {
