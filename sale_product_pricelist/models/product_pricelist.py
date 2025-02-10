@@ -28,7 +28,7 @@ class ProductPricelist(models.Model):
         return True
 
 
-    # @api.model
+    # 
     # def _compute_product_pricelist_lines(self):
     #     logger.warning('Inicio _compute_product_pricelist_dependencies')
 
@@ -73,7 +73,7 @@ class ProductPricelist(models.Model):
 
     #     logger.warning('Termino _compute_product_pricelist_dependencies')
 
-
+    @api.model
     def _compute_product_pricelist_lines(self):
         """
         Actualiza las líneas de lista de precios relacionadas en productos y plantillas.
