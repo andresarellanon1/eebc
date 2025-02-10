@@ -4,3 +4,5 @@ from . import project_version_lines
 from . import project_version_wizard
 from . import project_plan_lines
 from . import project_picking_lines
+from . import project_version_picking_wizard_line
+from . import project_version_plan_wizard_line

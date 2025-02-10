@@ -13,22 +13,13 @@ class ProjectVersionWizard(models.TransientModel):
     modified_by = fields.Many2one('res.users', string='Modificado por', required=True)
     plan_total_cost = fields.Float(string="Costo total")
 
-    project_plan_lines = fields.Many2many(
-        'project.plan.line',
-        string='Planeación'
-    )
-    project_picking_lines = fields.Many2many(
-        'project.picking.lines',
-        string='Inventario'
-    )
-
     wizard_plan_lines = fields.One2many(
-        'project.plan.wizard.line', 'wizard_version_id',
+        'project.version.plan.wizard.line', 'wizard_id',
         string="Project Plan Lines"
     )
 
     wizard_picking_lines = fields.One2many(
-        'project.picking.wizard.line', 'wizard_version_history_id',
+        'project.version.picking.wizard.line', 'wizard_id',
         string="Project Picking Lines"
     )
 
@@ -198,10 +189,7 @@ class ProjectVersionWizard(models.TransientModel):
             project = self._origin.project_id
             current_task_type = None
 
-            plan_lines = self.prep_plan_lines(record.wizard_plan_lines)
-            wizard_picking_lines = self.prep_picking_lines(record.wizard_picking_lines)
-
-            for line in plan_lines:
+            for line in record.wizard_plan_lines:
                 if line.display_type and line.for_create:
                     current_task_type = self.get_or_create_task_type(line.name, project)
 
@@ -227,7 +215,7 @@ class ProjectVersionWizard(models.TransientModel):
                         picking_lines = []
                         is_task = False
 
-                        for picking in wizard_picking_lines:
+                        for picking in record.wizard_picking_lines:
                             if picking.display_type:
                                 is_task = picking.name == line.name
                             elif is_task:
