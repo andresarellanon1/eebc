@@ -132,8 +132,11 @@ class SaleOrder(models.Model):
     
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
-        for plan in self:
-            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+        for line in self.project_picking_lines
+            if line.subtotal > 0:
+                plan.plan_total_cost = sum(line.subtotal)
+            else:
+                plan.plan_total_cost = sum(line.last_price)
 
     @api.onchange('is_project')
     def _onchange_is_project(self):
