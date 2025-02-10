@@ -72,6 +72,10 @@ class ProductTemplate(models.Model):
                 #     pricelist.is_special
                 # )
 
+            pricelist_line_ids_before = product_template.product_pricelist_line_ids.mapped('id')
+            logger.warning("IDs de las líneas de precios antes de eliminar: %s", pricelist_line_ids_before)
+
+
             # 2. Unlink and delete all
             if product_template.product_pricelist_line_ids:
                 product_template.product_pricelist_line_ids.unlink()
