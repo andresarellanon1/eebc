@@ -148,7 +148,7 @@ class ProjectProject(models.Model):
                         for picking in project.project_picking_lines:
                             if picking.display_type:
                                 is_task = picking.name == line.name
-                            elif is_task and picking.product_id.id not in [p[2]['product_id'] for p in picking_lines]:
+                            elif is_task and for_newlines:
                                 picking_lines.append((0, 0, {
                                     'name': picking.product_id.name,
                                     'product_id': picking.product_id.id,
@@ -204,7 +204,7 @@ class ProjectProject(models.Model):
                         for picking in project.project_picking_lines:
                             if picking.display_type:
                                 is_task = picking.name == line.name
-                            elif is_task and picking.product_id.id not in [p[2]['product_id'] for p in picking_lines]:
+                            elif is_task and for_newlines:
                                 picking_lines.append((0, 0, {
                                     'name': picking.product_id.name,
                                     'product_id': picking.product_id.id,
