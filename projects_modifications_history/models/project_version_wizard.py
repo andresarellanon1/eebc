@@ -77,12 +77,6 @@ class ProjectVersionWizard(models.TransientModel):
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
 
-        # Preparar nuevas líneas desde la sale_order
-        new_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
-        new_picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
-
-        
-
         # Verificar si ya existe un historial de versiones para el proyecto
         existing_history = self.env['project.version.history'].search([
             ('project_id', '=', self.project_id.id),
@@ -104,7 +98,8 @@ class ProjectVersionWizard(models.TransientModel):
         # Validar que se haya proporcionado un motivo de modificación
         if not self.modification_motive:
             raise UserError('Hace falta agregar el motivo de la modificación.')
-
+        
+        self.sale_order_id.clean_duplicates_after_modification()
         # Crear tareas para el proyecto
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
         self.sale_order_id.project_lines_created()
@@ -121,7 +116,7 @@ class ProjectVersionWizard(models.TransientModel):
         })
 
         # Eliminar duplicados después de la modificación
-        self.sale_order_id.clean_duplicates_after_modification()
+        
         self.sale_order_id.state = 'sale'
 
         # Cerrar el wizard después de completar la acción
@@ -197,3 +192,21 @@ class ProjectVersionWizard(models.TransientModel):
                     'for_newlines': line.for_newlines,
                 }))
         return picking_lines
+
+    def update_project_lines(self):
+        project = self._origin.project_id
+
+        new_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+        new_picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
+
+        # Eliminar todas las líneas existentes en el proyecto
+        project.write({
+            'project_plan_lines': [(5, 0, 0)],  # Elimina todas las líneas de project_plan_lines
+            'project_picking_lines': [(5, 0, 0)],  # Elimina todas las líneas de project_picking_lines
+        })
+
+        # Agregar las nuevas líneas desde la sale_order
+        project.write({
+            'project_plan_lines': new_plan_lines,  # Agrega las nuevas líneas de project_plan_lines
+            'project_picking_lines': new_picking_lines,  # Agrega las nuevas líneas de project_picking_lines
+        })

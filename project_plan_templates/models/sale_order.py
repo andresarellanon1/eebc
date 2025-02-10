@@ -185,8 +185,13 @@ class SaleOrder(models.Model):
                 sale.update_picking_lines()
                 sale.update_task_lines()
 
+            self.change_for_modification()
+
             sale.state = 'budget'
-            
+    
+    def change_for_modification(self):
+        for sale in self.project_picking_lines:
+            sale.for_modification = False
 
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
@@ -252,7 +257,8 @@ class SaleOrder(models.Model):
             'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
             'for_create': line.for_create,
             'for_modification': False,
-            'for_picking': line.for_picking
+            'for_picking': line.for_picking,
+            'for_newlines': line.for_newlines
         }) for line in lines]
 
     def _prepare_picking_lines(self, lines):
@@ -270,7 +276,8 @@ class SaleOrder(models.Model):
             'subtotal': line.subtotal,
             'for_create': line.for_create,
             'for_modification': False,
-            'last_price': line.last_price
+            'last_price': line.last_price,
+            'for_newlines': line.for_newlines
         }) for line in lines]
 
     def prep_task_line_section_line(self, line):
@@ -425,20 +432,21 @@ class SaleOrder(models.Model):
     def clean_duplicates_after_modification(self):
         """
         Limpia las líneas duplicadas después de modificar un proyecto.
-        Solo limpia las líneas con for_modification=True.
+        Solo limpia las líneas que no tienen for_modification, for_create o for_newlines activados.
         """
         for sale in self:
-            lines_to_remove = sale.project_plan_lines.filtered('for_modification')
-            lines_to_remove.unlink()
-
-            lines_to_remove_picking = sale.project_picking_lines.filtered('for_modification')
-            lines_to_remove_picking.unlink()
+            # Filtrar y eliminar líneas en project_picking_lines
+            lines_to_remove_picking = sale.project_picking_lines.filtered(
+                lambda line: not line.for_create 
+            )
+            if lines_to_remove_picking:
+                lines_to_remove_picking.unlink()
 
     def project_lines_created(self):
         for sale in self.project_plan_lines:
-            sale.for_newlines == False
+            sale.for_newlines = False
         for sale in self.project_picking_lines:
-            sale.for_newlines == False
+            sale.for_newlines = False
         
     def action_open_report(self):
         self.ensure_one()
