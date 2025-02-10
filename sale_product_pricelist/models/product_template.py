@@ -14,7 +14,6 @@ class ProductTemplate(models.Model):
         string='Lineas de lista de precios')
 
     def _get_include_template_pricelist_ids(self):
-        logger.warning('Inicio _get_include_template_pricelist_ids')
         for product_template in self:
             company_id = product_template.company_id or self.env.company
             # Agregate all applicable pricelist for the given product template:
@@ -28,7 +27,6 @@ class ProductTemplate(models.Model):
                 pricelists_ids.add(pricelist_id)
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.add(pricelist_id)
-            logger.warning('Termino _get_include_template_pricelist_ids')
             return list(pricelists_ids)
 
         
