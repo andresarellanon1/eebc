@@ -53,7 +53,7 @@ class SplitStockMoveWizard(models.TransientModel):
 
         if stock_move.picking_id:
             stock_move.picking_id.write({
-                'move_ids': [(4, new_move.id) for new_move in new_moves]  # Agrega cada nuevo movimiento al campo one2many
+                'move_ids_without_package': [(4, new_move.id) for new_move in new_moves]  # Agrega cada nuevo movimiento al campo one2many
             })
 
         # Abrir la vista de los nuevos movimientos creados
