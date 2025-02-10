@@ -36,12 +36,17 @@ class ProductPricelistLine(models.Model):
         - Utiliza `search_count` para optimizar consultas
         """
         sale_line_model = self.env['sale.order.line']
+        pricelist_item_model = self.env['product.pricelist.item']
         for line in self:
-            reference_count = sale_line_model.search_count([
+            reference_sale = sale_line_model.search_count([
                 ('product_pricelist_id', '=', line.id)
             ])
-            line.is_orphan = reference_count == 0
+            line.is_orphan = reference_sale == 0
             
+            reference_item = pricelist_item_model.search_count([
+                ('pricelist_id', '=', line.pricelist_id)
+            ])
+            line.is_orphan = reference_sale == 0
 
     def _compute_display_name(self):
         for record in self:
