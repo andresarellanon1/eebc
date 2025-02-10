@@ -48,6 +48,9 @@ class ProductPricelistLine(models.Model):
             ])
             line.is_orphan = reference_sale == 0
 
+            logger.warning("Linea ID: %s, Pricelist ID: %s, Is Orphan: %s, Reference Sale Count: %d, Reference Item Count: %d",
+                            line.id, line.pricelist_id.id, line.is_orphan, reference_sale, reference_item)
+
     def _compute_display_name(self):
         for record in self:
            
