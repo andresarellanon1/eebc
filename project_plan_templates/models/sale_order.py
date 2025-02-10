@@ -174,11 +174,12 @@ class SaleOrder(models.Model):
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
         for sale in self:
-            # Siempre asignar el cliente desde el proyecto si existe
-            if sale.project_id and sale.project_id.partner_id:
-                sale.partner_id = sale.project_id.partner_id
+            if sale.project_id:
+                # Primero, asignar el cliente desde el proyecto
+                if sale.project_id.partner_id:
+                    sale.partner_id = sale.project_id.partner_id
 
-            # Limpiar las líneas previas
+            # Limpiar las líneas previas (esto evita duplicados)
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
             sale.project_picking_lines = [(5, 0, 0)]
@@ -188,9 +189,8 @@ class SaleOrder(models.Model):
             if sale.edit_project and sale.project_id and sale.project_id.actual_sale_order_id:
                 previous_order = sale.project_id.actual_sale_order_id
 
-                # Asignar el cliente y nombre del proyecto desde el pedido anterior
+                # Asignar el cliente desde el pedido anterior (esto solo refuerza el cambio)
                 sale.partner_id = previous_order.partner_id
-                sale.project_name = previous_order.project_name
 
                 # Copiar líneas de orden
                 sale.order_line = [(0, 0, {
@@ -204,7 +204,7 @@ class SaleOrder(models.Model):
                     'last_service_price': line.last_service_price
                 }) for line in previous_order.order_line]
 
-                # Copiar líneas del plan
+                # Copiar líneas de plan
                 sale.project_plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
 
                 # Copiar líneas de picking
@@ -212,6 +212,7 @@ class SaleOrder(models.Model):
 
                 # Copiar líneas de tareas
                 sale.task_time_lines = self._prepare_task_lines(previous_order.task_time_lines)
+
 
 
     def _prepare_task_lines(self, lines):
