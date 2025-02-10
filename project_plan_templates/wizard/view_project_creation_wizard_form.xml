@@ -14,21 +14,23 @@
                         </div>
                             <group>
                                 <group>
-                                    <field name="project_id" readonly="1"/>
+                                    <h2>INFORMACIÓN DEL PROYECTO</h2>
+                                    <field name="project_id" readonly="1" invisible="1"/>
                                     <field name="sale_order_id" readonly="1"/>
                                     <field name="client_id" readonly="1"/>
-                                    <field name="partner_id"/>
-                                    <field name="picking_type_id"/>
-                                    <field name="location_id"/>
-                                    <field name="location_dest_id"/>
-                                </group>
-                                <group>
-                                    <field name="scheduled_date"/>
                                     <field name="date_start" string="Calendario del proyecto" 
                                         widget="daterange" 
                                         options="{&quot;end_date_field&quot;: &quot;date&quot;, &quot;always_range&quot;: &quot;1&quot;}" 
                                         required="date_start or date"/>
                                     <field name="date" invisible="1" required="date_start"/>
+                                </group>
+                                <group>
+                                    <h2>MOVIMIENTO DE MATERIALES</h2>
+                                    <field name="scheduled_date"/>
+                                    <field name="partner_id"/>
+                                    <field name="picking_type_id"/>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
                                 </group>
                             </group>
                             <notebook>
