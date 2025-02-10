@@ -58,7 +58,6 @@ class SplitStockMoveWizard(models.TransientModel):
                     'move_ids_without_package': [(0,0, new_move_vals)]  # Agrega cada nuevo movimiento al campo one2many
                 })
             remaining_qty -= qty
-        _logger.warning('valor del diccionario 2: %s', new_move_vals)
         # Desactivar o cancelar la línea original
         stock_move.write({'product_uom_qty': 0, 'state': 'cancel'})
 
