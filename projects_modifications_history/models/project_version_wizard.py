@@ -48,8 +48,8 @@ class ProjectVersionWizard(models.TransientModel):
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
         for record in self:
-            record.project_picking_lines = [(5, 0, 0)]
-            record.project_plan_lines = [(5, 0, 0)]
+            record.wizard_picking_lines = [(5, 0, 0)]
+            record.wizard_plan_lines = [(5, 0, 0)]
 
             plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
             picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
