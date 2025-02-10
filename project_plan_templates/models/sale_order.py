@@ -160,6 +160,7 @@ class SaleOrder(models.Model):
                 # Procesar nuevas líneas y conservar la secuencia
                 plan_lines = []
                 for line in sale.order_line:
+                    
                     if line.for_modification:
                         if line.display_type == 'line_section':
                             plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
