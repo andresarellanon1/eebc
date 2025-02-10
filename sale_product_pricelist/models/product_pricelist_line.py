@@ -46,10 +46,8 @@ class ProductPricelistLine(models.Model):
             reference_item = pricelist_item_model.search_count([
                 ('pricelist_id', '=', line.pricelist_id.id)
             ])
-            line.is_orphan = reference_sale == 0
+            line.is_orphan = reference_item == 0
 
-            logger.warning("Linea ID: %s, Pricelist ID: %s, Is Orphan: %s, Reference Sale Count: %d, Reference Item Count: %d",
-                            line.id, line.pricelist_id.id, line.is_orphan, reference_sale, reference_item)
 
     def _compute_display_name(self):
         for record in self:
