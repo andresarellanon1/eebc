@@ -44,7 +44,7 @@ class ProductPricelistLine(models.Model):
             line.is_orphan = reference_sale == 0
             
             reference_item = pricelist_item_model.search_count([
-                ('pricelist_id', '=', line.pricelist_id)
+                ('pricelist_id', '=', line.pricelist_id.id)
             ])
             line.is_orphan = reference_sale == 0
 
