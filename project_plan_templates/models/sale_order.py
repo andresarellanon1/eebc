@@ -171,6 +171,7 @@ class SaleOrder(models.Model):
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                                 plan_pickings.append((4, project_picking.id))
                         line.for_modification = False
+                        line.is_modificated = True
 
                 # Reasignar secuencias originales a las líneas nuevas
                 for plan in plan_lines:
@@ -311,7 +312,7 @@ class SaleOrder(models.Model):
     
     def prep_plan_section_line(self, line, for_create, for_task):
         return (0, 0, {
-            'name': line.name + ' * ' + str(line.product_uom_qty) if for_task else line.name,
+            'name': line.name + ' * ' + str(line.product_uom_qty) if for_task and not is_modificated else line.name,
             'display_type': line.display_type or 'line_section',
             'description': False,
             'sequence': 0,
