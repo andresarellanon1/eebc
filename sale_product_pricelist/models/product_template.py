@@ -84,7 +84,7 @@ class ProductTemplate(models.Model):
 
             # 3. Link and create all
             # self.env.cr.commit()
-            # product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, vals) for vals in pricelist_line_vals]})
+            product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, vals) for vals in pricelist_line_vals]})
             # 4. recompute orphans
             
             product_template.product_pricelist_line_ids._compute_is_orphan()
