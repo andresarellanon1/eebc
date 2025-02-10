@@ -84,7 +84,7 @@ class ProductPricelist(models.Model):
                 for i in range(0, len(product_templates), batch_size):
                     batch = product_templates[i:i + batch_size]
                     batch._compute_product_pricelist_line_ids()
-                    self.env.cr.commit()
+                    # self.env.cr.commit()
                     # self.env.clear()  # Clear the environment cache to free memory
 
     @api.depends('item_ids')
