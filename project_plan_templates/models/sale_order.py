@@ -162,10 +162,10 @@ class SaleOrder(models.Model):
                 for line in sale.order_line:
                     if line.for_modification:
                         if line.display_type == 'line_section':
-                            plan_lines.append(self.prep_plan_section_line(line, True, False))
+                            plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
                         else:
                             if line.product_id.project_plan_id:
-                                plan_lines.append(self.prep_plan_section_line(line, False, True))
+                                plan_lines.append(self.prep_plan_section_line(line, False, True, line.is_modificated))
                                 plan_lines += self.prep_plan_lines(line)
 
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
@@ -310,7 +310,7 @@ class SaleOrder(models.Model):
             'last_price': False
         })
     
-    def prep_plan_section_line(self, line, for_create, for_task):
+    def prep_plan_section_line(self, line, for_create, for_task, is_modificated):
         return (0, 0, {
             'name': line.name + ' * ' + str(line.product_uom_qty) if for_task and not is_modificated else line.name,
             'display_type': line.display_type or 'line_section',
