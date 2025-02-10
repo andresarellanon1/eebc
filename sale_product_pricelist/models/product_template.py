@@ -14,7 +14,6 @@ class ProductTemplate(models.Model):
         string='Lineas de lista de precios')
 
     def _get_include_template_pricelist_ids(self):
-        logger.warning('Inicio _get_include_template_pricelist_ids')
         for product_template in self:
             company_id = product_template.company_id or self.env.company
             # Agregate all applicable pricelist for the given product template:
@@ -28,7 +27,6 @@ class ProductTemplate(models.Model):
                 pricelists_ids.add(pricelist_id)
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.add(pricelist_id)
-            logger.warning('Termino _get_include_template_pricelist_ids')
             return list(pricelists_ids)
 
         
@@ -69,8 +67,8 @@ class ProductTemplate(models.Model):
             # 3. Link and create all
             product_template.sudo().write({'product_pricelist_line_ids': [(0, 0, vals) for vals in pricelist_line_vals]})
             # 4. recompute orphans
-            self.env.cr.commit()
-            product_template.product_pricelist_line_ids._compute_is_orphan()
+            # self.env.cr.commit()
+            # product_template.product_pricelist_line_ids._compute_is_orphan()
             # If nothing to link, write to `False`
             if len(pricelist_line_vals) <= 0:
                 product_template.sudo().write({'product_pricelist_line_ids': False})
