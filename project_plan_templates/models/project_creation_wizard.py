@@ -25,7 +25,7 @@ class ProjectCreation(models.TransientModel):
     )
 
     wizard_picking_lines = fields.One2many(
-        'project.picking.wizard.line', 'wizard_id',
+        'project.picking.wizard.line', 'wizard_creation_id',
         string="Project Picking Lines"
     )
 
