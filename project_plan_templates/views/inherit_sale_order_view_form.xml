@@ -71,7 +71,7 @@
                             <field name="product_packaging_id"/>
                             <field name="quantity"/>
                             <field name="standard_price"/>
-                            <field name="last_price" column_invisible="1"/>
+                            <field name="last_price"/>
                             <field name="subtotal"/>
                         </tree>
                     </field>
