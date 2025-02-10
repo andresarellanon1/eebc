@@ -28,8 +28,10 @@ class ProductTemplate(models.Model):
                 pricelists_ids.add(pricelist_id)
             for pricelist_id in items_all_stock.pricelist_id:
                 pricelists_ids.add(pricelist_id)
+            logger.warning('Termino _get_include_template_pricelist_ids')
             return list(pricelists_ids)
-        logger.warning('Termino _get_include_template_pricelist_ids')
+
+        
 
     @api.depends_context('company')
     @api.depends("categ_id", "list_price", "standard_price")
