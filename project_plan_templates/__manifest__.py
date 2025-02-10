@@ -29,6 +29,7 @@
         "views/project_menu.xml",
         "views/task_picking_line.xml",
         "views/timesheet_template_view.xml",
+        "views/inherit_sale_order_tree.xml",
         "wizard/view_project_creation_wizard_form.xml",
         "wizard/view_task_inventory_wizard.xml"
     ],
