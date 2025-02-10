@@ -48,8 +48,8 @@ class ProjectVersionWizard(models.TransientModel):
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
         for record in self:
-            # record.project_picking_lines = [(5, 0, 0)]
-            # record.project_plan_lines = [(5, 0, 0)]
+            record.project_picking_lines = [(5, 0, 0)]
+            record.project_plan_lines = [(5, 0, 0)]
 
             plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
             picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
@@ -132,7 +132,8 @@ class ProjectVersionWizard(models.TransientModel):
                         'task_timesheet_id': False,
                         'for_create': line.for_create,
                         'for_newlines': line.for_newlines,
-                        'service_qty': line.service_qty
+                        'service_qty': line.service_qty,
+                        'for_modification': line.for_modification
                     }))
                 else:
                     plan_lines.append((0, 0, {
@@ -147,7 +148,8 @@ class ProjectVersionWizard(models.TransientModel):
                         'display_type': False,
                         'for_create': True,
                         'for_newlines': line.for_newlines,
-                        'service_qty': line.service_qty
+                        'service_qty': line.service_qty,
+                        'for_modification': line.for_modification
                     }))
         return plan_lines
 

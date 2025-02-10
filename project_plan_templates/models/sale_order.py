@@ -242,7 +242,7 @@ class SaleOrder(models.Model):
             'work_shift': line.work_shift,
             'unit_price': line.unit_price,
             'price_subtotal': line.price_subtotal,
-            'for_modification': False
+            'for_modification': False,
         }) for line in lines]
 
     def _prepare_plan_lines(self, lines):
