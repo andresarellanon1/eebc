@@ -106,7 +106,7 @@ class ProjectPlanPickingLine(models.Model):
         for record in self:
             if not record.sale_order_id:
                 record.standard_price = record.product_id.standard_price
-            elif record.last_price:
+            elif record.new_line:
                 record.standard_price = record.product_id.standard_price
                 record.last_price = record.product_id.standard_price
 
