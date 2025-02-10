@@ -21,7 +21,7 @@ class SplitStockMoveWizard(models.TransientModel):
         # Crear nuevas líneas de stock.move
         new_moves = self.env['stock.move']
         remaining_qty = stock_move.product_uom_qty
-
+        new_move_vals = {}
         while remaining_qty > 0:
             qty = min(self.split_quantity, remaining_qty)
             # Crear un nuevo movimiento con los valores del original
@@ -51,10 +51,10 @@ class SplitStockMoveWizard(models.TransientModel):
         stock_move.write({'product_uom_qty': 0, 'state': 'cancel'})
 
         if stock_move.picking_id:
-            for new_move in new_moves:
-                stock_move.picking_id.write({
-                    'move_ids_without_package': [(0,0, new_move_vals)]  # Agrega cada nuevo movimiento al campo one2many
-                })
+        
+            stock_move.picking_id.write({
+                'move_ids_without_package': [(0,0, new_move_vals)]  # Agrega cada nuevo movimiento al campo one2many
+            })
 
         # Abrir la vista de los nuevos movimientos creados
         return {
