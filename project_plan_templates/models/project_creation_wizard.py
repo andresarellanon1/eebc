@@ -114,6 +114,8 @@ class ProjectCreation(models.TransientModel):
             'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
         })
 
+        self.sale_order_id.project_id = project.id
+
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'project.project',
