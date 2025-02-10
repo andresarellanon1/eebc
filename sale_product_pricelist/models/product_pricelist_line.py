@@ -41,13 +41,12 @@ class ProductPricelistLine(models.Model):
             reference_sale = sale_line_model.search_count([
                 ('product_pricelist_id', '=', line.id)
             ])
-            line.is_orphan = reference_sale == 0
-            
+
             reference_item = pricelist_item_model.search_count([
                 ('pricelist_id', '=', line.pricelist_id.id)
             ])
-            line.is_orphan = reference_item == 0
-
+            
+            line.is_orphan = reference_sale == 0 or reference_item == 0
 
     def _compute_display_name(self):
         for record in self:
