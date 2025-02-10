@@ -72,7 +72,7 @@ class ProductTemplate(models.Model):
                 #     pricelist.is_special
                 # )
 
-
+            product_template.product_pricelist_line_ids.unlink()
             # product_template.sudo().write({'product_pricelist_line_ids': [(6, 0, [])] + pricelist_line_vals})
 
             # 2. Unlink and delete all
