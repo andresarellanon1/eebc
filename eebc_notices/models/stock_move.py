@@ -199,8 +199,7 @@ class StockMove(models.Model):
         }
 
 
-
-
+    
     def _create_line_ids(self, in_or_out):
         for move in self:
             if not move.id:
