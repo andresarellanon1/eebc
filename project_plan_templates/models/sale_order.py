@@ -200,14 +200,6 @@ class SaleOrder(models.Model):
         for sale in self:
             if not sale.project_id:
                 return
-
-            #  Primero, asignamos el cliente del proyecto, si existe
-            if sale.project_id.partner_id:
-                sale.partner_id = sale.project_id.partner_id
-
-            
-            sale._onchange_partner_id()  
-
             #  Limpiar líneas previas para evitar duplicados
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
@@ -219,7 +211,7 @@ class SaleOrder(models.Model):
                 previous_order = sale.project_id.actual_sale_order_id
 
                 # Volvemos a asignar el cliente, por si el pedido anterior tiene uno distinto
-                sale.partner_id = previous_order.partner_id
+                sale.partner_id = previous_order.partner_id.id
 
                 # Copiar líneas del pedido anterior
                 sale.order_line = [(0, 0, {
