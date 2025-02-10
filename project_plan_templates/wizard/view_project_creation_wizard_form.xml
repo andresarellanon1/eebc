@@ -15,18 +15,17 @@
                         <group>
                             <group>
                                 <div>
-                                    <h2>INFORMACIÓN DEL PROYECTO</h2>
+                                    <h5>INFORMACIÓN DEL PROYECTO</h5>
                                 </div>
                             </group>
                             <group>
                                 <div>
-                                    <h2>MOVIMIENTO DE MATERIALES</h2>
+                                    <h5>MOVIMIENTO DE MATERIALES</h5>
                                 </div>
                             </group>
                         </group>
                         <group>
                             <group>
-                                <h2>INFORMACIÓN DEL PROYECTO</h2>
                                 <field name="project_id" readonly="1" invisible="1"/>
                                 <field name="sale_order_id" readonly="1"/>
                                 <field name="client_id" readonly="1"/>
@@ -37,7 +36,6 @@
                                 <field name="date" invisible="1" required="date_start"/>
                             </group>
                             <group>
-                                <h2>MOVIMIENTO DE MATERIALES</h2>
                                 <field name="scheduled_date"/>
                                 <field name="partner_id"/>
                                 <field name="picking_type_id"/>

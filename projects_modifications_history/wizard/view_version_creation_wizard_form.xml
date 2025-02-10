@@ -9,7 +9,18 @@
                     <sheet>
                         <group>
                             <group>
-                                <h2>INFORMACIÓN DEL PROYECTO</h2>
+                                <div>
+                                    <h5>INFORMACIÓN DEL PROYECTO</h5>
+                                </div>
+                            </group>
+                            <group>
+                                <div>
+                                    <h5>MOVIMIENTO DE MATERIALES</h5>
+                                </div>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
                                 <field name="modified_by" readonly="1"/>
                                 <field name="modification_date" readonly="1"/>
                                 <field name="sale_order_id" readonly="1"/>
@@ -21,7 +32,6 @@
                                 <field name="date" invisible="1" required="date_start"/>
                             </group>
                             <group>
-                                <h2>MOVIMIENTO DE MATERIALES</h2>
                                 <field name="scheduled_date"/>
                                 <field name="contact_id"/>
                                 <field name="picking_type_id" readonly="1"/>
