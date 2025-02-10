@@ -12,6 +12,8 @@ class SplitStockMoveWizard(models.TransientModel):
     def action_split_stock_move(self):
         self.ensure_one()
         stock_move = self.stock_move_id
+
+        # Validaciones
         if self.split_quantity <= 0:
             raise UserError("La cantidad debe ser mayor que 0.")
         if self.split_quantity > stock_move.product_uom_qty:
@@ -20,15 +22,28 @@ class SplitStockMoveWizard(models.TransientModel):
         # Crear nuevas líneas de stock.move
         new_moves = self.env['stock.move']
         remaining_qty = stock_move.product_uom_qty
+
         while remaining_qty > 0:
             qty = min(self.split_quantity, remaining_qty)
-            new_move = stock_move.copy(default={'product_uom_qty': qty})
+            # Crear un nuevo movimiento con los mismos valores, excepto la cantidad
+            new_move_vals = {
+                'product_uom_qty': qty,
+                'origin': stock_move.origin,
+                'product_id': stock_move.product_id.id,
+                'location_id': stock_move.location_id.id,
+                'location_dest_id': stock_move.location_dest_id.id,
+                'picking_id': stock_move.picking_id.id,
+                'name': stock_move.name,
+                'state': 'draft',  # Estado inicial del nuevo movimiento
+            }
+            new_move = stock_move.copy(default=new_move_vals)
             new_moves += new_move
             remaining_qty -= qty
 
-        # Desactivar la línea original
+        # Desactivar o cancelar la línea original
         stock_move.write({'product_uom_qty': 0, 'state': 'cancel'})
 
+        # Abrir la vista de los nuevos movimientos creados
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'stock.move',
