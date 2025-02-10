@@ -60,21 +60,13 @@ class ProductTemplate(models.Model):
                     'is_special': pricelist.is_special
                 })
 
-                # logger.warning(
-                #     "Procesando pricelist: %s | ID: %d | UOM ID: %d | Producto Template ID: %d | "
-                #     "Currency ID: %d | Company ID: %d | Is Special: %s",
-                #     pricelist.name,
-                #     pricelist.id,
-                #     product_template.uom_id.id,
-                #     product_template.id,
-                #     pricelist.currency_id.id,
-                #     pricelist.company_id.id,
-                #     pricelist.is_special
-                # )
-
             # 2. Unlink and delete all
             if product_template.product_pricelist_line_ids:
-                product_template.product_pricelist_line_ids.unlink()
+                BATCH_SIZE = 50
+                pricelist_lines = product_template.product_pricelist_line_ids
+                for batch in range(0, len(pricelist_lines), BATCH_SIZE):
+                    pricelist_lines[batch : batch + BATCH_SIZE].unlink()
+                # product_template.product_pricelist_line_ids.unlink()
                 # product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
                 logger.warning('Se elimino la lista de precios')
 
@@ -91,7 +83,6 @@ class ProductTemplate(models.Model):
         logger.warning('Termino _compute_product_pricelist_line_ids')
 
     def get_min_sale_price(self, currency_id):
-        logger.warning('Inicio get_min_sale_price')
         """
             Helper to use in validations.
             Returns the lowest price out of all pricelist lines.
@@ -104,4 +95,3 @@ class ProductTemplate(models.Model):
                     lowest_value = pricelist.unit_price
             lowest_value = round(lowest_value, price_unit_prec)
             return lowest_value
-        logger.warning('Termino get_min_sale_price')
