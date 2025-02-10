@@ -46,7 +46,10 @@ class ProductPricelistLine(models.Model):
                 ('pricelist_id', '=', line.pricelist_id.id)
             ])
             
-            line.is_orphan = reference_sale == 0 or reference_item == 0
+            if reference_sale != 0:
+                 line.is_orphan = False
+            if reference_item != 0:
+                line.is_orphan = False
 
     def _compute_display_name(self):
         for record in self:
