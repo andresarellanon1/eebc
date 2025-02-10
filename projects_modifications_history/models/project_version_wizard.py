@@ -198,7 +198,10 @@ class ProjectVersionWizard(models.TransientModel):
             project = self._origin.project_id
             current_task_type = None
 
-            for line in record.wizard_plan_lines:
+            plan_lines = self.prep_plan_lines(record.wizard_plan_lines)
+            wizard_picking_lines = self.prep_picking_lines(record.wizard_picking_lines)
+
+            for line in plan_lines:
                 if line.display_type and line.for_create:
                     current_task_type = self.get_or_create_task_type(line.name, project)
 
@@ -224,7 +227,7 @@ class ProjectVersionWizard(models.TransientModel):
                         picking_lines = []
                         is_task = False
 
-                        for picking in record.wizard_picking_lines:
+                        for picking in wizard_picking_lines:
                             if picking.display_type:
                                 is_task = picking.name == line.name
                             elif is_task:
