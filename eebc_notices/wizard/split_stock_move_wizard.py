@@ -11,7 +11,7 @@ class SplitStockMoveWizard(models.TransientModel):
 
     def action_split_stock_move(self):
         self.ensure_one()
-        stock_move = self.stock_move_id
+        stock_move = self.stock_move_id.id
         self.split_stock_move(stock_move,self.split_quantity)
         # # Validaciones
         # if self.split_quantity <= 0:
