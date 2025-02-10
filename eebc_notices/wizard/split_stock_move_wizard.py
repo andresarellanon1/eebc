@@ -25,18 +25,26 @@ class SplitStockMoveWizard(models.TransientModel):
 
         while remaining_qty > 0:
             qty = min(self.split_quantity, remaining_qty)
-            # Crear un nuevo movimiento con los mismos valores, excepto la cantidad
+            # Crear un nuevo movimiento con los valores del original
             new_move_vals = {
                 'product_uom_qty': qty,
-                'origin': stock_move.origin,
+                'product_uom': stock_move.product_uom.id,
                 'product_id': stock_move.product_id.id,
                 'location_id': stock_move.location_id.id,
                 'location_dest_id': stock_move.location_dest_id.id,
                 'picking_id': stock_move.picking_id.id,
                 'name': stock_move.name,
+                'origin': stock_move.origin,
                 'state': 'draft',  # Estado inicial del nuevo movimiento
+                'company_id': stock_move.company_id.id,
+                'date': stock_move.date,
+                'date_deadline': stock_move.date_deadline,
+                'procure_method': stock_move.procure_method,
+                'scrapped': stock_move.scrapped,
+                'rule_id': stock_move.rule_id.id,
+                # Agrega otros campos necesarios aquí
             }
-            new_move = stock_move.copy(default=new_move_vals)
+            new_move = self.env['stock.move'].create(new_move_vals)
             new_moves += new_move
             remaining_qty -= qty
 
