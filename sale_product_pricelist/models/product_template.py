@@ -74,7 +74,8 @@ class ProductTemplate(models.Model):
 
             # 2. Unlink and delete all
             if product_template.product_pricelist_line_ids:
-                product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
+                product_template.product_pricelist_line_ids.unlink()
+                # product_template.sudo().write({'product_pricelist_line_ids': [(5, 0, 0)]})
                 logger.warning('Se elimino la lista de precios')
 
             # 3. Link and create all
