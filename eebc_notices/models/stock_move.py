@@ -169,7 +169,11 @@ class StockMove(models.Model):
                 
             }
         }
-        
+    def _action_assign(self):
+        _logger.warning('Entramos aca del action assign')
+        # Desactivar la agrupación de movimientos
+        return super(StockMove, self.with_context(group_by=False))._action_assign()
+
     def action_show_outgoing(self):
         in_or_out = "out"
         notice_lines_to_wizard =self._create_line_ids(in_or_out)
