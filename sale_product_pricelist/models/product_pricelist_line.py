@@ -17,10 +17,12 @@ class ProductPricelistLine(models.Model):
     unit_price = fields.Float('Precio unitario', digits="Precio Unitario", compute="_compute_unit_price", store=False)
     is_special = fields.Boolean(string="Es prioritaria", related="pricelist_id.is_special")
     company_id = fields.Many2one('res.company', string='Empresa', related="pricelist_id.company_id")
+
     is_orphan = fields.Boolean(
         string='Línea Huérfana',
         compute='_compute_is_orphan',
         store=True,
+        default=False,
         help='Indica si esta línea de lista de precios no está siendo utilizada en ninguna línea de pedido de venta.'
     )
 
@@ -34,15 +36,24 @@ class ProductPricelistLine(models.Model):
         - Utiliza `search_count` para optimizar consultas
         """
         sale_line_model = self.env['sale.order.line']
+        pricelist_item_model = self.env['product.pricelist.item']
         for line in self:
-            reference_count = sale_line_model.search_count([
+            reference_sale = sale_line_model.search_count([
                 ('product_pricelist_id', '=', line.id)
             ])
-            line.is_orphan = reference_count == 0
+
+            reference_item = pricelist_item_model.search_count([
+                ('pricelist_id', '=', line.pricelist_id.id)
+            ])
+            
+            if reference_sale != 0:
+                 line.is_orphan = False
+            if reference_item != 0:
+                line.is_orphan = False
 
     def _compute_display_name(self):
         for record in self:
-            record._compute_is_orphan()
+           
             if record.unit_price and record.name and (not record.is_orphan):
                 record.display_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
             elif (not record.is_orphan) and (not record.pricelist_id):
@@ -51,6 +62,7 @@ class ProductPricelistLine(models.Model):
                 record.display_name = "---Orphan"
             else:
                 record.display_name = record.name
+
 
     @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
     def _compute_unit_price(self):
@@ -90,6 +102,7 @@ class ProductPricelistLine(models.Model):
             else:
                 name = f"{record.name} ({record.currency_id})"
             result.append((record.id, name))
+
         return result
 
     def open_product_pricelist(self):

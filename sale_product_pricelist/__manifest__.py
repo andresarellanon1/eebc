@@ -2,18 +2,13 @@
     'name': 'Listas de precios en producto',
     'summary': 'Visor de lista de precios en productos y lineas de documentos de venta.',
     'description': """
-        Este módulo muestra una tabla con la lista de precios dentro de la vista de cada producto.
-        Muestra una widget de selección para la lista de precios en el documento de venta y el documento de factura de cliente.
-        Actualiza el precio unitario de la línea en cuestión correspondiente con la lista de precios seleccionada en cualquiera de estos dos documentos.
-        Este modulo implementa metodos para computar la lista de precios y el precio unitario tomando en cuenta la divisa secundaria para la empresa.
-        Seleccion default:
-            Al seleccionar el producto de la linea se implementa un algoritmo de prioridades.
-            Las prioridades se definen por la lista de precio del cliente (base de odoo) y la lista prioritaria agregada en un modulo personalizado.
-            El algoritmo encuentra la lista de precios con mayor prioridad en caso de que el producto se encuentre en mas de una.
-        Multi divisa:
-            Si la orden cambio de divisa, busca una lista de precio con el mismo nombre pero en la divisa objetivo.
-        Multi sucursal:
-            Encuentra solamente listas de precio correspondientes a la sucursal del vendedor de la orden.
+        Este módulo gestiona listas de precios en la vista de productos y documentos de venta y facturación. 
+        Permite seleccionar una lista de precios y actualiza automáticamente el precio unitario según la 
+        selección. Utiliza un algoritmo de prioridades para determinar la lista de precios más adecuada, 
+        considerando las configuraciones del cliente y las listas personalizadas.
+
+        También admite multi-divisa y multi-sucursal: si la orden cambia de divisa, busca una lista de precios
+        equivalente; además, solo muestra listas de precios correspondientes a la sucursal del vendedor.
     """,
     'version': '17.0.4.016',
     'website': 'https://quadrosoluciones.com',

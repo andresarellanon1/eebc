@@ -11,8 +11,8 @@
                     domain="[
                      ('product_templ_id', '=', product_template_id), 
                      ('currency_id', '=', currency_id), 
-                     ('company_id', '=', company_id), 
-                     ('is_orphan', '=', False), 
+                     ('company_id', '=', company_id),
+                     ('is_orphan', '=', False),
                      ('pricelist_id', '!=', False), 
                      ('is_special', '=', False)]"
                     options="{'no_create': True, 'no_create_edit':True, 'no_quick_create':True, 'no_open': True}"
