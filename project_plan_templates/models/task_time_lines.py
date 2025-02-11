@@ -44,7 +44,7 @@ class TaskTimeLines(models.Model):
     @api.onchange('product_id')
     def _onchange_product(self):
         for record in self:
-            record.unit_price = record.product_id.list_price
+            record.unit_price = record.product_id.standard_price
 
 
     @api.depends('work_shift')

@@ -106,6 +106,9 @@ class ProjectPlanPickingLine(models.Model):
         for record in self:
             if not record.sale_order_id:
                 record.standard_price = record.product_id.standard_price
+            elif record.for_newlines:
+                record.standard_price = record.product_id.standard_price
+                record.last_price = record.product_id.standard_price
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -126,6 +129,9 @@ class ProjectPlanPickingLine(models.Model):
             quantity = record.quantity
 
             if quantity >= 0:
-                record.subtotal = record.standard_price * quantity
+                if record.standard_price > 0:
+                    record.subtotal = record.standard_price * quantity
+                else:
+                    record.subtotal = record.last_price * quantity
             else:
                 record.subtotal = 0.00

@@ -43,22 +43,8 @@ class ProjectPlan(models.Model):
 
     labour_total_cost = fields.Float(string="Costo mano de obra", compute="_compute_labour_cost", default=0.0)
 
-    # @api.constrains('project_plan_lines', 'picking_lines')
-    # def _check_lines_existence(self):
-    #     for record in self:
-    #         if not record.project_plan_lines:
-    #             raise ValidationError("Debe agregar al menos una línea en la pestaña 'Tasks'.")
-    #         if not record.picking_lines:
-    #             raise ValidationError("Debe agregar al menos una línea en la pestaña 'Stock'.")
-
-    # @api.constrains('product_template_id')
-    # def _check_unique_product_template(self):
-    #     for record in self:
-    #         if record.product_template_id:
-    #             duplicates = self.search([('product_template_id', '=', record.product_template_id.id), ('id', '!=', record.id)])
-    #             if duplicates:
-    #                 raise ValidationError("El producto '%s' ya está asignado a otro proyecto." % record.product_template_id.display_name)
-
+    project_plan_pickings = fields.Many2one('project.plan.pickings', string="Lista de materiales")
+    task_timesheet_id = fields.Many2one('task.timesheet', string="Hoja de horas")
 
     @api.depends('picking_lines.subtotal')
     def _compute_total_cost(self):
@@ -72,17 +58,17 @@ class ProjectPlan(models.Model):
             task.labour_total_cost = sum(line.price_subtotal for line in task.task_time_lines)
             self.update_product_template_list_price(task)
 
-    @api.depends('project_plan_lines')
+    @api.depends('project_plan_pickings')
     def _compute_picking_lines(self):
         for record in self:
             record.picking_lines = [(5, 0, 0)]
-            record.picking_lines = record.get_picking_lines(record.project_plan_lines)
+            record.picking_lines = record.get_picking_lines(record.project_plan_pickings)
 
-    @api.depends('project_plan_lines')
+    @api.depends('task_timesheet_id')
     def _compute_task_lines(self):
         for record in self:
             record.task_time_lines = [(5, 0, 0)]
-            record.task_time_lines = record.get_task_time_lines(record.project_plan_lines)
+            record.task_time_lines = record.get_task_time_lines(record.task_timesheet_id)
 
     def get_picking_lines(self, line):
         picking_lines = []
@@ -102,7 +88,7 @@ class ProjectPlan(models.Model):
 
     def prep_picking_lines(self, line):
         picking_lines = []
-        for picking in line.project_plan_pickings.project_picking_lines:
+        for picking in line.project_picking_lines:
             picking_lines.append((0, 0, {
                 'name': picking.product_id.name,
                 'product_id': picking.product_id.id,
@@ -118,7 +104,7 @@ class ProjectPlan(models.Model):
     
     def prep_task_time_lines(self, line):
         task_lines = []
-        for task in line.task_timesheet_id.task_time_lines:
+        for task in line.task_time_lines:
             task_lines.append((0, 0, {
                 'product_id': task.product_id.id,
                 'description': task.description,
@@ -155,4 +141,34 @@ class ProjectPlan(models.Model):
             if product_template and product_template.project_plan_id != self:
                 product_template.write({'project_plan_id': self.id})
 
+        return result
+
+    def ensure_plan_line_exists(self):
+        """ Garantiza que exista una línea en project_plan_lines con la información obligatoria. """
+        for plan in self:
+            plan.project_plan_lines = [(5, 0, 0)]
+
+            existing_line = self.env['project.plan.line'].search([
+                ('project_plan_id', '=', plan.id),
+                ('name', '=', plan.name)
+            ], limit=1)
+
+            if not existing_line:
+                plan.project_plan_lines = [(0, 0, {
+                    'name': plan.name,
+                    'description': plan.description,
+                    'project_plan_pickings': plan.project_plan_pickings.id,
+                    'task_timesheet_id': plan.task_timesheet_id.id,
+                })]
+
+    def create(self, vals):
+        """ Sobrecarga create para garantizar la existencia de la línea en project_plan_lines. """
+        record = super(ProjectPlan, self).create(vals)
+        record.ensure_plan_line_exists()
+        return record
+
+    def write(self, vals):
+        """ Sobrecarga write para verificar y crear la línea si no existe. """
+        result = super(ProjectPlan, self).write(vals)
+        self.ensure_plan_line_exists()
         return result

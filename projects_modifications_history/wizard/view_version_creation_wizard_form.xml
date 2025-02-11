@@ -9,22 +9,34 @@
                     <sheet>
                         <group>
                             <group>
+                                <div>
+                                    <h5>INFORMACIÓN DEL PROYECTO</h5>
+                                </div>
+                            </group>
+                            <group>
+                                <div>
+                                    <h5>MOVIMIENTO DE MATERIALES</h5>
+                                </div>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
                                 <field name="modified_by" readonly="1"/>
                                 <field name="modification_date" readonly="1"/>
                                 <field name="sale_order_id" readonly="1"/>
-                                <field name="contact_id"/>
-                                <field name="picking_type_id" readonly="1"/>
-                                <field name="location_id"/>
-                                <field name="location_dest_id"/>
                                 
-                            </group>
-                            <group>
-                                <field name="scheduled_date"/>
                                 <field name="date_start" string="Calendario del proyecto" 
                                     widget="daterange" 
                                     options="{&quot;end_date_field&quot;: &quot;date&quot;, &quot;always_range&quot;: &quot;1&quot;}" 
                                     required="date_start or date"/>
                                 <field name="date" invisible="1" required="date_start"/>
+                            </group>
+                            <group>
+                                <field name="scheduled_date"/>
+                                <field name="contact_id"/>
+                                <field name="picking_type_id" readonly="1"/>
+                                <field name="location_id"/>
+                                <field name="location_dest_id"/>
                             </group>
                             <notebook>
                                 <page name="motive" string="Descripción de la modificación">
@@ -33,7 +45,7 @@
                                 <page name="tasks" string="Planeacion">
                                     <div style="width: 100%;">
                                         <field name="wizard_plan_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none">
-                                            <tree style="width: 100%;" editable="bottom">
+                                            <tree style="width: 100%;" editable="bottom" limit="1000">
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="display_type" column_invisible="True"/>
                                                 <field name="name" readonly="1"/>
@@ -53,7 +65,7 @@
                                 <page name="stock" string="Materiales">
                                     <div>
                                         <field name="wizard_picking_lines" nolabel="1" widget="section_and_note_one2many" mode="tree,kanban" style="pointer-events:none">
-                                            <tree style="width: 100%;" editable="bottom">
+                                            <tree style="width: 100%;" editable="bottom" limit="1000">
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="company_id" column_invisible="1" readonly="1"/>
                                                 <field name="display_type" column_invisible="True" readonly="1"/>

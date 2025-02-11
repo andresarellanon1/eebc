@@ -97,8 +97,19 @@ class SaleOrder(models.Model):
 
     def update_picking_lines(self):
         for record in self:
-            #record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
-            record.project_picking_lines = record.get_picking_lines(record.project_plan_lines)
+            existing_lines = {line.name: line.sequence for line in record.project_picking_lines}
+
+            # Generar nuevas líneas de picking
+            picking_lines = record.get_picking_lines(record.project_plan_lines)
+
+            # Reasignar secuencias originales
+            for line in picking_lines:
+                line_name = line[2].get('name', '')
+                if line_name in existing_lines:
+                    line[2]['sequence'] = existing_lines[line_name]
+
+            # Asignar las líneas ordenadas por secuencia
+            record.project_picking_lines = sorted(picking_lines, key=lambda x: x[2]['sequence'])
 
     def get_picking_lines(self, line):
         picking_lines = []
@@ -143,47 +154,52 @@ class SaleOrder(models.Model):
                     ) 
 
                 plan_pickings = []
+                # Mantener el orden original en las líneas existentes
+                existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
+
+                # Procesar nuevas líneas y conservar la secuencia
                 plan_lines = []
                 for line in sale.order_line:
+
                     if line.for_modification:
                         if line.display_type == 'line_section':
-                            plan_lines.append(self.prep_plan_section_line(line, True, False))
+                            plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
                         else:
                             if line.product_id.project_plan_id:
-                                plan_lines.append(self.prep_plan_section_line(line, False, True))
+                                plan_lines.append(self.prep_plan_section_line(line, False, True, line.is_modificated))
                                 plan_lines += self.prep_plan_lines(line)
 
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                                 plan_pickings.append((4, project_picking.id))
                         line.for_modification = False
-                    line.last_service_price = line.price_unit
+                        line.is_modificated = True
 
-                for plan in sale.project_plan_lines:
-                    if plan.for_modification:
-                        plan.for_modification = False
+                # Reasignar secuencias originales a las líneas nuevas
+                for plan in plan_lines:
+                    plan_name = plan[2].get('name', '')
+                    if plan_name in existing_lines:
+                        plan[2]['sequence'] = existing_lines[plan_name]
 
+                # Sobrescribir sin desordenar
                 sale.project_plan_pickings = plan_pickings
-                sale.project_plan_lines = plan_lines
+                sale.project_plan_lines = sorted(plan_lines, key=lambda x: x[2]['sequence'])
 
                 sale.update_picking_lines()
                 sale.update_task_lines()
 
+            self.change_for_modification()
+
             sale.state = 'budget'
-            
+    
+    def change_for_modification(self):
+        for sale in self.project_picking_lines:
+            sale.for_modification = False
 
     @api.onchange('project_id')
     def _compute_order_lines_from_project_previous_version(self):
         for sale in self:
             if not sale.project_id:
                 return
-
-            #  Primero, asignamos el cliente del proyecto, si existe
-            if sale.project_id.partner_id:
-                sale.partner_id = sale.project_id.partner_id
-
-            
-            sale._onchange_partner_id()  
-
             #  Limpiar líneas previas para evitar duplicados
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
@@ -195,13 +211,13 @@ class SaleOrder(models.Model):
                 previous_order = sale.project_id.actual_sale_order_id
 
                 # Volvemos a asignar el cliente, por si el pedido anterior tiene uno distinto
-                sale.partner_id = previous_order.partner_id
+                sale.partner_id = sale.project_id.client_id
 
                 # Copiar líneas del pedido anterior
                 sale.order_line = [(0, 0, {
                     'product_id': line.product_id.id,
                     'display_type': line.display_type,
-                    'name': line.name + ' * ' + str(line.product_uom_qty),
+                    'name': line.name + ' * ' + str(line.product_uom_qty) if not line.is_modificated else line.name,
                     'product_uom_qty': 0,
                     'price_unit': line.last_service_price,
                     'discount': line.discount,
@@ -231,7 +247,7 @@ class SaleOrder(models.Model):
             'work_shift': line.work_shift,
             'unit_price': line.unit_price,
             'price_subtotal': line.price_subtotal,
-            'for_modification': False
+            'for_modification': False,
         }) for line in lines]
 
     def _prepare_plan_lines(self, lines):
@@ -248,7 +264,8 @@ class SaleOrder(models.Model):
             'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
             'for_create': line.for_create,
             'for_modification': False,
-            'for_picking': line.for_picking
+            'for_picking': line.for_picking,
+            'for_newlines': line.for_newlines
         }) for line in lines]
 
     def _prepare_picking_lines(self, lines):
@@ -266,7 +283,8 @@ class SaleOrder(models.Model):
             'subtotal': line.subtotal,
             'for_create': line.for_create,
             'for_modification': False,
-            'last_price': line.last_price
+            'last_price': line.last_price,
+            'for_newlines': line.for_newlines
         }) for line in lines]
 
     def prep_task_line_section_line(self, line):
@@ -298,9 +316,9 @@ class SaleOrder(models.Model):
             'last_price': False
         })
     
-    def prep_plan_section_line(self, line, for_create, for_task):
+    def prep_plan_section_line(self, line, for_create, for_task, is_modificated):
         return (0, 0, {
-            'name': line.name + ' * ' + str(line.product_uom_qty) if for_task else line.name,
+            'name': line.name + ' * ' + str(line.product_uom_qty) if for_task and not is_modificated else line.name,
             'display_type': line.display_type or 'line_section',
             'description': False,
             'sequence': 0,
@@ -421,20 +439,21 @@ class SaleOrder(models.Model):
     def clean_duplicates_after_modification(self):
         """
         Limpia las líneas duplicadas después de modificar un proyecto.
-        Solo limpia las líneas con for_modification=True.
+        Solo limpia las líneas que no tienen for_modification, for_create o for_newlines activados.
         """
         for sale in self:
-            lines_to_remove = sale.project_plan_lines.filtered('for_modification')
-            lines_to_remove.unlink()
-
-            lines_to_remove_picking = sale.project_picking_lines.filtered('for_modification')
-            lines_to_remove_picking.unlink()
+            # Filtrar y eliminar líneas en project_picking_lines
+            lines_to_remove_picking = sale.project_picking_lines.filtered(
+                lambda line: not line.for_create and not line.for_newlines and not line.for_modification and not line.display_type
+            )
+            if lines_to_remove_picking:
+                lines_to_remove_picking.unlink()
 
     def project_lines_created(self):
         for sale in self.project_plan_lines:
-            sale.for_newlines == False
+            sale.for_newlines = False
         for sale in self.project_picking_lines:
-            sale.for_newlines == False
+            sale.for_newlines = False
         
     def action_open_report(self):
         self.ensure_one()

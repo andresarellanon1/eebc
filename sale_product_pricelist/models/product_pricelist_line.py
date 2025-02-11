@@ -17,50 +17,43 @@ class ProductPricelistLine(models.Model):
     unit_price = fields.Float('Precio unitario', digits="Precio Unitario", compute="_compute_unit_price", store=False)
     is_special = fields.Boolean(string="Es prioritaria", related="pricelist_id.is_special")
     company_id = fields.Many2one('res.company', string='Empresa', related="pricelist_id.company_id")
+
     is_orphan = fields.Boolean(
         string='Línea Huérfana',
         compute='_compute_is_orphan',
         store=True,
+        default=False,
         help='Indica si esta línea de lista de precios no está siendo utilizada en ninguna línea de pedido de venta.'
     )
 
-
-    @api.depends()  # Agrega dependencias si hay campos relacionados
+    @api.depends()
     def _compute_is_orphan(self):
-        sale_lines = self.env["sale.order.line"].read_group(
-            [("product_pricelist_id", "in", self.ids)],
-            ["product_pricelist_id"],
-            ["product_pricelist_id"],
-        )
-        # Crear un set con los IDs de líneas referenciadas
-        referenced_ids = {sl["product_pricelist_id"][0] for sl in sale_lines if sl.get("product_pricelist_id")}
-        
+        """
+        Determina si la línea de lista de precios no tiene relación con líneas de pedido de venta.
+        1. Busca en todas las líneas de pedido de venta
+        2. Verifica si alguna referencia esta línea de precio (campo `product_pricelist_id`)
+        3. Marca como huérfana si no hay referencias
+        - Utiliza `search_count` para optimizar consultas
+        """
+        sale_line_model = self.env['sale.order.line']
+        pricelist_item_model = self.env['product.pricelist.item']
         for line in self:
-            line.is_orphan = line.id in referenced_ids
-            logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", line.name, "Sí" if line.is_orphan else "No")
+            reference_sale = sale_line_model.search_count([
+                ('product_pricelist_id', '=', line.id)
+            ])
 
-    # @api.depends()
-    # def _compute_is_orphan(self):
-    #     """
-    #     Determina si la línea de lista de precios no tiene relación con líneas de pedido de venta.
-    #     1. Busca en todas las líneas de pedido de venta
-    #     2. Verifica si alguna referencia esta línea de precio (campo `product_pricelist_id`)
-    #     3. Marca como huérfana si no hay referencias
-    #     - Utiliza `search_count` para optimizar consultas
-    #     """
-    #     sale_line_model = self.env['sale.order.line']
-    #     for line in self:
-    #         reference_count = sale_line_model.search_count([
-    #             ('product_pricelist_id', '=', line.id)
-    #         ])
-    #         line.is_orphan = reference_count == 0
-    #         logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", line.name, "Sí" if line.is_orphan else "No")
+            reference_item = pricelist_item_model.search_count([
+                ('pricelist_id', '=', line.pricelist_id.id)
+            ])
+            
+            if reference_sale != 0:
+                 line.is_orphan = False
+            if reference_item != 0:
+                line.is_orphan = False
 
     def _compute_display_name(self):
         for record in self:
-            # record._compute_is_orphan()
-            logger.warning("Compute is_orphan: %s - ¿Es huérfana? %s", record.name, "Sí" if record.is_orphan else "No")
-
+           
             if record.unit_price and record.name and (not record.is_orphan):
                 record.display_name = f"{record.name} - {record.unit_price} ({record.currency_id.name})"
             elif (not record.is_orphan) and (not record.pricelist_id):
@@ -69,6 +62,7 @@ class ProductPricelistLine(models.Model):
                 record.display_name = "---Orphan"
             else:
                 record.display_name = record.name
+
 
     @api.depends('pricelist_id', 'product_templ_id', 'uom_id', 'currency_id')
     def _compute_unit_price(self):
@@ -109,7 +103,6 @@ class ProductPricelistLine(models.Model):
                 name = f"{record.name} ({record.currency_id})"
             result.append((record.id, name))
 
-            logger.warning("Final display names: %s", result)
         return result
 
     def open_product_pricelist(self):

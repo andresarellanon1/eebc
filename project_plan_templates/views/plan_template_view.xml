@@ -24,8 +24,11 @@
                             <h1>
                                 <field name="name" class="w-100" required="1"/>
                             </h1>
-                            <field name="product_template_id" string="Servicios" invisible="1"/>
-                            
+                            <group>
+                                <field name="product_template_id" string="Servicios" invisible="1"/>
+                                <field name="project_plan_pickings" string="Lista de materiales"/>
+                                <field name="task_timesheet_id" string="Mano de obra"/>
+                            </group>
                         </div>
                         <notebook>
 
@@ -33,7 +36,7 @@
                                 <field name="description" options="{'resizable': false}"/>
                             </page>
 
-                            <page name="tasks" string="Tareas">
+                            <!-- <page name="tasks" string="Tareas">
                                 <field name="project_plan_lines" nolabel="1">
                                     <tree editable="editable_bottom" style="width: 100%;">
                                         <field name="sequence" widget="handle"/>
@@ -44,10 +47,10 @@
                                         <field name="task_timesheet_id" required="1" options="{'create': True}"/>
                                     </tree>
                                 </field>
-                            </page>
+                            </page> -->
                             <page name="picking_lines" widget="section_and_note_one2many" string="Materiales">
                                 <field name="picking_lines" nolabel="1">
-                                    <tree editable="editable_bottom" style="width: 100%;">
+                                    <tree editable="editable_bottom" style="width: 100%;" limit="1000">
                                         <field name="company_id" column_invisible="1"/>
                                         <field name="display_type" column_invisible="True"/>
                                         <field name="name" column_invisible="1"/>

@@ -18,7 +18,7 @@
         "views/inherit_project_task_form_version.xml",
         "views/project_version_view.xml",
         "wizard/view_version_creation_wizard_form.xml",
-        "views/inherit_project_edit_view.xml",
+        #"views/inherit_project_edit_view.xml",
     ],
     "license": "LGPL-3",
     'installable': True,

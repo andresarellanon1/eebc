@@ -21,7 +21,7 @@
                 </page>
                 <page name="material" string="Materiales">
                     <field name="project_picking_lines" mode="tree,kanban" nolabel="1">
-                        <tree editable="editable_bottom" style="width: 100%">
+                        <tree editable="editable_bottom" style="width: 100%" limit="1000">
                             <field name="company_id" column_invisible="1"/> 
                             <field name="product_id"/>
                             <field name="name"/>
@@ -29,6 +29,7 @@
                             <field name="product_packaging_id"/>
                             <field name="quantity"/>
                             <field name="used_quantity"/>
+                            <field name="for_modification" column_invisible="1"/>
                             <!--<field name="standard_price"/>
                             <field name="subtotal"/>-->
                         </tree>
