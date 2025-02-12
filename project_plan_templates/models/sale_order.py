@@ -195,14 +195,16 @@ class SaleOrder(models.Model):
         for sale in self.project_picking_lines:
             sale.for_modification = False
 
+   
     @api.onchange('project_id')
     def _compute_partner_from_project(self):
         """ Primero asigna el cliente relacionado con el proyecto. """
         for sale in self:
             if sale.project_id:
                 sale.partner_id = sale.project_id.client_id  # Trae el cliente
+                sale.edit_project = True  # Forzar que el otro onchange se ejecute
 
-    @api.onchange('edit_project')
+    @api.onchange('project_id', 'edit_project')
     def _compute_order_lines_from_project_previous_version(self):
         """ Luego copia las líneas del pedido anterior si aplica. """
         for sale in self:
@@ -215,33 +217,25 @@ class SaleOrder(models.Model):
             sale.project_picking_lines = [(5, 0, 0)]
             sale.task_time_lines = [(5, 0, 0)]
 
-           # Si el proyecto tiene un pedido anterior, copiamos datos
-            if sale.edit_project and sale.project_id.actual_sale_order_id:
-                previous_order = sale.project_id.actual_sale_order_id
+            previous_order = sale.project_id.actual_sale_order_id
 
-                # Volvemos a asignar el cliente, por si el pedido anterior tiene uno distinto
-                sale.partner_id = sale.project_id.client_id
+            # Copiar líneas del pedido anterior
+            sale.order_line = [(0, 0, {
+                'product_id': line.product_id.id,
+                'display_type': line.display_type,
+                'name': line.name + ' * ' + str(line.product_uom_qty) if not line.is_modificated else line.name,
+                'product_uom_qty': 0,
+                'price_unit': line.last_service_price,
+                'discount': line.discount,
+                'for_modification': False,
+                'last_service_price': line.last_service_price
+            }) for line in previous_order.order_line]
 
-                # Copiar líneas del pedido anterior
-                sale.order_line = [(0, 0, {
-                    'product_id': line.product_id.id,
-                    'display_type': line.display_type,
-                    'name': line.name + ' * ' + str(line.product_uom_qty) if not line.is_modificated else line.name,
-                    'product_uom_qty': 0,
-                    'price_unit': line.last_service_price,
-                    'discount': line.discount,
-                    'for_modification': False,
-                    'last_service_price': line.last_service_price
-                }) for line in previous_order.order_line]
+            # Copiar líneas de plan, picking y tareas
+            sale.project_plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
+            sale.project_picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
+            sale.task_time_lines = self._prepare_task_lines(previous_order.task_time_lines)
 
-                # Copiar líneas de plan
-                sale.project_plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
-
-                # Copiar líneas de picking
-                sale.project_picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
-
-                # Copiar líneas de tareas
-                sale.task_time_lines = self._prepare_task_lines(previous_order.task_time_lines)
 
     def _prepare_task_lines(self, lines):
         return [(0, 0, {
