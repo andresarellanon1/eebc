@@ -39,3 +39,10 @@ class SaleOrderLine(models.Model):
     def _compute_is_long_name(self):
         for line in self:
             line.is_long_name = line.name and len(line.name) > 9
+    
+    @api.onchange('product_uom_qty')
+    def _onchange_product_qty(self):
+        _logger.warning('Entro al onchange')
+        for record in self:
+            record.order_id._actualizar_cantidad_plantilla()
+
