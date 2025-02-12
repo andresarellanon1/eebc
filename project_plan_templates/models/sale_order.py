@@ -200,8 +200,8 @@ class SaleOrder(models.Model):
                     raise ValidationError(
                         f"se requiere el nombre del proyecto"
                     ) 
-
-                sale.project_plan_pickings.unlink()
+                
+                sale.project_plan_lines.unlink()
                 sale.project_picking_lines.unlink()
                 sale.task_time_lines.unlink()
 
