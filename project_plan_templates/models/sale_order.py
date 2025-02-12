@@ -201,12 +201,12 @@ class SaleOrder(models.Model):
                         f"se requiere el nombre del proyecto"
                     ) 
                 
-                lines_to_remove = sale.project_plan_lines.filtered(lambda line: not line.for_modification)
-                lines_to_remove.unlink()
-                lines_to_remove = sale.task_time_lines.filtered(lambda line: not line.for_modification)
-                lines_to_remove.unlink()
-                lines_to_remove = sale.project_picking_lines.filtered(lambda line: not line.for_modification)
-                lines_to_remove.unlink()
+                plannig_lines_to_remove = sale.project_plan_lines.filtered(lambda line: not line.for_modification)
+                plannig_lines_to_remove.unlink()
+                time_lines_to_remove = sale.task_time_lines.filtered(lambda line: not line.for_modification)
+                time_lines_to_remove.unlink()
+                picking_lines_to_remove = sale.project_picking_lines.filtered(lambda line: not line.for_modification)
+                picking_lines_to_remove.unlink() 
 
                 plan_pickings = []
                 existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
