@@ -202,7 +202,8 @@ class SaleOrder(models.Model):
                     ) 
 
                 sale.project_plan_pickings.unlink()
-                sale.project_plan_lines.unlink()
+                sale.project_picking_lines.unlink()
+                sale.task_time_lines.unlink()
 
                 plan_pickings = []
                 existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
