@@ -280,7 +280,8 @@ class SaleOrder(models.Model):
                         'price_unit': line.last_service_price,
                         'discount': line.discount,
                         'for_modification': False,
-                        'last_service_price': line.last_service_price
+                        'last_service_price': line.last_service_price,
+                        'product_pricelist_id': line.product_pricelist_id,
                     }) for line in previous_order.order_line]
 
                     # Copiar líneas de plan
