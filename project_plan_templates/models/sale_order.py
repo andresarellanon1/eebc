@@ -189,49 +189,30 @@ class SaleOrder(models.Model):
     #         sale.update_picking_lines()
     #         sale.update_task_lines()
 
-
     def action_generate_planning(self):
         """
         Genera las líneas de planificación, materiales y mano de obra del proyecto.
-        Además, elimina y reemplaza solo las líneas donde for_modification == False.
         """
         self.ensure_one()
-        
         for sale in self:
-            _logger.warning(f"Iniciando la generación de planificación para la venta: {sale.name}")
-            
             if sale.is_project:
-                _logger.warning(f"El proyecto está marcado como 'is_project' para la venta: {sale.name}")
-                
                 if not sale.project_name and not sale.edit_project:
-                    _logger.error(f"Se requiere el nombre del proyecto para la venta: {sale.name}")
-                    raise ValidationError("Se requiere el nombre del proyecto")
+                    raise ValidationError(
+                        f"se requiere el nombre del proyecto"
+                    ) 
                 
-                # Guardar referencias de líneas que deben conservarse
-                keep_plan_lines = sale.project_plan_lines.filtered(lambda line: line.for_modification)
-                keep_picking_lines = sale.project_picking_lines.filtered(lambda line: line.for_modification)
-                keep_task_lines = sale.task_time_lines.filtered(lambda line: line.for_modification)
-                
-                _logger.warning(f"Líneas a mantener (for_modification): Plan: {len(keep_plan_lines)}, Picking: {len(keep_picking_lines)}, Task: {len(keep_task_lines)}")
-                
-                # Eliminar solo las líneas que NO están marcadas para modificación
-                sale.project_plan_lines -= keep_plan_lines
-                sale.project_picking_lines -= keep_picking_lines
-                sale.task_time_lines -= keep_task_lines
-                
-                _logger.warning("Líneas de planificación, picking y tareas no necesarias han sido eliminadas")
+                lines_to_remove = sale.project_plan_lines.filtered(lambda line: not line.for_modification)
+                lines_to_remove.unlink()
+                lines_to_remove = sale.project_plan_lines.filtered(lambda line: not line.for_modification)
+                lines_to_remove.unlink()
+                lines_to_remove = sale.project_picking_lines.filtered(lambda line: not line.for_modification)
+                lines_to_remove.unlink()
 
-                # Inicializar nuevas listas de planificación y pickings
                 plan_pickings = []
-                existing_lines = {line.name: line.sequence for line in keep_plan_lines}  # Conservar secuencia existente
+                existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
                 plan_lines = []
-
                 for line in sale.order_line:
-                    _logger.warning(f"Procesando la línea de orden: {line.name}, for_modification: {line.for_modification}")
-                    
-                    if line.for_modification:
-                        _logger.warning(f"Línea marcada para modificación: {line.name}")
-                        
+                    # if line.for_modification:
                         if line.display_type == 'line_section':
                             plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
                         else:
@@ -240,46 +221,24 @@ class SaleOrder(models.Model):
                                 plan_lines += self.prep_plan_lines(line)
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                                 plan_pickings.append((4, project_picking.id))
-                        
                         line.for_modification = False
                         line.is_modificated = True
-                        _logger.warning(f"Línea marcada como modificada: {line.name}")
+                    
 
-                    else:
-                        _logger.warning(f"Línea NO marcada para modificación: {line.name}")
-                        
-                        if line.display_type == 'line_section':
-                            plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
-                        else:
-                            if line.product_id.project_plan_id:
-                                plan_lines.append(self.prep_plan_section_line(line, False, True, line.is_modificated))
-                                plan_lines += self.prep_plan_lines(line)
-                            for project_picking in line.product_id.project_plan_id.project_plan_pickings:
-                                plan_pickings.append((4, project_picking.id))
 
-                # Crear los registros para las líneas de planificación
+
                 for plan in plan_lines:
                     plan_name = plan[2].get('name', '')
                     if plan_name in existing_lines:
                         plan[2]['sequence'] = existing_lines[plan_name]
-                    
-                    _logger.warning(f"Creando línea de planificación con nombre: {plan[2]['name']}, secuencia: {plan[2]['sequence']}")
-                    sale.project_plan_lines.create(plan[2])
 
-                # Asignar las nuevas líneas y ordenarlas por secuencia
                 sale.project_plan_pickings = plan_pickings
-                _logger.warning(f"Se asignaron {len(plan_pickings)} pickings al proyecto")
-
+                sale.project_plan_lines = sorted(plan_lines, key=lambda x: x[2]['sequence'])
                 sale.update_picking_lines()
                 sale.update_task_lines()
-                _logger.warning("Se actualizaron las líneas de picking y tareas")
 
             self.change_for_modification()
             sale.state = 'budget'
-            _logger.warning(f"Estado del proyecto para la venta {sale.name} cambiado a 'budget'")
-
-
-
     
     def change_for_modification(self):
         """
@@ -291,7 +250,7 @@ class SaleOrder(models.Model):
     @api.onchange('project_id')
     def _onchange_project_id(self):
         """
-        Obtiene la warningrmación de la orden de venta anterior al modificar un proyecto en proceso.
+        Obtiene la información de la orden de venta anterior al modificar un proyecto en proceso.
         """
         for sale in self:
             if sale.project_id:
