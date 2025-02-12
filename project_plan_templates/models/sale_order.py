@@ -171,10 +171,10 @@ class SaleOrder(models.Model):
                 
                 if line.for_modification == False:
                     if line.display_type == 'line_section':
-                        plan_lines.append(self.prep_plan_section_line(line, True, False))
+                        plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
                     else:
                         if line.product_id.project_plan_id:
-                            plan_lines.append(self.prep_plan_section_line(line, False, True))
+                            plan_lines.append(self.prep_plan_section_line(line, False, True, line.is_modificated))
                             plan_lines += self.prep_plan_lines(line)
 
                         for project_picking in line.product_id.project_plan_id.project_plan_pickings:
