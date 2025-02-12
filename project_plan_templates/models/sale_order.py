@@ -207,36 +207,47 @@ class SaleOrder(models.Model):
             sale.for_modification = False
 
     @api.onchange('project_id')
-    def _compute_order_lines_from_project_previous_version(self):
+    def _onchange_project_id(self):
         """
         Obtiene la información de la orden de venta anterior al modificar un proyecto en proceso.
         """
         for sale in self:
-            if not sale.project_id:
-                return
-            sale.order_line = [(5, 0, 0)]
-            sale.project_plan_lines = [(5, 0, 0)]
-            sale.project_picking_lines = [(5, 0, 0)]
-            sale.task_time_lines = [(5, 0, 0)]
+            if sale.project_id:
+                # Asignar cliente desde el proyecto
+                sale.partner_id = sale.project_id.client_id  
 
-            if sale.edit_project and sale.project_id.actual_sale_order_id:
-                previous_order = sale.project_id.actual_sale_order_id
-                sale.partner_id = sale.project_id.client_id
-                sale.order_line = [(0, 0, {
-                    'product_id': line.product_id.id,
-                    'display_type': line.display_type,
-                    'name': line.name + ' * ' + str(line.product_uom_qty) if not line.is_modificated else line.name,
-                    'product_uom_qty': 0,
-                    'price_unit': line.last_service_price,
-                    'discount': line.discount,
-                    'for_modification': False,
-                    'last_service_price': line.last_service_price
-                }) for line in previous_order.order_line]
+                # Limpiar líneas previas para evitar duplicados
+                sale.order_line = [(5, 0, 0)]
+                sale.project_plan_lines = [(5, 0, 0)]
+                sale.project_picking_lines = [(5, 0, 0)]
+                sale.task_time_lines = [(5, 0, 0)]
 
-                sale.project_plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
-                sale.project_picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
-                sale.task_time_lines = self._prepare_task_lines(previous_order.task_time_lines)
+                # Si el proyecto tiene un pedido anterior, copiamos datos
+                if sale.edit_project and sale.project_id.actual_sale_order_id:
+                    previous_order = sale.project_id.actual_sale_order_id
 
+                    # Copiar líneas del pedido anterior
+                    sale.order_line = [(0, 0, {
+                        'product_id': line.product_id.id,
+                        'display_type': line.display_type,
+                        'name': line.name + ' * ' + str(line.product_uom_qty) if not line.is_modificated else line.name,
+                        'product_uom_qty': 0,
+                        'price_unit': line.last_service_price,
+                        'discount': line.discount,
+                        'for_modification': False,
+                        'last_service_price': line.last_service_price
+                    }) for line in previous_order.order_line]
+
+                    # Copiar líneas de plan
+                    sale.project_plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
+
+                    # Copiar líneas de picking
+                    sale.project_picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
+
+                    # Copiar líneas de tareas
+                    sale.task_time_lines = self._prepare_task_lines(previous_order.task_time_lines)
+                
+    
     def _prepare_task_lines(self, lines):
         """
         Prepara las líneas de mano de obra para su reutilización en la modificación de proyectos.

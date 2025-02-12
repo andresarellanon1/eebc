@@ -1,6 +1,10 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class SplitStockMoveWizard(models.TransientModel):
     _name = 'split.stock.move.wizard'
@@ -21,10 +25,11 @@ class SplitStockMoveWizard(models.TransientModel):
         # Crear nuevas líneas de stock.move
         new_moves = self.env['stock.move']
         remaining_qty = stock_move.product_uom_qty
-
         while remaining_qty > 0:
             qty = min(self.split_quantity, remaining_qty)
             # Crear un nuevo movimiento con los valores del original
+            new_move_vals = {}
+
             new_move_vals = {
                 'product_uom_qty': qty,
                 'product_uom': stock_move.product_uom.id,
@@ -45,16 +50,22 @@ class SplitStockMoveWizard(models.TransientModel):
             }
             # new_move = self.env['stock.move'].create(new_move_vals)
             # new_moves += new_move
-            remaining_qty -= qty
+            _logger.warning('valor del diccionario 1: %s', new_move_vals)
 
-        # Desactivar o cancelar la línea original
-        stock_move.write({'product_uom_qty': 0, 'state': 'cancel'})
-
-        if stock_move.picking_id:
-            for new_move in new_moves:
+            if stock_move.picking_id:
+            
                 stock_move.picking_id.write({
                     'move_ids_without_package': [(0,0, new_move_vals)]  # Agrega cada nuevo movimiento al campo one2many
                 })
+            remaining_qty -= qty
+        # Desactivar o cancelar la línea original
+        stock_move.write({'product_uom_qty': 0, 'state': 'cancel'})
+
+        # if stock_move.picking_id:
+        
+        #     stock_move.picking_id.write({
+        #         'move_ids_without_package': [(0,0, new_move_vals)]  # Agrega cada nuevo movimiento al campo one2many
+        #     })
 
         # Abrir la vista de los nuevos movimientos creados
         return {
