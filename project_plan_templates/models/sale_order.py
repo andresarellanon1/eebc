@@ -3,6 +3,8 @@ from odoo.exceptions import UserError, ValidationError
 import json
 import logging
 
+_logger = logging.getLogger(__name__)
+
 class SaleOrder(models.Model):
     """
     Modelo que hereda de 'sale.order' para agregar funcionalidades relacionadas con proyectos.
@@ -160,6 +162,7 @@ class SaleOrder(models.Model):
 
     def _actualizar_cantidad_plantilla(self):
         for sale in self:
+            _logger.warning('Entro a la funcion')
             plan_pickings = []
             # Mantener el orden original en las líneas existentes
             existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
