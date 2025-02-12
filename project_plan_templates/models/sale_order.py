@@ -199,12 +199,6 @@ class SaleOrder(models.Model):
     def _compute_partner_from_project(self):
         """ Asigna el cliente relacionado con el proyecto. """
         for sale in self:
-            #  Limpiar líneas previas para evitar duplicados
-            sale.order_line = [(5, 0, 0)]
-            sale.project_plan_lines = [(5, 0, 0)]
-            sale.project_picking_lines = [(5, 0, 0)]
-            sale.task_time_lines = [(5, 0, 0)]
-            
             if sale.project_id:
                 sale.partner_id = sale.project_id.client_id  # Trae el cliente
 
