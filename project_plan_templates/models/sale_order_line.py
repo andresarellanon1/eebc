@@ -41,8 +41,8 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.is_long_name = line.name and len(line.name) > 9
     
-    @api.onchange('product_uom_qty')
-    def _onchange_product_qty(self):
-        for record in self:
-            record.order_id.action_generate_planning()
+    # @api.onchange('product_uom_qty')
+    # def _onchange_product_qty(self):
+    #     for record in self:
+    #         record.order_id.action_generate_planning()
 
