@@ -18,7 +18,7 @@
             <xpath expr="//button[@name='action_cancel']" position="replace">
                 <button name="action_cancel" type="object" string="Cancel" invisible="state not in ['draft', 'sent', 'sale', 'budget'] or not id or locked" data-hotkey="x"/>
             </xpath>
-            <xpath expr="//field[@name='partner_invoice_id']" position="after">
+            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="is_project" invisible="state in ('sale', 'budget', 'process')"/>
                 <field name="edit_project" invisible="is_project != True or state in ('sale', 'budget', 'process')"/>
                 <field name="project_name" invisible="is_project != True or state in ('process')" readonly="state in ('budget', 'sale') or edit_project != False"/>
