@@ -192,24 +192,33 @@ class SaleOrder(models.Model):
     def action_generate_planning(self):
         """
         Genera las líneas de planificación, materiales y mano de obra del proyecto.
+        Además, elimina y reemplaza solo las líneas donde for_modification == False.
         """
         self.ensure_one()
+        
         for sale in self:
             if sale.is_project:
                 if not sale.project_name and not sale.edit_project:
-                    raise ValidationError(
-                        f"se requiere el nombre del proyecto"
-                    ) 
+                    raise ValidationError("Se requiere el nombre del proyecto") 
                 
-                sale.project_plan_lines.unlink()
-                sale.project_picking_lines.unlink()
-                sale.task_time_lines.unlink()
+                # Guardar referencias de líneas que deben conservarse
+                keep_plan_lines = sale.project_plan_lines.filtered(lambda line: line.for_modification)
+                keep_picking_lines = sale.project_picking_lines.filtered(lambda line: line.for_modification)
+                keep_task_lines = sale.task_time_lines.filtered(lambda line: line.for_modification)
 
+                # Eliminar solo las líneas que NO están marcadas para modificación
+                sale.project_plan_lines -= keep_plan_lines
+                sale.project_picking_lines -= keep_picking_lines
+                sale.task_time_lines -= keep_task_lines
+
+                # Inicializar nuevas listas de planificación y pickings
                 plan_pickings = []
-                existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
+                existing_lines = {line.name: line.sequence for line in keep_plan_lines}  # Conservar secuencia existente
                 plan_lines = []
+
                 for line in sale.order_line:
-                    # if line.for_modification:
+                    if line.for_modification:
+                        # Mantiene la lógica original para líneas con modificaciones
                         if line.display_type == 'line_section':
                             plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
                         else:
@@ -218,21 +227,36 @@ class SaleOrder(models.Model):
                                 plan_lines += self.prep_plan_lines(line)
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                                 plan_pickings.append((4, project_picking.id))
+                        
                         line.for_modification = False
                         line.is_modificated = True
+                    else:
+                        # Si no es para modificación, reemplazamos con nuevas líneas
+                        if line.display_type == 'line_section':
+                            plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
+                        else:
+                            if line.product_id.project_plan_id:
+                                plan_lines.append(self.prep_plan_section_line(line, False, True, line.is_modificated))
+                                plan_lines += self.prep_plan_lines(line)
+                            for project_picking in line.product_id.project_plan_id.project_plan_pickings:
+                                plan_pickings.append((4, project_picking.id))
 
+                # Restaurar secuencias para líneas existentes
                 for plan in plan_lines:
                     plan_name = plan[2].get('name', '')
                     if plan_name in existing_lines:
                         plan[2]['sequence'] = existing_lines[plan_name]
 
+                # Asignar nuevas líneas y ordenar por secuencia
                 sale.project_plan_pickings = plan_pickings
-                sale.project_plan_lines = sorted(plan_lines, key=lambda x: x[2]['sequence'])
+                sale.project_plan_lines = sorted(keep_plan_lines + plan_lines, key=lambda x: x[2]['sequence'])
+
                 sale.update_picking_lines()
                 sale.update_task_lines()
 
             self.change_for_modification()
             sale.state = 'budget'
+
     
     def change_for_modification(self):
         """
