@@ -160,36 +160,34 @@ class SaleOrder(models.Model):
                 record.edit_project = False
                 record.project_id = False
 
-    def _actualizar_cantidad_plantilla(self):
-        for sale in self:
-            _logger.warning('Entro a la funcion')
-            plan_pickings = []
-            # Mantener el orden original en las líneas existentes
-            existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
+    # def _actualizar_cantidad_plantilla(self):
+    #     for sale in self:
+    #         plan_pickings = []
+    #         # Mantener el orden original en las líneas existentes
+    #         existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
 
-            # Procesar nuevas líneas y conservar la secuencia
-            plan_lines = []
+    #         # Procesar nuevas líneas y conservar la secuencia
+    #         plan_lines = []
         
-            for line in sale.order_line:
+    #         for line in sale.order_line:
                 
-                if line.for_modification == False:
-                    if line.display_type == 'line_section':
-                        plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
-                    else:
-                        if line.product_id.project_plan_id:
-                            plan_lines.append(self.prep_plan_section_line(line, False, True, line.is_modificated))
-                            plan_lines += self.prep_plan_lines(line)
+    #             if line.for_modification == False:
+    #                 if line.display_type == 'line_section':
+    #                     plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
+    #                 else:
+    #                     if line.product_id.project_plan_id:
+    #                         plan_lines.append(self.prep_plan_section_line(line, False, True, line.is_modificated))
+    #                         plan_lines += self.prep_plan_lines(line)
 
-                        for project_picking in line.product_id.project_plan_id.project_plan_pickings:
-                            plan_pickings.append((4, project_picking.id))
+    #                     for project_picking in line.product_id.project_plan_id.project_plan_pickings:
+    #                         plan_pickings.append((4, project_picking.id))
             
-            
-            # Sobrescribir sin desordenar
-            sale.project_plan_pickings = plan_pickings
-            sale.project_plan_lines = sorted(plan_lines, key=lambda x: x[2]['sequence'])
+    #         # Sobrescribir sin desordenar
+    #         sale.project_plan_pickings = plan_pickings
+    #         sale.project_plan_lines = sorted(plan_lines, key=lambda x: x[2]['sequence'])
 
-            sale.update_picking_lines()
-            sale.update_task_lines()
+    #         sale.update_picking_lines()
+    #         sale.update_task_lines()
 
     def action_generate_planning(self):
         """
@@ -207,7 +205,7 @@ class SaleOrder(models.Model):
                 existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
                 plan_lines = []
                 for line in sale.order_line:
-                    if line.for_modification:
+                    # if line.for_modification:
                         if line.display_type == 'line_section':
                             plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
                         else:

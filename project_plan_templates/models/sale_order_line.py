@@ -43,7 +43,6 @@ class SaleOrderLine(models.Model):
     
     @api.onchange('product_uom_qty')
     def _onchange_product_qty(self):
-        _logger.warning('Entro al onchange')
         for record in self:
-            record.order_id._actualizar_cantidad_plantilla()
+            record.order_id.action_generate_planning()
 
