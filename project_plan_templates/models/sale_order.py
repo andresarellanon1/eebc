@@ -241,21 +241,23 @@ class SaleOrder(models.Model):
                             for project_picking in line.product_id.project_plan_id.project_plan_pickings:
                                 plan_pickings.append((4, project_picking.id))
 
-                # Restaurar secuencias para líneas existentes
+                # Crear los registros para las líneas de planificación
                 for plan in plan_lines:
                     plan_name = plan[2].get('name', '')
                     if plan_name in existing_lines:
                         plan[2]['sequence'] = existing_lines[plan_name]
+                    
+                    # Aquí estamos creando las líneas de planificación usando el ORM de Odoo
+                    sale.project_plan_lines.create(plan[2])
 
-                # Asignar nuevas líneas y ordenar por secuencia
+                # Asignar las nuevas líneas y ordenarlas por secuencia
                 sale.project_plan_pickings = plan_pickings
-                sale.project_plan_lines = sorted(keep_plan_lines + plan_lines, key=lambda x: x[2]['sequence'])
-
                 sale.update_picking_lines()
                 sale.update_task_lines()
 
             self.change_for_modification()
             sale.state = 'budget'
+
 
     
     def change_for_modification(self):
