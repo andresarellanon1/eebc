@@ -201,12 +201,19 @@ class SaleOrder(models.Model):
                         f"se requiere el nombre del proyecto"
                     ) 
                 
-                plannig_lines_to_remove = sale.project_plan_lines.filtered(lambda line: not line.for_modification)
-                plannig_lines_to_remove.unlink()
-                time_lines_to_remove = sale.task_time_lines.filtered(lambda line: not line.for_modification)
-                time_lines_to_remove.unlink()
-                picking_lines_to_remove = sale.project_picking_lines.filtered(lambda line: not line.for_modification)
-                picking_lines_to_remove.unlink() 
+                """
+                Elimina las lineas que ya han sido modificadas para reemplazarlas
+                """
+                # plannig_lines_to_remove = sale.project_plan_lines.filtered(lambda line: not line.for_modification)
+                # plannig_lines_to_remove.unlink()
+                # time_lines_to_remove = sale.task_time_lines.filtered(lambda line: not line.for_modification)
+                # time_lines_to_remove.unlink()
+                # picking_lines_to_remove = sale.project_picking_lines.filtered(lambda line: not line.for_modification)
+                # picking_lines_to_remove.unlink() 
+
+                sale.project_plan_lines.unlink()
+                sale.project_picking_lines.unlink()
+                sale.task_time_lines.unlink()
 
                 plan_pickings = []
                 existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
@@ -273,7 +280,8 @@ class SaleOrder(models.Model):
                         'price_unit': line.last_service_price,
                         'discount': line.discount,
                         'for_modification': False,
-                        'last_service_price': line.last_service_price
+                        'last_service_price': line.last_service_price,
+                        'product_pricelist_id': line.product_pricelist_id,
                     }) for line in previous_order.order_line]
 
                     # Copiar líneas de plan
@@ -284,6 +292,11 @@ class SaleOrder(models.Model):
 
                     # Copiar líneas de tareas
                     sale.task_time_lines = self._prepare_task_lines(previous_order.task_time_lines)
+
+                    _logger.warning(f"Se copiaron {len(previous_order.order_line)} líneas de orden al nuevo pedido")
+
+                    for plan_line in sale.order_line:
+                        _logger.warning(f"Plan Line: {plan_line} | Nombre: {plan_line.name} | price_unit: {plan_line.price_unit} | last_service_price: {plan_line.last_service_price}")
                 
     
     def _prepare_task_lines(self, lines):
