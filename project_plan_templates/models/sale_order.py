@@ -283,26 +283,19 @@ class SaleOrder(models.Model):
                         'last_service_price': line.last_service_price
                     }) for line in previous_order.order_line]
 
-                    _logger.warning(f"Se copiaron {len(previous_order.order_line)} líneas de orden al nuevo pedido")
-
                     # Copiar líneas de plan
-                    _logger.warning(f"Copiando líneas de planificación del pedido anterior: {previous_order.name}")
                     sale.project_plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
 
-                    for plan_line in sale.project_plan_lines:
-                        _logger.warning(f"Plan Line: {plan_line} | Nombre: {plan_line.name} | price_unit: {plan_line.price_unit}")
-
-                    _logger.warning(f"Se copiaron {len(previous_order.project_plan_lines)} líneas de planificación")
-
                     # Copiar líneas de picking
-                    _logger.warning(f"Copiando líneas de picking del pedido anterior: {previous_order.name}")
                     sale.project_picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
-                    _logger.warning(f"Se copiaron {len(previous_order.project_picking_lines)} líneas de picking")
 
                     # Copiar líneas de tareas
-                    _logger.warning(f"Copiando líneas de tareas del pedido anterior: {previous_order.name}")
                     sale.task_time_lines = self._prepare_task_lines(previous_order.task_time_lines)
-                    _logger.warning(f"Se copiaron {len(previous_order.task_time_lines)} líneas de tareas")
+
+                    _logger.warning(f"Se copiaron {len(previous_order.order_line)} líneas de orden al nuevo pedido")
+
+                    for plan_line in sale.order_line:
+                        _logger.warning(f"Plan Line: {plan_line} | Nombre: {plan_line.name} | price_unit: {plan_line.price_unit}")
                 
     
     def _prepare_task_lines(self, lines):
