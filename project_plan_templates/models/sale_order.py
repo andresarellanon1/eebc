@@ -202,10 +202,16 @@ class SaleOrder(models.Model):
             if sale.project_id:
                 sale.partner_id = sale.project_id.client_id  # Trae el cliente
 
-    @api.onchange('edit_project')
+    @api.onchange('edit_project', 'project_id')
     def _compute_order_lines_from_project_previous_version(self):
         """ Copia las líneas del pedido anterior si aplica. """
         for sale in self:
+           
+            #  Limpiar líneas previas para evitar duplicados
+            sale.order_line = [(5, 0, 0)]
+            sale.project_plan_lines = [(5, 0, 0)]
+            sale.project_picking_lines = [(5, 0, 0)]
+            sale.task_time_lines = [(5, 0, 0)]
 
             # Si el proyecto tiene un pedido anterior, copiamos datos
             if sale.edit_project and sale.project_id.actual_sale_order_id:
