@@ -37,49 +37,91 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-    @api.onchange('name')
+   @api.onchange('name')
     def _compute_task_id(self):
+        """
+        Actualiza el campo `task_id_char` con el nombre de la tarea asociada (`project_task_id`).
+        Este método se ejecuta cuando cambia el campo `name`.
+        """
         self.task_id_char = self.project_task_id.name
+
 
     @api.onchange('name')
     def _compute_picking_type_id(self):
+        """
+        Actualiza el campo `picking_type_id` con el tipo de operación predeterminado del proyecto asociado.
+        Este método se ejecuta cuando cambia el campo `name`.
+        """
         self.picking_type_id = self.project_task_id.project_id.default_picking_type_id.id
+
 
     @api.onchange('name')
     def _compute_origin(self):
+        """
+        Actualiza el campo `origin` con el nombre de la tarea asociada (`project_task_id`).
+        Este método se ejecuta cuando cambia el campo `name`.
+        """
         self.origin = self.project_task_id.name
+
 
     @api.onchange('name')
     def _onchange_project_task_id(self):
+        """
+        Actualiza los productos disponibles en el campo `product_id` basados en los productos asociados
+        a las líneas de picking del proyecto. También establece el dominio para `product_id`.
+        Este método se ejecuta cuando cambia el campo `name`.
+        """
         if self.project_task_id:
             project = self.project_task_id.project_id
+            # Obtener los IDs de los productos asociados a las líneas de picking del proyecto
             product_ids = [int(product.id) for product in project.project_picking_lines.mapped('product_id')]
+            # Asignar los productos al campo `project_stock_products`
             self.project_stock_products = [(6, 0, product_ids)]
+            # Establecer el dominio para `product_id`
             return {'domain': {'product_id': [('id', 'in', product_ids)]}}
+
 
     @api.onchange('task_inventory_lines')
     def _compute_max_quantity(self):
+        """
+        Calcula la cantidad máxima disponible para cada producto en las líneas de inventario de la tarea.
+        Este método se ejecuta cuando cambia el campo `task_inventory_lines`.
+        """
         for inv_lines in self.task_inventory_lines:
             for proyect_lines in self.project_task_id.project_id.project_picking_lines:
                 if inv_lines.product_id == proyect_lines.product_id:
+                    # Calcular la cantidad máxima disponible
                     inv_lines.max_quantity = proyect_lines.quantity - proyect_lines.reservado
-        
+
+
     def _quantity_flag(self):
+        """
+        Verifica si alguna línea de inventario excede la cantidad máxima disponible.
+        
+        :return: True si alguna línea excede la cantidad máxima, False en caso contrario.
+        """
         for inv_lines in self.task_inventory_lines:
             for proyect_lines in self.project_task_id.project_id.project_picking_lines:
                 if inv_lines.product_id == proyect_lines.product_id:
                     if inv_lines.quantity > inv_lines.max_quantity:
                         return True
-                        
+        return False
+
 
     def action_confirm_create_inventory(self):
+        """
+        Confirma la creación del inventario y genera un movimiento de stock.
+        Si alguna línea de inventario excede la cantidad máxima, se lanza una excepción.
+        """
         self.ensure_one()
-    
+
         if self._quantity_flag():
             raise ValidationError("La cantidad de los productos no puede ser mayor a la cantidad máxima")
         else:
+            # Actualizar la cantidad reservada en las líneas de picking del proyecto
             self.project_task_id.project_id.project_picking_lines.reservado_update(self.task_inventory_lines)
 
+            # Preparar los valores para los movimientos de stock
             stock_move_ids_vals = [(0, 0, {
                 'product_id': line.product_id.id,
                 'product_packaging_id': line.product_packaging_id.id,
@@ -91,6 +133,7 @@ class ProjectCreation(models.TransientModel):
                 'name': self.name,
             }) for line in self.task_inventory_lines]
 
+            # Preparar los valores para el picking de stock
             stock_picking_vals = {
                 'name': self.name,
                 'partner_id': self.partner_id.id,
@@ -117,8 +160,10 @@ class ProjectCreation(models.TransientModel):
                 'note': self.note,
             }
 
+            # Crear el picking de stock
             stock_picking = self.env['stock.picking'].create(stock_picking_vals)
 
+            # Abrir la vista del picking creado
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'stock.picking',

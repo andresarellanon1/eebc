@@ -81,57 +81,70 @@ class ProjectPlanPickingLine(models.Model):
     for_create = fields.Boolean(default=True)
     for_modification = fields.Boolean(default=True)
     for_newlines = fields.Boolean(default=True)
-    
-
-    # @api.constrains('product_id')
-    # def _check_product_id(self):
-    #     for record in self:
-    #         if not record.product_id:
-    #             raise ValidationError("El campo 'Product' es obligatorio. No se puede guardar un registro sin este campo.")
-                
-    # @api.constrains('product_packaging_id')
-    # def _check_product_packaging_id(self):
-    #     for record in self:
-    #         if not record.product_packaging_id:
-    #             raise ValidationError("El campo 'Packaging' es obligatorio. No se puede guardar una línea sin este campo.")
 
     @api.onchange('used_quantity')
     def _check_quantity(self):
+        """
+        Valida que la cantidad utilizada no exceda la cantidad disponible.
+        Si la cantidad utilizada es mayor que la cantidad disponible, se lanza una excepción.
+        """
         for record in self:
-            if record.used_quantity > quantity:
-                raise ValidationError("Cantidad excedida, ordene mas o ingrese la cantidad correcta")
+            if record.used_quantity > record.quantity:  # Corregido: Se usa `record.quantity` en lugar de `quantity`
+                raise ValidationError("Cantidad excedida, ordene más o ingrese la cantidad correcta")
+
 
     @api.depends('product_id', 'product_id.standard_price')
     def _compute_standard_price(self):
+        """
+        Calcula el precio estándar del producto basado en el campo 'standard_price' del producto seleccionado.
+        Este método se ejecuta automáticamente cuando cambia el campo 'product_id' o su precio estándar.
+        Si el registro no está asociado a una orden de venta o es una nueva línea, se usa el precio estándar del producto.
+        """
         for record in self:
-            if not record.sale_order_id:
+            if not record.sale_order_id or record.for_newlines:
                 record.standard_price = record.product_id.standard_price
-            elif record.for_newlines:
-                record.standard_price = record.product_id.standard_price
-                record.last_price = record.product_id.standard_price
+                record.last_price = record.product_id.standard_price  # Actualiza el último precio
+
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
+        """
+        Actualiza la unidad de medida y el nombre del producto cuando se selecciona un producto.
+        Este método se ejecuta automáticamente cuando cambia el campo 'product_id'.
+        """
         if self.product_id:
-            self.product_uom = self.product_id.uom_id
-            self.name = self.product_id.name
+            self.product_uom = self.product_id.uom_id  # Asigna la unidad de medida del producto
+            self.name = self.product_id.name  # Asigna el nombre del producto
+
 
     def reservado_update(self, task_inventory_lines):
+        """
+        Actualiza la cantidad reservada del producto en función de las líneas de inventario de la tarea.
+        Este método compara el producto actual con las líneas de inventario y actualiza la cantidad reservada.
+        
+        :param task_inventory_lines: Líneas de inventario de la tarea.
+        """
         for record in self:
             for inventory_lines in task_inventory_lines:
                 if record.product_id.id == inventory_lines.product_id.id:
                     if record.quantity >= (record.reservado + inventory_lines.quantity):
-                        record.reservado += inventory_lines.quantity
+                        record.reservado += inventory_lines.quantity  # Incrementa la cantidad reservada
+
 
     @api.depends('quantity')
     def _compute_subtotal(self):
+        """
+        Calcula el subtotal multiplicando el precio estándar o el último precio por la cantidad.
+        Este método se ejecuta automáticamente cuando cambia el campo 'quantity'.
+        Si la cantidad es negativa, el subtotal se establece en 0.00.
+        """
         for record in self:
             quantity = record.quantity
 
             if quantity >= 0:
                 if record.standard_price > 0:
-                    record.subtotal = record.standard_price * quantity
+                    record.subtotal = record.standard_price * quantity  # Usa el precio estándar
                 else:
-                    record.subtotal = record.last_price * quantity
+                    record.subtotal = record.last_price * quantity  # Usa el último precio si no hay precio estándar
             else:
-                record.subtotal = 0.00
+                record.subtotal = 0.00  # Si la cantidad es negativa, el subtotal es 0.00

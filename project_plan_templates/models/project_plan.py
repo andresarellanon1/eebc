@@ -48,45 +48,79 @@ class ProjectPlan(models.Model):
 
     @api.depends('picking_lines.subtotal')
     def _compute_total_cost(self):
+        """
+        Calcula el costo total de los materiales basado en las líneas de picking.
+        También actualiza el precio de lista del producto asociado.
+        """
         for plan in self:
-            plan.material_total_cost = sum(line.subtotal for line in plan.picking_lines)
-            self.update_product_template_list_price(plan)
+            plan.material_total_cost = sum(line.subtotal for line in plan.picking_lines)  # Suma los subtotales de las líneas de picking
+            self.update_product_template_list_price(plan)  # Actualiza el precio de lista del producto
+
 
     @api.depends('task_time_lines.price_subtotal')
     def _compute_labour_cost(self):
+        """
+        Calcula el costo total de la mano de obra basado en las líneas de tareas.
+        También actualiza el precio de lista del producto asociado.
+        """
         for task in self:
-            task.labour_total_cost = sum(line.price_subtotal for line in task.task_time_lines)
-            self.update_product_template_list_price(task)
+            task.labour_total_cost = sum(line.price_subtotal for line in task.task_time_lines)  # Suma los subtotales de las líneas de tareas
+            self.update_product_template_list_price(task)  # Actualiza el precio de lista del producto
+
 
     @api.depends('project_plan_pickings')
     def _compute_picking_lines(self):
+        """
+        Calcula y actualiza las líneas de picking basadas en las plantillas de movimientos.
+        """
         for record in self:
-            record.picking_lines = [(5, 0, 0)]
-            record.picking_lines = record.get_picking_lines(record.project_plan_pickings)
+            record.picking_lines = [(5, 0, 0)]  # Limpia las líneas existentes
+            record.picking_lines = record.get_picking_lines(record.project_plan_pickings)  # Obtiene las nuevas líneas de picking
+
 
     @api.depends('task_timesheet_id')
     def _compute_task_lines(self):
+        """
+        Calcula y actualiza las líneas de tareas basadas en la plantilla de hojas de horas.
+        """
         for record in self:
-            record.task_time_lines = [(5, 0, 0)]
-            record.task_time_lines = record.get_task_time_lines(record.task_timesheet_id)
+            record.task_time_lines = [(5, 0, 0)]  # Limpia las líneas existentes
+            record.task_time_lines = record.get_task_time_lines(record.task_timesheet_id)  # Obtiene las nuevas líneas de tareas
+
 
     def get_picking_lines(self, line):
+        """
+        Obtiene las líneas de picking a partir de las plantillas de movimientos.
+        
+        :param line: Plantillas de movimientos.
+        :return: Lista de líneas de picking.
+        """
         picking_lines = []
-
         for picking in line:
-            picking_lines += self.prep_picking_lines(picking)
-                
+            picking_lines += self.prep_picking_lines(picking)  # Prepara las líneas de picking
         return picking_lines
 
+
     def get_task_time_lines(self, line):
+        """
+        Obtiene las líneas de tareas a partir de la plantilla de hojas de horas.
+        
+        :param line: Plantilla de hojas de horas.
+        :return: Lista de líneas de tareas.
+        """
         task_lines = []
-
         for task in line:
-            task_lines += self.prep_task_time_lines(task)
-
+            task_lines += self.prep_task_time_lines(task)  # Prepara las líneas de tareas
         return task_lines
 
+
     def prep_picking_lines(self, line):
+        """
+        Prepara las líneas de picking individuales.
+        
+        :param line: Línea de la plantilla de movimientos.
+        :return: Lista de líneas de picking preparadas.
+        """
         picking_lines = []
         for picking in line.project_picking_lines:
             picking_lines.append((0, 0, {
@@ -101,8 +135,15 @@ class ProjectPlan(models.Model):
                 'display_type': False
             }))
         return picking_lines
-    
+
+
     def prep_task_time_lines(self, line):
+        """
+        Prepara las líneas de tareas individuales.
+        
+        :param line: Línea de la plantilla de hojas de horas.
+        :return: Lista de líneas de tareas preparadas.
+        """
         task_lines = []
         for task in line.task_time_lines:
             task_lines.append((0, 0, {
@@ -114,8 +155,15 @@ class ProjectPlan(models.Model):
                 'price_subtotal': task.price_subtotal
             }))
         return task_lines
-        
+
+
     def prep_picking_section_line(self, line):
+        """
+        Prepara una línea de sección para las líneas de picking.
+        
+        :param line: Línea de la plantilla de movimientos.
+        :return: Línea de sección preparada.
+        """
         return (0, 0, {
             'name': line.name,
             'display_type': line.display_type or 'line_section',
@@ -128,25 +176,38 @@ class ProjectPlan(models.Model):
             'subtotal': False
         })
 
+
     def update_product_template_list_price(self, plan):
+        """
+        Actualiza el precio de lista del producto asociado con el costo total de materiales y mano de obra.
+        
+        :param plan: Plan de proyecto.
+        """
         if plan.product_template_id:
-            total_cost = plan.material_total_cost + plan.labour_total_cost
-            plan.product_template_id.write({'list_price': total_cost})
+            total_cost = plan.material_total_cost + plan.labour_total_cost  # Calcula el costo total
+            plan.product_template_id.write({'list_price': total_cost})  # Actualiza el precio de lista
+
 
     @api.model
     def write(self, vals):
+        """
+        Sobrescribe el método write para actualizar el proyecto asociado al producto.
+        """
         result = super(ProjectPlan, self).write(vals)
         if 'product_template_id' in vals and vals['product_template_id']:
             product_template = self.env['product.template'].browse(vals['product_template_id'])
             if product_template and product_template.project_plan_id != self:
-                product_template.write({'project_plan_id': self.id})
-
+                product_template.write({'project_plan_id': self.id})  # Asocia el plan al producto
         return result
 
+
     def ensure_plan_line_exists(self):
-        """ Garantiza que exista una línea en project_plan_lines con la información obligatoria. """
+        """
+        Garantiza que exista una línea en project_plan_lines con la información obligatoria.
+        Si no existe, crea una nueva línea.
+        """
         for plan in self:
-            plan.project_plan_lines = [(5, 0, 0)]
+            plan.project_plan_lines = [(5, 0, 0)]  # Limpia las líneas existentes
 
             existing_line = self.env['project.plan.line'].search([
                 ('project_plan_id', '=', plan.id),
@@ -159,16 +220,22 @@ class ProjectPlan(models.Model):
                     'description': plan.description,
                     'project_plan_pickings': plan.project_plan_pickings.id,
                     'task_timesheet_id': plan.task_timesheet_id.id,
-                })]
+                })]  # Crea una nueva línea si no existe
+
 
     def create(self, vals):
-        """ Sobrecarga create para garantizar la existencia de la línea en project_plan_lines. """
+        """
+        Sobrescribe el método create para garantizar la existencia de la línea en project_plan_lines.
+        """
         record = super(ProjectPlan, self).create(vals)
-        record.ensure_plan_line_exists()
+        record.ensure_plan_line_exists()  # Asegura que exista la línea
         return record
 
+
     def write(self, vals):
-        """ Sobrecarga write para verificar y crear la línea si no existe. """
+        """
+        Sobrescribe el método write para verificar y crear la línea si no existe.
+        """
         result = super(ProjectPlan, self).write(vals)
-        self.ensure_plan_line_exists()
+        self.ensure_plan_line_exists()  # Asegura que exista la línea
         return result
