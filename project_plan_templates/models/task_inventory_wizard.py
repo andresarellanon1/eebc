@@ -37,7 +37,7 @@ class ProjectCreation(models.TransientModel):
     lat_dest = fields.Float(string="Latitud de destino")
     long_dest = fields.Float(string="Longitud de destino")
 
-   @api.onchange('name')
+    @api.onchange('name')
     def _compute_task_id(self):
         """
         Actualiza el campo `task_id_char` con el nombre de la tarea asociada (`project_task_id`).
