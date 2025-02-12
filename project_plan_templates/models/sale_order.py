@@ -201,6 +201,9 @@ class SaleOrder(models.Model):
                         f"se requiere el nombre del proyecto"
                     ) 
 
+                sale.project_plan_pickings.unlink()
+                sale.project_plan_lines.unlink()
+
                 plan_pickings = []
                 existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
                 plan_lines = []
