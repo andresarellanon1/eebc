@@ -3,6 +3,8 @@ from odoo.exceptions import UserError, ValidationError
 import json
 import logging
 
+_logger = logging.getLogger(__name__)
+
 class SaleOrder(models.Model):
     """
     Modelo que hereda de 'sale.order' para agregar funcionalidades relacionadas con proyectos.
