@@ -1,21 +1,44 @@
 from odoo import fields, api, models
 from odoo.exceptions import UserError
 import logging
+
 logger = logging.getLogger(__name__)
 
 
 class ProjectProject(models.Model):
+    """
+    Modelo que hereda de 'project.project' para agregar funcionalidades adicionales relacionadas con la planificación
+    de proyectos, movimientos de inventario y tareas.
+    """
+
     _inherit = 'project.project'
 
+    # Campos adicionales para la planificación de proyectos
     project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly=True)
-    project_plan_lines = fields.One2many('project.plan.line', 'origin_project_id', string="Project plan lines", compute="_compute_project_plan_lines", store=True)
+    project_plan_lines = fields.One2many(
+        'project.plan.line', 
+        'origin_project_id', 
+        string="Líneas de planificación del proyecto", 
+        compute="_compute_project_plan_lines", 
+        store=True
+    )
     
+    # Campos para manejar movimientos de inventario relacionados con el proyecto
     project_picking_ids = fields.Many2many('project.plan.pickings', string="Movimientos de inventario")
-    project_picking_lines = fields.One2many('project.picking.lines', 'project_id', string="Project picking lines", compute="_compute_project_picking_lines", store=True)
+    project_picking_lines = fields.One2many(
+        'project.picking.lines', 
+        'project_id', 
+        string="Líneas de picking del proyecto", 
+        compute="_compute_project_picking_lines", 
+        store=True
+    )
+    
+    # Campos para costos y relaciones con órdenes de venta
     plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
     sale_order_id = fields.Many2one('sale.order', string='Orden de venta', readonly=False, store=True)
     actual_sale_order_id = fields.Many2one('sale.order', string="Orden actual de venta", store=True)
 
+    # Campos para ubicaciones y fechas
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada de entrega')
@@ -25,24 +48,37 @@ class ProjectProject(models.Model):
 
     @api.depends('project_picking_lines.subtotal')
     def _compute_total_cost(self):
+        """
+        Calcula el costo total del proyecto basado en las líneas de picking.
+        """
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
 
     @api.depends('sale_order_id')
     def _compute_project_picking_lines(self):
+        """
+        Calcula y actualiza las líneas de picking del proyecto basadas en la orden de venta asociada.
+        """
         for record in self:
-            record.project_picking_lines = [(5, 0, 0)]
-
-            record.project_picking_lines = self.prep_picking_lines(self.sale_order_id.project_picking_lines)
+            record.project_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
+            record.project_picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
 
     @api.depends('sale_order_id')
     def _compute_project_plan_lines(self):
+        """
+        Calcula y actualiza las líneas de planificación del proyecto basadas en la orden de venta asociada.
+        """
         for record in self:
-            record.project_plan_lines = [(5, 0, 0)]
-
-            record.project_plan_lines = self.prep_plan_lines(self.sale_order_id.project_plan_lines)
+            record.project_plan_lines = [(5, 0, 0)]  # Limpiar líneas existentes
+            record.project_plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
 
     def prep_picking_lines(self, picking):
+        """
+        Prepara las líneas de picking para su uso en el proyecto.
+        
+        :param picking: Líneas de picking de la orden de venta.
+        :return: Lista de líneas de picking preparadas.
+        """
         picking_lines = []
         for line in picking:
             if line.display_type == 'line_section':
@@ -78,6 +114,12 @@ class ProjectProject(models.Model):
         return picking_lines
 
     def prep_plan_lines(self, plan):
+        """
+        Prepara las líneas de planificación para su uso en el proyecto.
+        
+        :param plan: Líneas de planificación de la orden de venta.
+        :return: Lista de líneas de planificación preparadas.
+        """
         plan_lines = []
         for line in plan:
             if line.use_project_task:
@@ -85,7 +127,7 @@ class ProjectProject(models.Model):
                     plan_lines.append((0, 0, {
                         'name': line.name,
                         'sequence': line.sequence,
-                        'display_type':  line.display_type or 'line_section',
+                        'display_type': line.display_type or 'line_section',
                         'description': False,
                         'use_project_task': True,
                         'planned_date_begin': False,
@@ -116,6 +158,14 @@ class ProjectProject(models.Model):
         return plan_lines
 
     def create_project_tasks(self, location_id, location_dest_id, scheduled_date):
+        """
+        Crea nuevas tareas con sus movimientos de inventario y hojas de horas al modificar un proyecto.
+        Este método se llama desde el wizard de modificación de proyectos.
+        
+        :param location_id: Ubicación de origen para los movimientos de inventario.
+        :param location_dest_id: Ubicación de destino para los movimientos de inventario.
+        :param scheduled_date: Fecha programada para los movimientos de inventario.
+        """
         for project in self:
             current_task_type = None
 
@@ -226,6 +276,13 @@ class ProjectProject(models.Model):
                         self.create_project_tasks_pickings(existing_task, picking_lines, location_id, location_dest_id, scheduled_date)
 
     def get_or_create_task_type(self, stage_id, project):
+        """
+        Obtiene o crea un tipo de tarea para el proyecto.
+        
+        :param stage_id: Nombre del tipo de tarea.
+        :param project: Proyecto asociado.
+        :return: Tipo de tarea existente o recién creado.
+        """
         task_type = self.env['project.task.type'].search([
             ('name', '=', stage_id),
             ('project_ids', 'in', project.id)
@@ -240,6 +297,15 @@ class ProjectProject(models.Model):
         return task_type
 
     def create_project_tasks_pickings(self, task_id, pickings, location_id, location_dest_id, scheduled_date):
+        """
+        Crea movimientos de inventario para las tareas del proyecto.
+        
+        :param task_id: Tarea asociada.
+        :param pickings: Líneas de picking.
+        :param location_id: Ubicación de origen.
+        :param location_dest_id: Ubicación de destino.
+        :param scheduled_date: Fecha programada.
+        """
         for line in pickings:
             line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
 
