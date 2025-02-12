@@ -1,5 +1,6 @@
 from odoo import fields, models, api
 import logging
+
 _logger = logging.getLogger(__name__)
 
 class SaleOrderLine(models.Model):
