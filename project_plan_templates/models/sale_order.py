@@ -203,7 +203,7 @@ class SaleOrder(models.Model):
                 
                 lines_to_remove = sale.project_plan_lines.filtered(lambda line: not line.for_modification)
                 lines_to_remove.unlink()
-                lines_to_remove = sale.project_plan_lines.filtered(lambda line: not line.for_modification)
+                lines_to_remove = sale.task_time_lines.filtered(lambda line: not line.for_modification)
                 lines_to_remove.unlink()
                 lines_to_remove = sale.project_picking_lines.filtered(lambda line: not line.for_modification)
                 lines_to_remove.unlink()
@@ -224,9 +224,6 @@ class SaleOrder(models.Model):
                         line.for_modification = False
                         line.is_modificated = True
                     
-
-
-
                 for plan in plan_lines:
                     plan_name = plan[2].get('name', '')
                     if plan_name in existing_lines:
