@@ -160,6 +160,7 @@ class SaleOrder(models.Model):
 
     def _actualizar_cantidad_plantilla(self):
         for sale in self:
+            _logger.warning('Entro a la funcion')
             plan_pickings = []
             # Mantener el orden original en las líneas existentes
             existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
