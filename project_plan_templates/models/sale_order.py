@@ -195,22 +195,27 @@ class SaleOrder(models.Model):
         for sale in self.project_picking_lines:
             sale.for_modification = False
 
-   
     @api.onchange('project_id')
     def _compute_partner_from_project(self):
-        """ Primero asigna el cliente relacionado con el proyecto. """
+        """ Asigna el cliente relacionado con el proyecto. """
         for sale in self:
             if sale.project_id:
                 sale.partner_id = sale.project_id.client_id  # Trae el cliente
-                sale.edit_project = True  # Forzar que el otro onchange se ejecute
 
-    @api.onchange('project_id', 'edit_project')
+    @api.onchange('project_id')
+    def _set_edit_project_flag(self):
+        """ Activa edit_project automáticamente si hay un proyecto seleccionado. """
+        for sale in self:
+            if sale.project_id:
+                sale.edit_project = True  # Esto activará el siguiente onchange
+
+    @api.onchange('edit_project')
     def _compute_order_lines_from_project_previous_version(self):
-        """ Luego copia las líneas del pedido anterior si aplica. """
+        """ Copia las líneas del pedido anterior si aplica. """
         for sale in self:
             if not sale.project_id or not sale.edit_project or not sale.project_id.actual_sale_order_id:
                 return
-          
+
             # Limpiar líneas previas para evitar duplicados
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
@@ -235,7 +240,6 @@ class SaleOrder(models.Model):
             sale.project_plan_lines = self._prepare_plan_lines(previous_order.project_plan_lines)
             sale.project_picking_lines = self._prepare_picking_lines(previous_order.project_picking_lines)
             sale.task_time_lines = self._prepare_task_lines(previous_order.task_time_lines)
-
 
     def _prepare_task_lines(self, lines):
         return [(0, 0, {
