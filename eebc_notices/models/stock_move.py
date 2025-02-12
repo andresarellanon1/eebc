@@ -169,7 +169,12 @@ class StockMove(models.Model):
                 
             }
         }
-        
+    def _merge_moves(self, merge_into=False):
+        """
+        Sobrescribir el método para evitar la fusión de movimientos.
+        """
+        # Retornar una lista vacía para evitar la fusión
+        return self.env['stock.move']
     def action_show_outgoing(self):
         in_or_out = "out"
         notice_lines_to_wizard =self._create_line_ids(in_or_out)
@@ -199,8 +204,7 @@ class StockMove(models.Model):
         }
 
 
-
-
+    
     def _create_line_ids(self, in_or_out):
         for move in self:
             if not move.id:

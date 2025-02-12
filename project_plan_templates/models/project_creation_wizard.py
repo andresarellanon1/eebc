@@ -25,7 +25,8 @@ class ProjectCreation(models.TransientModel):
     )
 
     wizard_picking_lines = fields.One2many(
-        'project.picking.wizard.line', 'wizard_creation_id',
+        'project.picking.wizard.line',  # Modelo relacionado
+        'wizard_creation_id',  # Campo inverso en el modelo relacionado
         string="Project Picking Lines"
     )
 
@@ -112,6 +113,8 @@ class ProjectCreation(models.TransientModel):
             'project_plan_lines': [(6, 0, self.sale_order_id.project_plan_lines.ids)],
             'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
         })
+
+        self.sale_order_id.project_id = project.id
 
         return {
             'type': 'ir.actions.act_window',

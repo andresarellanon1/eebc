@@ -24,9 +24,11 @@
                             <h1>
                                 <field name="name" class="w-100" required="1"/>
                             </h1>
-                            <field name="product_template_id" string="Servicios" invisible="1"/>
-                            <field name="project_plan_pickings"/>
-                            <field name="task_timesheet_id"/>
+                            <group>
+                                <field name="product_template_id" string="Servicios" invisible="1"/>
+                                <field name="project_plan_pickings" string="Lista de materiales"/>
+                                <field name="task_timesheet_id" string="Mano de obra"/>
+                            </group>
                         </div>
                         <notebook>
 

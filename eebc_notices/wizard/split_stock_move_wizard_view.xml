@@ -17,6 +17,7 @@
     </field>
 </record>
 
+
 <record id="action_split_stock_move_wizard" model="ir.actions.act_window">
     <field name="name">Dividir Movimiento de Stock</field>
     <field name="res_model">split.stock.move.wizard</field>
