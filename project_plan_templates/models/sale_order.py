@@ -208,9 +208,7 @@ class SaleOrder(models.Model):
         for sale in self:
             if not sale.project_id or not sale.edit_project or not sale.project_id.actual_sale_order_id:
                 return
-            
-            previous_order = sale.project_id.actual_sale_order_id
-
+          
             # Limpiar líneas previas para evitar duplicados
             sale.order_line = [(5, 0, 0)]
             sale.project_plan_lines = [(5, 0, 0)]
