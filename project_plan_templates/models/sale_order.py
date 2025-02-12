@@ -189,6 +189,7 @@ class SaleOrder(models.Model):
     #         sale.update_picking_lines()
     #         sale.update_task_lines()
 
+
     def action_generate_planning(self):
         """
         Genera las líneas de planificación, materiales y mano de obra del proyecto.
@@ -197,19 +198,28 @@ class SaleOrder(models.Model):
         self.ensure_one()
         
         for sale in self:
+            _logger.info(f"Iniciando la generación de planificación para la venta: {sale.name}")
+            
             if sale.is_project:
+                _logger.info(f"El proyecto está marcado como 'is_project' para la venta: {sale.name}")
+                
                 if not sale.project_name and not sale.edit_project:
-                    raise ValidationError("Se requiere el nombre del proyecto") 
+                    _logger.error(f"Se requiere el nombre del proyecto para la venta: {sale.name}")
+                    raise ValidationError("Se requiere el nombre del proyecto")
                 
                 # Guardar referencias de líneas que deben conservarse
                 keep_plan_lines = sale.project_plan_lines.filtered(lambda line: line.for_modification)
                 keep_picking_lines = sale.project_picking_lines.filtered(lambda line: line.for_modification)
                 keep_task_lines = sale.task_time_lines.filtered(lambda line: line.for_modification)
-
+                
+                _logger.debug(f"Líneas a mantener (for_modification): Plan: {len(keep_plan_lines)}, Picking: {len(keep_picking_lines)}, Task: {len(keep_task_lines)}")
+                
                 # Eliminar solo las líneas que NO están marcadas para modificación
                 sale.project_plan_lines -= keep_plan_lines
                 sale.project_picking_lines -= keep_picking_lines
                 sale.task_time_lines -= keep_task_lines
+                
+                _logger.debug("Líneas de planificación, picking y tareas no necesarias han sido eliminadas")
 
                 # Inicializar nuevas listas de planificación y pickings
                 plan_pickings = []
@@ -217,8 +227,11 @@ class SaleOrder(models.Model):
                 plan_lines = []
 
                 for line in sale.order_line:
+                    _logger.debug(f"Procesando la línea de orden: {line.name}, for_modification: {line.for_modification}")
+                    
                     if line.for_modification:
-                        # Mantiene la lógica original para líneas con modificaciones
+                        _logger.info(f"Línea marcada para modificación: {line.name}")
+                        
                         if line.display_type == 'line_section':
                             plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
                         else:
@@ -230,8 +243,11 @@ class SaleOrder(models.Model):
                         
                         line.for_modification = False
                         line.is_modificated = True
+                        _logger.debug(f"Línea marcada como modificada: {line.name}")
+
                     else:
-                        # Si no es para modificación, reemplazamos con nuevas líneas
+                        _logger.info(f"Línea NO marcada para modificación: {line.name}")
+                        
                         if line.display_type == 'line_section':
                             plan_lines.append(self.prep_plan_section_line(line, True, False, line.is_modificated))
                         else:
@@ -247,16 +263,21 @@ class SaleOrder(models.Model):
                     if plan_name in existing_lines:
                         plan[2]['sequence'] = existing_lines[plan_name]
                     
-                    # Aquí estamos creando las líneas de planificación usando el ORM de Odoo
+                    _logger.debug(f"Creando línea de planificación con nombre: {plan[2]['name']}, secuencia: {plan[2]['sequence']}")
                     sale.project_plan_lines.create(plan[2])
 
                 # Asignar las nuevas líneas y ordenarlas por secuencia
                 sale.project_plan_pickings = plan_pickings
+                _logger.debug(f"Se asignaron {len(plan_pickings)} pickings al proyecto")
+
                 sale.update_picking_lines()
                 sale.update_task_lines()
+                _logger.debug("Se actualizaron las líneas de picking y tareas")
 
             self.change_for_modification()
             sale.state = 'budget'
+            _logger.info(f"Estado del proyecto para la venta {sale.name} cambiado a 'budget'")
+
 
 
     
