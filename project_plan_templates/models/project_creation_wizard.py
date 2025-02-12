@@ -1,12 +1,20 @@
 from odoo import models, fields, api
 import logging
 from odoo.exceptions import UserError, ValidationError
+
 logger = logging.getLogger(__name__)
 
+
 class ProjectCreation(models.TransientModel):
+    """
+    Wizard para confirmar la creación de un proyecto. Este wizard permite configurar los detalles del proyecto,
+    incluyendo las líneas de planificación y los movimientos de inventario asociados.
+    """
+
     _name = 'project.creation.wizard'
     _description = 'Wizard to confirm project creation'
 
+    # Campos del wizard
     project_plan_id = fields.Many2one('project.plan', string="Plantilla de tareas", readonly=True)
     project_name = fields.Char(string="Nombre del proyecto", required=True)
     user_id = fields.Many2one('res.users', string="Administrador del proyecto")
@@ -14,26 +22,29 @@ class ProjectCreation(models.TransientModel):
     sale_order_id = fields.Many2one('sale.order', string="Orden de venta")
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
     
+    # Relaciones con plantillas de movimientos y líneas de planificación
     project_plan_pickings = fields.Many2many(
         'project.plan.pickings', 
         string="Plantilla de movimientos"
     )
 
     wizard_plan_lines = fields.One2many(
-        'project.plan.wizard.line', 'wizard_id',
-        string="Project Plan Lines"
+        'project.plan.wizard.line', 
+        'wizard_id',
+        string="Líneas de planificación del proyecto"
     )
 
     wizard_picking_lines = fields.One2many(
-        'project.picking.wizard.line',  # Modelo relacionado
-        'wizard_creation_id',  # Campo inverso en el modelo relacionado
-        string="Project Picking Lines"
+        'project.picking.wizard.line',  
+        'wizard_creation_id',  
+        string="Líneas de picking del proyecto"
     )
 
     note = fields.Char()
 
-    plan_total_cost = fields.Float(string="Costo total",  compute='_compute_total_cost', default=0.0)
-    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operacion")
+    # Campos para costos y detalles de inventario
+    plan_total_cost = fields.Float(string="Costo total", compute='_compute_total_cost', default=0.0)
+    picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación")
     location_id = fields.Many2one('stock.location', string='Ubicación de origen')
     location_dest_id = fields.Many2one('stock.location', string='Ubicación de destino')
     scheduled_date = fields.Datetime(string='Fecha programada de entrega')
@@ -45,29 +56,36 @@ class ProjectCreation(models.TransientModel):
 
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
+        """
+        Prepara las líneas de planificación y picking del proyecto cuando se abre el wizard.
+        """
         for record in self:
-            
+            # Limpiar líneas existentes
             record.wizard_picking_lines = [(5, 0, 0)]
             record.wizard_plan_lines = [(5, 0, 0)]
 
+            # Preparar nuevas líneas de planificación y picking
             plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
             picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
 
+            # Asignar las líneas preparadas
             record.wizard_plan_lines = plan_lines
             record.wizard_picking_lines = picking_lines
-
     
     def action_confirm_create_project(self):
+        """
+        Crea el proyecto con la información generada en el presupuesto del proyecto.
+        """
         self.ensure_one()
 
+        # Validar si hay líneas de planificación
         for line in self.wizard_plan_lines:
-            logger.info(
-                    "No hay datos en Wizard Plan Line"
-                )
-            
-        # if not self.project_id:
+            logger.info("No hay datos en Wizard Plan Line")
+
+        # Cambiar el estado de la orden de venta a 'venta'
         self.sale_order_id.state = 'sale'
 
+        # Preparar los valores para crear el proyecto
         project_vals = {
             'name': self.project_name,
             'description': self.description,
@@ -82,10 +100,14 @@ class ProjectCreation(models.TransientModel):
             'location_dest_id': self.location_dest_id.id
         }
 
+        # Crear el proyecto
         project = self.env['project.project'].create(project_vals)
         logger.warning(f"Id del proyecto: {project.id}")
+
+        # Crear las tareas del proyecto
         self.create_project_tasks(project)
 
+        # Registrar el historial de versiones del proyecto
         existing_history = self.env['project.version.history'].search([
             ('project_id', '=', project.id), 
             ('client_id', '=', self.project_id.client_id.id)
@@ -100,11 +122,14 @@ class ProjectCreation(models.TransientModel):
                 'client_id': project.client_id.id,
             })
 
+        # Limpiar las líneas de picking modificadas
         for sale in self.sale_order_id.project_picking_lines:
             sale.for_modification = False
 
+        # Marcar las líneas como creadas
         self.sale_order_id.project_lines_created()
 
+        # Registrar las líneas de planificación y picking en el historial
         self.env['project.version.lines'].create({
             'project_version_history_id': history.id,
             'modification_date': fields.Datetime.now(),
@@ -114,8 +139,10 @@ class ProjectCreation(models.TransientModel):
             'project_picking_lines': [(6, 0, self.sale_order_id.project_picking_lines.ids)],
         })
 
+        # Asignar el proyecto a la orden de venta
         self.sale_order_id.project_id = project.id
 
+        # Abrir la vista del proyecto recién creado
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'project.project',
@@ -123,45 +150,36 @@ class ProjectCreation(models.TransientModel):
             'view_mode': 'form',
             'target': 'current',
         }
-        
-
-            # return {
-            #     'name': 'Project Version History',
-            #     'view_mode': 'form',
-            #     'res_model': 'project.version.wizard',
-            #     'type': 'ir.actions.act_window',
-            #     'target': 'new',
-            #     'context': {
-            #         'default_project_id': self.project_id.id,
-            #         'default_modified_by': self.env.user.id,
-            #         'default_modification_date': fields.Datetime.now(),
-            #         'default_contact_id': self.partner_id.id,
-            #         'default_location_id': self.location_id.id,
-            #         'default_location_dest_id': self.location_dest_id.id,
-            #         'default_scheduled_date': self.scheduled_date,
-            #         'default_picking_type_id': self.picking_type_id.id,
-            #         'default_sale_order_id': self.sale_order_id.id
-            #     }
-            # }
 
     def get_or_create_task_for_picking(self, picking_line, project):
-        # Intentar encontrar una tarea asociada con este picking
+        """
+        Obtiene o crea una tarea asociada con un movimiento de inventario.
+        
+        :param picking_line: Línea de picking.
+        :param project: Proyecto asociado.
+        :return: Tarea existente o recién creada.
+        """
         task = self.env['project.task'].search([
             ('project_id', '=', project.id),
-            ('name', '=', picking_line.name)  # Asumimos que el nombre del picking puede estar relacionado con el nombre de la tarea
+            ('name', '=', picking_line.name)
         ], limit=1)
 
         if not task:
-            # Si no se encuentra una tarea, crear una nueva tarea para el picking
             task = self.env['project.task'].create({
                 'name': picking_line.name,
                 'project_id': project.id,
-                'stage_id': self.env.ref('project.project_stage_new').id,  # Usar un stage predeterminado
+                'stage_id': self.env.ref('project.project_stage_new').id,
             })
         
         return task
 
     def create_project_tasks_pickings(self, task_id, pickings):
+        """
+        Crea los movimientos de inventario asociados a una tarea.
+        
+        :param task_id: Tarea asociada.
+        :param pickings: Líneas de picking.
+        """
         for line in pickings:
             line_data = line[2] if isinstance(line, tuple) else line  # Acceder al diccionario
 
@@ -204,6 +222,11 @@ class ProjectCreation(models.TransientModel):
             self.env['stock.picking'].create(stock_picking_vals)
 
     def create_project_tasks(self, project):
+        """
+        Genera las tareas del proyecto con los servicios presupuestados.
+        
+        :param project: Proyecto asociado.
+        """
         current_task_type = None
         for line in self.wizard_plan_lines:
             if line.display_type and line.for_create:
@@ -255,6 +278,13 @@ class ProjectCreation(models.TransientModel):
                 self.create_project_tasks_pickings(task_id, picking_lines)
 
     def get_or_create_task_type(self, stage_id, project):
+        """
+        Obtiene o crea un tipo de tarea para el proyecto.
+        
+        :param stage_id: Nombre del tipo de tarea.
+        :param project: Proyecto asociado.
+        :return: Tipo de tarea existente o recién creado.
+        """
         task_type = self.env['project.task.type'].search([
             ('name', '=', stage_id),
             ('project_ids', 'in', project.id)
@@ -269,6 +299,12 @@ class ProjectCreation(models.TransientModel):
         return task_type
 
     def prep_plan_lines(self, plan):
+        """
+        Prepara las líneas de planificación para su uso en el proyecto.
+        
+        :param plan: Líneas de planificación.
+        :return: Lista de líneas de planificación preparadas.
+        """
         plan_lines = []
         for line in plan:
             if line.use_project_task:
@@ -305,6 +341,12 @@ class ProjectCreation(models.TransientModel):
         return plan_lines
 
     def prep_picking_lines(self, picking):
+        """
+        Prepara las líneas de picking para su uso en el proyecto.
+        
+        :param picking: Líneas de picking.
+        :return: Lista de líneas de picking preparadas.
+        """
         picking_lines = []
         for line in picking:
             if line.display_type == 'line_section':
@@ -339,5 +381,8 @@ class ProjectCreation(models.TransientModel):
 
     @api.depends('wizard_picking_lines.subtotal')
     def _compute_total_cost(self):
+        """
+        Calcula el costo total de los materiales basado en las líneas de picking.
+        """
         for plan in self:
             plan.plan_total_cost = sum(line.subtotal for line in plan.wizard_picking_lines)

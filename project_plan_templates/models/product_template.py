@@ -16,6 +16,9 @@ class ProductTemplate(models.Model):
 
     @api.constrains('project_plan_id')
     def _check_unique_project_plan(self):
+        """
+        Validación para no agregar plantillas ya utilizadas en varios productos
+        """
         for record in self:
             if record.project_plan_id:
                 duplicates = self.search([('project_plan_id', '=', record.project_plan_id.id), ('id', '!=', record.id)])
@@ -33,6 +36,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('project_plan_id')
     def _compute_service_price(self):
+        """Calculo para el costo del servicio"""
         if self.project_plan_id:
             total_cost = self.project_plan_id.labour_total_cost + self.project_plan_id.material_total_cost
             self.list_price = total_cost
