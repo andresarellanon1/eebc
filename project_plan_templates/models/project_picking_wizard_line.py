@@ -41,15 +41,29 @@ class ProjectPickingWizardLine(models.TransientModel):
 
     @api.depends('product_id')
     def _compute_standard_price(self):
+        """
+        Calcula el precio estándar del producto basado en el campo 'standard_price' del producto seleccionado.
+        Este método se ejecuta automáticamente cuando cambia el campo 'product_id'.
+        """
         for record in self:
+            # Asignar el precio estándar del producto al campo 'standard_price' del registro actual
             record.standard_price = record.product_id.standard_price
+
 
     @api.depends('quantity')
     def _compute_subtotal(self):
+        """
+        Calcula el subtotal multiplicando el precio estándar por la cantidad.
+        Este método se ejecuta automáticamente cuando cambia el campo 'quantity'.
+        Si la cantidad es negativa, el subtotal se establece en 0.00.
+        """
         for record in self:
             quantity = record.quantity
 
+            # Verificar si la cantidad es válida (no negativa)
             if quantity >= 0:
+                # Calcular el subtotal multiplicando el precio estándar por la cantidad
                 record.subtotal = record.standard_price * quantity
             else:
+                # Si la cantidad es negativa, establecer el subtotal en 0.00
                 record.subtotal = 0.00

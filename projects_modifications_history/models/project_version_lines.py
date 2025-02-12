@@ -59,30 +59,46 @@ class ProjecVersionLines(models.Model):
 
     @api.depends('modification_date', 'project_id')
     def _compute_version_number(self):
+        """
+        Calcula el número de versión basado en la fecha de modificación y el proyecto asociado.
+        El número de versión se genera como "V{número}", donde el número corresponde al índice de la versión en la lista de versiones del proyecto.
+        Si no hay proyecto asociado, el número de versión es "V0".
+        """
         for record in self:
             if record.project_id:
+                # Buscar todas las versiones del proyecto ordenadas por fecha de modificación
                 versions = self.env['project.version.lines'].search(
                     [('project_id', '=', record.project_id.id)],
                     order='modification_date'
                 )
+                # Asignar el número de versión basado en el índice de la versión actual
                 record.version_number = f"V{versions.ids.index(record.id) + 1}" if record.id else "V0"
             else:
+                # Si no hay proyecto asociado, asignar "V0"
                 record.version_number = "V0"
+
 
     @api.depends('project_id')
     def _compute_previous_version_lines(self):
+        """
+        Calcula y asigna las líneas de planificación y picking de la versión anterior del proyecto.
+        Si existe una versión anterior, se copian sus líneas de planificación y picking.
+        Si no existe una versión anterior, se limpian las líneas.
+        """
         for record in self:
-            record.project_name = record.project_id.name
+            record.project_name = record.project_id.name  # Asignar el nombre del proyecto
             _logger.warning(f"Buscando versiones previas para record ID {record.id}, project_id {record.project_id.id}")
 
+            # Buscar la versión anterior del proyecto
             previous_version = self.search([
                 ('project_id', '=', record.project_id.id),
                 ('id', '<', record.id)
             ], order="id desc", limit=1)
             _logger.warning(f"Resultado de búsqueda: {previous_version}")
-            
+
             if previous_version:
-                record.previous_version_plan_lines = [(5, 0, 0)]
+                # Copiar las líneas de planificación de la versión anterior
+                record.previous_version_plan_lines = [(5, 0, 0)]  # Limpiar líneas existentes
                 record.previous_version_plan_lines = [
                     (0, 0, {
                         'name': line.name,
@@ -97,8 +113,10 @@ class ProjecVersionLines(models.Model):
                     for line in previous_version.project_plan_lines
                 ]
 
-                aux_previous_project_plan_lines =  record.previous_version_plan_lines
+                # Guardar temporalmente las líneas de planificación copiadas
+                aux_previous_project_plan_lines = record.previous_version_plan_lines
 
+                # Limpiar y volver a asignar las líneas de planificación de la versión anterior
                 previous_version.project_plan_lines = [(5, 0, 0)]
                 previous_version.project_plan_lines = [
                     (0, 0, {
@@ -114,8 +132,10 @@ class ProjecVersionLines(models.Model):
                     for line in aux_previous_project_plan_lines
                 ]
 
-                aux_project_plan_lines =  record.project_plan_lines
+                # Guardar temporalmente las líneas de planificación actuales
+                aux_project_plan_lines = record.project_plan_lines
 
+                # Limpiar y volver a asignar las líneas de planificación actuales
                 record.project_plan_lines = [(5, 0, 0)]
                 record.project_plan_lines = [
                     (0, 0, {
@@ -131,9 +151,8 @@ class ProjecVersionLines(models.Model):
                     for line in aux_project_plan_lines
                 ]
 
-              
-                
-                record.previous_version_picking_lines = [(5, 0, 0)]
+                # Copiar las líneas de picking de la versión anterior
+                record.previous_version_picking_lines = [(5, 0, 0)]  # Limpiar líneas existentes
                 record.previous_version_picking_lines = [
                     (0, 0, {
                         'name': line.name,
@@ -148,7 +167,10 @@ class ProjecVersionLines(models.Model):
                     for line in previous_version.project_picking_lines
                 ]
 
-                aux_previous_project_pickings_lines =  record.previous_version_picking_lines
+                # Guardar temporalmente las líneas de picking copiadas
+                aux_previous_project_pickings_lines = record.previous_version_picking_lines
+
+                # Limpiar y volver a asignar las líneas de picking de la versión anterior
                 previous_version.project_picking_lines = [(5, 0, 0)]
                 previous_version.project_picking_lines = [
                     (0, 0, {
@@ -164,7 +186,10 @@ class ProjecVersionLines(models.Model):
                     for line in aux_previous_project_pickings_lines
                 ]
 
-                aux_project_picking_lines =  record.project_picking_lines
+                # Guardar temporalmente las líneas de picking actuales
+                aux_project_picking_lines = record.project_picking_lines
+
+                # Limpiar y volver a asignar las líneas de picking actuales
                 record.project_picking_lines = [(5, 0, 0)]
                 record.project_picking_lines = [
                     (0, 0, {
@@ -181,6 +206,7 @@ class ProjecVersionLines(models.Model):
                 ]
 
             else:
+                # Si no hay versión anterior, limpiar las líneas
                 _logger.warning('No tiene version previa')
                 record.previous_version_plan_lines = [(5, 0, 0)]
                 record.previous_version_picking_lines = [(5, 0, 0)]

@@ -11,7 +11,7 @@ class ProjectVersionWizard(models.TransientModel):
     modification_date = fields.Datetime(string='Fecha de modificación')
     modification_motive = fields.Html(string='Motivo de los cambios')
     modified_by = fields.Many2one('res.users', string='Modificado por', required=True)
-    plan_total_cost = fields.Float(string="Costo total")
+    plan_total_cost = fields.Float(string="Costo total", compute="_compute_total_cos", store=True)
 
     wizard_plan_lines = fields.One2many(
         'project.version.plan.wizard.line', 'wizard_id',
@@ -40,31 +40,49 @@ class ProjectVersionWizard(models.TransientModel):
     # Afterward, it creates a new entry in the version history with the current modification details.
     # Finally, it saves the updated project information and closes the wizard window.
 
-    # @api.depends('project_picking_lines.subtotal')
-    # def _compute_total_cost(self):
-    #     for plan in self:
-    #         plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)
+    @api.depends('project_picking_lines.subtotal')
+    def _compute_total_cost(self):
+        """
+        Calcula el costo total del proyecto basado en los subtotales de las líneas de picking.
+        Este método se ejecuta automáticamente cuando cambia el campo `subtotal` en las líneas de picking.
+        """
+        for plan in self:
+            plan.plan_total_cost = sum(line.subtotal for line in plan.project_picking_lines)  # Suma los subtotales de las líneas de picking
+
 
     @api.onchange('sale_order_id')
     def _compute_wizard_lines(self):
+        """
+        Actualiza las líneas de planificación y picking en el wizard basadas en la orden de venta asociada.
+        Este método se ejecuta automáticamente cuando cambia el campo `sale_order_id`.
+        """
         for record in self:
+            # Limpiar las líneas existentes en el wizard
             record.wizard_picking_lines = [(5, 0, 0)]
             record.wizard_plan_lines = [(5, 0, 0)]
 
+            # Preparar las líneas de planificación y picking basadas en la orden de venta
             plan_lines = self.prep_plan_lines(record.sale_order_id.project_plan_lines)
             picking_lines = self.prep_picking_lines(record.sale_order_id.project_picking_lines)
 
+            # Asignar las líneas preparadas al wizard
             record.wizard_plan_lines = plan_lines
             record.wizard_picking_lines = picking_lines
 
+
     def action_confirm_version_history(self):
+        """
+        Confirma la creación de una nueva versión del proyecto y actualiza el historial de versiones.
+        Este método se llama desde el wizard de confirmación de versiones.
+        """
         self.ensure_one()
 
+        # Obtener el proyecto asociado
         project = self._origin.project_id
         if not project:
             raise ValueError("No se encontró el proyecto asociado.")
 
-        # Actualizar la sale_order asociada al proyecto
+        # Actualizar la orden de venta asociada al proyecto
         project.actual_sale_order_id = self.sale_order_id.id
         project.sale_order_id = self.sale_order_id.id
 
@@ -89,8 +107,7 @@ class ProjectVersionWizard(models.TransientModel):
         # Validar que se haya proporcionado un motivo de modificación
         if not self.modification_motive:
             raise UserError('Hace falta agregar el motivo de la modificación.')
-        
-        
+
         # Crear tareas para el proyecto
         project.create_project_tasks(self.location_id.id, self.location_dest_id.id, self.scheduled_date)
         self.sale_order_id.project_lines_created()
@@ -115,7 +132,14 @@ class ProjectVersionWizard(models.TransientModel):
             'type': 'ir.actions.act_window_close'
         }
 
+
     def prep_plan_lines(self, plan):
+        """
+        Prepara las líneas de planificación para su uso en el wizard.
+        
+        :param plan: Líneas de planificación del proyecto.
+        :return: Lista de líneas de planificación preparadas.
+        """
         plan_lines = []
         for line in plan:
             if line.use_project_task:
@@ -123,7 +147,7 @@ class ProjectVersionWizard(models.TransientModel):
                     plan_lines.append((0, 0, {
                         'name': line.name,
                         'sequence': line.sequence,
-                        'display_type':  line.display_type or 'line_section',
+                        'display_type': line.display_type or 'line_section',
                         'description': False,
                         'use_project_task': True,
                         'planned_date_begin': False,
@@ -153,7 +177,14 @@ class ProjectVersionWizard(models.TransientModel):
                     }))
         return plan_lines
 
+
     def prep_picking_lines(self, picking):
+        """
+        Prepara las líneas de picking para su uso en el wizard.
+        
+        :param picking: Líneas de picking del proyecto.
+        :return: Lista de líneas de picking preparadas.
+        """
         picking_lines = []
         for line in picking:
             if line.display_type == 'line_section':

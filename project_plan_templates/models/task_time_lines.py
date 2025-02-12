@@ -30,29 +30,49 @@ class TaskTimeLines(models.Model):
 
     @api.depends('work_shift')
     def _compute_estimated_hours(self):
+        """
+        Calcula el tiempo estimado en horas multiplicando el número de turnos (`work_shift`) por 8 horas por turno.
+        Este método se ejecuta automáticamente cuando cambia el campo `work_shift`.
+        """
         for record in self:
-            record.estimated_time = record.work_shift * 8
-        
+            record.estimated_time = record.work_shift * 8  # 8 horas por turno
+
+
+    # Método comentado (no se usa actualmente)
     # def _product_domain(self):
+    #     """
+    #     Define un dominio para filtrar productos que son servicios, están disponibles para venta y tienen un nombre específico.
+    #     Este método no está en uso actualmente.
+    #     """
     #     for record in self:
     #         products = self.env['product.template'].search([
-    #             ('detailed_type', '=', 'service'), 
-    #             ('sale_ok', '=', True),
-    #             ('name', '=', 'CUADRILLA INSTALADORA')
+    #             ('detailed_type', '=', 'service'),  # Solo servicios
+    #             ('sale_ok', '=', True),  # Disponibles para venta
+    #             ('name', '=', 'CUADRILLA INSTALADORA')  # Nombre específico
     #         ])
+
 
     @api.onchange('product_id')
     def _onchange_product(self):
+        """
+        Actualiza el precio unitario (`unit_price`) con el precio estándar del producto seleccionado.
+        Este método se ejecuta automáticamente cuando cambia el campo `product_id`.
+        """
         for record in self:
-            record.unit_price = record.product_id.standard_price
+            record.unit_price = record.product_id.standard_price  # Asignar el precio estándar del producto
 
 
     @api.depends('work_shift')
     def _compute_subtotal(self):
+        """
+        Calcula el subtotal multiplicando el precio unitario (`unit_price`) por el número de turnos (`work_shift`).
+        Este método se ejecuta automáticamente cuando cambia el campo `work_shift`.
+        Si el número de turnos es negativo, el subtotal se establece en 0.00.
+        """
         for record in self:
             quantity = record.work_shift
 
             if quantity >= 0:
-                record.price_subtotal = record.unit_price * quantity
+                record.price_subtotal = record.unit_price * quantity  # Calcular el subtotal
             else:
-                record.subtotal = 0.00
+                record.price_subtotal = 0.00  # Si la cantidad es negativa, el subtotal es 0.00

@@ -9,5 +9,9 @@ class AccountAnalyticLine(models.Model):
 
     @api.depends('work_shift')
     def _compute_estimated_time(self):
+        """
+        Calcula las jornadas de la mano de obra a horas de esta manera se puede utilizar
+        la mano de obra de la predeterminada de odoo
+        """
         for record in self:
             record.estimated_time = record.work_shift * 8
