@@ -1,6 +1,8 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class ProjectPlanPickings(models.Model):
     _name = 'project.plan.pickings'
@@ -153,26 +155,35 @@ class ProjectPlanPickingLine(models.Model):
     @api.onchange('quantity')
     def _onchange_quantity(self):
         """
-        Actualiza el subtotal cuando cambia la cantidad.
-        Este método se ejecuta automáticamente cuando cambia el campo 'quantity'.
+        Cuando cambia la cantidad en la línea de picking, 
+        actualiza el precio unitario de la línea en la orden de venta.
         """
+        _logger.warning("Entrando a _onchange_quantity")
 
-        fill = False 
+        fill = False
         order_lines = self.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
 
         for line in order_lines:
+            _logger.warning("Validando línea de orden: %s", line.name)
+
             for material in self:
+                _logger.warning("Validando material: %s", material.name)
 
-                    if material.display_type == 'line_section':
+                if material.display_type == 'line_section':
+                    _logger.warning("Entró al IF display_type == 'line_section'")
 
-                        name = line.name + ' * ' + str(line.product_uom_qty) 
+                    name = line.name + ' * ' + str(line.product_uom_qty) 
 
-                        if name == material.name:
-                            fill = True
-                        else:
-                            fill = False
+                    _logger.warning("Nombre generado: %s | Nombre en material: %s", name, material.name)
+                    
+                    if name == material.name:
+                        fill = True
+                        _logger.warning("Coincidencia encontrada, activando fill")
+                    else:
+                        fill = False
+                        _logger.warning("No coincide, fill en False")
 
-                    if fill and material.for_modification:
-                            line.price_unit += material.subtotal if material.subtotal else 0
-                  
-
+                if fill and material.for_modification:
+                    new_price = line.price_unit + (material.subtotal if material.subtotal else 0)
+                    _logger.warning("Modificando precio: %s -> %s", line.price_unit, new_price)
+                    line.price_unit = new_price
