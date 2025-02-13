@@ -207,7 +207,8 @@ class ProjectPlan(models.Model):
         Si no existe, crea una nueva línea.
         """
         for plan in self:
-            plan.project_plan_lines = [(5, 0, 0)]  # Limpia las líneas existentes
+            if self.env.context.get('skip_ensure_plan_line_exists'):
+                return
 
             existing_line = self.env['project.plan.line'].search([
                 ('project_plan_id', '=', plan.id),
@@ -215,12 +216,14 @@ class ProjectPlan(models.Model):
             ], limit=1)
 
             if not existing_line:
-                plan.project_plan_lines = [(0, 0, {
-                    'name': plan.name,
-                    'description': plan.description,
-                    'project_plan_pickings': plan.project_plan_pickings.id,
-                    'task_timesheet_id': plan.task_timesheet_id.id,
-                })]  # Crea una nueva línea si no existe
+                plan.with_context(skip_ensure_plan_line_exists=True).write({
+                    'project_plan_lines': [(0, 0, {
+                        'name': plan.name,
+                        'description': plan.description,
+                        'project_plan_pickings': plan.project_plan_pickings.id,
+                        'task_timesheet_id': plan.task_timesheet_id.id,
+                    })]
+            })
 
 
     def create(self, vals):
@@ -237,5 +240,5 @@ class ProjectPlan(models.Model):
         Sobrescribe el método write para verificar y crear la línea si no existe.
         """
         result = super(ProjectPlan, self).write(vals)
-        self.ensure_plan_line_exists()  # Asegura que exista la línea
+        self.with_context(skip_ensure_plan_line_exists=True).ensure_plan_line_exists()  # Usa contexto para evitar bucle
         return result
