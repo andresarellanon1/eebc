@@ -148,3 +148,30 @@ class ProjectPlanPickingLine(models.Model):
                     record.subtotal = record.last_price * quantity  # Usa el último precio si no hay precio estándar
             else:
                 record.subtotal = 0.00  # Si la cantidad es negativa, el subtotal es 0.00
+
+    @api.onchange('quantity')
+    def _onchange_quantity(self):
+        """
+        Actualiza el subtotal cuando cambia la cantidad.
+        Este método se ejecuta automáticamente cuando cambia el campo 'quantity'.
+        """
+
+        fill = False 
+        order_lines = self.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
+
+        for line in order_lines:
+            for material in self:
+
+                    if material.display_type == 'line_section':
+
+                        name = line.name + ' * ' + str(line.product_uom_qty) 
+
+                        if name == material.name:
+                            fill = True
+                        else:
+                            fill = False
+
+                    if fill and material.for_modification:
+                            line.price_unit += material.subtotal if material.subtotal else 0
+                  
+
