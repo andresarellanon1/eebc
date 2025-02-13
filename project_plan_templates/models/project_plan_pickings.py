@@ -140,6 +140,9 @@ class ProjectPlanPickingLine(models.Model):
         Calcula el subtotal multiplicando el precio estándar o el último precio por la cantidad.
         Este método se ejecuta automáticamente cuando cambia el campo 'quantity'.
         Si la cantidad es negativa, el subtotal se establece en 0.00.
+
+        Ademas actualiza el precio unitario de la línea en la orden de venta.
+        deacuerdo a los pickings agregados que no pertenezcan a la plantilla.
         """
         for record in self:
             quantity = record.quantity
@@ -151,14 +154,6 @@ class ProjectPlanPickingLine(models.Model):
                     record.subtotal = record.last_price * quantity  # Usa el último precio si no hay precio estándar
             else:
                 record.subtotal = 0.00  # Si la cantidad es negativa, el subtotal es 0.00
-
-    @api.onchange('quantity')
-    def _onchange_quantity(self):
-        """
-        Cuando cambia la cantidad en la línea de picking, 
-        actualiza el precio unitario de la línea en la orden de venta.
-        """
-        _logger.warning("Entrando a _onchange_quantity")
 
         fill = False
         picking_lines = self.sale_order_id.project_picking_lines
@@ -188,3 +183,7 @@ class ProjectPlanPickingLine(models.Model):
                     new_price = line.price_unit + (material.subtotal if material.subtotal else 0)
                     _logger.warning("Modificando precio: %s -> %s", line.price_unit, new_price)
                     line.precio_prueba = new_price
+                    line.price_unit = new_price
+
+        
+        
