@@ -28,7 +28,6 @@
             <xpath expr="//tree/field[@name='product_template_id']" position="replace">
                 <field name="products_project_domain" column_invisible="1"/>
                 <field name="last_service_price" column_invisible="1"/>
-                <field name="precio_prueba" />
                 <field name="is_modificated" column_invisible="1"/>
                 <field name="product_template_id" string="Product" readonly="not product_updatable" required="not display_type" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom':product_uom,'company_id': parent.company_id,'default_list_price': price_unit,'default_description_sale': name}" options="{'no_open': True,}" domain="[('id', 'in', products_project_domain)]" widget="sol_product_many2one" placeholder="Type to find a product..."/>
             </xpath>
