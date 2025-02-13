@@ -160,8 +160,8 @@ class ProjectPlanPickingLine(models.Model):
         _logger.warning("Entrando a _onchange_quantity")
 
         fill = False
-        order_lines = self.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
-        _logger.warning("Sale_order_id: %s", self.sale_order_id)
+        order_lines = self.sale_order_id.order_line
+
         for line in order_lines:
             _logger.warning("Validando línea de orden: %s", line.name)
 
