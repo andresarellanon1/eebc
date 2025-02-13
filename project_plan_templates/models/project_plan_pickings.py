@@ -160,12 +160,13 @@ class ProjectPlanPickingLine(models.Model):
         _logger.warning("Entrando a _onchange_quantity")
 
         fill = False
+        picking_lines = self.sale_order_id.project_picking_lines
         order_lines = self.sale_order_id.order_line
 
         for line in order_lines:
             _logger.warning("Validando línea de orden: %s", line.name)
 
-            for material in self:
+            for material in picking_lines:
                 _logger.warning("Validando material: %s", material.name)
 
                 if material.display_type == 'line_section':
