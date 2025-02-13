@@ -162,7 +162,7 @@ class ProjectPlanPickingLine(models.Model):
 
         fill = False
         order_lines = self.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
-
+        _logger.warning("Sale_order_id: %s", self.sale_order_id.id)
         for line in order_lines:
             _logger.warning("Validando línea de orden: %s", line.name)
 
