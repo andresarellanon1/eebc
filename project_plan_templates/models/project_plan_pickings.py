@@ -187,4 +187,4 @@ class ProjectPlanPickingLine(models.Model):
                 if fill and material.for_modification:
                     new_price = line.price_unit + (material.subtotal if material.subtotal else 0)
                     _logger.warning("Modificando precio: %s -> %s", line.price_unit, new_price)
-                    line.price_unit = new_price
+                    line.precio_prueba = new_price
