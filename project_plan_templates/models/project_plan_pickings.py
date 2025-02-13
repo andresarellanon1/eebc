@@ -81,6 +81,7 @@ class ProjectPlanPickingLine(models.Model):
     for_create = fields.Boolean(default=True)
     for_modification = fields.Boolean(default=True)
     for_newlines = fields.Boolean(default=True)
+    not_modificable = fields.Boolean(default=False)
 
     @api.onchange('used_quantity')
     def _check_quantity(self):
