@@ -44,3 +44,4 @@ class ProjectLines(models.Model):
     for_picking = fields.Boolean(default=True)
     service_qty = fields.Float(string="Cantidad")
     for_newlines = fields.Boolean(default=True)
+    not_modificable = fields.Boolean(default=False)

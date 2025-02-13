@@ -316,6 +316,7 @@ class SaleOrder(models.Model):
             'unit_price': line.unit_price,
             'price_subtotal': line.price_subtotal,
             'for_modification': False,
+            'not_modificable': line.not_modificable
         }) for line in lines]
 
     def _prepare_plan_lines(self, lines):
@@ -338,7 +339,8 @@ class SaleOrder(models.Model):
             'for_create': line.for_create,
             'for_modification': False,
             'for_picking': line.for_picking,
-            'for_newlines': line.for_newlines
+            'for_newlines': line.for_newlines,
+            'not_modificable': line.not_modificable
         }) for line in lines]
 
     def _prepare_picking_lines(self, lines):
@@ -362,7 +364,8 @@ class SaleOrder(models.Model):
             'for_create': line.for_create,
             'for_modification': False,
             'last_price': line.last_price,
-            'for_newlines': line.for_newlines
+            'for_newlines': line.for_newlines,
+            'not_modificable': line.not_modificable
         }) for line in lines]
 
     def prep_task_line_section_line(self, line):
@@ -380,7 +383,8 @@ class SaleOrder(models.Model):
             'estimated_time':  False,
             'work_shift':  False,
             'unit_price':  False,
-            'price_subtotal': False
+            'price_subtotal': False,
+            'not_modificable': False
         })
     
     def prep_picking_section_line(self, line, for_create, for_task):
@@ -405,7 +409,8 @@ class SaleOrder(models.Model):
             'subtotal': False,
             'for_create': for_create,
             'for_modification': False,
-            'last_price': False
+            'last_price': False,
+            'not_modificable': False
         })
     
     def prep_plan_section_line(self, line, for_create, for_task, is_modificated):
@@ -432,6 +437,7 @@ class SaleOrder(models.Model):
             'for_modification': True,
             'service_qty': 0,
             'for_picking': True,
+            'not_modificable': False
         })
 
     def prep_plan_lines(self, line):
@@ -456,7 +462,8 @@ class SaleOrder(models.Model):
                 'for_create': True,
                 'for_modification': plan.for_modification,
                 'service_qty': line.product_uom_qty,
-                'for_picking': True
+                'for_picking': True,
+                'not_modificable': plan.not_modificable
             }))
         return plan_lines
 
@@ -482,7 +489,8 @@ class SaleOrder(models.Model):
                 'display_type': False,
                 'for_create': True,
                 'for_modification': False,
-                'last_price': picking.standard_price
+                'last_price': picking.standard_price,
+                'not_modificable': picking.not_modificable
             }))
         return picking_lines
 
@@ -563,10 +571,16 @@ class SaleOrder(models.Model):
         """
         Marca las líneas de planificación y picking como no nuevas después de su creación.
         """
+        for sale in self.order_line:
+            sale.not_modificable = True
         for sale in self.project_plan_lines:
             sale.for_newlines = False
+            sale.not_modificable = True
         for sale in self.project_picking_lines:
             sale.for_newlines = False
+            sale.not_modificable = True
+        for sale in sel.task_time_lines:
+            sale.not_modificable = True
         
     def action_open_report(self):
         """
