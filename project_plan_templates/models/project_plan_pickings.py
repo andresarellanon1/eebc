@@ -1,6 +1,8 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class ProjectPlanPickings(models.Model):
     _name = 'project.plan.pickings'
@@ -138,6 +140,9 @@ class ProjectPlanPickingLine(models.Model):
         Calcula el subtotal multiplicando el precio estándar o el último precio por la cantidad.
         Este método se ejecuta automáticamente cuando cambia el campo 'quantity'.
         Si la cantidad es negativa, el subtotal se establece en 0.00.
+
+        Ademas actualiza el precio unitario de la línea en la orden de venta.
+        deacuerdo a los pickings agregados que no pertenezcan a la plantilla.
         """
         for record in self:
             quantity = record.quantity
@@ -149,3 +154,35 @@ class ProjectPlanPickingLine(models.Model):
                     record.subtotal = record.last_price * quantity  # Usa el último precio si no hay precio estándar
             else:
                 record.subtotal = 0.00  # Si la cantidad es negativa, el subtotal es 0.00
+
+        fill = False
+        picking_lines = self.sale_order_id.project_picking_lines
+        order_lines = self.sale_order_id.order_line
+
+        for line in order_lines:
+            _logger.warning("Validando línea de orden: %s", line.name)
+
+            for material in picking_lines:
+                _logger.warning("Validando material: %s", material.name)
+
+                if material.display_type == 'line_section':
+                    _logger.warning("Entró al IF display_type == 'line_section'")
+
+                    name = line.name + ' * ' + str(line.product_uom_qty) 
+
+                    _logger.warning("Nombre generado: %s | Nombre en material: %s", name, material.name)
+                    
+                    if name == material.name:
+                        fill = True
+                        _logger.warning("Coincidencia encontrada, activando fill")
+                    else:
+                        fill = False
+                        _logger.warning("No coincide, fill en False")
+
+                if fill and material.for_modification:
+                    new_price = line.price_unit + (material.subtotal if material.subtotal else 0)
+                    _logger.warning("Modificando precio: %s -> %s", line.price_unit, new_price)
+                    line.write({'price_unit': new_price})
+
+        
+        
