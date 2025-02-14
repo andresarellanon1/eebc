@@ -38,7 +38,6 @@ class TaskTimeLines(models.Model):
         for record in self:
             record.estimated_time = record.work_shift * 8  # 8 horas por turno
 
-
     def _product_domain(self):
         """
         Define un dominio para filtrar productos que son mano de obra, están disponibles para venta.
@@ -50,6 +49,8 @@ class TaskTimeLines(models.Model):
                 ('is_labour', '=', True)  
             ])
 
+            record.product_domain = [(6, 0, products.ids)]
+            # logger.warning(f"[Productos encontrados: {products}]")
 
     @api.onchange('product_id')
     def _onchange_product(self):
