@@ -28,10 +28,19 @@ class SaleOrderLine(models.Model):
                 products = self.env['product.template'].search([
                     ('detailed_type', '=', 'service'),  # Solo servicios
                     ('project_plan_id', '!=', False),  # Con plantilla de planificación
-                    ('is_extra', '=', True), #Si es un material extra
                     ('sale_ok', '=', True),  # Disponibles para venta
                 ])
-                record.products_project_domain = [(6, 0, products.ids)]  # Asignar el dominio de productos
+
+                # Buscar productos adicionales que tengan is_extra = True
+                extra_products = self.env['product.template'].search([
+                    ('is_extra', '=', True),  # Productos con is_extra True
+                ])
+
+                # Combinar ambos conjuntos de productos, sin repetir elementos
+                combined_products = products | extra_products
+
+                # Asignar el dominio de productos combinado
+                record.products_project_domain = [(6, 0, combined_products.ids)]  # Asignar el dominio de productos
             else:
                 # Buscar productos que no son servicios y están disponibles para venta
                 products = self.env['product.template'].search([

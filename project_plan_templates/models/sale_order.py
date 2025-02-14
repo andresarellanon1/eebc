@@ -175,22 +175,12 @@ class SaleOrder(models.Model):
                 """
                 Elimina las lineas que ya han sido modificadas para reemplazarlas
                 """
-                # plannig_lines_to_remove = sale.project_plan_lines.filtered(lambda line: not line.for_modification)
-                # plannig_lines_to_remove.unlink()
-                # time_lines_to_remove = sale.task_time_lines.filtered(lambda line: not line.for_modification)
-                # time_lines_to_remove.unlink()
-                # picking_lines_to_remove = sale.project_picking_lines.filtered(lambda line: not line.for_modification)
-                # picking_lines_to_remove.unlink() 
-
-                sale.project_plan_lines.unlink()
-                sale.project_picking_lines.unlink()
-                sale.task_time_lines.unlink()
 
                 plan_pickings = []
                 existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
                 plan_lines = []
                 for line in sale.order_line:
-                    # if line.for_modification:
+                    if line.for_modification:
                         if line.display_type == 'line_section':
                             plan_lines.append(self.prep_plan_section_line(line, True, False, True))
                         else:
@@ -247,7 +237,7 @@ class SaleOrder(models.Model):
                         'product_id': line.product_id.id,
                         'display_type': line.display_type,
                         'name': line.name,
-                        'product_uom_qty': 0,
+                        'product_uom_qty': line.product_uom_qty,
                         'price_unit': line.last_service_price,
                         'discount': line.discount,
                         'for_modification': False,
@@ -307,6 +297,7 @@ class SaleOrder(models.Model):
             'planned_date_end': line.planned_date_end,
             'project_plan_pickings': line.project_plan_pickings.id if line.project_plan_pickings else False,
             'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
+            'service_qty': line.service_qty,
             'for_create': line.for_create,
             'for_modification': False,
             'for_picking': line.for_picking,
