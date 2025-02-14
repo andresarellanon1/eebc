@@ -50,7 +50,7 @@ class TaskTimeLines(models.Model):
             ])
 
             record.product_domain = [(6, 0, products.ids)]
-            # logger.warning(f"[Productos encontrados: {products}]")
+            logger.warning(f"[Productos encontrados: {products.ids}]")
 
     @api.onchange('product_id')
     def _onchange_product(self):
