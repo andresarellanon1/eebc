@@ -155,7 +155,6 @@ class ProjectPlanPickingLine(models.Model):
             else:
                 record.subtotal = 0.00  # Si la cantidad es negativa, el subtotal es 0.00
 
-        fill = False
         picking_lines = self.sale_order_id.project_picking_lines
         order_lines = self.sale_order_id.order_line
 
@@ -166,8 +165,9 @@ class ProjectPlanPickingLine(models.Model):
                 for material in picking_lines:
 
                     if material.for_modification:
-                        new_price = line.price_unit + (material.subtotal if material.subtotal else 0)
-                        line.write({'price_unit': new_price})
-
+                        product = line.product_id
+                        new_price = product.list_price + (material.subtotal if material.subtotal else 0)
+                        product.write({'list_price': new_price})
+                        _logger.warning('Precio de extras: %s', product.list_price)
         
         
