@@ -579,7 +579,7 @@ class SaleOrder(models.Model):
         for sale in self.project_picking_lines:
             sale.for_newlines = False
             sale.not_modificable = True
-        for sale in sel.task_time_lines:
+        for sale in self.task_time_lines:
             sale.not_modificable = True
         
     def action_open_report(self):
