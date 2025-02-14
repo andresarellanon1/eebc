@@ -28,6 +28,7 @@ class SaleOrderLine(models.Model):
                 products = self.env['product.template'].search([
                     ('detailed_type', '=', 'service'),  # Solo servicios
                     ('project_plan_id', '!=', False),  # Con plantilla de planificación
+                    ('is_extra', '=', True), #Si es un material extra
                     ('sale_ok', '=', True),  # Disponibles para venta
                 ])
                 record.products_project_domain = [(6, 0, products.ids)]  # Asignar el dominio de productos
