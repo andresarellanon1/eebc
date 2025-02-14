@@ -31,9 +31,9 @@
                                     required="date_start or date"/>
                                 <field name="date" invisible="1" required="date_start"/>
                             </group>
-                            <group>
-                                <field name="scheduled_date"/>
+                            <group>                                
                                 <field name="contact_id"/>
+                                <field name="scheduled_date"/>
                                 <field name="picking_type_id" readonly="1"/>
                                 <field name="location_id"/>
                                 <field name="location_dest_id"/>
