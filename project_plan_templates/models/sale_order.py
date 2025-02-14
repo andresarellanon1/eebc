@@ -237,7 +237,7 @@ class SaleOrder(models.Model):
                         'product_id': line.product_id.id,
                         'display_type': line.display_type,
                         'name': line.name,
-                        'product_uom_qty': 0,
+                        'product_uom_qty': line.product_uom_qty,
                         'price_unit': line.last_service_price,
                         'discount': line.discount,
                         'for_modification': False,
