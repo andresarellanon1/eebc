@@ -161,7 +161,7 @@ class ProjectPlanPickingLine(models.Model):
 
         for line in order_lines:
             
-            if line.is_extra:
+            if line.product_template_id.is_extra:
 
                 for material in picking_lines:
 
