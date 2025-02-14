@@ -297,6 +297,7 @@ class SaleOrder(models.Model):
             'planned_date_end': line.planned_date_end,
             'project_plan_pickings': line.project_plan_pickings.id if line.project_plan_pickings else False,
             'task_timesheet_id': line.task_timesheet_id.id if line.task_timesheet_id else False,
+            'service_qty': line.service_qty,
             'for_create': line.for_create,
             'for_modification': False,
             'for_picking': line.for_picking,
@@ -396,7 +397,7 @@ class SaleOrder(models.Model):
             'task_timesheet_id': False,
             'for_create': for_create,
             'for_modification': True,
-            'service_qty': line.service_qty,
+            'service_qty': 0,
             'for_picking': True,
             'not_modificable': False
         })
