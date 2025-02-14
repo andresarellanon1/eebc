@@ -32,6 +32,9 @@
                 <field name="not_modificable" column_invisible="1"/>
                 <field name="product_template_id" string="Product" readonly="not product_updatable" required="not display_type" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom':product_uom,'company_id': parent.company_id,'default_list_price': price_unit,'default_description_sale': name}" options="{'no_open': True,}" domain="[('id', 'in', products_project_domain)]" widget="sol_product_many2one" placeholder="Type to find a product..."/>
             </xpath>
+            <xpath expr="//tree/field[@name='price_unit']" position="replace">
+                <field name="price_unit" attrs="{'readonly': [('for_modification', '=', 'False')]}"/>
+            </xpath>
             <xpath expr="//page[@name='other_information']" position="after">
                 <page name="project_tasks" string="Planeación" invisible="state in ('draft') or is_project != True">
                     <field name="project_plan_lines" widget="section_and_note_one2many" mode="tree,kanban" nolabel="1" readonly="is_editable == False">
