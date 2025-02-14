@@ -396,7 +396,7 @@ class SaleOrder(models.Model):
             'task_timesheet_id': False,
             'for_create': for_create,
             'for_modification': True,
-            'service_qty': 0,
+            'service_qty': line.service_qty,
             'for_picking': True,
             'not_modificable': False
         })
