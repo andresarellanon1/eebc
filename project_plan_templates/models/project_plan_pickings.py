@@ -158,12 +158,11 @@ class ProjectPlanPickingLine(models.Model):
         picking_lines = self.sale_order_id.project_picking_lines
         order_lines = self.sale_order_id.order_line
 
-        new_price = 0
-
         for line in order_lines:
             
             if line.product_template_id.is_extra:
-
+                product = line.product_id
+                product.list_price = 0
                 for material in picking_lines:
 
                     if material.for_modification:
