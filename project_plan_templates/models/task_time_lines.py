@@ -27,6 +27,7 @@ class TaskTimeLines(models.Model):
         ]
     )
     for_modification = fields.Boolean(default=True)
+    not_modificable = fields.Boolean(default=False)
 
     @api.depends('work_shift')
     def _compute_estimated_hours(self):
