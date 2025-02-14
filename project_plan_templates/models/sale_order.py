@@ -175,22 +175,12 @@ class SaleOrder(models.Model):
                 """
                 Elimina las lineas que ya han sido modificadas para reemplazarlas
                 """
-                # plannig_lines_to_remove = sale.project_plan_lines.filtered(lambda line: not line.for_modification)
-                # plannig_lines_to_remove.unlink()
-                # time_lines_to_remove = sale.task_time_lines.filtered(lambda line: not line.for_modification)
-                # time_lines_to_remove.unlink()
-                # picking_lines_to_remove = sale.project_picking_lines.filtered(lambda line: not line.for_modification)
-                # picking_lines_to_remove.unlink() 
-
-                sale.project_plan_lines.unlink()
-                sale.project_picking_lines.unlink()
-                sale.task_time_lines.unlink()
 
                 plan_pickings = []
                 existing_lines = {line.name: line.sequence for line in sale.project_plan_lines}
                 plan_lines = []
                 for line in sale.order_line:
-                    # if line.for_modification:
+                    if line.for_modification:
                         if line.display_type == 'line_section':
                             plan_lines.append(self.prep_plan_section_line(line, True, False, True))
                         else:
