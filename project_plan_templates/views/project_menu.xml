@@ -14,7 +14,7 @@
         </record>
 
         <record id="plan_timesheet_templates_action" model="ir.actions.act_window">
-            <field name="name">Hojas de horas</field> 
+            <field name="name">Mano de obra</field> 
             <field name="res_model">task.timesheet</field> 
             <field name="view_mode">tree,form</field> 
         </record>
