@@ -159,7 +159,7 @@ class ProjectProject(models.Model):
 
     def create_project_tasks(self, location_id, location_dest_id, scheduled_date):
         """
-        Crea nuevas tareas con sus movimientos de inventario y hojas de horas al modificar un proyecto.
+        Crea nuevas tareas con sus movimientos de inventario y Mano de obra al modificar un proyecto.
         Este método se llama desde el wizard de modificación de proyectos.
         
         :param location_id: Ubicación de origen para los movimientos de inventario.

@@ -49,7 +49,7 @@
 
         <menuitem 
             id="timesheet_option2"
-            name="Hojas de horas"
+            name="Mano de obra"
             action="plan_timesheet_templates_action" 
             parent="project_menu_root" 
             sequence="20" 
@@ -73,7 +73,7 @@
 
         <menuitem 
             id="timesheet_option"
-            name="Hojas de horas"
+            name="Mano de obra"
             action="plan_timesheet_templates_action" 
             parent="menu_project_config" 
             sequence="20" 
