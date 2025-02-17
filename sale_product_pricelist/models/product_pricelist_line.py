@@ -26,6 +26,10 @@ class ProductPricelistLine(models.Model):
         help='Indica si esta línea de lista de precios no está siendo utilizada en ninguna línea de pedido de venta.'
     )
 
+    def imprimir_registros(self):
+        for pricelist in self:
+            logger.warning('Pricelist con ID: %s y Nombre: %s', pricelist.id, pricelist.name)
+
     @api.depends()
     def _compute_is_orphan(self):
         """

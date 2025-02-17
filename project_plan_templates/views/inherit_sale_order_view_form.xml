@@ -38,6 +38,7 @@
             </xpath>
             <xpath expr="//tree/field[@name='name']" position="attributes">
                 <attribute name="readonly">not for_modification</attribute>
+                <attribute name="force_save">True</attribute>
             </xpath>
             <xpath expr="//tree/field[@name='price_unit']" position="attributes">
                 <attribute name="readonly">not for_modification</attribute>
