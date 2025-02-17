@@ -257,7 +257,7 @@ class SaleOrder(models.Model):
                     _logger.warning(f"Se copiaron {len(previous_order.order_line)} líneas de orden al nuevo pedido")
 
                     for plan_line in sale.order_line:
-                        _logger.warning(f"Plan Line: {plan_line} | Nombre: {plan_line.name} | price_unit: {plan_line.price_unit} | last_service_price: {plan_line.last_service_price}")
+                        _logger.warning(f"Plan Line: {plan_line} | Nombre: {plan_line.name} | price_unit: {plan_line.price_unit} | last_service_price: {plan_line.last_service_price} | Pricelist_id: {plan_line.product_pricelist_id}")
                 
     
     def _prepare_task_lines(self, lines):
