@@ -39,8 +39,19 @@ class ProductTemplate(models.Model):
 
         # 1. Obtener y eliminar todas las líneas de precios en una sola operación
         all_pricelist_lines = self.mapped("product_pricelist_line_ids")
+
         if all_pricelist_lines:
-            all_pricelist_lines.unlink()
+            # Buscar si hay órdenes de venta que usan estas líneas de precios
+            sale_order_lines_using_pricelist = self.env["sale.order.line"].search([
+                ("product_pricelist_id", "in", all_pricelist_lines.ids)
+            ])
+            
+            if sale_order_lines_using_pricelist:
+                logger.warning("No se pueden eliminar líneas de precios en uso por órdenes de venta: %s", sale_order_lines_using_pricelist)
+            else:
+                all_pricelist_lines.unlink()
+                if all_pricelist_lines:
+                    all_pricelist_lines.unlink()
 
         # 2. Preparar un diccionario para almacenar las líneas de precios por producto
         pricelist_lines_by_product = defaultdict(list)
