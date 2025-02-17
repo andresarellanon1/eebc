@@ -168,8 +168,8 @@ class ProjectPlanPickingLine(models.Model):
                     if material.for_modification:
                         product = line.product_id
                         new_price = product.list_price + (material.subtotal if material.subtotal else 0)
-                        # product.write({'list_price': new_price})
-                        # product.write({'standard_price': new_price})
-                        # _logger.warning('Precio de extras: %s', product.list_price)
+                        product.write({'list_price': new_price})
+                        product.write({'standard_price': new_price})
+                        _logger.warning('Precio de extras: %s', product.list_price)
         
         
