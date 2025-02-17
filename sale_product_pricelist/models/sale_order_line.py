@@ -14,6 +14,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange("product_pricelist_id")
     def product_pricelist_id_change(self):
+        logger.warning('El pricelist es: %s', self.product_pricelist_id.name)
         for line in self:
             line._compute_pricelist_price_unit()
 
