@@ -11,6 +11,7 @@
 
             <xpath expr="//field[@name='project_plan_id']" position="after">
                 <field name="is_extra"/> 
+                <field name="is_labour"/>
             </xpath>
 
             <xpath expr="//field[@name='list_price']" position="attributes">

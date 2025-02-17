@@ -6,7 +6,9 @@ from odoo.exceptions import ValidationError
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    is_extra = fields.Boolean(string="Material extra", defaut=False)
+    is_extra = fields.Boolean(string="Material extra", default=False)
+
+    is_labour = fields.Boolean(string="Es mano de obra", default=False)
     
     project_plan_id = fields.Many2one(
         'project.plan',

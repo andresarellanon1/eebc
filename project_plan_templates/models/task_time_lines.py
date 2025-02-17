@@ -1,4 +1,6 @@
 from odoo import fields, models, api
+import logging
+logger = logging.getLogger(__name__)
 
 class TaskTimeLines(models.Model):
 
@@ -10,7 +12,7 @@ class TaskTimeLines(models.Model):
     project_plan_id = fields.Many2one('project.plan')
 
     product_id = fields.Many2one('product.template', string="Mano de obra")
-    product_domain = fields.Many2many('product.template', store=True)
+    product_domain = fields.Many2many('product.template', compute="_product_domain", store=True)
 
     description = fields.Char(string="Descripción")
     estimated_time = fields.Float(string="Horas estimadas", compute="_compute_estimated_hours", store=True)
@@ -38,20 +40,19 @@ class TaskTimeLines(models.Model):
         for record in self:
             record.estimated_time = record.work_shift * 8  # 8 horas por turno
 
+    def _product_domain(self):
+        """
+        Define un dominio para filtrar productos que son mano de obra, están disponibles para venta.
+        """
+        for record in self:
+            products = self.env['product.template'].search([
+                ('detailed_type', '=', 'service'),  # Solo servicios
+                ('sale_ok', '=', True),  # Disponibles para venta
+                ('is_labour', '=', True)  
+            ])
 
-    # Método comentado (no se usa actualmente)
-    # def _product_domain(self):
-    #     """
-    #     Define un dominio para filtrar productos que son servicios, están disponibles para venta y tienen un nombre específico.
-    #     Este método no está en uso actualmente.
-    #     """
-    #     for record in self:
-    #         products = self.env['product.template'].search([
-    #             ('detailed_type', '=', 'service'),  # Solo servicios
-    #             ('sale_ok', '=', True),  # Disponibles para venta
-    #             ('name', '=', 'CUADRILLA INSTALADORA')  # Nombre específico
-    #         ])
-
+            record.product_domain = [(6, 0, products.ids)]
+            logger.warning(f"[Productos encontrados: {products.ids}]")
 
     @api.onchange('product_id')
     def _onchange_product(self):
