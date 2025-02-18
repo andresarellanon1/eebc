@@ -223,13 +223,15 @@ class SaleOrder(models.Model):
                 sale.partner_id = sale.project_id.client_id  
 
                 # Limpiar líneas previas para evitar duplicados
-                sale.order_line = [(5, 0, 0)]
-                sale.project_plan_lines = [(5, 0, 0)]
-                sale.project_picking_lines = [(5, 0, 0)]
-                sale.task_time_lines = [(5, 0, 0)]
+                
 
                 # Si el proyecto tiene un pedido anterior, copiamos datos
                 if sale.edit_project and sale.project_id.actual_sale_order_id:
+                    sale.order_line = [(5, 0, 0)]
+                    sale.project_plan_lines = [(5, 0, 0)]
+                    sale.project_picking_lines = [(5, 0, 0)]
+                    sale.task_time_lines = [(5, 0, 0)]
+
                     previous_order = sale.project_id.actual_sale_order_id
 
                     # Copiar líneas del pedido anterior
@@ -238,7 +240,10 @@ class SaleOrder(models.Model):
                         'display_type': line.display_type,
                         'name': line.name,
                         'product_uom_qty': line.product_uom_qty,
+                        'product_uom': line.product_uom,
                         'price_unit': line.last_service_price,
+                        'price_subtotal': line.price_subtotal,
+                        'purchase_price': line.purchase_price,
                         'discount': line.discount,
                         'for_modification': False,
                         'last_service_price': line.last_service_price,

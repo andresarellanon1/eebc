@@ -81,7 +81,7 @@ class ProjectPlan(models.Model):
     @api.depends('task_timesheet_id')
     def _compute_task_lines(self):
         """
-        Calcula y actualiza las líneas de tareas basadas en la plantilla de hojas de horas.
+        Calcula y actualiza las líneas de tareas basadas en la plantilla de Mano de obra.
         """
         for record in self:
             record.task_time_lines = [(5, 0, 0)]  # Limpia las líneas existentes
@@ -103,9 +103,9 @@ class ProjectPlan(models.Model):
 
     def get_task_time_lines(self, line):
         """
-        Obtiene las líneas de tareas a partir de la plantilla de hojas de horas.
+        Obtiene las líneas de tareas a partir de la plantilla de Mano de obra.
         
-        :param line: Plantilla de hojas de horas.
+        :param line: Plantilla de Mano de obra.
         :return: Lista de líneas de tareas.
         """
         task_lines = []
@@ -141,7 +141,7 @@ class ProjectPlan(models.Model):
         """
         Prepara las líneas de tareas individuales.
         
-        :param line: Línea de la plantilla de hojas de horas.
+        :param line: Línea de la plantilla de Mano de obra.
         :return: Lista de líneas de tareas preparadas.
         """
         task_lines = []
